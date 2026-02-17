@@ -12,9 +12,9 @@
     <!-- Link Swiper's CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
-    <link rel="stylesheet" href="/motokloz-demo/assets/css/custom.css">
-    <link rel="stylesheet" href="/motokloz-demo/assets/css/user-auth.css">
-    <link rel="stylesheet" href="/motokloz-demo/assets/css/responsive.css">
+    <link rel="stylesheet" href="/assets/css/custom.css">
+    <link rel="stylesheet" href="/assets/css/user-auth.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -105,11 +105,11 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-6">
-                        <img src="/motokloz-demo/assets/images/darklogo.png" class="logo logo-dark" alt="Motokloz Logo">
-                        <img src="/motokloz-demo/assets/images/lightlogo.png" class="logo logo-light"
+                        <img src="/assets/images/darklogo.png" class="logo logo-dark" alt="Motokloz Logo">
+                        <img src="/assets/images/lightlogo.png" class="logo logo-light"
                             alt="Motokloz Logo">
                         <button id="themeToggle" aria-label="Toggle theme">
-                            <img id="themeIcon" src="/motokloz-demo/assets/images/darkmood.png" alt="Theme toggle" />
+                            <img id="themeIcon" src="/assets/images/darkmood.png" alt="Theme toggle" />
                         </button>
                     </div>
                     <div class="col-lg-6 btn-header">
@@ -125,7 +125,7 @@
                         <div class="logo-o">Borrow
                             <span class="speed-line"></span>
                         </div>
-                        <img src="/motokloz-demo/assets/images/user.png" class="img-fluid">
+                        <img src="/assets/images/user.png" class="img-fluid">
                     </div>
                 </div>
             </div>
@@ -135,7 +135,7 @@
     <div class="top-back">
         <a href="#" class="dashboard-back">
             <span class="back-icon">
-                <img src="/motokloz-demo/assets/images/carento (5).png" alt="Back">
+                <img src="/assets/images/carento (5).png" alt="Back">
             </span>
             <span class="back-text">Go back to dashboard</span>
         </a>
@@ -259,9 +259,9 @@
                         </div>
                     </div>
                     <div class="chat-actions">
-                        <a href="#"><img src="/motokloz-demo/assets/images/icon (7).png" alt=""></a>
-                        <a href="#"><img src="/motokloz-demo/assets/images/icon (8).png" alt=""></a>
-                        <a href="#"><img src="/motokloz-demo/assets/images/icon (9).png" mages/icon (9).png" alt=""></a>
+                        <a href="#"><img src="/assets/images/icon (7).png" alt=""></a>
+                        <a href="#"><img src="/assets/images/icon (8).png" alt=""></a>
+                        <a href="#"><img src="/assets/images/icon (9).png" mages/icon (9).png" alt=""></a>
                     </div>
                 </div>
 
@@ -337,10 +337,10 @@
                 </div>
 
                 <div class="chat-input">
-                    <a href="#"><img src="/motokloz-demo/assets/images/mention.png" alt=""></a>
+                    <a href="#"><img src="/assets/images/mention.png" alt=""></a>
                     <input class="text-input" type="text" placeholder="Type your message here...">
-                    <a href="#"><img src="/motokloz-demo/assets/images/emoji.png" alt=""></a>
-                    <a href="#"><img src="/motokloz-demo/assets/images/chatsubmite.png" alt=""></a>
+                    <a href="#"><img src="/assets/images/emoji.png" alt=""></a>
+                    <a href="#"><img src="/assets/images/chatsubmite.png" alt=""></a>
 
                 </div>
             </div>
@@ -1612,7 +1612,7 @@
             <div class="footer-mid">
                 <div class="row">
                     <div class="col-lg-4">
-                        <img src="/motokloz-demo/assets/images/darklogo.png" class="img-fluid" alt="Motokloz Logo">
+                        <img src="/assets/images/darklogo.png" class="img-fluid" alt="Motokloz Logo">
                         <ul>
                             <li><i class="fa-sharp fa-solid fa-location-dot"></i><a href="#">2356 Oakwood Drive, Suite
                                     18, San Francisco, California 94111, US</a></li>
@@ -1738,10 +1738,10 @@ toggleBtn.addEventListener("click", () => {
             document.body.classList.toggle("dark-mode");
 
             if (document.body.classList.contains("dark-mode")) {
-                icon.src = "/motokloz-demo/assets/images/lightmood.png";
+                icon.src = "/assets/images/lightmood.png";
                 localStorage.setItem("theme", "dark");
             } else {
-                icon.src = "/motokloz-demo/assets/images/darkmood.png";
+                icon.src = "/assets/images/darkmood.png";
                 localStorage.setItem("theme", "light");
             }
 
@@ -1750,7 +1750,7 @@ toggleBtn.addEventListener("click", () => {
         // Page load par state restore
         if (localStorage.getItem("theme") === "dark") {
             document.body.classList.add("dark-mode");
-            icon.src = "/motokloz-demo/assets/images/lightmood.png";
+            icon.src = "/assets/images/lightmood.png";
         }
     </script>
     <script>

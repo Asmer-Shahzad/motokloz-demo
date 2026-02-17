@@ -17,34 +17,34 @@
                     <div class="swiper main-gallery-slider">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
-                                <img src="/motokloz-demo/assets/images/gallery1.png" alt="Slide 1">
+                                <img src="/assets/images/gallery1.png" alt="Slide 1">
                             </div>
                             <div class="swiper-slide">
-                                <img src="/motokloz-demo/assets/images/gallery2.png" alt="Slide 2">
+                                <img src="/assets/images/gallery2.png" alt="Slide 2">
                             </div>
                             <div class="swiper-slide">
-                                <img src="/motokloz-demo/assets/images/gallery3.png" alt="Slide 3">
+                                <img src="/assets/images/gallery3.png" alt="Slide 3">
                             </div>
                             <div class="swiper-slide">
-                                <img src="/motokloz-demo/assets/images/gallery4.png" alt="Slide 4">
+                                <img src="/assets/images/gallery4.png" alt="Slide 4">
                             </div>
                             <div class="swiper-slide">
-                                <img src="/motokloz-demo/assets/images/gallery5.png" alt="Slide 5">
+                                <img src="/assets/images/gallery5.png" alt="Slide 5">
                             </div>
                             <div class="swiper-slide">
-                                <img src="/motokloz-demo/assets/images/gallery6.png" alt="Slide 6">
+                                <img src="/assets/images/gallery6.png" alt="Slide 6">
                             </div>
                              <div class="swiper-slide">
-                                <img src="/motokloz-demo/assets/images/gallery7.png" alt="Slide 7">
+                                <img src="/assets/images/gallery7.png" alt="Slide 7">
                             </div>
                              <div class="swiper-slide">
-                                <img src="/motokloz-demo/assets/images/gallery8.png" alt="Slide 8">
+                                <img src="/assets/images/gallery8.png" alt="Slide 8">
                             </div>
                             <div class="swiper-slide">
-                                <img src="/motokloz-demo/assets/images/gallery9.png" alt="Slide 9">
+                                <img src="/assets/images/gallery9.png" alt="Slide 9">
                             </div>
                             <div class="swiper-slide">
-                                <img src="/motokloz-demo/assets/images/gallery10.png" alt="Slide 10">
+                                <img src="/assets/images/gallery10.png" alt="Slide 10">
                             </div>
                         </div>
 
@@ -63,16 +63,16 @@
 
                     <div class="swiper thumb-strip-slider mt-3">
                         <div class="swiper-wrapper">
-                            <div class="swiper-slide"><img src="/motokloz-demo/assets/images/gallery1.png"></div>
-                            <div class="swiper-slide"><img src="/motokloz-demo/assets/images/gallery2.png"></div>
-                            <div class="swiper-slide"><img src="/motokloz-demo/assets/images/gallery3.png"></div>
-                            <div class="swiper-slide"><img src="/motokloz-demo/assets/images/gallery4.png"></div>
-                            <div class="swiper-slide"><img src="/motokloz-demo/assets/images/gallery5.png"></div>
-                            <div class="swiper-slide"><img src="/motokloz-demo/assets/images/gallery6.png"></div>
-                            <div class="swiper-slide"><img src="/motokloz-demo/assets/images/gallery7.png"></div>
-                            <div class="swiper-slide"><img src="/motokloz-demo/assets/images/gallery8.png"></div>
-                            <div class="swiper-slide"><img src="/motokloz-demo/assets/images/gallery9.png"></div>
-                            <div class="swiper-slide"><img src="/motokloz-demo/assets/images/gallery10.png"></div>
+                            <div class="swiper-slide"><img src="/assets/images/gallery1.png"></div>
+                            <div class="swiper-slide"><img src="/assets/images/gallery2.png"></div>
+                            <div class="swiper-slide"><img src="/assets/images/gallery3.png"></div>
+                            <div class="swiper-slide"><img src="/assets/images/gallery4.png"></div>
+                            <div class="swiper-slide"><img src="/assets/images/gallery5.png"></div>
+                            <div class="swiper-slide"><img src="/assets/images/gallery6.png"></div>
+                            <div class="swiper-slide"><img src="/assets/images/gallery7.png"></div>
+                            <div class="swiper-slide"><img src="/assets/images/gallery8.png"></div>
+                            <div class="swiper-slide"><img src="/assets/images/gallery9.png"></div>
+                            <div class="swiper-slide"><img src="/assets/images/gallery10.png"></div>
                         </div>
                     </div>
 
@@ -108,14 +108,14 @@
                 
                 <div class="mto-specs-container mb-5">
                     <div class="row g-2">
-                        <div class="col-md-3 col-6"><div class="mto-info-tile"><img src="/motokloz-demo/assets/images/icon01.png" alt=""> 56,500</div></div>
-                        <div class="col-md-3 col-6"><div class="mto-info-tile"><img src="/motokloz-demo/assets/images/icon02.png" alt=""> Diesel</div></div>
-                        <div class="col-md-3 col-6"><div class="mto-info-tile"><img src="/motokloz-demo/assets/images/icon03.png" alt=""> Automatic</div></div>
-                        <div class="col-md-3 col-6"><div class="mto-info-tile"><img src="/motokloz-demo/assets/images/icon04.png" alt=""> 7 seats</div></div>
-                        <div class="col-md-3 col-6"><div class="mto-info-tile"><img src="/motokloz-demo/assets/images/icon05.png" alt=""> 3 Large bags</div></div>
-                        <div class="col-md-3 col-6"><div class="mto-info-tile"><img src="/motokloz-demo/assets/images/icon06.png" alt=""> SUVs</div></div>
-                        <div class="col-md-3 col-6"><div class="mto-info-tile"><img src="/motokloz-demo/assets/images/icon07.png" alt=""> 4 Doors</div></div>
-                        <div class="col-md-3 col-6"><div class="mto-info-tile"><img src="/motokloz-demo/assets/images/icon08.png" alt=""> 2.5L</div></div>
+                        <div class="col-md-3 col-6"><div class="mto-info-tile"><img src="/assets/images/icon01.png" alt=""> 56,500</div></div>
+                        <div class="col-md-3 col-6"><div class="mto-info-tile"><img src="/assets/images/icon02.png" alt=""> Diesel</div></div>
+                        <div class="col-md-3 col-6"><div class="mto-info-tile"><img src="/assets/images/icon03.png" alt=""> Automatic</div></div>
+                        <div class="col-md-3 col-6"><div class="mto-info-tile"><img src="/assets/images/icon04.png" alt=""> 7 seats</div></div>
+                        <div class="col-md-3 col-6"><div class="mto-info-tile"><img src="/assets/images/icon05.png" alt=""> 3 Large bags</div></div>
+                        <div class="col-md-3 col-6"><div class="mto-info-tile"><img src="/assets/images/icon06.png" alt=""> SUVs</div></div>
+                        <div class="col-md-3 col-6"><div class="mto-info-tile"><img src="/assets/images/icon07.png" alt=""> 4 Doors</div></div>
+                        <div class="col-md-3 col-6"><div class="mto-info-tile"><img src="/assets/images/icon08.png" alt=""> 2.5L</div></div>
                     </div>
                 </div>
 
@@ -176,7 +176,7 @@
                             <span class="mto-rating-badge"><i class="fa-solid fa-star me-1"></i> 4.96 <span class="fw-normal text-muted ms-1">(672 reviews)</span></span>
                         </div>
                         <div class="d-flex align-items-center mb-4">
-                            <img src="/motokloz-demo/assets/images/Carento (5).png" class="rounded-circle me-3" alt="Dealer">
+                            <img src="/assets/images/Carento (5).png" class="rounded-circle me-3" alt="Dealer">
                             <div>
                                 <h6 class="mb-0 fw-bold">Emily Rose</h6>
                                 <p class="small text-muted mb-0">Las Vegas, USA</p>
