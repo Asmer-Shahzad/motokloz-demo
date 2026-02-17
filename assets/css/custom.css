@@ -280,33 +280,36 @@ select{
 }*/
 
 .card{
-    background:#fff;
+    background: transparent;
     border-radius:14px;
     text-align:center;
-    padding:15px;
-    box-shadow:0 10px 25px rgba(0,0,0,.2);
+    border: none;
 }
 
 .card img{
     max-width:100%;
-    height:80px;
+    height: auto;
     object-fit:contain;
-    margin-bottom:10px;
+    border: #fff;
+    border-radius: 13px;
 }
 
 .card span{
-    display:inline-block;
     font-size:12px;
     background:#f1f1f1;
     padding:4px 10px;
     border-radius:20px;
-    margin-bottom:8px;
+    width: 42%;
+    margin: 0 auto;
+    position: relative;
+    top: -12px;
 }
 
 .card h4{
     margin:0;
     font-size:16px;
     font-weight:600;
+    color: #fff;
 }
 .vehicle-box {
     background: url(../images/vehicle-box.png) no-repeat top right;
@@ -488,8 +491,8 @@ select{
     padding-top: 10px;
 }
 .swiper-slide {
-    border: 1px solid #DDE1DE;
-    border-radius: 13px;
+    border: none;
+    border-radius: 0;
 }
 .popular-vehicles {
     padding: 0 0 70px 0;
@@ -508,16 +511,14 @@ select{
        margin-top: -440px;
 }
 
-/* Car */
 .car {
   position: absolute;
   bottom: 0;
   width: 801px;
 
-  /* start outside from right */
-  left: 100%;
+  left: 100%; /* start outside right */
 
-  animation: carMove 10s linear infinite;
+  animation: carMove 4s linear forwards;
 }
 
 /* Keyframes */
@@ -526,7 +527,7 @@ select{
     transform: translateX(0);
   }
   to {
-    transform: translateX(-150vw);
+    transform: translateX(-900px); /* jitna andar lana ho utna px set karo */
   }
 }
 .about-bg {
@@ -818,4 +819,652 @@ footer.footer {
 }
 .btn-mobile {
     display: none;
+}
+.search-container {
+   background: var(--banner-bg-color);
+    border-radius: 16px;
+    padding: 30px 30px;
+    margin: 100px 0 0 0;
+    border: 1px solid #DDE1DE;
+}
+
+/* Top Tabs Styles */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-left: 10px;
+}
+
+.tabs .tab {
+    padding: 10px 25px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.tab.active {
+    background-color: #f98e00; /* Orange color from image */
+    color: white;
+    border-radius: 25px;
+}
+
+.need-help {
+    color: #666;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.need-help i {
+    margin-right: 5px;
+}
+
+/* Main Box Styles */
+.search-box {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.filter-item {
+    flex: 1;
+    padding: 0 15px;
+}
+
+.label {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.value {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.value i {
+    color: #ccc;
+    font-size: 18px;
+}
+
+.value strong {
+    color: #111;
+    font-size: 15px;
+}
+
+/* Divider line between items */
+.divider {
+    width: 1px;
+    height: 50px;
+    background-color: #eee;
+}
+
+/* Orange Button */
+.find-btn {
+    background-color: #f98e00;
+    color: white;
+    border: none;
+    padding: 15px 35px;
+    border-radius: 40px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.3s;
+}
+
+.find-btn:hover {
+    background-color: #e07b00;
+}
+.car-listing-bg {
+    background: url(/motokloz-demo/assets/images/car-listing-banner.png);
+    margin: 20px 0 0 0;
+        padding: 180px 0 0px 0;
+    border-radius: 20px;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    height: 487px;
+}
+.car-listing-cont h4 {
+    border-radius: 72px;
+    display: table;
+    margin: 0 auto;
+    text-align: center;
+    padding: 5px 20px;
+    color: #F58D02;
+    font-size: 14px;
+    background: rgba(255, 225, 185, 0.2);
+    backdrop-filter: blur(7px);
+}
+.car-listing-cont h2 {
+    text-align: center;
+    font-size: 48px;
+    color: #fff;
+    line-height: 70px;
+    margin: 0;
+}
+.car-listing-cont p {
+    text-align: center;
+    font-size: 15px;
+    color: #fff;
+}
+section.banner-car-listing {
+    margin-bottom: 136px;
+}
+.fleet-section {
+    padding: 70px 0;
+}
+
+.main-title {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--select-color);
+}
+
+.main-subtitle {
+    color: #777777;
+    font-size: 16px;
+}
+
+/* Sidebar Complete Styling */
+.complete-sidebar {
+    border: 1px solid #eeeeee;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    background: var(--banner-bg-color);
+}
+
+.sidebar-main-heading {
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: var(--select-color);
+}
+
+.filter-group {
+    margin-bottom: 18px;
+}
+
+.sidebar-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--select-color);
+}
+
+.sidebar-input {
+    background-color: #f9f9f9;
+    border: 1px solid #f2f2f2;
+    font-size: 14px;
+    border-radius: 10px;
+    color: #666666;
+    padding: 10px 15px;
+}
+
+.sidebar-input:focus {
+    box-shadow: none;
+    border-color: #f98e00;
+}
+
+.map-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--select-color);
+}
+
+.map-toggle-icon {
+    font-size: 12px;
+    color: #999;
+}
+
+/* Toolbar Styling */
+.view-icons i {
+    color: #cccccc;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.view-icons i.active {
+    color: #111111;
+}
+
+.results-info {
+    font-size: 14px;
+    color: #888888;
+}
+
+.btn-clear-filters {
+    background-color: #f98e00;
+    color: #ffffff;
+    border: none;
+    padding: 8px 22px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 700;
+    transition: 0.3s;
+}
+
+.btn-clear-filters:hover {
+    background-color: #e07b00;
+}
+
+.tool-select {
+    width: auto;
+    font-size: 13px;
+    border-radius: 18px;
+    border: 1px solid #eeeeee;
+}
+
+/* MODERN GRID CARD (image_9a84e7 style) */
+.modern-car-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #eeeeee;
+    transition: all 0.3s ease;
+}
+
+.modern-car-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+}
+
+.car-card-top {
+    position: relative;
+    height: 195px;
+}
+
+.car-card-top img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Badge on top of image */
+.badge-mileage {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: #ffffff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    color: #000;
+}
+
+.badge-mileage i {
+    color: #f98e00;
+    margin-right: 6px;
+}
+
+/* Card Body */
+.car-card-bottom {
+    padding: 20px;
+    background: var(--banner-bg-color);
+}
+
+.car-main-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    color: var(--select-color);
+    min-height: 44px;
+}
+
+.car-distance-away {
+    font-size: 14px;
+    margin-bottom: 22px;
+    color: var(--select-color);
+}
+
+/* Orange Circular Icons */
+.car-circle-icons-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.orange-circle {
+    width: 44px;
+    height: 44px;
+    background-color: #f98e00;
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+}
+
+.extra-icons-count {
+    font-size: 15px;
+    font-weight: 700;
+    color: #333333;
+    margin-left: 2px;
+    color: var(--select-color);
+}
+
+/* Price Block (Right Aligned) */
+.car-price-block {
+    margin-top: 15px;
+}
+
+.price-value {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 0;
+    color: var(--select-color);
+}
+
+.price-sub-text {
+    font-size: 13px;
+    color: #999999;
+    margin: 0;
+}
+
+/* Pagination Styling */
+.page-num-btn, .page-nav-btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #eeeeee;
+    background: #ffffff;
+    border-radius: 10px;
+    margin: 0 4px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.page-num-btn.active {
+    background-color: #f98e00;
+    color: #ffffff;
+    border: none;
+}
+.row.fleet-top {
+    margin-bottom: 15px;
+}
+/* Fluid Layout */
+.gallery-section {
+    padding: 30px 0;
+
+}
+
+/* Main Slider Wrapper */
+.main-gallery-slider {
+    width: 100%;
+    height: 600px;
+    border-radius: 25px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.main-gallery-slider img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Fixed Buttons Container (Always on top) */
+.gallery-action-overlay {
+    position: absolute;
+    bottom: 35px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    z-index: 100; /* Taake image ke upar rahe */
+}
+
+.btn-lexus-orange {
+    background-color: #f98e00;
+    color: #ffffff;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.3s ease-in-out;
+}
+
+.btn-lexus-white {
+    background-color: #ffffff;
+    color: #111111;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Navigation Arrows */
+.arrow-round {
+    background-color: #ffffff;
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.arrow-round::after {
+    font-size: 18px !important;
+    color: #333333;
+    font-weight: 800;
+}
+
+/* Thumbnails Strip */
+.thumb-strip-slider {
+    height: 120px;
+}
+
+.thumb-strip-slider .swiper-slide {
+    border-radius: 18px;
+    overflow: hidden;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: 0.3s;
+}
+
+/* Active Thumbnail */
+.thumb-strip-slider .swiper-slide-thumb-active {
+    opacity: 1;
+    border: 3px solid #f98e00;
+}
+
+.thumb-strip-slider img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+/* All Classes are prefixed with mto- to avoid conflicts */
+
+.mto-page-body {
+    background-color: #fcfcfc;
+    font-family: 'Inter', sans-serif;
+    color: #111;
+}
+
+.mto-top-headline {
+    font-size: 28px;
+    line-height: 1.3;
+    color: var(--select-color);
+}
+
+.mto-map-link {
+    text-decoration: none;
+    border-bottom: 2px solid #000;
+    color: var(--select-color);
+}
+
+.mto-meta-row {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--select-color);
+}
+
+/* Utility Pills */
+.mto-pill-btn {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 6px 15px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #444;
+}
+
+/* Beige Info Grid */
+.mto-info-tile {
+    background-color: #fff4e5;
+    padding: 18px 5px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #000;
+}
+.mto-info-tile i {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+/* Custom Stack/Accordion */
+.mto-stack-item {
+    border-radius: 15px;
+    overflow: hidden;
+    background: var(--banner-bg-color);
+    border: 1px solid #DDE1DE;
+    box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.07);
+}
+
+.mto-stack-trigger {
+    padding: 20px 25px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.mto-stack-trigger:hover {background-color: transparent;}
+
+.mto-stack-content {
+    padding: 0 25px 25px 25px;
+    display: none;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.mto-stack-content.show { display: block; }
+
+.mto-arrow {
+    font-size: 12px;
+    color: #999;
+    transition: 0.3s;
+}
+
+.mto-stack-trigger.active .mto-arrow { transform: rotate(180deg); }
+
+.mto-opt i { color: #f98e00; }
+
+/* Sidebar Components */
+.mto-card-unit {
+    border-radius: 20px;
+    border: none;
+    background: var(--banner-bg-color);
+}
+
+.mto-btn-orange {
+    background-color: #f98e00;
+    color: #fff;
+    border: none;
+    padding: 13px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.mto-btn-black {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 13px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.mto-rating-badge {
+    font-size: 12px;
+    font-weight: 700;
+}
+.mto-rating-badge i { color: #f98e00; }
+
+.mto-contact-details i { width: 22px; }
+
+.mto-sticky-side {
+    position: sticky;
+    top: 20px;
+}
+.mto-specs-container.mb-5 {
+    padding: 25px 18px;
+    border-radius: 8px;
+    background: var(--banner-bg-color);
+    box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.07);
+    border: 1px solid #DDE1DE;
+}
+
+.col-md-6.mto-opt {
+    color: var(--select-color);
+}
+h5.mb-0.fw-bold {
+    color: var(--select-color);
+}
+.text-muted {
+    color: var(--select-color) !important;
+}
+.mto-qa-card.border.p-3.rounded-3 h6.fw-bold {
+    color: var(--select-color);
+}
+h6.fw-bold.mb-3 {
+    color: var(--select-color);
+}
+
+span.fw-bold {
+    color: var(--select-color);
+}
+
+.mto-contact-details.small.fw-semibold .mb-2 {
+    color: var(--select-color);
+}
+
+.mto-contact-details.small.fw-semibold {}
+
+i.fa-solid.fa-phone.me-2.text-muted {}
+
+h6.mb-0.fw-bold {
+    color: var(--select-color);
+}
+
+span.mto-rating-badge {
+    color: var(--select-color);
 }
