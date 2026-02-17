@@ -12,9 +12,9 @@
     <!-- Link Swiper's CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
-    <link rel="stylesheet" href="/motokloz-demo/assets/css/custom.css">
-    <link rel="stylesheet" href="/motokloz-demo/assets/css/user-auth.css">
-    <link rel="stylesheet" href="/motokloz-demo/assets/css/responsive.css">
+    <link rel="stylesheet" href="/assets/css/custom.css">
+    <link rel="stylesheet" href="/assets/css/user-auth.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -105,11 +105,10 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-6">
-                        <img src="/motokloz-demo/assets/images/darklogo.png" class="logo logo-dark" alt="Motokloz Logo">
-                        <img src="/motokloz-demo/assets/images/lightlogo.png" class="logo logo-light"
-                            alt="Motokloz Logo">
+                        <img src="/assets/images/darklogo.png" class="logo logo-dark" alt="Motokloz Logo">
+                        <img src="/assets/images/lightlogo.png" class="logo logo-light" alt="Motokloz Logo">
                         <button id="themeToggle" aria-label="Toggle theme">
-                            <img id="themeIcon" src="/motokloz-demo/assets/images/darkmood.png" alt="Theme toggle" />
+                            <img id="themeIcon" src="/assets/images/darkmood.png" alt="Theme toggle" />
                         </button>
                     </div>
                     <div class="col-lg-6 btn-header">
@@ -125,7 +124,7 @@
                         <div class="logo-o">Borrow
                             <span class="speed-line"></span>
                         </div>
-                        <img src="/motokloz-demo/assets/images/user.png" class="img-fluid">
+                        <img src="/assets/images/user.png" class="img-fluid">
                     </div>
                 </div>
             </div>
@@ -141,7 +140,7 @@
                 <!-- Image -->
                 <div class="col-lg-6 d-none d-lg-block">
                     <div class="auth-image">
-                        <img src="/motokloz-demo/assets/images/Main.png" alt="main image">
+                        <img src="/assets/images/Main.png" alt="main image">
                     </div>
                 </div>
 
@@ -155,11 +154,11 @@
                         <p>Motokloz your one-stop-shop for all your car buying needs!</p>
                         <form action="#" id="signup-form" class="user-form">
                             <div class="form-group">
-                                <img src="/motokloz-demo/assets/images/userlogin.png" alt="">
+                                <img src="/assets/images/userlogin.png" alt="">
                                 <input type="text" class="form-control" placeholder="Email / Username">
                             </div>
                             <div class="form-group">
-                                <img src="/motokloz-demo/assets/images/password.png" alt="">
+                                <img src="/assets/images/password.png" alt="">
                                 <input type="password" class="form-control" placeholder="****************">
                             </div>
                             <div class="remember-row">
@@ -174,7 +173,7 @@
 
                             <button class="btn btn-auth d-flex align-items-center justify-content-center gap-2">
                                 Login
-                                <img src="/motokloz-demo/assets/images/bttnarrow.png" alt=" arrow" width="18">
+                                <img src="/assets/images/bttnarrow.png" alt=" arrow" width="18">
                             </button>
                         </form>
 
@@ -210,7 +209,7 @@
             <div class="footer-mid">
                 <div class="row">
                     <div class="col-lg-4">
-                        <img src="/motokloz-demo/assets/images/darklogo.png" class="img-fluid" alt="Motokloz Logo">
+                        <img src="/assets/images/darklogo.png" class="img-fluid" alt="Motokloz Logo">
                         <ul>
                             <li><i class="fa-sharp fa-solid fa-location-dot"></i><a href="#">2356 Oakwood Drive, Suite
                                     18, San Francisco, California 94111, US</a></li>
@@ -328,117 +327,160 @@ toggleBtn.addEventListener("click", () => {
 </script> -->
 
     <script>
-        const toggleBtn = document.getElementById("themeToggle");
-        const icon = document.getElementById("themeIcon");
+    const toggleBtn = document.getElementById("themeToggle");
+    const icon = document.getElementById("themeIcon");
 
-        toggleBtn.addEventListener("click", function() {
+    toggleBtn.addEventListener("click", function() {
 
-            document.body.classList.toggle("dark-mode");
+        document.body.classList.toggle("dark-mode");
 
-            if (document.body.classList.contains("dark-mode")) {
-                icon.src = "/motokloz-demo/assets/images/lightmood.png";
-                localStorage.setItem("theme", "dark");
-            } else {
-                icon.src = "/motokloz-demo/assets/images/darkmood.png";
-                localStorage.setItem("theme", "light");
-            }
-
-        });
-
-        // Page load par state restore
-        if (localStorage.getItem("theme") === "dark") {
-            document.body.classList.add("dark-mode");
-            icon.src = "/motokloz-demo/assets/images/lightmood.png";
+        if (document.body.classList.contains("dark-mode")) {
+            icon.src = "/assets/images/lightmood.png";
+            localStorage.setItem("theme", "dark");
+        } else {
+            icon.src = "/assets/images/darkmood.png";
+            localStorage.setItem("theme", "light");
         }
+
+    });
+
+    // Page load par state restore
+    if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+        icon.src = "/assets/images/lightmood.png";
+    }
     </script>
     <script>
-        $(document).ready(function() {
+    $(document).ready(function() {
 
-            $('.tab').click(function() {
-                $('.tab').removeClass('active');
-                $(this).addClass('active');
-            });
-
-            $('#priceRange').on('input', function() {
-                $('#priceVal').text('10,000 - 12,000');
-            });
-
+        $('.tab').click(function() {
+            $('.tab').removeClass('active');
+            $(this).addClass('active');
         });
+
+        $('#priceRange').on('input', function() {
+            $('#priceVal').text('10,000 - 12,000');
+        });
+
+    });
     </script>
 
     <script>
-        var swiper = new Swiper(".mySwiper", {
-            slidesPerView: 7,
-            spaceBetween: 20,
-            autoplay: false,
-            loop: false,
-            // autoplay: {
-            //     delay: 2500,
-            // },
-            breakpoints: {
-                0: {
-                    slidesPerView: 2
-                },
-                768: {
-                    slidesPerView: 4
-                },
-                1024: {
-                    slidesPerView: 6
-                }
+    var swiper = new Swiper(".mySwiper", {
+                slidesPerView: 7,
+                spaceBetween: 20,
+                autoplay: false,
+                loop: false,
+                // autoplay: {
+                //     delay: 2500,
+                // },
+                breakpoints: {
+                    0: {
+                        slidesPerView: 2
+                    },
+                    768: {
+                        slidesPerView: 4
+                    },
+                    1024: {
+                        slidesPerView: 6
+                    }
+
+                });
+
+            // Page load par state restore
+            if (localStorage.getItem("theme") === "dark") {
+                document.body.classList.add("dark-mode");
+                icon.src = "/motokloz-demo/assets/images/lightmood.png";
             }
-        });
     </script>
     <script>
-        var swiper = new Swiper(".carSwiper", {
-            slidesPerView: 4,
-            spaceBetween: 20,
-            loop: true,
-            autoplay: {
-                delay: 3000,
-                disableOnInteraction: false,
+    $(document).ready(function() {
+
+        $('.tab').click(function() {
+            $('.tab').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        $('#priceRange').on('input', function() {
+            $('#priceVal').text('10,000 - 12,000');
+        });
+
+    });
+    </script>
+
+    <script>
+    var swiper = new Swiper(".mySwiper", {
+        slidesPerView: 7,
+        spaceBetween: 20,
+        autoplay: false,
+        loop: false,
+        // autoplay: {
+        //     delay: 2500,
+        // },
+        breakpoints: {
+            0: {
+                slidesPerView: 2
             },
-            breakpoints: {
-                0: {
-                    slidesPerView: 1
-                },
-                768: {
-                    slidesPerView: 2
-                },
-                1024: {
-                    slidesPerView: 4
-                },
+            768: {
+                slidesPerView: 4
+            },
+            1024: {
+                slidesPerView: 6
             }
-        });
+        }
+    });
     </script>
     <script>
-        const reviewSwiper = new Swiper(".review-swiper", {
-            slidesPerView: 3,
-            spaceBetween: 24,
-            loop: true,
-            speed: 5000,
-
-            autoplay: {
-                delay: 0,
-                disableOnInteraction: false,
+    var swiper = new Swiper(".carSwiper", {
+        slidesPerView: 4,
+        spaceBetween: 20,
+        loop: true,
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+        },
+        breakpoints: {
+            0: {
+                slidesPerView: 1
             },
+            768: {
+                slidesPerView: 2
+            },
+            1024: {
+                slidesPerView: 4
+            },
+        }
+    });
+    </script>
+    <script>
+    const reviewSwiper = new Swiper(".review-swiper", {
+        slidesPerView: 3,
+        spaceBetween: 24,
+        loop: true,
+        speed: 5000,
 
-            breakpoints: {
-                0: {
-                    slidesPerView: 1.2
-                },
-                768: {
-                    slidesPerView: 2
-                },
-                1024: {
-                    slidesPerView: 3
-                },
-            }
-        });
+        autoplay: {
+            delay: 0,
+            disableOnInteraction: false,
+        },
 
-        // hover pause
-        const reviewEl = document.querySelector('.review-swiper');
-        reviewEl.addEventListener('mouseenter', () => reviewSwiper.autoplay.stop());
-        reviewEl.addEventListener('mouseleave', () => reviewSwiper.autoplay.start());
+        breakpoints: {
+            0: {
+                slidesPerView: 1.2
+            },
+            768: {
+                slidesPerView: 2
+            },
+            1024: {
+                slidesPerView: 3
+            },
+        }
+    });
+
+    // hover pause
+    const reviewEl = document.querySelector('.review-swiper');
+    reviewEl.addEventListener('mouseenter', () => reviewSwiper.autoplay.stop());
+    reviewEl.addEventListener('mouseleave', () => reviewSwiper.autoplay.start());
     </script>
 
 

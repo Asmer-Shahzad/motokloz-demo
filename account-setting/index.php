@@ -12,9 +12,9 @@
     <!-- Link Swiper's CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
-    <link rel="stylesheet" href="/motokloz-demo/assets/css/custom.css">
-    <link rel="stylesheet" href="/motokloz-demo/assets/css/user-auth.css">
-    <link rel="stylesheet" href="/motokloz-demo/assets/css/responsive.css">
+    <link rel="stylesheet" href="/assets/css/custom.css">
+    <link rel="stylesheet" href="/assets/css/user-auth.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -105,11 +105,11 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-6">
-                        <img src="/motokloz-demo/assets/images/darklogo.png" class="logo logo-dark" alt="Motokloz Logo">
-                        <img src="/motokloz-demo/assets/images/lightlogo.png" class="logo logo-light"
+                        <img src="/assets/images/darklogo.png" class="logo logo-dark" alt="Motokloz Logo">
+                        <img src="/assets/images/lightlogo.png" class="logo logo-light"
                             alt="Motokloz Logo">
                         <button id="themeToggle" aria-label="Toggle theme">
-                            <img id="themeIcon" src="/motokloz-demo/assets/images/darkmood.png" alt="Theme toggle" />
+                            <img id="themeIcon" src="/assets/images/darkmood.png" alt="Theme toggle" />
                         </button>
                     </div>
                     <div class="col-lg-6 btn-header">
@@ -125,7 +125,7 @@
                         <div class="logo-o">Borrow
                             <span class="speed-line"></span>
                         </div>
-                        <img src="/motokloz-demo/assets/images/user.png" class="img-fluid">
+                        <img src="/assets/images/user.png" class="img-fluid">
                     </div>
                 </div>
             </div>
@@ -153,7 +153,7 @@
                     <div class="side-top">
                         <div class="user-box mb-4">
 
-                            <img src="/motokloz-demo/assets/images/border.png" class=" user-img">
+                            <img src="/assets/images/border.png" class=" user-img">
 
                             <div class="user-info">
                                 <h6 class="user-info-head">Steven Jobs</h6>
@@ -161,7 +161,7 @@
                             </div>
 
                             <span class="edit-btn">
-                                <img src="/motokloz-demo/assets/images/Link (3).png" class="edit-img">
+                                <img src="/assets/images/Link (3).png" class="edit-img">
                             </span>
 
                         </div>
@@ -170,35 +170,35 @@
                     <ul class="account-menu">
 
                         <li class="menu-item">
-                            <img src="/motokloz-demo/assets/images/Vector (2).png" class="menu-icon">
+                            <img src="/assets/images/Vector (2).png" class="menu-icon">
                             My Profile
                         </li>
 
                         <li class="menu-item d-flex justify-content-between align-items-center">
                             <div>
-                                <img src="/motokloz-demo/assets/images/Icon (1).png" class="menu-icon">
+                                <img src="/assets/images/Icon (1).png" class="menu-icon">
                                 Dashboard
                             </div>
                             <span class="badge">1</span>
                         </li>
 
                         <li class="menu-item">
-                            <img src="/motokloz-demo/assets/images/Icon (2).png" class="menu-icon">
+                            <img src="/assets/images/Icon (2).png" class="menu-icon">
                             Listings
                         </li>
 
                         <li class="menu-item">
-                            <img src="/motokloz-demo/assets/images/material-symbols_add-rounded.png" class="menu-icon">
+                            <img src="/assets/images/material-symbols_add-rounded.png" class="menu-icon">
                             Add Listing
                         </li>
 
                         <li class="menu-item">
-                            <img src="/motokloz-demo/assets/images/Icon (3).png" class="menu-icon">
+                            <img src="/assets/images/Icon (3).png" class="menu-icon">
                             My Wishlist
                         </li>
 
                         <li class="menu-item active">
-                            <img src="/motokloz-demo/assets/images/Icon (4).png" class="menu-icon">
+                            <img src="/assets/images/Icon (4).png" class="menu-icon">
                             Account Setting
                         </li>
 
@@ -585,7 +585,7 @@
             <div class="footer-mid">
                 <div class="row">
                     <div class="col-lg-4">
-                        <img src="/motokloz-demo/assets/images/darklogo.png" class="img-fluid" alt="Motokloz Logo">
+                        <img src="/assets/images/darklogo.png" class="img-fluid" alt="Motokloz Logo">
                         <ul>
                             <li><i class="fa-sharp fa-solid fa-location-dot"></i><a href="#">2356 Oakwood Drive,
                                     Suite
@@ -713,10 +713,10 @@ toggleBtn.addEventListener("click", () => {
         document.body.classList.toggle("dark-mode");
 
         if (document.body.classList.contains("dark-mode")) {
-            icon.src = "/motokloz-demo/assets/images/lightmood.png";
+            icon.src = "/assets/images/lightmood.png";
             localStorage.setItem("theme", "dark");
         } else {
-            icon.src = "/motokloz-demo/assets/images/darkmood.png";
+            icon.src = "/assets/images/darkmood.png";
             localStorage.setItem("theme", "light");
         }
 
@@ -725,7 +725,7 @@ toggleBtn.addEventListener("click", () => {
     // Page load par state restore
     if (localStorage.getItem("theme") === "dark") {
         document.body.classList.add("dark-mode");
-        icon.src = "/motokloz-demo/assets/images/lightmood.png";
+        icon.src = "/assets/images/lightmood.png";
     }
     </script>
     <script>
