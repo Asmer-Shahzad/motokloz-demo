@@ -732,7 +732,7 @@
         min-height: 465px;
         border-radius: 20px;
         overflow: hidden;
-        background: url('/assets/images/carento.png') center/cover no-repeat;
+        background: url('/assets/images/Carento.png') center/cover no-repeat;
     }
 
     .banner-overlay {
