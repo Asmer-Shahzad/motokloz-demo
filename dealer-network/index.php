@@ -179,7 +179,7 @@
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="dealer-card">
                         <div class="d-flex align-items-start gap-3">
-                            <img src="/motokloz-demo/assets/images/ellipse 6493.png" class="dealer-avatar" alt="">
+                            <img src="/motokloz-demo/assets/images/Ellipse 6493.png" class="dealer-avatar" alt="">
                             <div>
                                 <h6 class="dealer-card-head">Opel Manchester</h6>
                                 <p class="dealer-address mb-2">
@@ -194,7 +194,7 @@
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="dealer-card">
                         <div class="d-flex align-items-start gap-3">
-                            <img src="/motokloz-demo/assets/images/ellipse 6493 (1).png" class="dealer-avatar" alt="">
+                            <img src="/motokloz-demo/assets/images/Ellipse 6493 (1).png" class="dealer-avatar" alt="">
                             <div>
                                 <h6 class="dealer-card-head">BMW Birmingham</h6>
                                 <p class="dealer-address mb-2">
@@ -209,7 +209,7 @@
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="dealer-card">
                         <div class="d-flex align-items-start gap-3">
-                            <img src="/motokloz-demo/assets/images/ellipse 6493 (2).png" class="dealer-avatar" alt="">
+                            <img src="/motokloz-demo/assets/images/Ellipse 6493 (2).png" class="dealer-avatar" alt="">
                             <div>
                                 <h6 class="dealer-card-head">Toyota London</h6>
                                 <p class="dealer-address mb-2">
@@ -224,7 +224,7 @@
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="dealer-card">
                         <div class="d-flex align-items-start gap-3">
-                            <img src="/motokloz-demo/assets/images/ellipse 6493 (3).png" class="dealer-avatar" alt="">
+                            <img src="/motokloz-demo/assets/images/Ellipse 6493 (3).png" class="dealer-avatar" alt="">
                             <div>
                                 <h6 class="dealer-card-head">Ford Glasgow</h6>
                                 <p class="dealer-address mb-2">
@@ -239,7 +239,7 @@
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="dealer-card">
                         <div class="d-flex align-items-start gap-3">
-                            <img src="/motokloz-demo/assets/images/ellipse 6493 (4).png" class="dealer-avatar" alt="">
+                            <img src="/motokloz-demo/assets/images/Ellipse 6493 (4).png" class="dealer-avatar" alt="">
                             <div>
                                 <h6 class="dealer-card-head">Volkswagen Leeds</h6>
                                 <p class="dealer-address mb-2">
@@ -254,7 +254,7 @@
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="dealer-card">
                         <div class="d-flex align-items-start gap-3">
-                            <img src="/motokloz-demo/assets/images/ellipse 6493 (5).png" class="dealer-avatar" alt="">
+                            <img src="/motokloz-demo/assets/images/Ellipse 6493 (5).png" class="dealer-avatar" alt="">
                             <div>
                                 <h6 class="dealer-card-head">Honda Edinburgh</h6>
                                 <p class="dealer-address mb-2">
@@ -269,7 +269,7 @@
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="dealer-card">
                         <div class="d-flex align-items-start gap-3">
-                            <img src="/motokloz-demo/assets/images/ellipse 6493 (6).png" class="dealer-avatar" alt="">
+                            <img src="/motokloz-demo/assets/images/Ellipse 6493 (6).png" class="dealer-avatar" alt="">
                             <div>
                                 <h6 class="dealer-card-head">Nissan Bristol</h6>
                                 <p class="dealer-address mb-2">
@@ -284,7 +284,7 @@
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="dealer-card">
                         <div class="d-flex align-items-start gap-3">
-                            <img src="/motokloz-demo/assets/images/ellipse 6493 (7).png" class="dealer-avatar" alt="">
+                            <img src="/motokloz-demo/assets/images/Ellipse 6493 (7).png" class="dealer-avatar" alt="">
                             <div>
                                 <h6 class="dealer-card-head">Kia Liverpool</h6>
                                 <p class="dealer-address mb-2">
@@ -299,7 +299,7 @@
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="dealer-card">
                         <div class="d-flex align-items-start gap-3">
-                            <img src="/motokloz-demo/assets/images/ellipse 6493 (8).png" class="dealer-avatar" alt="">
+                            <img src="/motokloz-demo/assets/images/Ellipse 6493 (8).png" class="dealer-avatar" alt="">
                             <div>
                                 <h6 class="dealer-card-head">Peugeot Sheffield</h6>
                                 <p class="dealer-address mb-2">
@@ -314,7 +314,7 @@
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="dealer-card">
                         <div class="d-flex align-items-start gap-3">
-                            <img src="/motokloz-demo/assets/images/ellipse 6493 (9).png" class="dealer-avatar" alt="">
+                            <img src="/motokloz-demo/assets/images/Ellipse 6493 (9).png" class="dealer-avatar" alt="">
                             <div>
                                 <h6 class="dealer-card-head">Volvo Oxford</h6>
                                 <p class="dealer-address mb-2">
@@ -329,7 +329,7 @@
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="dealer-card">
                         <div class="d-flex align-items-start gap-3">
-                            <img src="/motokloz-demo/assets/images/ellipse 6493 (10).png" class="dealer-avatar" alt="">
+                            <img src="/motokloz-demo/assets/images/Ellipse 6493 (10).png" class="dealer-avatar" alt="">
                             <div>
                                 <h6 class="dealer-card-head">Mazda Southampton</h6>
                                 <p class="dealer-address mb-2">
@@ -344,7 +344,7 @@
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="dealer-card">
                         <div class="d-flex align-items-start gap-3">
-                            <img src="/motokloz-demo/assets/images/ellipse 6493 (11).png" class="dealer-avatar" alt="">
+                            <img src="/motokloz-demo/assets/images/Ellipse 6493 (11).png" class="dealer-avatar" alt="">
                             <div>
                                 <h6 class="dealer-card-head">Land Rover Norwich</h6>
                                 <p class="dealer-address mb-2">
@@ -359,7 +359,7 @@
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="dealer-card">
                         <div class="d-flex align-items-start gap-3">
-                            <img src="/motokloz-demo/assets/images/ellipse 6493 (12).png" class="dealer-avatar" alt="">
+                            <img src="/motokloz-demo/assets/images/Ellipse 6493 (12).png" class="dealer-avatar" alt="">
                             <div>
                                 <h6 class="dealer-card-head">Jeep Nottingham</h6>
                                 <p class="dealer-address mb-2">
@@ -374,7 +374,7 @@
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="dealer-card">
                         <div class="d-flex align-items-start gap-3">
-                            <img src="/motokloz-demo/assets/images/ellipse 6493 (13).png" class="dealer-avatar" alt="">
+                            <img src="/motokloz-demo/assets/images/Ellipse 6493 (13).png" class="dealer-avatar" alt="">
                             <div>
                                 <h6 class="dealer-card-head">BMW Manchester</h6>
                                 <p class="dealer-address mb-2">
@@ -389,7 +389,7 @@
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="dealer-card">
                         <div class="d-flex align-items-start gap-3">
-                            <img src="/motokloz-demo/assets/images/ellipse 6493 (14).png" class="dealer-avatar" alt="">
+                            <img src="/motokloz-demo/assets/images/Ellipse 6493 (14).png" class="dealer-avatar" alt="">
                             <div>
                                 <h6 class="dealer-card-head">Ford Manchester</h6>
                                 <p class="dealer-address mb-2">
@@ -473,16 +473,16 @@
                 <div class="col-lg-6">
                     <div class="row g-3">
                         <div class="col-6">
-                            <img src="/motokloz-demo/assets/images/carento (1).png" class="mission-img" alt="">
+                            <img src="/motokloz-demo/assets/images/Carento (1).png" class="mission-img" alt="">
                         </div>
                         <div class="col-6">
-                            <img src="/motokloz-demo/assets/images/carento (2).png" class="mission-img" alt="">
+                            <img src="/motokloz-demo/assets/images/Carento (2).png" class="mission-img" alt="">
                         </div>
                         <div class="col-5">
-                            <img src="/motokloz-demo/assets/images/carento (3).png" class="mission-img" alt="">
+                            <img src="/motokloz-demo/assets/images/Carento (3).png" class="mission-img" alt="">
                         </div>
                         <div class="col-7">
-                            <img src="/motokloz-demo/assets/images/carento (4).png" class="mission-img" alt="">
+                            <img src="/motokloz-demo/assets/images/Carento (4).png" class="mission-img" alt="">
                         </div>
                     </div>
                 </div>
@@ -492,475 +492,475 @@
 
 
     <style>
-    .dealer-search-wrap {
-        padding: 0 0 20px;
-        max-width: 100%;
-        overflow-x: hidden;
-        /* prevent any accidental horizontal scroll */
-    }
+        .dealer-search-wrap {
+            padding: 0 0 20px;
+            max-width: 100%;
+            overflow-x: hidden;
+            /* prevent any accidental horizontal scroll */
+        }
 
-    .dealer-search-inner {
-        background: var(--banner-bg-color);
-        border: 1px solid #DDE1DE;
-        border-radius: 18px;
-        padding: 12px 14px;
-        display: flex;
-        flex-wrap: wrap;
-        /* ← very important */
-        gap: 12px;
-        align-items: center;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-    }
-
-    .deal-sec {
-        display: flex;
-        align-items: center;
-        flex: 1 1 100%;
-        /* take full width on small screens */
-        min-width: 0;
-        /* allows shrinking below content size */
-        gap: 12px;
-    }
-
-    .search-field {
-        flex: 1;
-        min-width: 120px;
-        /* reasonable minimum */
-    }
-
-    .search-field input {
-        border: none;
-        outline: none;
-        width: 100%;
-        font-size: 14px;
-        color: var(--select-color);
-        background: transparent;
-        padding: 8px;
-    }
-
-    .divider {
-        width: 1px;
-        height: 28px;
-        background: #e5e7eb;
-        flex-shrink: 0;
-    }
-
-    .btn-search,
-    .btn-dealer {
-        background: #F58D02;
-        color: #fff;
-        border: none;
-        padding: 12px 20px;
-        border-radius: 999px;
-        font-weight: 500;
-        font-size: 14px;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        white-space: nowrap;
-        cursor: pointer;
-        transition: background 0.2s;
-        flex-shrink: 0;
-    }
-
-    .btn-search:hover,
-    .btn-dealer:hover {
-        background: #e67f00;
-    }
-
-    .btn-search img,
-    .btn-dealer img {
-        width: 16px;
-        height: 16px;
-        object-fit: contain;
-    }
-
-    /* ────────────────────────────────────────
-   Mobile-first responsive adjustments
-───────────────────────────────────────── */
-
-    @media (max-width: 640px) {
         .dealer-search-inner {
-            padding: 12px;
-            gap: 10px;
-        }
-
-        .deal-sec {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 10px;
-        }
-
-        .divider {
-            display: none;
-            /* hide on very small screens */
-        }
-
-        .search-field {
-            min-width: unset;
-        }
-
-        .btn-search,
-        .btn-dealer {
-            width: 100%;
-            /* full width buttons on mobile */
-            justify-content: center;
-            padding: 12px 16px;
-        }
-    }
-
-    @media (min-width: 641px) {
-        .dealer-search-inner {
-            /* flex-wrap: nowrap; */
-        }
-
-        .deal-sec {
-            flex: 1 1 auto;
-            min-width: 0;
-        }
-
-        .btn-search,
-        .btn-dealer {
-            flex: 0 0 auto;
-        }
-    }
-
-    .deal-sec {
-        display: flex;
-        align-items: center;
-        flex: auto;
-        border: 1px solid #DDE1DE;
-        border-radius: 50px;
-        padding: 10px;
-    }
-
-    .custom-pagination .page-link {
-        border: none;
-        color: #333;
-        font-weight: 500;
-        background: #f1f3f5;
-    }
-
-    .pagination {
-        padding-top: 55px;
-        flex-wrap: wrap;
-        /* allow wrapping on smaller screens */
-        gap: 8px;
-        /* spacing between items */
-    }
-
-    .page-square {
-        width: 44px;
-        height: 44px;
-        border-radius: 5px;
-        display: flex;
-        background: #F2F4F6;
-        align-items: center;
-        justify-content: center;
-        color: #000000;
-        line-height: 35px;
-        font-size: 16px;
-        transition: all 0.2s ease;
-    }
-
-    /* Active page */
-    .page-item.active .page-link {
-        background: #ff9800;
-        color: #fff;
-        border-color: unset !important;
-    }
-
-    /* Hover effect */
-    .page-link:hover {
-        background: #e9ecef;
-        color: #000;
-    }
-
-    /* Dots */
-    .dots {
-        pointer-events: none;
-        background: #f1f3f5;
-    }
-
-    /* Prev/Next icons */
-    .page-link img {
-        width: 20px;
-        height: 20px;
-        object-fit: contain;
-    }
-
-    /* Responsive tweaks */
-    @media (max-width: 768px) {
-        .page-square {
-            width: 36px;
-            height: 36px;
-            font-size: 14px;
-        }
-
-        .pagination {
-            justify-content: center;
-            /* center on small screens */
-            padding-top: 30px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .page-square {
-            width: 30px;
-            height: 30px;
-            font-size: 12px;
-        }
-
-        .page-link img {
-            width: 16px;
-            height: 16px;
-        }
-    }
-
-    /* ===== GLOBAL / VARIABLES ===== */
-    :root {
-        --primary: #F58D02;
-        --primary-hover: #e67f00;
-        --text-dark: #000000;
-        --text-muted: #737373;
-        --border-light: #e5e7eb;
-        --card-border: #DDE1DE;
-    }
-
-    /* ===== BANNER SECTION ===== */
-    .dealer-banner {
-        position: relative;
-        min-height: 465px;
-        border-radius: 20px;
-        overflow: hidden;
-        background: url('/motokloz-demo/assets/images/carento.png') center/cover no-repeat;
-    }
-
-    .banner-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(90deg,
-                rgba(0, 0, 0, 0.70) 0%,
-                rgba(0, 0, 0, 0.35) 40%,
-                rgba(0, 0, 0, 0) 70%);
-    }
-
-    .banner-content {
-        position: relative;
-        height: 405px;
-        display: flex;
-        align-items: end;
-        padding-bottom: 2rem;
-        /* added spacing */
-    }
-
-    .banner-content h2 {
-        font-size: 40px;
-        font-weight: 700;
-    }
-
-    /* ===== SEARCH BAR ===== */
-    /*===== search bar styles (100% original) =====*/
-
-    /* ===== DEALER CARDS ===== */
-    .dealer-card {
-        border: 1px solid var(--card-border);
-        background: var(--banner-bg-color);
-        border-radius: 8px !important;
-        padding: 20px !important;
-        /* reduced from 23px 26px for smaller devices */
-        height: 100%;
-        transition: box-shadow 0.25s ease;
-    }
-
-    .dealer-card:hover {
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-    }
-
-    .dealer-avatar {
-        width: 78px;
-        height: 78px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-
-    .dealer-card-head {
-        font-size: 24px;
-        line-height: 32px;
-        font-weight: 700;
-        color: var(--select-color);
-    }
-
-    .dealer-address {
-        font-size: 16px;
-        color: var(--text-muted);
-        line-height: 26px;
-    }
-
-    .vehicle-badge {
-        padding: 4px 10px;
-        background: #F2F4F6;
-        border-radius: 18px;
-        display: inline-block;
-        color: var(--text-dark);
-        border: 1px solid var(--card-border);
-        font-weight: 700;
-        font-size: 12px;
-        line-height: 18px;
-    }
-
-    /* ===== MISSION SECTION ===== */
-    .mission-section {
-        padding: 70px 0;
-    }
-
-    .mission-title {
-        font-weight: 700;
-        font-size: 36px;
-        line-height: 42px;
-        color: var(--select-color);
-    }
-
-    .mission-text {
-        color: var(--text-muted);
-        margin: 16px 0;
-        max-width: 510px;
-        font-size: 18px;
-        line-height: 28px;
-        font-weight: 500;
-    }
-
-    .mission-list {
-        list-style: none;
-        padding: 0;
-        margin-bottom: 10px;
-    }
-
-    .mission-list li {
-        position: relative;
-        padding-left: 28px;
-        margin-bottom: 15px;
-        font-size: 16px;
-        font-weight: 700;
-        left: 0;
-        /* removed left offset */
-        color: var(--select-color);
-        padding-bottom: 12px;
-    }
-
-    .mission-list li::before {
-        content: "";
-        position: absolute;
-        width: 18px;
-        height: 18px;
-        background: url('/motokloz-demo/assets/images/tick.png') no-repeat center;
-        background-size: contain;
-        left: 0;
-        top: 4px;
-    }
-
-    .mission-img {
-        width: 100%;
-        height: 269px;
-        object-fit: cover;
-        border-radius: 8px;
-    }
-
-    /* make images stack nicely on mobile */
-    @media (max-width: 768px) {
-        .mission-img {
-            height: auto;
-            aspect-ratio: 4/3;
-        }
-    }
-
-    /* ===== MEDIA QUERIES FOR BANNER & CARDS ===== */
-    @media (max-width: 768px) {
-        .dealer-banner {
-            min-height: 300px;
-        }
-
-        .banner-content {
-            height: 300px;
-        }
-
-        .banner-content h2 {
-            font-size: 28px;
-        }
-
-        .dealer-card-head {
-            font-size: 20px;
-            line-height: 28px;
-        }
-
-        .dealer-address {
-            font-size: 14px;
-            line-height: 22px;
-        }
-    }
-
-    @media (max-width: 576px) {
-        .mission-title {
-            font-size: 28px;
-            line-height: 36px;
-        }
-
-        .mission-text {
-            font-size: 16px;
-            line-height: 24px;
-        }
-    }
-
-    /* ensure images in mission don't overflow */
-    .row.g-3 {
-        --bs-gutter-y: 1rem;
-    }
-
-    body {
-
-        font-family: Vend Sans !important;
-
-
-
-    }
-
-    /* ===== FIX: tablet landscape layout ===== */
-    @media (min-width: 768px) and (max-width: 1000px) {
-
-        /* ensure grid behaves like 2 columns */
-        .dealer-card {
-            padding: 18px !important;
-            border-radius: 10px !important;
-        }
-
-        /* fix card content alignment */
-        .dealer-card .d-flex {
-            flex-direction: row;
+            background: var(--banner-bg-color);
+            border: 1px solid #DDE1DE;
+            border-radius: 18px;
+            padding: 12px 14px;
+            display: flex;
+            flex-wrap: wrap;
+            /* ← very important */
+            gap: 12px;
             align-items: center;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+        }
+
+        .deal-sec {
+            display: flex;
+            align-items: center;
+            flex: 1 1 100%;
+            /* take full width on small screens */
+            min-width: 0;
+            /* allows shrinking below content size */
             gap: 12px;
         }
 
+        .search-field {
+            flex: 1;
+            min-width: 120px;
+            /* reasonable minimum */
+        }
+
+        .search-field input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+            color: var(--select-color);
+            background: transparent;
+            padding: 8px;
+        }
+
+        .divider {
+            width: 1px;
+            height: 28px;
+            background: #e5e7eb;
+            flex-shrink: 0;
+        }
+
+        .btn-search,
+        .btn-dealer {
+            background: #F58D02;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 999px;
+            font-weight: 500;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .btn-search:hover,
+        .btn-dealer:hover {
+            background: #e67f00;
+        }
+
+        .btn-search img,
+        .btn-dealer img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+        }
+
+        /* ────────────────────────────────────────
+   Mobile-first responsive adjustments
+───────────────────────────────────────── */
+
+        @media (max-width: 640px) {
+            .dealer-search-inner {
+                padding: 12px;
+                gap: 10px;
+            }
+
+            .deal-sec {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+
+            .divider {
+                display: none;
+                /* hide on very small screens */
+            }
+
+            .search-field {
+                min-width: unset;
+            }
+
+            .btn-search,
+            .btn-dealer {
+                width: 100%;
+                /* full width buttons on mobile */
+                justify-content: center;
+                padding: 12px 16px;
+            }
+        }
+
+        @media (min-width: 641px) {
+            .dealer-search-inner {
+                /* flex-wrap: nowrap; */
+            }
+
+            .deal-sec {
+                flex: 1 1 auto;
+                min-width: 0;
+            }
+
+            .btn-search,
+            .btn-dealer {
+                flex: 0 0 auto;
+            }
+        }
+
+        .deal-sec {
+            display: flex;
+            align-items: center;
+            flex: auto;
+            border: 1px solid #DDE1DE;
+            border-radius: 50px;
+            padding: 10px;
+        }
+
+        .custom-pagination .page-link {
+            border: none;
+            color: #333;
+            font-weight: 500;
+            background: #f1f3f5;
+        }
+
+        .pagination {
+            padding-top: 55px;
+            flex-wrap: wrap;
+            /* allow wrapping on smaller screens */
+            gap: 8px;
+            /* spacing between items */
+        }
+
+        .page-square {
+            width: 44px;
+            height: 44px;
+            border-radius: 5px;
+            display: flex;
+            background: #F2F4F6;
+            align-items: center;
+            justify-content: center;
+            color: #000000;
+            line-height: 35px;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        /* Active page */
+        .page-item.active .page-link {
+            background: #ff9800;
+            color: #fff;
+            border-color: unset !important;
+        }
+
+        /* Hover effect */
+        .page-link:hover {
+            background: #e9ecef;
+            color: #000;
+        }
+
+        /* Dots */
+        .dots {
+            pointer-events: none;
+            background: #f1f3f5;
+        }
+
+        /* Prev/Next icons */
+        .page-link img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 768px) {
+            .page-square {
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+            }
+
+            .pagination {
+                justify-content: center;
+                /* center on small screens */
+                padding-top: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-square {
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
+            }
+
+            .page-link img {
+                width: 16px;
+                height: 16px;
+            }
+        }
+
+        /* ===== GLOBAL / VARIABLES ===== */
+        :root {
+            --primary: #F58D02;
+            --primary-hover: #e67f00;
+            --text-dark: #000000;
+            --text-muted: #737373;
+            --border-light: #e5e7eb;
+            --card-border: #DDE1DE;
+        }
+
+        /* ===== BANNER SECTION ===== */
+        .dealer-banner {
+            position: relative;
+            min-height: 465px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: url('/motokloz-demo/assets/images/carento.png') center/cover no-repeat;
+        }
+
+        .banner-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg,
+                    rgba(0, 0, 0, 0.70) 0%,
+                    rgba(0, 0, 0, 0.35) 40%,
+                    rgba(0, 0, 0, 0) 70%);
+        }
+
+        .banner-content {
+            position: relative;
+            height: 405px;
+            display: flex;
+            align-items: end;
+            padding-bottom: 2rem;
+            /* added spacing */
+        }
+
+        .banner-content h2 {
+            font-size: 40px;
+            font-weight: 700;
+        }
+
+        /* ===== SEARCH BAR ===== */
+        /*===== search bar styles (100% original) =====*/
+
+        /* ===== DEALER CARDS ===== */
+        .dealer-card {
+            border: 1px solid var(--card-border);
+            background: var(--banner-bg-color);
+            border-radius: 8px !important;
+            padding: 20px !important;
+            /* reduced from 23px 26px for smaller devices */
+            height: 100%;
+            transition: box-shadow 0.25s ease;
+        }
+
+        .dealer-card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+
         .dealer-avatar {
-            width: 64px;
-            height: 64px;
+            width: 78px;
+            height: 78px;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
         .dealer-card-head {
-            font-size: 17px;
-            line-height: 24px;
+            font-size: 24px;
+            line-height: 32px;
+            font-weight: 700;
+            color: var(--select-color);
         }
 
         .dealer-address {
-            font-size: 12px;
-            line-height: 19px;
+            font-size: 16px;
+            color: var(--text-muted);
+            line-height: 26px;
         }
 
-        /* fix badge wrapping */
         .vehicle-badge {
-            font-size: 10px;
-            padding: 3px 8px;
+            padding: 4px 10px;
+            background: #F2F4F6;
+            border-radius: 18px;
+            display: inline-block;
+            color: var(--text-dark);
+            border: 1px solid var(--card-border);
+            font-weight: 700;
+            font-size: 12px;
+            line-height: 18px;
         }
-    }
+
+        /* ===== MISSION SECTION ===== */
+        .mission-section {
+            padding: 70px 0;
+        }
+
+        .mission-title {
+            font-weight: 700;
+            font-size: 36px;
+            line-height: 42px;
+            color: var(--select-color);
+        }
+
+        .mission-text {
+            color: var(--text-muted);
+            margin: 16px 0;
+            max-width: 510px;
+            font-size: 18px;
+            line-height: 28px;
+            font-weight: 500;
+        }
+
+        .mission-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 10px;
+        }
+
+        .mission-list li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: 700;
+            left: 0;
+            /* removed left offset */
+            color: var(--select-color);
+            padding-bottom: 12px;
+        }
+
+        .mission-list li::before {
+            content: "";
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: url('/motokloz-demo/assets/images/tick.png') no-repeat center;
+            background-size: contain;
+            left: 0;
+            top: 4px;
+        }
+
+        .mission-img {
+            width: 100%;
+            height: 269px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        /* make images stack nicely on mobile */
+        @media (max-width: 768px) {
+            .mission-img {
+                height: auto;
+                aspect-ratio: 4/3;
+            }
+        }
+
+        /* ===== MEDIA QUERIES FOR BANNER & CARDS ===== */
+        @media (max-width: 768px) {
+            .dealer-banner {
+                min-height: 300px;
+            }
+
+            .banner-content {
+                height: 300px;
+            }
+
+            .banner-content h2 {
+                font-size: 28px;
+            }
+
+            .dealer-card-head {
+                font-size: 20px;
+                line-height: 28px;
+            }
+
+            .dealer-address {
+                font-size: 14px;
+                line-height: 22px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .mission-title {
+                font-size: 28px;
+                line-height: 36px;
+            }
+
+            .mission-text {
+                font-size: 16px;
+                line-height: 24px;
+            }
+        }
+
+        /* ensure images in mission don't overflow */
+        .row.g-3 {
+            --bs-gutter-y: 1rem;
+        }
+
+        body {
+
+            font-family: Vend Sans !important;
+
+
+
+        }
+
+        /* ===== FIX: tablet landscape layout ===== */
+        @media (min-width: 768px) and (max-width: 1000px) {
+
+            /* ensure grid behaves like 2 columns */
+            .dealer-card {
+                padding: 18px !important;
+                border-radius: 10px !important;
+            }
+
+            /* fix card content alignment */
+            .dealer-card .d-flex {
+                flex-direction: row;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .dealer-avatar {
+                width: 64px;
+                height: 64px;
+            }
+
+            .dealer-card-head {
+                font-size: 17px;
+                line-height: 24px;
+            }
+
+            .dealer-address {
+                font-size: 12px;
+                line-height: 19px;
+            }
+
+            /* fix badge wrapping */
+            .vehicle-badge {
+                font-size: 10px;
+                padding: 3px 8px;
+            }
+        }
     </style>
 
 
@@ -1108,117 +1108,117 @@ toggleBtn.addEventListener("click", () => {
 </script> -->
 
     <script>
-    const toggleBtn = document.getElementById("themeToggle");
-    const icon = document.getElementById("themeIcon");
+        const toggleBtn = document.getElementById("themeToggle");
+        const icon = document.getElementById("themeIcon");
 
-    toggleBtn.addEventListener("click", function() {
+        toggleBtn.addEventListener("click", function() {
 
-        document.body.classList.toggle("dark-mode");
+            document.body.classList.toggle("dark-mode");
 
-        if (document.body.classList.contains("dark-mode")) {
-            icon.src = "/motokloz-demo/assets/images/lightmood.png";
-            localStorage.setItem("theme", "dark");
-        } else {
-            icon.src = "/motokloz-demo/assets/images/darkmood.png";
-            localStorage.setItem("theme", "light");
-        }
-
-    });
-
-    // Page load par state restore
-    if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark-mode");
-        icon.src = "/motokloz-demo/assets/images/lightmood.png";
-    }
-    </script>
-    <script>
-    $(document).ready(function() {
-
-        $('.tab').click(function() {
-            $('.tab').removeClass('active');
-            $(this).addClass('active');
-        });
-
-        $('#priceRange').on('input', function() {
-            $('#priceVal').text('10,000 - 12,000');
-        });
-
-    });
-    </script>
-
-    <script>
-    var swiper = new Swiper(".mySwiper", {
-        slidesPerView: 7,
-        spaceBetween: 20,
-        autoplay: false,
-        loop: false,
-        // autoplay: {
-        //     delay: 2500,
-        // },
-        breakpoints: {
-            0: {
-                slidesPerView: 2
-            },
-            768: {
-                slidesPerView: 4
-            },
-            1024: {
-                slidesPerView: 6
+            if (document.body.classList.contains("dark-mode")) {
+                icon.src = "/motokloz-demo/assets/images/lightmood.png";
+                localStorage.setItem("theme", "dark");
+            } else {
+                icon.src = "/motokloz-demo/assets/images/darkmood.png";
+                localStorage.setItem("theme", "light");
             }
+
+        });
+
+        // Page load par state restore
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark-mode");
+            icon.src = "/motokloz-demo/assets/images/lightmood.png";
         }
-    });
     </script>
     <script>
-    var swiper = new Swiper(".carSwiper", {
-        slidesPerView: 4,
-        spaceBetween: 20,
-        loop: true,
-        autoplay: {
-            delay: 3000,
-            disableOnInteraction: false,
-        },
-        breakpoints: {
-            0: {
-                slidesPerView: 1
-            },
-            768: {
-                slidesPerView: 2
-            },
-            1024: {
-                slidesPerView: 4
-            },
-        }
-    });
+        $(document).ready(function() {
+
+            $('.tab').click(function() {
+                $('.tab').removeClass('active');
+                $(this).addClass('active');
+            });
+
+            $('#priceRange').on('input', function() {
+                $('#priceVal').text('10,000 - 12,000');
+            });
+
+        });
+    </script>
+
+    <script>
+        var swiper = new Swiper(".mySwiper", {
+            slidesPerView: 7,
+            spaceBetween: 20,
+            autoplay: false,
+            loop: false,
+            // autoplay: {
+            //     delay: 2500,
+            // },
+            breakpoints: {
+                0: {
+                    slidesPerView: 2
+                },
+                768: {
+                    slidesPerView: 4
+                },
+                1024: {
+                    slidesPerView: 6
+                }
+            }
+        });
     </script>
     <script>
-    const reviewSwiper = new Swiper(".review-swiper", {
-        slidesPerView: 3,
-        spaceBetween: 24,
-        loop: true,
-        speed: 5000,
-
-        autoplay: {
-            delay: 0,
-            disableOnInteraction: false,
-        },
-
-        breakpoints: {
-            0: {
-                slidesPerView: 1.2
+        var swiper = new Swiper(".carSwiper", {
+            slidesPerView: 4,
+            spaceBetween: 20,
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
             },
-            768: {
-                slidesPerView: 2
-            },
-            1024: {
-                slidesPerView: 3
-            },
-        }
-    });
+            breakpoints: {
+                0: {
+                    slidesPerView: 1
+                },
+                768: {
+                    slidesPerView: 2
+                },
+                1024: {
+                    slidesPerView: 4
+                },
+            }
+        });
+    </script>
+    <script>
+        const reviewSwiper = new Swiper(".review-swiper", {
+            slidesPerView: 3,
+            spaceBetween: 24,
+            loop: true,
+            speed: 5000,
 
-    // hover pause
-    const reviewEl = document.querySelector('.review-swiper');
-    reviewEl.addEventListener('mouseenter', () => reviewSwiper.autoplay.stop());
-    reviewEl.addEventListener('mouseleave', () => reviewSwiper.autoplay.start());
+            autoplay: {
+                delay: 0,
+                disableOnInteraction: false,
+            },
+
+            breakpoints: {
+                0: {
+                    slidesPerView: 1.2
+                },
+                768: {
+                    slidesPerView: 2
+                },
+                1024: {
+                    slidesPerView: 3
+                },
+            }
+        });
+
+        // hover pause
+        const reviewEl = document.querySelector('.review-swiper');
+        reviewEl.addEventListener('mouseenter', () => reviewSwiper.autoplay.stop());
+        reviewEl.addEventListener('mouseleave', () => reviewSwiper.autoplay.start());
     </script>
 
 

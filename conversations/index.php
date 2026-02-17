@@ -135,7 +135,7 @@
     <div class="top-back">
         <a href="#" class="dashboard-back">
             <span class="back-icon">
-                <img src="/motokloz-demo/assets/images/carento (5).png" alt="Back">
+                <img src="/motokloz-demo/assets/images/Carento (5).png" alt="Back">
             </span>
             <span class="back-text">Go back to dashboard</span>
         </a>

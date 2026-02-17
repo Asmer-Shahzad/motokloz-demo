@@ -141,7 +141,7 @@
                 <!-- Image -->
                 <div class="col-lg-6 d-none d-lg-block">
                     <div class="auth-image">
-                        <img src="/motokloz-demo/assets/images/main.png" alt="main image">
+                        <img src="/motokloz-demo/assets/images/Main.png" alt="main image">
                     </div>
                 </div>
 
@@ -328,117 +328,117 @@ toggleBtn.addEventListener("click", () => {
 </script> -->
 
     <script>
-    const toggleBtn = document.getElementById("themeToggle");
-    const icon = document.getElementById("themeIcon");
+        const toggleBtn = document.getElementById("themeToggle");
+        const icon = document.getElementById("themeIcon");
 
-    toggleBtn.addEventListener("click", function() {
+        toggleBtn.addEventListener("click", function() {
 
-        document.body.classList.toggle("dark-mode");
+            document.body.classList.toggle("dark-mode");
 
-        if (document.body.classList.contains("dark-mode")) {
-            icon.src = "/motokloz-demo/assets/images/lightmood.png";
-            localStorage.setItem("theme", "dark");
-        } else {
-            icon.src = "/motokloz-demo/assets/images/darkmood.png";
-            localStorage.setItem("theme", "light");
-        }
-
-    });
-
-    // Page load par state restore
-    if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark-mode");
-        icon.src = "/motokloz-demo/assets/images/lightmood.png";
-    }
-    </script>
-    <script>
-    $(document).ready(function() {
-
-        $('.tab').click(function() {
-            $('.tab').removeClass('active');
-            $(this).addClass('active');
-        });
-
-        $('#priceRange').on('input', function() {
-            $('#priceVal').text('10,000 - 12,000');
-        });
-
-    });
-    </script>
-
-    <script>
-    var swiper = new Swiper(".mySwiper", {
-        slidesPerView: 7,
-        spaceBetween: 20,
-        autoplay: false,
-        loop: false,
-        // autoplay: {
-        //     delay: 2500,
-        // },
-        breakpoints: {
-            0: {
-                slidesPerView: 2
-            },
-            768: {
-                slidesPerView: 4
-            },
-            1024: {
-                slidesPerView: 6
+            if (document.body.classList.contains("dark-mode")) {
+                icon.src = "/motokloz-demo/assets/images/lightmood.png";
+                localStorage.setItem("theme", "dark");
+            } else {
+                icon.src = "/motokloz-demo/assets/images/darkmood.png";
+                localStorage.setItem("theme", "light");
             }
+
+        });
+
+        // Page load par state restore
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark-mode");
+            icon.src = "/motokloz-demo/assets/images/lightmood.png";
         }
-    });
     </script>
     <script>
-    var swiper = new Swiper(".carSwiper", {
-        slidesPerView: 4,
-        spaceBetween: 20,
-        loop: true,
-        autoplay: {
-            delay: 3000,
-            disableOnInteraction: false,
-        },
-        breakpoints: {
-            0: {
-                slidesPerView: 1
-            },
-            768: {
-                slidesPerView: 2
-            },
-            1024: {
-                slidesPerView: 4
-            },
-        }
-    });
+        $(document).ready(function() {
+
+            $('.tab').click(function() {
+                $('.tab').removeClass('active');
+                $(this).addClass('active');
+            });
+
+            $('#priceRange').on('input', function() {
+                $('#priceVal').text('10,000 - 12,000');
+            });
+
+        });
+    </script>
+
+    <script>
+        var swiper = new Swiper(".mySwiper", {
+            slidesPerView: 7,
+            spaceBetween: 20,
+            autoplay: false,
+            loop: false,
+            // autoplay: {
+            //     delay: 2500,
+            // },
+            breakpoints: {
+                0: {
+                    slidesPerView: 2
+                },
+                768: {
+                    slidesPerView: 4
+                },
+                1024: {
+                    slidesPerView: 6
+                }
+            }
+        });
     </script>
     <script>
-    const reviewSwiper = new Swiper(".review-swiper", {
-        slidesPerView: 3,
-        spaceBetween: 24,
-        loop: true,
-        speed: 5000,
-
-        autoplay: {
-            delay: 0,
-            disableOnInteraction: false,
-        },
-
-        breakpoints: {
-            0: {
-                slidesPerView: 1.2
+        var swiper = new Swiper(".carSwiper", {
+            slidesPerView: 4,
+            spaceBetween: 20,
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
             },
-            768: {
-                slidesPerView: 2
-            },
-            1024: {
-                slidesPerView: 3
-            },
-        }
-    });
+            breakpoints: {
+                0: {
+                    slidesPerView: 1
+                },
+                768: {
+                    slidesPerView: 2
+                },
+                1024: {
+                    slidesPerView: 4
+                },
+            }
+        });
+    </script>
+    <script>
+        const reviewSwiper = new Swiper(".review-swiper", {
+            slidesPerView: 3,
+            spaceBetween: 24,
+            loop: true,
+            speed: 5000,
 
-    // hover pause
-    const reviewEl = document.querySelector('.review-swiper');
-    reviewEl.addEventListener('mouseenter', () => reviewSwiper.autoplay.stop());
-    reviewEl.addEventListener('mouseleave', () => reviewSwiper.autoplay.start());
+            autoplay: {
+                delay: 0,
+                disableOnInteraction: false,
+            },
+
+            breakpoints: {
+                0: {
+                    slidesPerView: 1.2
+                },
+                768: {
+                    slidesPerView: 2
+                },
+                1024: {
+                    slidesPerView: 3
+                },
+            }
+        });
+
+        // hover pause
+        const reviewEl = document.querySelector('.review-swiper');
+        reviewEl.addEventListener('mouseenter', () => reviewSwiper.autoplay.stop());
+        reviewEl.addEventListener('mouseleave', () => reviewSwiper.autoplay.start());
     </script>
 
 
