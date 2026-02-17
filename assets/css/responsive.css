@@ -2,7 +2,9 @@
 	.search-btn {
     margin: 0 auto;
 }
-
+.header-top .col-lg-8 {
+    width: 100%;
+}
 .filter-bar {
     flex-wrap: wrap;
     justify-content: space-evenly;
@@ -120,7 +122,27 @@ ul.navbar-nav.mb-2.mb-lg-0 {
     font-size: 14px;
 }
 }
+@media (max-width: 768px) {
+    .search-box {
+        flex-direction: column;
+        padding: 20px;
+    }
+    .divider {
+        display: none;
+    }
+    .filter-item {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .find-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
 @media only screen and (max-width: 767px) {
+    .help {
+    display: none;
+}
 	.col-lg-4.btn-mobile {
     display: none;
 }
