@@ -8,20 +8,15 @@
 
 <body>
     <?php require_once(__DIR__ . '/../include/header.php'); ?>
-
     <div class="container account-setting my-4">
-
         <!-- Breadcrumb -->
         <div class="d-flex align-items-center gap-2 mb-2 text-muted small Breadcrumb">
             <span class="Breadcrumb-home">Home</span>
             <span>›</span>
             <strong class="seat-head">Account Setting</strong>
         </div>
-
         <h2 class="main-head">Account Setting</h2>
-
         <div class="row g-4">
-
             <!-- Sidebar -->
             <div class="col-lg-3">
                 <div class="account-sidebar">
@@ -163,7 +158,6 @@
 
         </div>
     </div>
-
     <style>
     .Breadcrumb-home {
         font-size: 16px;
@@ -433,23 +427,8 @@
         }
     }
     </style>
-
-
-
-
-
-
-
-
-
-
-
-
-
     <?php require_once(__DIR__ . '/../include/footer-script.php'); ?>
     <?php require_once(__DIR__ . '/../include/footer.php'); ?>
-
-
 </body>
 
 </html>

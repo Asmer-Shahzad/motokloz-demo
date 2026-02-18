@@ -2,26 +2,17 @@
 <html>
 
 <head>
-<<<<<<< HEAD
-    <title>Motokloz</title>
-    <?php include 'include/header-script.php'; ?>
-=======
-    <title>Sign Up</title>
+    <title>Login</title>
     <?php require_once(__DIR__ . '/../include/header-script.php'); ?>
 
 
->>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
 </head>
 
 <body>
 
-<<<<<<< HEAD
-
-    <?php include 'include/header.php'; ?>
-
-=======
     <?php require_once(__DIR__ . '/../include/header.php'); ?>
->>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
+
+
 
     <section class="auth-section">
         <div class="container">
@@ -85,15 +76,10 @@
 
 
 
-<<<<<<< HEAD
-    <?php include 'include/footer.php'; ?>
+    <?php require_once(__DIR__ . '/../include/footer-script.php'); ?>
+    <?php require_once(__DIR__ . '/../include/footer.php'); ?>
 
-=======
-     <?php require_once(__DIR__ . '/../include/footer-script.php'); ?>
-<?php require_once(__DIR__ . '/../include/footer.php'); ?>
->>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
 
-    <?php include 'include/footer-script.php'; ?>
 </body>
 
 </html>
