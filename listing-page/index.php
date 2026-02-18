@@ -102,7 +102,7 @@
             </div>
         </div>
         <div class="header">
-            <div class="container-fluid">
+            <div class="container-fluid s">
                 <div class="row">
                     <div class="col-lg-6">
                         <img src="/motokloz-demo/assets/images/darklogo.png" class="logo logo-dark" alt="Motokloz Logo">
