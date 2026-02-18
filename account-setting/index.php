@@ -29,7 +29,7 @@
                     <div class="side-top">
                         <div class="user-box mb-4">
 
-                            <img src="/assets/images/border.png" class=" user-img">
+                            <img src="<?php echo $prefix; ?>/assets/images/border.png" class=" user-img">
 
                             <div class="user-info">
                                 <h6 class="user-info-head">Steven Jobs</h6>
@@ -37,7 +37,7 @@
                             </div>
 
                             <span class="edit-btn">
-                                <img src="/assets/images/Link (3).png" class="edit-img">
+                                <img src="<?php echo $prefix; ?>/assets/images/Link (3).png" class="edit-img">
                             </span>
 
                         </div>
@@ -46,35 +46,36 @@
                     <ul class="account-menu">
 
                         <li class="menu-item">
-                            <img src="/assets/images/Vector (2).png" class="menu-icon">
+                            <img src="<?php echo $prefix; ?>/assets/images/Vector (2).png" class="menu-icon">
                             My Profile
                         </li>
 
                         <li class="menu-item d-flex justify-content-between align-items-center">
                             <div>
-                                <img src="/assets/images/Icon (1).png" class="menu-icon">
+                                <img src="<?php echo $prefix; ?>/assets/images/Icon (1).png" class="menu-icon">
                                 Dashboard
                             </div>
                             <span class="badge">1</span>
                         </li>
 
                         <li class="menu-item">
-                            <img src="/assets/images/Icon (2).png" class="menu-icon">
+                            <img src="<?php echo $prefix; ?>/assets/images/Icon (2).png" class="menu-icon">
                             Listings
                         </li>
 
                         <li class="menu-item">
-                            <img src="/assets/images/material-symbols_add-rounded.png" class="menu-icon">
+                            <img src="<?php echo $prefix; ?>/assets/images/material-symbols_add-rounded.png"
+                                class="menu-icon">
                             Add Listing
                         </li>
 
                         <li class="menu-item">
-                            <img src="/assets/images/Icon (3).png" class="menu-icon">
+                            <img src="<?php echo $prefix; ?>/assets/images/Icon (3).png" class="menu-icon">
                             My Wishlist
                         </li>
 
                         <li class="menu-item active">
-                            <img src="/assets/images/Icon (4).png" class="menu-icon">
+                            <img src="<?php echo $prefix; ?>/assets/images/Icon (4).png" class="menu-icon">
                             Account Setting
                         </li>
 
@@ -445,254 +446,8 @@
 
 
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-top">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <h3>Subscribe to see secret deals prices drop the moment you sign up!</h3>
-                    </div>
-                    <div class="subscribe-box col-lg-6">
-                        <input type="email" placeholder="Enter your Email">
-                        <button type="submit">Subscribe</button>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-mid">
-                <div class="row">
-                    <div class="col-lg-4">
-                        <img src="/assets/images/darklogo.png" class="img-fluid" alt="Motokloz Logo">
-                        <ul>
-                            <li><i class="fa-sharp fa-solid fa-location-dot"></i><a href="#">2356 Oakwood Drive,
-                                    Suite
-                                    18, San Francisco, California 94111, US</a></li>
-                            <li><i class="fa-sharp fa-solid fa-clock"></i><a href="#">Hours: 8:00 - 17:00, Mon -
-                                    Sat</a>
-                            </li>
-                            <li><i class="fa-sharp fa-solid fa-envelope"></i><a
-                                    href="mailto:support@carento.com">support@carento.com</a></li>
-                        </ul>
-                        <div class="calltoaction">
-                            <h5><i class="fa-sharp fa-solid fa-phone"></i> Need help? Call us</h5>
-                            <h6><a href="tel:+1 222-555-33-99">+1 222-555-33-99</a></h6>
-                        </div>
-                    </div>
-                    <div class="col-lg-2">
-                        <h4>Company</h4>
-                        <ul>
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Our Awards</a></li>
-                            <li><a href="#">Agencies</a></li>
-                            <li><a href="#">Copyright Notices</a></li>
-                            <li><a href="#">Terms of Use</a></li>
-                            <li><a href="#">Privacy Notice</a></li>
-                            <li><a href="#">Lost & Found</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="col-lg-2">
-                        <h4>Our Partners</h4>
-                        <ul>
-                            <li><a href="#">Affiliates</a></li>
-                            <li><a href="#">Travel Agents</a></li>
-                            <li><a href="#">AARP Members</a></li>
-                            <li><a href="#">Points Programs</a></li>
-                            <li><a href="#">Military & Veterans</a></li>
-                            <li><a href="#">Work with us</a></li>
-                            <li><a href="#">Advertise with us</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-2">
-                        <h4>Support</h4>
-                        <ul>
-                            <li><a href="#">Forum support</a></li>
-                            <li><a href="#">Help Center</a></li>
-                            <li><a href="#">Live chat</a></li>
-                            <li><a href="#">How it works</a></li>
-                            <li><a href="#">Security</a></li>
-                            <li><a href="#">Refund Policy</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-2">
-                        <h4>Our Services</h4>
-                        <ul>
-                            <li><a href="#">Car Rental Services</a></li>
-                            <li><a href="#">Vehicle Leasing Options</a></li>
-                            <li><a href="#">Long-Term Car Rentals</a></li>
-                            <li><a href="#">Car Sales and Trade-Ins</a></li>
-                            <li><a href="#">Luxury Car Rentals</a></li>
-                            <li><a href="#">Rent-to-Own Programs</a></li>
-                            <li><a href="#">Fleet Management Solutions</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <p>© 2026 <span>Motokloz</span>. All rights reserved.</p>
-                    </div>
-                    <div class="col-lg-6">
-                        <ul>
-                            <li>Follow us</li>
-                            <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
-                            <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
-                            <li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>
-                            <li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-
-
-
-
-
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Swiper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <!-- <script>
-const toggleBtn = document.getElementById("themeToggle");
-const icon = toggleBtn.querySelector("i");
-
-// Page load pe saved theme check
-if (localStorage.getItem("theme") === "dark") {
-    document.body.classList.add("dark");
-    icon.classList.replace("fa-moon", "fa-sun");
-}
-
-toggleBtn.addEventListener("click", () => {
-    document.body.classList.toggle("dark");
-
-    if (document.body.classList.contains("dark")) {
-        icon.classList.replace("fa-moon", "fa-sun");
-        localStorage.setItem("theme", "dark");
-    } else {
-        icon.classList.replace("fa-sun", "fa-moon");
-        localStorage.setItem("theme", "light");
-    }
-});
-</script> -->
-
-    <script>
-    const toggleBtn = document.getElementById("themeToggle");
-    const icon = document.getElementById("themeIcon");
-
-    toggleBtn.addEventListener("click", function() {
-
-        document.body.classList.toggle("dark-mode");
-
-        if (document.body.classList.contains("dark-mode")) {
-            icon.src = "/assets/images/lightmood.png";
-            localStorage.setItem("theme", "dark");
-        } else {
-            icon.src = "/assets/images/darkmood.png";
-            localStorage.setItem("theme", "light");
-        }
-
-    });
-
-    // Page load par state restore
-    if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark-mode");
-        icon.src = "/assets/images/lightmood.png";
-    }
-    </script>
-    <script>
-    $(document).ready(function() {
-
-        $('.tab').click(function() {
-            $('.tab').removeClass('active');
-            $(this).addClass('active');
-        });
-
-        $('#priceRange').on('input', function() {
-            $('#priceVal').text('10,000 - 12,000');
-        });
-
-    });
-    </script>
-
-    <script>
-    var swiper = new Swiper(".mySwiper", {
-        slidesPerView: 7,
-        spaceBetween: 20,
-        autoplay: false,
-        loop: false,
-        // autoplay: {
-        //     delay: 2500,
-        // },
-        breakpoints: {
-            0: {
-                slidesPerView: 2
-            },
-            768: {
-                slidesPerView: 4
-            },
-            1024: {
-                slidesPerView: 6
-            }
-        }
-    });
-    </script>
-    <script>
-    var swiper = new Swiper(".carSwiper", {
-        slidesPerView: 4,
-        spaceBetween: 20,
-        loop: true,
-        autoplay: {
-            delay: 3000,
-            disableOnInteraction: false,
-        },
-        breakpoints: {
-            0: {
-                slidesPerView: 1
-            },
-            768: {
-                slidesPerView: 2
-            },
-            1024: {
-                slidesPerView: 4
-            },
-        }
-    });
-    </script>
-    <script>
-    const reviewSwiper = new Swiper(".review-swiper", {
-        slidesPerView: 3,
-        spaceBetween: 24,
-        loop: true,
-        speed: 5000,
-
-        autoplay: {
-            delay: 0,
-            disableOnInteraction: false,
-        },
-
-        breakpoints: {
-            0: {
-                slidesPerView: 1.2
-            },
-            768: {
-                slidesPerView: 2
-            },
-            1024: {
-                slidesPerView: 3
-            },
-        }
-    });
-
-    // hover pause
-    const reviewEl = document.querySelector('.review-swiper');
-    reviewEl.addEventListener('mouseenter', () => reviewSwiper.autoplay.stop());
-    reviewEl.addEventListener('mouseleave', () => reviewSwiper.autoplay.start());
-    </script>
+    <?php require_once(__DIR__ . '/../include/footer-script.php'); ?>
+    <?php require_once(__DIR__ . '/../include/footer.php'); ?>
 
 
 </body>

@@ -13,6 +13,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
 <link rel="stylesheet" href="<?php echo $prefix; ?>/assets/css/custom.css">
 <link rel="stylesheet" href="<?php echo $prefix; ?>/assets/css/responsive.css">
+<link rel="stylesheet" href="<?php echo $prefix; ?>/assets/css/user-auth.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link

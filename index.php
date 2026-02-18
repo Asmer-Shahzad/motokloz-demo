@@ -94,8 +94,12 @@
 
                                         <div class="swiper-slide">
                                             <div class="card">
+<<<<<<< HEAD
                                                 <img src="<?php echo $prefix;?>/assets/images/Auto.png"
                                                     class="img-fluid">
+=======
+                                                <img src="<?php echo $prefix; ?>/assets/images/Auto.png" class="img-fluid">
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
                                                 <span>24 vehicles</span>
                                                 <h4>Auto</h4>
                                             </div>
@@ -103,7 +107,11 @@
 
                                         <div class="swiper-slide">
                                             <div class="card">
+<<<<<<< HEAD
                                                 <img src="<?php echo $prefix;?>/assets/images/RV.png" class="img-fluid">
+=======
+                                                <img src="<?php echo $prefix; ?>/assets/images/RV.png" class="img-fluid">
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
                                                 <span>24 vehicles</span>
                                                 <h4>RV</h4>
                                             </div>
@@ -111,7 +119,11 @@
 
                                         <div class="swiper-slide">
                                             <div class="card">
+<<<<<<< HEAD
                                                 <img src="<?php echo $prefix;?>/assets/images/Motorcycle.png"
+=======
+                                                <img src="<?php echo $prefix; ?>/assets/images/Motorcycle.png"
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
                                                     class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>Motorcycle</h4>
@@ -120,7 +132,11 @@
 
                                         <div class="swiper-slide">
                                             <div class="card">
+<<<<<<< HEAD
                                                 <img src="<?php echo $prefix;?>/assets/images/Powersports.png"
+=======
+                                                <img src="<?php echo $prefix; ?>/assets/images/Powersports.png"
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
                                                     class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>Powersports</h4>
@@ -129,7 +145,11 @@
 
                                         <div class="swiper-slide">
                                             <div class="card">
+<<<<<<< HEAD
                                                 <img src="<?php echo $prefix;?>/assets/images/Heavy Truck.png"
+=======
+                                                <img src="<?php echo $prefix; ?>/assets/images/Heavy Truck.png"
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
                                                     class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>Heavy Truck</h4>
@@ -138,8 +158,12 @@
 
                                         <div class="swiper-slide">
                                             <div class="card">
+<<<<<<< HEAD
                                                 <img src="<?php echo $prefix;?>/assets/images/Trailers.png"
                                                     class="img-fluid">
+=======
+                                                <img src="<?php echo $prefix; ?>/assets/images/Trailers.png" class="img-fluid">
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
                                                 <span>24 vehicles</span>
                                                 <h4>Trailers</h4>
                                             </div>
@@ -147,7 +171,11 @@
 
                                         <div class="swiper-slide">
                                             <div class="card">
+<<<<<<< HEAD
                                                 <img src="<?php echo $prefix;?>/assets/images/Farm Equipment.png"
+=======
+                                                <img src="<?php echo $prefix; ?>/assets/images/Farm Equipment.png"
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
                                                     class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>Farm Equipment</h4>
@@ -221,7 +249,11 @@
                                 <!-- Card -->
                                 <div class="swiper-slide">
                                     <div class="car-img">
+<<<<<<< HEAD
                                         <img src="<?php echo $prefix;?>/assets/images/car1.png" class="img-fluid">
+=======
+                                        <img src="<?php echo $prefix; ?>/assets/images/car1.png" class="img-fluid">
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
                                         <span class="rating">⭐ 4.96 (672 reviews)</span>
                                     </div>
                                     <div class="car-content">
@@ -243,7 +275,11 @@
                                 <!-- Card -->
                                 <div class="swiper-slide">
                                     <div class="car-img">
+<<<<<<< HEAD
                                         <img src="<?php echo $prefix;?>/assets/images/car2.png" class="img-fluid">
+=======
+                                        <img src="<?php echo $prefix; ?>/assets/images/car2.png" class="img-fluid">
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
                                         <span class="rating">⭐ 4.96 (672 reviews)</span>
                                     </div>
                                     <div class="car-content">
@@ -265,7 +301,11 @@
                                 <!-- Card -->
                                 <div class="swiper-slide">
                                     <div class="car-img">
+<<<<<<< HEAD
                                         <img src="<?php echo $prefix;?>/assets/images/car3.png" class="img-fluid">
+=======
+                                        <img src="<?php echo $prefix; ?>/assets/images/car3.png" class="img-fluid">
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
                                         <span class="rating">⭐ 4.96 (672 reviews)</span>
                                     </div>
                                     <div class="car-content">
@@ -287,7 +327,11 @@
                                 <!-- Card -->
                                 <div class="swiper-slide">
                                     <div class="car-img">
+<<<<<<< HEAD
                                         <img src="<?php echo $prefix;?>/assets/images/car3.png" class="img-fluid">
+=======
+                                        <img src="<?php echo $prefix; ?>/assets/images/car3.png" class="img-fluid">
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
                                         <span class="rating">⭐ 4.96 (672 reviews)</span>
                                     </div>
                                     <div class="car-content">
@@ -338,7 +382,11 @@
             </div>
         </div>
         <div class="car-wrap">
+<<<<<<< HEAD
             <img src="<?php echo $prefix;?>/assets/images/suv.png" class="car img-fluid" alt="car">
+=======
+            <img src="<?php echo $prefix; ?>/assets/images/suv.png" class="car img-fluid" alt="car">
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
         </div>
     </section>
 
@@ -348,7 +396,11 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 testimonials-content">
+<<<<<<< HEAD
                     <h4><img src="<?php echo $prefix;?>/assets/images/persons.png" class="img-fluid">Testimonials</h4>
+=======
+                    <h4><img src="<?php echo $prefix; ?>/assets/images/persons.png" class="img-fluid">Testimonials</h4>
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
                     <h2>What they say about us?</h2>
                     <p>Egestas massa lobortis tellus libero sit suspendisse id elementum. <br>Est sit massa libero neque
                         fermentum non.</p>
@@ -360,7 +412,11 @@
 
                     <div class="swiper-slide">
                         <div class="review-card">
+<<<<<<< HEAD
                             <img src="<?php echo $prefix;?>/assets/images/star.png" class="img-fluid">
+=======
+                            <img src="<?php echo $prefix; ?>/assets/images/star.png" class="img-fluid">
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
 
                             <div class="review-user">
                                 <h4>Sarah M.</h4>
@@ -376,7 +432,11 @@
 
                     <div class="swiper-slide">
                         <div class="review-card">
+<<<<<<< HEAD
                             <img src="<?php echo $prefix;?>/assets/images/star.png" class="img-fluid">
+=======
+                            <img src="<?php echo $prefix; ?>/assets/images/star.png" class="img-fluid">
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
 
                             <div class="review-user">
                                 <h4>Alex K.</h4>
@@ -392,7 +452,11 @@
 
                     <div class="swiper-slide">
                         <div class="review-card">
+<<<<<<< HEAD
                             <img src="<?php echo $prefix;?>/assets/images/star.png" class="img-fluid">
+=======
+                            <img src="<?php echo $prefix; ?>/assets/images/star.png" class="img-fluid">
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
 
                             <div class="review-user">
                                 <h4>James L.</h4>
@@ -408,7 +472,11 @@
 
                     <div class="swiper-slide">
                         <div class="review-card">
+<<<<<<< HEAD
                             <img src="<?php echo $prefix;?>/assets/images/star.png" class="img-fluid">
+=======
+                            <img src="<?php echo $prefix; ?>/assets/images/star.png" class="img-fluid">
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
 
                             <div class="review-user">
                                 <h4>James L.</h4>
@@ -425,7 +493,11 @@
 
                     <div class="swiper-slide">
                         <div class="review-card">
+<<<<<<< HEAD
                             <img src="<?php echo $prefix;?>/assets/images/star.png" class="img-fluid">
+=======
+                            <img src="<?php echo $prefix; ?>/assets/images/star.png" class="img-fluid">
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
 
                             <div class="review-user">
                                 <h4>James L.</h4>
@@ -441,7 +513,11 @@
 
                     <div class="swiper-slide">
                         <div class="review-card">
+<<<<<<< HEAD
                             <img src="<?php echo $prefix;?>/assets/images/star.png" class="img-fluid">
+=======
+                            <img src="<?php echo $prefix; ?>/assets/images/star.png" class="img-fluid">
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
 
                             <div class="review-user">
                                 <h4>James L.</h4>

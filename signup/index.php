@@ -2,15 +2,26 @@
 <html>
 
 <head>
+<<<<<<< HEAD
     <title>Motokloz</title>
     <?php include 'include/header-script.php'; ?>
+=======
+    <title>Sign Up</title>
+    <?php require_once(__DIR__ . '/../include/header-script.php'); ?>
+
+
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
 </head>
 
 <body>
 
+<<<<<<< HEAD
 
     <?php include 'include/header.php'; ?>
 
+=======
+    <?php require_once(__DIR__ . '/../include/header.php'); ?>
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
 
     <section class="auth-section">
         <div class="container">
@@ -19,7 +30,7 @@
                 <!-- Image -->
                 <div class="col-lg-6 d-none d-lg-block">
                     <div class="auth-image">
-                        <img src="/assets/images/truck.png" alt="truck">
+                        <img src="<?php echo $prefix; ?>/assets/images/truck.png" alt="truck">
                     </div>
                 </div>
 
@@ -33,28 +44,28 @@
                         <p>Motokloz your one-stop-shop for all your car buying needs!</p>
                         <form action="#" id="signup-form" class="user-form">
                             <div class="form-group">
-                                <img src="/assets/images/userlogin.png" alt="">
+                                <img src="<?php echo $prefix; ?>/assets/images/userlogin.png" alt="">
                                 <input type="text" class="form-control" placeholder="Username">
                             </div>
 
                             <div class="form-group">
-                                <img src="/assets/images/Vector.png" alt="">
+                                <img src="<?php echo $prefix; ?>/assets/images/Vector.png" alt="">
                                 <input type="email" class="form-control" placeholder="Email">
                             </div>
 
                             <div class="form-group">
-                                <img src="/assets/images/password.png" alt="">
+                                <img src="<?php echo $prefix; ?>/assets/images/password.png" alt="">
                                 <input type="password" class="form-control" placeholder="****************">
                             </div>
 
                             <div class="form-group">
-                                <img src="/assets/images/password.png" alt="">
+                                <img src="<?php echo $prefix; ?>/assets/images/password.png" alt="">
                                 <input type="password" class="form-control" placeholder="****************">
                             </div>
 
                             <button class="btn btn-auth d-flex align-items-center justify-content-center gap-2">
                                 Sign Up
-                                <img src="/assets/images/bttnarrow.png" alt=" arrow" width="18">
+                                <img src="<?php echo $prefix; ?>/assets/images/bttnarrow.png" alt=" arrow" width="18">
                             </button>
                         </form>
 
@@ -74,8 +85,13 @@
 
 
 
+<<<<<<< HEAD
     <?php include 'include/footer.php'; ?>
 
+=======
+     <?php require_once(__DIR__ . '/../include/footer-script.php'); ?>
+<?php require_once(__DIR__ . '/../include/footer.php'); ?>
+>>>>>>> 173c07343e1656739d8fcad33e2dee965a6c65cf
 
     <?php include 'include/footer-script.php'; ?>
 </body>

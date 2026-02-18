@@ -36,10 +36,10 @@ toggleBtn.addEventListener("click", () => {
         document.body.classList.toggle("dark-mode");
 
         if (document.body.classList.contains("dark-mode")) {
-            icon.src = "/assets/images/lightmood.png";
+            icon.src = "<?php echo $prefix; ?>/assets/images/lightmood.png";
             localStorage.setItem("theme", "dark");
         } else {
-            icon.src = "/assets/images/darkmood.png";
+            icon.src = "<?php echo $prefix; ?>/assets/images/darkmood.png";
             localStorage.setItem("theme", "light");
         }
 
@@ -48,7 +48,7 @@ toggleBtn.addEventListener("click", () => {
     // Page load par state restore
     if (localStorage.getItem("theme") === "dark") {
         document.body.classList.add("dark-mode");
-        icon.src = "/assets/images/lightmood.png";
+        icon.src = "<?php echo $prefix; ?>/assets/images/lightmood.png";
     }
     </script>
     <script>
