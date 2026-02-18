@@ -989,7 +989,6 @@
     }
     </style>
 
-
     <?php require_once(__DIR__ . '/../include/footer-script.php'); ?>
     <?php require_once(__DIR__ . '/../include/footer.php'); ?>
 
