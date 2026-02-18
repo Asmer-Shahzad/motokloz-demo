@@ -14,7 +14,7 @@
             <div class="footer-mid">
                 <div class="row">
                     <div class="col-lg-5">
-                        <img src="/assets/images/darklogo.png" class="img-fluid" alt="Motokloz Logo">
+                        <img src="<?php echo $prefix; ?>/assets/images/darklogo.png" class="img-fluid" alt="Motokloz Logo">
                         <ul>
                             <li><i class="fa-sharp fa-solid fa-location-dot"></i><a href="#">2356 Oakwood Drive, Suite
                                     18, San Francisco, California 94111, US</a></li>

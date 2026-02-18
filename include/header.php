@@ -19,7 +19,7 @@
                     <div class="col-lg-8">
                         <nav class="navbar navbar-expand-lg">
                             <!-- <a class="navbar-brand" href="/">
-                            <img src="/assets/images/logo.png" class="img-fluid" alt="Logo">
+                            <img src="<?php echo $prefix; ?>/assets/images/logo.png" class="img-fluid" alt="Logo">
                         </a> -->
                             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -76,11 +76,11 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-6">
-                        <img src="/assets/images/darklogo.png" class="logo logo-dark" alt="Motokloz Logo">
-                        <img src="/assets/images/lightlogo.png" class="logo logo-light"
+                        <img src="<?php echo $prefix; ?>/assets/images/darklogo.png" class="logo logo-dark" alt="Motokloz Logo">
+                        <img src="<?php echo $prefix; ?>/assets/images/lightlogo.png" class="logo logo-light"
                             alt="Motokloz Logo">
                         <button id="themeToggle" aria-label="Toggle theme">
-                            <img id="themeIcon" src="/assets/images/darkmood.png" alt="Theme toggle" />
+                            <img id="themeIcon" src="<?php echo $prefix; ?>/assets/images/darkmood.png" alt="Theme toggle" />
                         </button>
                     </div>
                     <div class="col-lg-6 btn-header">
@@ -96,7 +96,7 @@
                         <div class="logo-o">Borrow
                             <span class="speed-line"></span>
                         </div>
-                        <img src="/assets/images/user.png" class="img-fluid">
+                        <img src="<?php echo $prefix; ?>/assets/images/user.png" class="img-fluid">
                     </div>
                 </div>
             </div>
