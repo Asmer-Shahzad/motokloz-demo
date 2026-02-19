@@ -617,7 +617,6 @@
     /* Base */
     .account-setting {
         font-family: "Vend Sans", sans-serif;
-        color: #222;
     }
 
     /* Breadcrumb */
@@ -833,7 +832,6 @@
     /* ========== BASE ========== */
     .account-setting {
         font-family: "Vend Sans", sans-serif;
-        color: #222;
     }
 
     /* Headings */
