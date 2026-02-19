@@ -3,7 +3,7 @@
     <!-- Prev -->
     <li class="page-item">
         <a class="page-link page-square" href="#">
-            <img src="<?php echo $prefix; ?>/assets/images/vector (5).png" alt="Next"
+            <img src="<?php echo $prefix; ?>/assets/images/Vector (5).png" alt="Next"
                 style="width:20px; height:20px; object-fit: scale-down;">
         </a>
     </li>
@@ -27,7 +27,7 @@
     <!-- Next -->
     <li class="page-item">
         <a class="page-link page-square" href="#">
-            <img src="<?php echo $prefix; ?>/assets/images/vector (6).png" alt="Next"
+            <img src="<?php echo $prefix; ?>/assets/images/Vector (6).png" alt="Next"
                 style="width:20px; height:20px; object-fit: scale-down;">
         </a>
 
