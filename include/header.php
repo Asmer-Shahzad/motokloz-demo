@@ -29,25 +29,25 @@
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav  mb-2 mb-lg-0">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/motokloz-demo/car-listing/">Auto</a>
+                                    <a class="nav-link" href="<?php echo $prefix; ?>/car-listing/">Auto</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/pricing/">RV</a>
+                                    <a class="nav-link" >RV</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/aboutus/">Motorcycle</a>
+                                    <a class="nav-link" >Motorcycle</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/contact-us/">Powersports</a>
+                                    <a class="nav-link" >Powersports</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/contact-us/">Heavy Truck</a>
+                                    <a class="nav-link" >Heavy Truck</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/contact-us/">Trailers</a>
+                                    <a class="nav-link" >Trailers</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/contact-us/">Farm Equipment</a>
+                                    <a class="nav-link" >Farm Equipment</a>
                                 </li>
                             </ul>
                             <div class="mobile-btn">
@@ -76,7 +76,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-6">
-                    <a href="/motokloz-demo/" class="site-logo">
+                    <a href="<?php echo $prefix; ?>/" class="site-logo">
                         <img src="<?php echo $prefix; ?>/assets/images/darklogo.png" class="logo logo-dark"
                             alt="Motokloz Logo">
                         <img src="<?php echo $prefix; ?>/assets/images/lightlogo.png" class="logo logo-light"
@@ -102,7 +102,7 @@
                         <span class="speed-line"></span>
                     </div>
                     <div class="user-profile-btn">
-                        <a href="/motokloz-demo/agent-setting/">
+                        <a href="<?php echo $prefix; ?>/agent-setting/">
                             <img src="<?php echo $prefix; ?>/assets/images/user.png" class="img-fluid light-dark">
                         </a>
                     </div>

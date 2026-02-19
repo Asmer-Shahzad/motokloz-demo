@@ -93,7 +93,7 @@
                                     <div class="swiper-wrapper">
 
                                         <div class="swiper-slide">
-                                            <a href="/motokloz-demo/car-listing/" class="card">
+                                            <a href="<?php echo $prefix; ?>/car-listing/" class="card">
                                                 <img src="<?php echo $prefix; ?>/assets/images/Auto.png"
                                                     class="img-fluid">
                                                 <span>24 vehicles</span>
