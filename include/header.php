@@ -32,22 +32,22 @@
                                     <a class="nav-link" href="<?php echo $prefix; ?>/car-listing/">Auto</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/pricing/">RV</a>
+                                    <a class="nav-link" >RV</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/aboutus/">Motorcycle</a>
+                                    <a class="nav-link" >Motorcycle</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/contact-us/">Powersports</a>
+                                    <a class="nav-link" >Powersports</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/contact-us/">Heavy Truck</a>
+                                    <a class="nav-link" >Heavy Truck</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/contact-us/">Trailers</a>
+                                    <a class="nav-link" >Trailers</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/contact-us/">Farm Equipment</a>
+                                    <a class="nav-link" >Farm Equipment</a>
                                 </li>
                             </ul>
                             <div class="mobile-btn">
