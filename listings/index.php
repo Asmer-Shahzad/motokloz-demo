@@ -409,7 +409,7 @@
                                             </div>
 
                                         </div>
-                                        <div class="pagination mt-56">
+                                        <div class="pagination-section mt-56">
                                                 <?php require_once(__DIR__ . '/../include/pagination.php'); ?>
                                             </div>
                                     </div>
