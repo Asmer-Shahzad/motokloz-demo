@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Sign Up</title>
+    <title>Login</title>
     <?php require_once(__DIR__ . '/../include/header-script.php'); ?>
 
 
@@ -11,6 +11,8 @@
 <body>
 
     <?php require_once(__DIR__ . '/../include/header.php'); ?>
+
+
 
     <section class="auth-section">
         <div class="container">
@@ -74,8 +76,9 @@
 
 
 
-     <?php require_once(__DIR__ . '/../include/footer-script.php'); ?>
-<?php require_once(__DIR__ . '/../include/footer.php'); ?>
+    <?php require_once(__DIR__ . '/../include/footer-script.php'); ?>
+    <?php require_once(__DIR__ . '/../include/footer.php'); ?>
+
 
 </body>
 

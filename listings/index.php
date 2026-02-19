@@ -4,9 +4,8 @@
 <head>
     <title>Login</title>
     <?php require_once(__DIR__ . '/../include/header-script.php'); ?>
-
-
 </head>
+<?php $pageTitle = 'Listing'; ?>
 
 <body>
     <?php require_once(__DIR__ . '/../include/header.php'); ?>
@@ -85,7 +84,7 @@
                                                         fill="#737373" />
                                                 </svg>
                                             </div>
-                                            <div class="sort">
+                                            <!-- <div class="sort">
                                                 sort
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="8" height="4"
                                                     viewBox="0 0 8 4" fill="none">
@@ -130,7 +129,7 @@
                                                         </linearGradient>
                                                     </defs>
                                                 </svg>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                     <div class="listing-body">
@@ -410,12 +409,14 @@
                                             </div>
 
                                         </div>
+                                        <div class="pagination mt-56">
+                                                <?php require_once(__DIR__ . '/../include/pagination.php'); ?>
+                                            </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Sidebar -->
 
                 </div>
             </div>

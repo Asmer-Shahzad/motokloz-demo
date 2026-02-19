@@ -3,13 +3,13 @@
 
 <head>
     <title>Motokloz</title>
-    <?php include 'include/header-script.php';?>
+    <?php include 'include/header-script.php'; ?>
 </head>
 
 <body>
 
-    
-<?php include 'include/header.php';?>
+
+    <?php include 'include/header.php'; ?>
 
 
     <section class="banner-section">
@@ -85,7 +85,7 @@
 
                             </div>
 
-    
+
                             <div class="browse-slider">
                                 <h2>Browse By Type</h2>
                                 <p>Find The Perfect Ride For Any Occasion</p>
@@ -94,7 +94,8 @@
 
                                         <div class="swiper-slide">
                                             <div class="card">
-                                                <img src="<?php echo $prefix; ?>/assets/images/Auto.png" class="img-fluid">
+                                                <img src="<?php echo $prefix; ?>/assets/images/Auto.png"
+                                                    class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>Auto</h4>
                                             </div>
@@ -102,7 +103,8 @@
 
                                         <div class="swiper-slide">
                                             <div class="card">
-                                                <img src="<?php echo $prefix; ?>/assets/images/RV.png" class="img-fluid">
+                                                <img src="<?php echo $prefix; ?>/assets/images/RV.png"
+                                                    class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>RV</h4>
                                             </div>
@@ -137,7 +139,8 @@
 
                                         <div class="swiper-slide">
                                             <div class="card">
-                                                <img src="<?php echo $prefix; ?>/assets/images/Trailers.png" class="img-fluid">
+                                                <img src="<?php echo $prefix; ?>/assets/images/Trailers.png"
+                                                    class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>Trailers</h4>
                                             </div>
@@ -480,15 +483,16 @@
 
 
 
-    
 
 
 
 
 
-<?php include 'include/footer.php';?>
+
+    <?php include 'include/footer.php'; ?>
 
 
-<?php include 'include/footer-script.php';?>
+    <?php include 'include/footer-script.php'; ?>
 </body>
+
 </html>
