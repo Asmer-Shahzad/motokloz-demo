@@ -9,7 +9,6 @@
 </head>
 
 <body>
-
     <?php require_once(__DIR__ . '/../include/header.php'); ?>
 
     <div class="container listing-page my-4">
