@@ -269,8 +269,8 @@
 
     /* Content */
     .account-content {
-        border: 1px solid #eaeaea;
-        border-radius: 14px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
         padding: 22px 24px;
         background: var(--bg-color);
         color: var(--select-color);

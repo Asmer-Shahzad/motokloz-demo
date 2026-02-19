@@ -418,7 +418,7 @@
 
         .card-header {
             /* background: var(--bg-color); */
-            border-bottom: 1px solid #E4E6E8;
+            border-bottom: 1px solid var(--border-color);
             padding: 14px 16px;
         }
 
@@ -592,10 +592,11 @@
             gap: 12px;
             padding: 12px 16px;
             margin: 10px;
-            border: 1px solid #E7EDF2;
+            border: 1px solid var(--border-color);
             color: var(--select-color);
             border-radius: 6px;
         }
+        
 
         .purchase-img {
             width: 70px;
@@ -613,7 +614,6 @@
         /* Base */
         .account-setting {
             font-family: "Vend Sans", sans-serif;
-            color: #222;
         }
 
         /* Breadcrumb */
@@ -829,7 +829,6 @@
         /* ========== BASE ========== */
         .account-setting {
             font-family: "Vend Sans", sans-serif;
-            color: #222;
         }
 
         /* Headings */
@@ -852,7 +851,7 @@
         /* Cards */
         .dashboard-card {
             border-radius: 10px;
-            border: 1px solid #E4E6E8;
+            border: 1px solid var(--border-color);
             background: var(--bg-color);
         }
 
@@ -932,14 +931,7 @@
         }
 
         /* Purchase item */
-        .purchase-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border: 1px solid #E7EDF2;
-            border-radius: 6px;
-        }
+
 
         /* Offer */
         .offer-item {

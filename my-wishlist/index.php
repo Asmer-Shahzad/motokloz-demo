@@ -28,7 +28,7 @@
             <div class="col-lg-9 wishlist-sec">
 
                 <!-- Wishlist Header Bar -->
-                <div class="wishlist-header d-flex justify-content-between align-items-center px-3 px-md-4 py-3 mb-4">
+                <div class="wishlist-header d-flex justify-content-between align-items-center px-3 px-md-4 py-3">
 
                     <h5 class=" search-head">My Wishlist</h5>
 
@@ -56,258 +56,272 @@
                     </div>
 
                 </div>
+                <div class="wishlist-body">
+                    <!-- Wishlist Items -->
+                    <div class="wishlist-items">
 
-                <!-- Wishlist Items -->
-                <div class="wishlist-items">
-
-                    <!-- Item 1 -->
-                    <div class=" wishlist-card mb-4">
-                        <div class="row g-0">
-                            <div class="col-md-5">
-                                <img src="<?php echo $prefix; ?>/assets/images/wish-1 (1).png"
-                                    class="img-fluid rounded-start wishlist-img" alt="Mini Cooper S Hardtop 2 Door">
-                            </div>
-                            <div class="col-md-7 cards-wish-all">
-                                <div class="card-body">
-
-                                    <div class="d-flex justify-content-between align-items-start mb-2 badge-main">
-
-                                        <span class="discount-badge">-25%</span>
-                                    </div>
-                                    <div class="rating-all d-flex align-items-center gap-2">
-                                        <img src="<?php echo $prefix; ?>/assets/images/Vector (12).png" alt="rating"
-                                            width="16">
-                                        <p class="rating-all-p mb-0">
-                                            <strong>4.96</strong> (672 reviews)
-                                        </p>
-                                    </div>
-
-
-                                    <h5 class="card-title fw-bold">Mini Cooper S Hardtop 2 Door</h5>
-
-                                    <p class="card-text location mb-3">
-                                        <img src="<?php echo $prefix; ?>/assets/images/Vector (11).png" class="icon">
-                                        Manchester,
-                                        England
-                                    </p>
-
-                                    <div class="features d-flex flex-wrap gap-3 mb-3">
-
-
-                                        <span class="feature">
-                                            <img src="<?php echo $prefix; ?>/assets/images/icon01.png" class="icon">
-                                            Unlimited mileage
-                                        </span>
-
-                                        <span class="feature">
-                                            <img src="<?php echo $prefix; ?>/assets/images/icon03.png" class="icon">
-                                            Automatic
-                                        </span>
-
-                                        <span class="feature">
-                                            <img src="<?php echo $prefix; ?>/assets/images/icon05.png" class="icon"> 3
-                                            Large
-                                            bags
-                                        </span>
-
-                                        <span class="feature">
-                                            <img src="<?php echo $prefix; ?>/assets/images/icon02.png" class="icon">
-                                            Diesel
-                                        </span>
-
-                                        <span class="feature">
-                                            <img src="<?php echo $prefix; ?>/assets/images/icon04.png" class="icon"> 7
-                                            seats
-
-                                        </span>
-
-                                        <span class="feature suv-badge">
-                                            <img src="<?php echo $prefix; ?>/assets/images/icon06.png" class="icon">
-                                            SUVs
-                                        </span>
-
-
-                                    </div>
-
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="price-wrap">
-                                            <span class="text-span">From</span>
-                                            <span class="price-span">$202.87</span>
-                                            <span class="text-span">/ USD</span>
-                                        </div>
-                                        <button class=" book-btn">Book Now</button>
-                                    </div>
-
+                        <!-- Item 1 -->
+                        <div class=" wishlist-card mb-4">
+                            <div class="row g-0">
+                                <div class="col-md-5">
+                                    <img src="<?php echo $prefix; ?>/assets/images/wish-1 (1).png"
+                                        class="img-fluid rounded-start wishlist-img" alt="Mini Cooper S Hardtop 2 Door">
                                 </div>
-                            </div>
+                                <div class="col-md-7 cards-wish-all">
+                                    <div class="card-body">
 
-                        </div>
-                    </div>
+                                        <div class="d-flex justify-content-between align-items-start mb-2 badge-main">
 
-                    <!-- Item 1 -->
-                    <div class=" wishlist-card mb-4">
-                        <div class="row g-0">
-                            <div class="col-md-5">
-                                <img src="<?php echo $prefix; ?>/assets/images/wish-1 (1).png"
-                                    class="img-fluid rounded-start wishlist-img" alt="Mini Cooper S Hardtop 2 Door">
-                            </div>
-                            <div class="col-md-7 cards-wish-all">
-                                <div class="card-body">
-
-                                    <div class="d-flex justify-content-between align-items-start mb-2 badge-main">
-                                        <span class="discount-badge">-25%</span>
-                                    </div>
-
-                                    <div class="rating-all d-flex align-items-center gap-2">
-                                        <img src="<?php echo $prefix; ?>/assets/images/Vector (12).png" alt="rating"
-                                            width="16">
-                                        <p class="rating-all-p mb-0">
-                                            <strong>4.96</strong> (672 reviews)
-                                        </p>
-                                    </div>
-
-                                    <h5 class="card-title fw-bold">Mini Cooper S Hardtop 2 Door</h5>
-
-                                    <p class="card-text location mb-3">
-                                        <img src="<?php echo $prefix; ?>/assets/images/Vector (11).png" class="icon">
-                                        Manchester,
-                                        England
-                                    </p>
-                                    <div class="features d-flex flex-wrap gap-3 mb-3">
-
-
-                                        <span class="feature">
-                                            <img src="<?php echo $prefix; ?>/assets/images/icon01.png" class="icon">
-                                            Unlimited mileage
-                                        </span>
-
-                                        <span class="feature">
-                                            <img src="<?php echo $prefix; ?>/assets/images/icon03.png" class="icon">
-                                            Automatic
-                                        </span>
-
-                                        <span class="feature">
-                                            <img src="<?php echo $prefix; ?>/assets/images/icon05.png" class="icon">
-                                            Diesel
-                                        </span>
-
-                                        <span class="feature">
-                                            <img src="<?php echo $prefix; ?>/assets/images/icon02.png" class="icon"> 7
-                                            seats
-                                        </span>
-
-                                        <span class="feature">
-                                            <img src="<?php echo $prefix; ?>/assets/images/icon04.png" class="icon"> 3
-                                            Large bags
-                                        </span>
-
-                                        <span class="feature suv-badge">
-                                            <img src="<?php echo $prefix; ?>/assets/images/icon06.png" class="icon">
-                                            SUVs
-                                        </span>
-
-
-                                    </div>
-
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="price-wrap">
-                                            <span class="text-span">From</span>
-                                            <span class="price-span">$202.87</span>
-                                            <span class="text-span">/ USD</span>
+                                            <span class="discount-badge">-25%</span>
                                         </div>
-                                        <button class=" book-btn">Book Now</button>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <!-- Item 1 -->
-                    <div class=" wishlist-card mb-4">
-                        <div class="row g-0">
-                            <div class="col-md-5">
-                                <img src="<?php echo $prefix; ?>/assets/images/wish-1 (1).png"
-                                    class="img-fluid rounded-start wishlist-img" alt="Mini Cooper S Hardtop 2 Door">
-                            </div>
-                            <div class="col-md-7 cards-wish-all">
-                                <div class="card-body">
-
-                                    <div class="d-flex justify-content-between align-items-start mb-2 badge-main">
-                                        <span class="discount-badge">-25%</span>
-                                    </div>
-
-                                    <div class="rating-all d-flex align-items-center gap-2">
-                                        <img src="<?php echo $prefix; ?>/assets/images/Vector (12).png" alt="rating"
-                                            width="16">
-                                        <p class="rating-all-p mb-0">
-                                            <strong>4.96</strong> (672 reviews)
-                                        </p>
-                                    </div>
-
-                                    <h5 class="card-title fw-bold">Mini Cooper S Hardtop 2 Door</h5>
-
-                                    <p class="card-text location mb-3">
-                                        <img src="<?php echo $prefix; ?>/assets/images/Vector (11).png" class="icon">
-                                        Manchester,
-                                        England
-                                    </p>
-
-                                    <div class="features d-flex flex-wrap gap-3 mb-3">
-
-
-                                        <span class="feature">
-                                            <img src="<?php echo $prefix; ?>/assets/images/icon01.png" class="icon">
-                                            Unlimited mileage
-                                        </span>
-
-                                        <span class="feature">
-                                            <img src="<?php echo $prefix; ?>/assets/images/icon03.png" class="icon">
-                                            Automatic
-                                        </span>
-
-                                        <span class="feature">
-                                            <img src="<?php echo $prefix; ?>/assets/images/icon05.png" class="icon">
-                                            Diesel
-                                        </span>
-
-                                        <span class="feature">
-                                            <img src="<?php echo $prefix; ?>/assets/images/icon02.png" class="icon"> 7
-                                            seats
-                                        </span>
-
-                                        <span class="feature">
-                                            <img src="<?php echo $prefix; ?>/assets/images/icon04.png" class="icon"> 3
-                                            Large bags
-                                        </span>
-
-                                        <span class="feature suv-badge">
-                                            <img src="<?php echo $prefix; ?>/assets/images/icon06.png" class="icon">
-                                            SUVs
-                                        </span>
-
-
-                                    </div>
-
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="price-wrap">
-                                            <span class="text-span">From</span>
-                                            <span class="price-span">$202.87</span>
-                                            <span class="text-span">/ USD</span>
+                                        <div class="rating-all d-flex align-items-center gap-2">
+                                            <img src="<?php echo $prefix; ?>/assets/images/Vector (12).png" alt="rating"
+                                                width="16">
+                                            <p class="rating-all-p mb-0">
+                                                <strong>4.96</strong> (672 reviews)
+                                            </p>
                                         </div>
 
-                                        <button class=" book-btn">Book Now</button>
+
+                                        <h5 class="card-title fw-bold">Mini Cooper S Hardtop 2 Door</h5>
+
+                                        <p class="card-text location mb-3">
+                                            <img src="<?php echo $prefix; ?>/assets/images/Vector (11).png"
+                                                class="icon light-dark">
+                                            Manchester,
+                                            England
+                                        </p>
+
+                                        <div class="features d-flex flex-wrap gap-3 mb-3">
+
+
+                                            <span class="feature">
+                                                <img src="<?php echo $prefix; ?>/assets/images/icon01.png" class="icon light-dark">
+                                                Unlimited mileage
+                                            </span>
+
+                                            <span class="feature">
+                                                <img src="<?php echo $prefix; ?>/assets/images/icon03.png" class="icon light-dark">
+                                                Automatic
+                                            </span>
+
+                                            <span class="feature">
+                                                <img src="<?php echo $prefix; ?>/assets/images/icon05.png" class="icon light-dark">
+                                                3
+                                                Large
+                                                bags
+                                            </span>
+
+                                            <span class="feature">
+                                                <img src="<?php echo $prefix; ?>/assets/images/icon02.png" class="icon light-dark">
+                                                Diesel
+                                            </span>
+
+                                            <span class="feature">
+                                                <img src="<?php echo $prefix; ?>/assets/images/icon04.png" class="icon light-dark">
+                                                7
+                                                seats
+
+                                            </span>
+
+                                            <span class="feature suv-badge">
+                                                <img src="<?php echo $prefix; ?>/assets/images/icon06.png" class="icon light-dark">
+                                                SUVs
+                                            </span>
+
+
+                                        </div>
+
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="price-wrap">
+                                                <span class="text-span">From</span>
+                                                <span class="price-span">$202.87</span>
+                                                <span class="text-span">/ USD</span>
+                                            </div>
+                                            <button class=" book-btn">Book Now</button>
+                                        </div>
+
                                     </div>
-
                                 </div>
+
                             </div>
-
                         </div>
-                    </div>
 
+                        <!-- Item 1 -->
+                        <div class=" wishlist-card mb-4">
+                            <div class="row g-0">
+                                <div class="col-md-5">
+                                    <img src="<?php echo $prefix; ?>/assets/images/wish-1 (1).png"
+                                        class="img-fluid rounded-start wishlist-img" alt="Mini Cooper S Hardtop 2 Door">
+                                </div>
+                                <div class="col-md-7 cards-wish-all">
+                                    <div class="card-body">
+
+                                        <div class="d-flex justify-content-between align-items-start mb-2 badge-main">
+                                            <span class="discount-badge">-25%</span>
+                                        </div>
+
+                                        <div class="rating-all d-flex align-items-center gap-2">
+                                            <img src="<?php echo $prefix; ?>/assets/images/Vector (12).png" alt="rating"
+                                                width="16">
+                                            <p class="rating-all-p mb-0">
+                                                <strong>4.96</strong> (672 reviews)
+                                            </p>
+                                        </div>
+
+                                        <h5 class="card-title fw-bold">Mini Cooper S Hardtop 2 Door</h5>
+
+                                        <p class="card-text location mb-3">
+                                            <img src="<?php echo $prefix; ?>/assets/images/Vector (11).png"
+                                                class="icon light-dark">
+                                            Manchester,
+                                            England
+                                        </p>
+                                        <div class="features d-flex flex-wrap gap-3 mb-3">
+
+
+                                            <span class="feature">
+                                                <img src="<?php echo $prefix; ?>/assets/images/icon01.png" class="icon light-dark">
+                                                Unlimited mileage
+                                            </span>
+
+                                            <span class="feature">
+                                                <img src="<?php echo $prefix; ?>/assets/images/icon03.png" class="icon light-dark">
+                                                Automatic
+                                            </span>
+
+                                            <span class="feature">
+                                                <img src="<?php echo $prefix; ?>/assets/images/icon05.png" class="icon light-dark">
+                                                Diesel
+                                            </span>
+
+                                            <span class="feature">
+                                                <img src="<?php echo $prefix; ?>/assets/images/icon02.png" class="icon light-dark">
+                                                7
+                                                seats
+                                            </span>
+
+                                            <span class="feature">
+                                                <img src="<?php echo $prefix; ?>/assets/images/icon04.png" class="icon light-dark">
+                                                3
+                                                Large bags
+                                            </span>
+
+                                            <span class="feature suv-badge">
+                                                <img src="<?php echo $prefix; ?>/assets/images/icon06.png" class="icon light-dark">
+                                                SUVs
+                                            </span>
+
+
+                                        </div>
+
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="price-wrap">
+                                                <span class="text-span">From</span>
+                                                <span class="price-span">$202.87</span>
+                                                <span class="text-span">/ USD</span>
+                                            </div>
+                                            <button class=" book-btn">Book Now</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Item 1 -->
+                        <div class=" wishlist-card mb-4">
+                            <div class="row g-0">
+                                <div class="col-md-5">
+                                    <img src="<?php echo $prefix; ?>/assets/images/wish-1 (1).png"
+                                        class="img-fluid rounded-start wishlist-img" alt="Mini Cooper S Hardtop 2 Door">
+                                </div>
+                                <div class="col-md-7 cards-wish-all">
+                                    <div class="card-body">
+
+                                        <div class="d-flex justify-content-between align-items-start mb-2 badge-main">
+                                            <span class="discount-badge">-25%</span>
+                                        </div>
+
+                                        <div class="rating-all d-flex align-items-center gap-2">
+                                            <img src="<?php echo $prefix; ?>/assets/images/Vector (12).png" alt="rating"
+                                                width="16">
+                                            <p class="rating-all-p mb-0">
+                                                <strong>4.96</strong> (672 reviews)
+                                            </p>
+                                        </div>
+
+                                        <h5 class="card-title fw-bold">Mini Cooper S Hardtop 2 Door</h5>
+
+                                        <p class="card-text location mb-3">
+                                            <img src="<?php echo $prefix; ?>/assets/images/Vector (11).png"
+                                                class="icon light-dark">
+                                            Manchester,
+                                            England
+                                        </p>
+
+                                        <div class="features d-flex flex-wrap gap-3 mb-3">
+
+
+                                            <span class="feature">
+                                                <img src="<?php echo $prefix; ?>/assets/images/icon01.png" class="icon light-dark">
+                                                Unlimited mileage
+                                            </span>
+
+                                            <span class="feature">
+                                                <img src="<?php echo $prefix; ?>/assets/images/icon03.png" class="icon light-dark">
+                                                Automatic
+                                            </span>
+
+                                            <span class="feature">
+                                                <img src="<?php echo $prefix; ?>/assets/images/icon05.png" class="icon light-dark">
+                                                Diesel
+                                            </span>
+
+                                            <span class="feature">
+                                                <img src="<?php echo $prefix; ?>/assets/images/icon02.png" class="icon light-dark">
+                                                7
+                                                seats
+                                            </span>
+
+                                            <span class="feature">
+                                                <img src="<?php echo $prefix; ?>/assets/images/icon04.png" class="icon light-dark">
+                                                3
+                                                Large bags
+                                            </span>
+
+                                            <span class="feature suv-badge">
+                                                <img src="<?php echo $prefix; ?>/assets/images/icon06.png" class="icon light-dark">
+                                                SUVs
+                                            </span>
+
+
+                                        </div>
+
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="price-wrap">
+                                                <span class="text-span">From</span>
+                                                <span class="price-span">$202.87</span>
+                                                <span class="text-span">/ USD</span>
+                                            </div>
+
+                                            <button class=" book-btn">Book Now</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="pagination-section mt-56">
+                        <?php require_once(__DIR__ . '/../include/pagination.php'); ?>
+                    </div>      
                 </div>
-                <?php require_once(__DIR__ . '/../include/pagination.php'); ?>
+
+
 
 
             </div>
@@ -325,7 +339,7 @@
         .price-span {
             font-size: 24px;
             line-height: 32px;
-            color: #101010 !important;
+            color: var(--select-color) !important;
         }
 
         .text-span {
@@ -358,12 +372,12 @@
         }
 
         .cards-wish-all {
-            height: auto;
-            flex: 1 !important;
-            background: #ffffff;
-            border-radius: 12px;
-            z-index: 2;
-        }
+    height: auto;
+    flex: 1 !important;
+    background: var(--banner-bg-color);
+    border-radius: 12px;
+    z-index: 2;
+}
 
         .dark-invert {
             filter: none;
@@ -425,7 +439,7 @@
             display: flex;
             align-items: center;
             font-size: 14px;
-            color: #555;
+                color: #999999;
         }
 
         .discount-badge {
@@ -437,7 +451,7 @@
         }
 
         .location {
-            color: #666;
+color: #999999;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -454,7 +468,7 @@
         }
 
         .wishlist-sec {
-            border: 1px solid #E4E6E8;
+            border: 1px solid var(--border-color);
             background: var(--bg-color);
             padding: 0;
             border-radius: 6px;
@@ -469,8 +483,7 @@
 
         .wishlist-header {
             background: #10101008;
-
-            border: 1px solid #E4E6E8
+            border-bottom: 1px solid var(--border-color);
         }
 
         .wishlist-header .form-control {
@@ -643,11 +656,11 @@
         }
 
         .wishlist-card {
-            border: 1px solid #DDE1DE;
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             overflow: hidden;
-            background: #fff;
-            margin: 25px 20px;
+            /* background: #fff; */
+            /* margin: 25px 20px; */    
             position: relative;
         }
 
@@ -683,7 +696,7 @@
             margin-bottom: 14px;
             line-height: 32px;
             font-weight: 700;
-            color: #101010;
+            color: var(--select-color);
         }
 
         .location {
@@ -704,13 +717,6 @@
             object-fit: scale-down;
         }
 
-        .suv-badge {
-
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 13px;
-            color: #333;
-        }
 
         .price {
             font-size: 18px;

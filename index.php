@@ -93,66 +93,66 @@
                                     <div class="swiper-wrapper">
 
                                         <div class="swiper-slide">
-                                            <div class="card">
+                                            <a href="/motokloz-demo/car-listing/" class="card">
                                                 <img src="<?php echo $prefix; ?>/assets/images/Auto.png"
                                                     class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>Auto</h4>
-                                            </div>
+                                            </a>
                                         </div>
 
                                         <div class="swiper-slide">
-                                            <div class="card">
+                                            <a href="#" class="card">
                                                 <img src="<?php echo $prefix; ?>/assets/images/RV.png"
                                                     class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>RV</h4>
-                                            </div>
+                                            </a>
                                         </div>
 
                                         <div class="swiper-slide">
-                                            <div class="card">
+                                            <a href="#" class="card">
                                                 <img src="<?php echo $prefix; ?>/assets/images/Motorcycle.png"
                                                     class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>Motorcycle</h4>
-                                            </div>
+                                            </a>
                                         </div>
 
                                         <div class="swiper-slide">
-                                            <div class="card">
+                                            <a href="#" class="card">
                                                 <img src="<?php echo $prefix; ?>/assets/images/Powersports.png"
                                                     class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>Powersports</h4>
-                                            </div>
+                                            </a>
                                         </div>
 
                                         <div class="swiper-slide">
-                                            <div class="card">
+                                            <a href="#" class="card">
                                                 <img src="<?php echo $prefix; ?>/assets/images/Heavy Truck.png"
                                                     class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>Heavy Truck</h4>
-                                            </div>
+                                            </a>
                                         </div>
 
                                         <div class="swiper-slide">
-                                            <div class="card">
+                                            <a href="#" class="card">
                                                 <img src="<?php echo $prefix; ?>/assets/images/Trailers.png"
                                                     class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>Trailers</h4>
-                                            </div>
+                                            </a>
                                         </div>
 
                                         <div class="swiper-slide">
-                                            <div class="card">
+                                            <a href="#" class="card">
                                                 <img src="<?php echo $prefix; ?>/assets/images/Farm Equipment.png"
                                                     class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>Farm Equipment</h4>
-                                            </div>
+                                            </a>
                                         </div>
 
                                     </div>

@@ -250,13 +250,14 @@ select {
 
 /* Price */
 .price input {
-  width: 160px;
+    width: 160px;
+    accent-color: #f98e00;
 }
 
 .price-value {
   font-size: 13px;
   margin-top: 6px;
-  color: #ddd;
+  color: var(--select-color);
 }
 
 /* Button */
@@ -995,7 +996,7 @@ footer.footer {
 }
 
 .car-listing-bg {
-  background: url(`/assets/images/car-listing-banner.png);
+  background: url('../images/car-listing-banner.png');
   margin: 20px 0 0 0;
   padding: 180px 0 0px 0;
   border-radius: 20px;
@@ -1051,7 +1052,7 @@ section.banner-car-listing {
 
 /* Sidebar Complete Styling */
 .complete-sidebar {
-  border: 1px solid #eeeeee;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 25px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
@@ -1142,11 +1143,14 @@ section.banner-car-listing {
 
 /* MODERN GRID CARD (image_9a84e7 style) */
 .modern-car-card {
-  background-color: #ffffff;
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid #eeeeee;
+  border: 1px solid var(--border-color);
   transition: all 0.3s ease;
+}
+
+.wishlist-body {
+    padding: 18px 20px;
 }
 
 .modern-car-card:hover {
@@ -1237,7 +1241,7 @@ section.banner-car-listing {
   margin-top: 15px;
 }
 
-.price-value {
+.car-price-block .price-value {
   font-size: 28px;
   font-weight: 800;
   margin-bottom: 0;
@@ -1602,7 +1606,7 @@ span.mto-rating-badge {
 .card-header-title {
   font-weight: 700;
   font-size: 18px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
   padding-bottom: 15px;
   margin-bottom: 20px;
 }
@@ -1844,7 +1848,7 @@ span.mto-rating-badge {
 }
 
 .listing-page .listing-bottom .listing-main {
-  border: 1px solid #E4E6E8;
+  border: 1px solid var(--border-color);
   border-radius: 10px;
 }
 
@@ -1853,7 +1857,7 @@ span.mto-rating-badge {
   gap: 10px;
   /* align-items: center; */
   background-color: rgb(33 37 41 / 3%);
-  border-bottom: 1px solid #E4E6E8;
+  border-bottom: 1px solid var(--border-color);
   padding: 9px 16px;
 }
 
@@ -1974,11 +1978,17 @@ span.mto-rating-badge {
   transition: all 0.2s ease;
   border: 0 !important;
 }
+.dark-mode .light-dark{
+  filter: brightness(0);
+}
 
+.light-dark{
+  filter: brightness(0) invert(1);
+}
 
 /* Pagination End */
 .sidebar-card {background: white;padding: 0;border: none;border-radius: 6px;}
-        .form-card { background: white; border-radius: 8px; padding: 25px; margin-bottom: 25px; border: 1px solid #eee; }
+        .form-card { border-radius: 8px; padding: 25px; margin-bottom: 25px; border: 1px solid var(--border-color); }
         .nav-link { color: #555; padding: 10px 15px; border-radius: 5px; font-size: 14px; }
         .nav-link:hover, .nav-link.active { background: #fff8ef; color: #ff9800 !important; }
         .btn-orange { background-color: #ff9800; color: white; border-radius: 25px; padding: 10px 25px; border: none; font-weight: 500; }
@@ -2038,7 +2048,7 @@ section.agent-header {
     padding-top: 50px;
 }
 h5.mb-4.border-bottom.pb-3 {
-    color: #222222;
+    color: var(--select-color);
 }
 .form-card.shadow-sm input.form-control {
     background-color: #f9f9f9;
