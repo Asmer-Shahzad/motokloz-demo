@@ -29,19 +29,13 @@
             <?php require_once(__DIR__ . '/../include/user-account-sidebar.php'); ?>
 
             <div class="col-lg-9">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-1">
-                        <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">My Profile</li>
-                    </ol>
-                </nav>
-                <h2 class="fw-bold mb-4">My Profile</h2>
+                
 
                 <div class="form-card shadow-sm">
                     <h5 class="mb-4 border-bottom pb-3">Update your profile</h5>
 
                     <div class="d-flex align-items-center mb-4 gap-3">
-                        <img src="https://via.placeholder.com/80" class="rounded" alt="Avatar">
+                        <img src="<?php echo $prefix; ?>/assets/images/Travilla.png" class="rounded" alt="Avatar">
                         <button class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></button>
                         <button class="btn-orange shadow-sm">Change avatar</button>
                     </div>

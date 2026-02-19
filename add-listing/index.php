@@ -5,7 +5,7 @@
     <?php require_once(__DIR__ . '/../include/header-script.php'); ?>
 </head>
 <body>
-
+<?php $pageTitle = 'Add Listing'; ?>
 <?php require_once(__DIR__ . '/../include/header.php'); ?>
 
 
@@ -14,12 +14,15 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <nav aria-label="breadcrumb">
+                <!-- <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-1">
                     <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Home</a></li>
                     <li class="breadcrumb-item active" aria-current="page">My Profile</li>
                 </ol>
-            </nav>
+            </nav> -->
+            <!-- breadcrumbs -->
+
+        <?php require_once(__DIR__ . '/../include/user-account-breadcrumbs.php'); ?>
             <h2 class="fw-bold mb-4">My Profile</h2>
             </div>
         </div>
@@ -28,30 +31,10 @@
 <div class="container">
     <div class="row">
         
-        <div class="col-lg-3">
-            <div class="sidebar-card shadow-sm">
-                <div class="d-flex align-items-center mb-4 position-relative">
-                    <img src="<?php echo $prefix; ?>/assets/images/border.png" class="rounded-circle me-3" alt="User">
-                    <div>
-                        <h6 class="mb-0">Steven Jobs</h6>
-                        <small class="">Since 2017</small>
-                    </div>
-                    <i class="fas fa-edit position-absolute top-0 end-0 cursor-pointer"></i>
-                </div>
-                
-                <nav class="nav flex-column">
-                    <a class="nav-link active" href="#"><i class="fas fa-user me-2"></i> My Profile</a>
-                    <a class="nav-link d-flex justify-content-between align-items-center" href="#">
-                        <span><i class="fas fa-th-large me-2"></i> Dashboard</span>
-                        <span class="badge badge-orange text-white">1</span>
-                    </a>
-                    <a class="nav-link" href="#"><i class="fas fa-list me-2"></i> Listings</a>
-                    <a class="nav-link" href="#"><i class="fas fa-plus-circle me-2"></i> Add Listing</a>
-                    <a class="nav-link" href="#"><i class="fas fa-heart me-2"></i> My Wishlist</a>
-                    <a class="nav-link" href="#"><i class="fas fa-cog me-2"></i> Account Setting</a>
-                </nav>
-            </div>
-        </div>
+        <!-- Sidebar -->
+
+
+<?php require_once(__DIR__ . '/../include/user-account-sidebar.php'); ?>
 
         <div class="col-lg-9">
             
