@@ -4,94 +4,25 @@
 <head>
     <title>Login</title>
     <?php require_once(__DIR__ . '/../include/header-script.php'); ?>
-
-
 </head>
 
 <body>
-
+    <?php $pageTitle = 'Dashboard'; ?>
     <?php require_once(__DIR__ . '/../include/header.php'); ?>
 
 
-    <div class="container account-setting my-4">
 
-        <!-- Breadcrumb -->
-        <div class="d-flex align-items-center gap-2 mb-2 text-muted small Breadcrumb">
-            <span class="Breadcrumb-home">Home</span>
-            <span>›</span>
-            <strong class="seat-head">Dashboard</strong>
-        </div>
+
+    <div class="container account-setting my-py-80">
+
+        <?php require_once(__DIR__ . '/../include/user-account-breadcrumbs.php'); ?>
 
         <h2 class="main-head">Dashboard</h2>
 
         <div class="row g-4">
 
             <!-- Sidebar -->
-            <div class="col-lg-3">
-                <div class="account-sidebar">
-
-                    <div class="side-top">
-                        <div class="user-box mb-4">
-
-                            <img src="<?php echo $prefix; ?>/assets/images/border.png" class=" user-img">
-
-                            <div class="user-info">
-                                <h6 class="user-info-head">Steven Jobs</h6>
-                                <small class="user-info-para">Since 2019</small>
-                            </div>
-
-                            <span class="edit-btn">
-                                <img src="<?php echo $prefix; ?>/assets/images/link (3).png" class="edit-img">
-                            </span>
-
-                        </div>
-                    </div>
-                    <style>
-
-                    </style>
-
-
-
-                    <ul class="account-menu">
-
-                        <li class="menu-item">
-                            <img src="<?php echo $prefix; ?>/assets/images/vector (2).png" class="menu-icon">
-                            My Profile
-                        </li>
-
-                        <li class="menu-item d-flex justify-content-between align-items-center  active">
-                            <div>
-                                <img src="<?php echo $prefix; ?>/assets/images/setting2 (2).png" class="menu-icon">
-                                Dashboard
-                            </div>
-                            <span class="badge">1</span>
-                        </li>
-
-                        <li class="menu-item">
-                            <img src="<?php echo $prefix; ?>/assets/images/icon (2).png" class="menu-icon">
-                            My Listings
-                        </li>
-
-                        <li class="menu-item">
-                            <img src="<?php echo $prefix; ?>/assets/images/material-symbols_add-rounded.png"
-                                class="menu-icon">
-                            Add Listing
-                        </li>
-
-                        <li class="menu-item">
-                            <img src="<?php echo $prefix; ?>/assets/images/icon (3).png" class="menu-icon">
-                            My Wishlist
-                        </li>
-
-                        <li class="menu-item">
-                            <img src="<?php echo $prefix; ?>/assets/images/setting2 (1).png" class="menu-icon">
-                            Account Setting
-                        </li>
-
-                    </ul>
-
-                </div>
-            </div>
+            <?php require_once(__DIR__ . '/../include/user-account-sidebar.php'); ?>
 
 
             <div class="col-lg-9">
@@ -213,42 +144,7 @@
                             </table>
                         </div>
 
-                        <ul class="pagination justify-content-start align-items-center gap-2">
-
-                            <!-- Prev -->
-                            <li class="page-item">
-                                <a class="page-link page-square" href="#">
-                                    <img src="<?php echo $prefix; ?>/assets/images/vector (5).png" alt="Next"
-                                        style="width:20px; height:20px; object-fit: scale-down;">
-                                </a>
-                            </li>
-
-                            <!-- Pages -->
-                            <li class="page-item"><a class="page-link page-square" href="#">1</a></li>
-
-                            <li class="page-item active">
-                                <a class="page-link page-square" href="#">2</a>
-                            </li>
-
-                            <li class="page-item"><a class="page-link page-square" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link page-square" href="#">4</a></li>
-                            <li class="page-item"><a class="page-link page-square" href="#">5</a></li>
-
-                            <!-- Dots -->
-                            <li class="page-item">
-                                <span class="page-link page-square dots">…</span>
-                            </li>
-
-                            <!-- Next -->
-                            <li class="page-item">
-                                <a class="page-link page-square" href="#">
-                                    <img src="<?php echo $prefix; ?>/assets/images/vector (6).png" alt="Next"
-                                        style="width:20px; height:20px; object-fit: scale-down;">
-                                </a>
-
-                            </li>
-
-                        </ul>
+                        <?php require_once(__DIR__ . '/../include/pagination.php'); ?>
                     </div>
 
                     <!-- ===== Bottom Cards ===== -->
@@ -1223,6 +1119,7 @@
 
     }
     </style>
+
 
 
 

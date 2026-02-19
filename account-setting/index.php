@@ -5,81 +5,21 @@
     <title>Account Setting</title>
     <?php require_once(__DIR__ . '/../include/header-script.php'); ?>
 </head>
+<?php 
+        $pageTitle = 'Account Setting';
+?>
 
 <body>
     <?php require_once(__DIR__ . '/../include/header.php'); ?>
-    <div class="container account-setting my-4">
+    <div class="container account-setting my-py-80">
         <!-- Breadcrumb -->
-        <div class="d-flex align-items-center gap-2 mb-2 text-muted small Breadcrumb">
-            <span class="Breadcrumb-home">Home</span>
-            <span>›</span>
-            <strong class="seat-head">Account Setting</strong>
-        </div>
+         <?php require_once(__DIR__ . '/../include/user-account-breadcrumbs.php'); ?>
         <h2 class="main-head">Account Setting</h2>
         <div class="row g-4">
             <!-- Sidebar -->
-            <div class="col-lg-3">
-                <div class="account-sidebar">
-
-                    <div class="side-top">
-                        <div class="user-box mb-4">
-
-                            <img src="<?php echo $prefix; ?>/assets/images/border.png" class=" user-img">
-
-                            <div class="user-info">
-                                <h6 class="user-info-head">Steven Jobs</h6>
-                                <small class="user-info-para">Since 2019</small>
-                            </div>
-
-                            <span class="edit-btn">
-                                <img src="<?php echo $prefix; ?>/assets/images/Link (3).png" class="edit-img">
-                            </span>
-
-                        </div>
-                    </div>
-
-                    <ul class="account-menu">
-
-                        <li class="menu-item">
-                            <img src="<?php echo $prefix; ?>/assets/images/Vector (2).png" class="menu-icon">
-                            My Profile
-                        </li>
-
-                        <li class="menu-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <img src="<?php echo $prefix; ?>/assets/images/Icon (1).png" class="menu-icon">
-                                Dashboard
-                            </div>
-                            <span class="badge">1</span>
-                        </li>
-
-                        <li class="menu-item">
-                            <img src="<?php echo $prefix; ?>/assets/images/Icon (2).png" class="menu-icon">
-                            Listings
-                        </li>
-
-                        <li class="menu-item">
-                            <img src="<?php echo $prefix; ?>/assets/images/material-symbols_add-rounded.png"
-                                class="menu-icon">
-                            Add Listing
-                        </li>
-
-                        <li class="menu-item">
-                            <img src="<?php echo $prefix; ?>/assets/images/Icon (3).png" class="menu-icon">
-                            My Wishlist
-                        </li>
-
-                        <li class="menu-item active">
-                            <img src="<?php echo $prefix; ?>/assets/images/Icon (4).png" class="menu-icon">
-                            Account Setting
-                        </li>
-
-                    </ul>
-
-                </div>
-            </div>
 
 
+<?php require_once(__DIR__ . '/../include/user-account-sidebar.php'); ?>
             <!-- Content -->
             <div class="col-lg-9">
                 <div class="account-content">
@@ -168,7 +108,6 @@
     /* Base */
     .account-setting {
         font-family: "Vend Sans", sans-serif;
-        color: #222;
     }
 
     /* Breadcrumb */
