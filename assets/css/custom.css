@@ -1566,7 +1566,6 @@ h6.mb-0.fw-bold {
 span.mto-rating-badge {
   color: var(--select-color);
 }
-<<<<<<< HEAD
 
 /* Sidebar Styling */
 .sidebar-box {
@@ -1978,7 +1977,6 @@ span.mto-rating-badge {
 
 
 /* Pagination End */
-=======
 .sidebar-card {background: white;padding: 0;border: none;border-radius: 6px;}
         .form-card { background: white; border-radius: 8px; padding: 25px; margin-bottom: 25px; border: 1px solid #eee; }
         .nav-link { color: #555; padding: 10px 15px; border-radius: 5px; font-size: 14px; }
@@ -2141,4 +2139,3 @@ h2.section-title {}
 .card-container h2.section-title {
     color: #000;
 }
->>>>>>> Farrukh
