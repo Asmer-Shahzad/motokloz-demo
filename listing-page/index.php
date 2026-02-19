@@ -503,7 +503,7 @@
         position: absolute;
         top: 0;
         right: 30px;
-        -webkit-mask-image: url(/assets/images/badge-bg.png);
+        -webkit-mask-image: url('/motokloz-demo/assets/images/badge-bg.png');
         align-items: center !important;
         justify-content: center !important;
         mask-size: 100%;
