@@ -13,6 +13,7 @@
 
 
 
+<<<<<<< HEAD
 
     <div class="container my-5">
 
@@ -22,10 +23,53 @@
         <div class="row">
             <div class="col-lg-3 page-title">
                 <h1>My Profile</h1>
+=======
+<section class="agent-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">My Profile</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-4">My Profile</h2>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="container">
+    <div class="row">
+        
+        <div class="col-lg-3">
+            <div class="sidebar-card shadow-sm">
+                <div class="d-flex align-items-center mb-4 position-relative">
+                    <img src="<?php echo $prefix; ?>/assets/images/border.png" class="rounded-circle me-3" alt="User">
+                    <div>
+                        <h6 class="mb-0">Steven Jobs</h6>
+                        <small class="">Since 2017</small>
+                    </div>
+                    <i class="fas fa-edit position-absolute top-0 end-0 cursor-pointer"></i>
+                </div>
+                
+                <nav class="nav flex-column">
+                    <a class="nav-link active" href="#"><i class="fas fa-user me-2"></i> My Profile</a>
+                    <a class="nav-link d-flex justify-content-between align-items-center" href="#">
+                        <span><i class="fas fa-th-large me-2"></i> Dashboard</span>
+                        <span class="badge badge-orange text-white">1</span>
+                    </a>
+                    <a class="nav-link" href="#"><i class="fas fa-list me-2"></i> Listings</a>
+                    <a class="nav-link" href="#"><i class="fas fa-plus-circle me-2"></i> Add Listing</a>
+                    <a class="nav-link" href="#"><i class="fas fa-heart me-2"></i> My Wishlist</a>
+                    <a class="nav-link" href="#"><i class="fas fa-cog me-2"></i> Account Setting</a>
+                </nav>
+>>>>>>> Farrukh
             </div>
         </div>
         <div class="row">
 
+<<<<<<< HEAD
             <?php require_once(__DIR__ . '/../include/user-account-sidebar.php'); ?>
 
             <div class="col-lg-9">
@@ -78,6 +122,18 @@
                         </div>
                     </div>
                     <button class="btn-orange mt-4">Save Changes</button>
+=======
+        <div class="col-lg-9">
+            
+
+            <div class="form-card shadow-sm">
+                <h5 class="mb-4 border-bottom pb-3">Update your profile</h5>
+                
+                <div class="d-flex align-items-center mb-4 gap-3">
+                    <img src="<?php echo $prefix; ?>/assets/images/Travilla.png" class="rounded" alt="Avatar">
+                    <button class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></button>
+                    <button class="btn-orange shadow-sm">Change avatar</button>
+>>>>>>> Farrukh
                 </div>
 
                 <div class="form-card shadow-sm">
@@ -142,7 +198,10 @@
 
 
 
-
+<?php require_once(__DIR__ . '/../include/footer-script.php'); ?>
+<?php require_once(__DIR__ . '/../include/footer.php'); ?>
+</body>
+</html>
 
 
 
