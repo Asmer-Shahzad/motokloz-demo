@@ -156,13 +156,14 @@ img.logo {
 }
 
 .header {
-  padding: 15px 0;
+  padding: 5px 0;
   border-bottom: 1px solid #dadee233;
 }
 
 .col-lg-6.btn-header {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
 }
 
 .search-wrapper {
@@ -183,12 +184,16 @@ img.logo {
 }
 
 .tab {
-  background: #2d2d2d;
-  color: #fff;
+  /* background: #2d2d2d; */
+  color: var(--select-color);
   border: none;
+  text-decoration: none;
   padding: 10px 22px;
   border-radius: 20px;
   cursor: pointer;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 700 !important;
 }
 
 .tab.active {
@@ -270,7 +275,7 @@ select {
   margin-left: auto;
   background: #ff9d00;
   border: none;
-  color: #000;
+  color: #fff;
   padding: 14px 24px;
   border-radius: 30px;
   font-size: 15px;
@@ -312,6 +317,7 @@ select {
   border-radius: 14px;
   text-align: center;
   border: none;
+  text-decoration: none;
 }
 
 .card img {
@@ -329,8 +335,11 @@ select {
   border-radius: 20px;
   width: 42%;
   margin: 0 auto;
+  color: #4d4d4d;
   position: relative;
   top: -12px;
+  text-decoration: none !important;
+  border: 1px solid #dde1de;
 }
 
 .card h4 {
@@ -781,6 +790,7 @@ a.btn-custom {
   color: #ffffff;
   font-size: 32px;
   font-weight: 600;
+  width: 65%;
   line-height: 110%;
 }
 
@@ -824,6 +834,53 @@ footer.footer {
   color: #ffffff;
   font-size: 18px;
   line-height: 28px;
+}
+
+/* Footer headings */
+footer h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: #222;
+}
+
+/* Remove default list style */
+footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Footer links base */
+footer ul li a {
+  position: relative;
+  display: inline-block;
+  color: #666;
+  text-decoration: none;
+  padding: 4px 0;
+  transition: color 0.25s ease;
+  font-size: 14px;
+}
+
+/* Hover color */
+footer ul li a:hover {
+  color: #f58d02;
+}
+
+/* Underline animation */
+footer ul li a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 1.5px;
+  background: #f58d02;
+  transition: width 0.3s ease;
+}
+
+footer ul li a:hover::after {
+  width: 100%;
 }
 
 .calltoaction h5 {
@@ -898,6 +955,7 @@ footer.footer {
   padding: 30px 30px;
   margin: 100px 0 0 0;
   border: 1px solid #dde1de;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 /* Top Tabs Styles */
@@ -941,7 +999,7 @@ footer.footer {
   padding: 15px 30px;
   display: flex;
   align-items: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); */
 }
 
 .filter-item {
@@ -1142,6 +1200,7 @@ section.banner-car-listing {
   font-size: 13px;
   border-radius: 18px;
   border: 1px solid #eeeeee;
+  padding: 12px 33px 12px 12px !important;
 }
 
 /* MODERN GRID CARD (image_9a84e7 style) */
@@ -1391,14 +1450,14 @@ section.banner-car-listing {
 }
 
 .mto-top-headline {
-  font-size: 28px;
+  font-size: 36px;
   line-height: 1.3;
   color: var(--select-color);
 }
 
 .mto-map-link {
   text-decoration: none;
-  border-bottom: 2px solid #000;
+  border-bottom: 1px solid #000;
   color: var(--select-color);
 }
 
@@ -1483,9 +1542,10 @@ section.banner-car-listing {
 
 /* Sidebar Components */
 .mto-card-unit {
-  border-radius: 20px;
+  border-radius: 10px;
   border: none;
   background: var(--banner-bg-color);
+  border: 1px solid #dde1de;
 }
 
 .mto-btn-orange {
@@ -1511,8 +1571,12 @@ section.banner-car-listing {
 .mto-rating-badge {
   font-size: 12px;
   font-weight: 700;
+  background: #ffff;
+  border: 1px solid #dde1de;
+  padding: 3px;
+  border-radius: 30px;
+  box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.07);
 }
-
 .mto-rating-badge i {
   color: #f98e00;
 }
@@ -1588,12 +1652,46 @@ span.mto-rating-badge {
   border-left: 3px solid transparent;
   transition: 0.3s;
 }
+/* Base style */
+.navbar-nav .nav-link {
+  position: relative;
+  color: #444;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition:
+    color 0.25s ease,
+    background-color 0.25s ease;
+}
 
-.nav-link:hover,
-.nav-link.active {
-  color: #ff9800 !important;
-  background-color: #fff9f0;
-  border-left: 3px solid #ff9800;
+/* Soft background on hover */
+.navbar-nav .nav-link:hover {
+  color: #f58d02;
+  background-color: rgba(245, 141, 2, 0.08);
+}
+
+/* Active link */
+.navbar-nav .nav-link.active {
+  color: #f58d02;
+  background-color: rgba(245, 141, 2, 0.12);
+}
+
+/* Smooth underline animation */
+.navbar-nav .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 0;
+  height: 2px;
+  background: #f58d02;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.navbar-nav .nav-link:hover::after,
+.navbar-nav .nav-link.active::after {
+  width: 60%;
 }
 
 /* Profile Cards */
@@ -2015,7 +2113,7 @@ span.mto-rating-badge {
 }
 .form-card {
   border-radius: 8px;
-  padding: 25px;
+  /* padding: 25px; */
   margin-bottom: 25px;
   border: 1px solid var(--border-color);
 }
@@ -2225,7 +2323,19 @@ ul.list-unstyled.service-list li {
   border: 1px solid #eee;
 }
 
-.small {
+.dropdown .btn {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 28px !important;
+  background: var(--bg-color);
+  color: var(--select-color);
+}
+#themeToggle {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .small p.mb-2 {

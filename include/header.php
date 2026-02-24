@@ -32,22 +32,22 @@
                                     <a class="nav-link" href="<?php echo $prefix; ?>/car-listing/">Auto</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" >RV</a>
+                                    <a class="nav-link">RV</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" >Motorcycle</a>
+                                    <a class="nav-link">Motorcycle</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" >Powersports</a>
+                                    <a class="nav-link">Powersports</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" >Heavy Truck</a>
+                                    <a class="nav-link">Heavy Truck</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" >Trailers</a>
+                                    <a class="nav-link">Trailers</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" >Farm Equipment</a>
+                                    <a class="nav-link">Farm Equipment</a>
                                 </li>
                             </ul>
                             <div class="mobile-btn">
@@ -75,13 +75,33 @@
     <div class="header">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-6 d-flex align-items-center" style="gap:4px;">
                     <a href="<?php echo $prefix; ?>/" class="site-logo">
                         <img src="<?php echo $prefix; ?>/assets/images/darklogo.png" class="logo logo-dark"
                             alt="Motokloz Logo">
                         <img src="<?php echo $prefix; ?>/assets/images/lightlogo.png" class="logo logo-light"
-                            alt="Motokloz Logo">    
+                            alt="Motokloz Logo">
                     </a>
+
+                    <div class="dropdown m-4">
+                        <button class="btn btn-light border rounded-pill px-3 py-1 dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            ENG
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">English (ENG)</a></li>
+
+
+                            <li><a class="dropdown-item" href="#">Spanish (ES)</a></li>
+                            <li><a class="dropdown-item" href="#">French (FR)</a></li>
+                            <li><a class="dropdown-item" href="#">German (DE)</a></li>
+                            <li><a class="dropdown-item" href="#">Chinese (ZH)</a></li>
+                            <li><a class="dropdown-item" href="#">Turkish (TR)</a></li>
+                            <li><a class="dropdown-item" href="#">Russian (RU)</a></li>
+
+                            <li><a class="dropdown-item" href="#">Indonesian (ID)</a></li>
+                        </ul>
+                    </div>
 
                     <button id="themeToggle" aria-label="Toggle theme">
                         <img id="themeIcon" src="<?php echo $prefix; ?>/assets/images/darkmood.png"

@@ -1,271 +1,276 @@
 @media only screen and (max-width: 1199px) {
-	.search-btn {
+  .search-btn {
     margin: 0 auto;
-}
-.header-top .col-lg-8 {
+  }
+  .header-top .col-lg-8 {
     width: 100%;
-}
-.filter-bar {
+  }
+  .filter-bar {
     flex-wrap: wrap;
     justify-content: space-evenly;
-}
+  }
 
-.popular-button ul li a {
+  .popular-button ul li a {
     font-size: 11px;
     padding: 11px 15px;
-}
+  }
 
-.popular-vehicles h2 {
+  .popular-vehicles h2 {
     font-size: 35px;
     line-height: 100%;
-}
+  }
 
-.secure-box p {
+  .secure-box p {
     width: auto;
-}
+  }
 
-.about-motokloz .col-lg-5 {
+  .about-motokloz .col-lg-5 {
     width: 60%;
-}
+  }
 
-.about-bg h2 {
+  .about-bg h2 {
     font-size: 35px;
     line-height: 100%;
-}
+  }
 
-.testimonials-content h2 {
+  .testimonials-content h2 {
     font-size: 35px;
     line-height: 110%;
-}
+  }
 
-.car-review h2 {
+  .car-review h2 {
     font-size: 35px;
-}
-footer .footer-mid {}
+  }
+  footer .footer-mid {
+  }
 
-footer .footer-mid .col-lg-4 {
+  footer .footer-mid .col-lg-4 {
     width: 33%;
-}
+  }
 
-footer .footer-mid .col-lg-2 {
+  footer .footer-mid .col-lg-2 {
     width: 33%;
     margin-bottom: 40px;
+  }
 }
-}
-@media only screen and (max-width: 991px)  {
-	.header-top .col-lg-8 {
+@media only screen and (max-width: 991px) {
+  .header-top .col-lg-8 {
     width: 10%;
-}
-.header-top .row {
+  }
+  .header-top .row {
     align-items: center;
-}
-.navbar-toggler-icon {
+  }
+  .navbar-toggler-icon {
     filter: invert(1);
-}
-.logo-o {
+  }
+  .logo-o {
     width: 95px;
     height: 33px;
     font-size: 12px;
-}
-.col-lg-6.btn-header .logo-o {
+  }
+  .col-lg-6.btn-header .logo-o {
     display: none;
-}
-.header .col-lg-6 {
+  }
+  .header .col-lg-6 {
     width: 80%;
-}
-.col-lg-6.btn-header {
+  }
+  .col-lg-6.btn-header {
     width: 20%;
-}
-.btn-mobile {
+  }
+  .btn-mobile {
     width: 90%;
     display: flex;
-        flex-direction: row-reverse;
-}
-.section-two .row {
-}
+    flex-direction: row-reverse;
+  }
+  .section-two .row {
+  }
 
-.secure-box {
+  .secure-box {
     margin-bottom: 20px;
-}
+  }
 
-.popular-vehicles .row.align-items-center {
+  .popular-vehicles .row.align-items-center {
     text-align: center;
-}
+  }
 
-.popular-button ul {
+  .popular-button ul {
     text-align: center;
     margin-top: 20px;
-}
+  }
 
-.about-motokloz .col-lg-5 {
+  .about-motokloz .col-lg-5 {
     width: 70%;
-}
+  }
 
-.footer-top {
+  .footer-top {
     text-align: center;
-}
+  }
 
-.footer-bottom .col-lg-6 {
+  .footer-bottom .col-lg-6 {
     width: 50%;
-}
+  }
 
-ul.navbar-nav.mb-2.mb-lg-0 {
+  ul.navbar-nav.mb-2.mb-lg-0 {
     background: #101010;
     width: 745px;
     position: absolute;
-}
-.header-top li.nav-item {
+  }
+  .header-top li.nav-item {
     padding: 0 0px 0 18px;
-}
+  }
 
-.header-top a.nav-link {
+  .header-top a.nav-link {
     font-size: 14px;
-}
+  }
 }
 @media (max-width: 768px) {
-    .search-box {
-        flex-direction: column;
-        padding: 20px;
-    }
-    .divider {
-        display: none;
-    }
-    .filter-item {
-        width: 100%;
-        margin-bottom: 20px;
-    }
-    .find-btn {
-        width: 100%;
-        justify-content: center;
-    }
+  .search-box {
+    flex-direction: column;
+    padding: 20px;
+  }
+  .divider {
+    display: none;
+  }
+  .filter-item {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  .find-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 @media only screen and (max-width: 767px) {
-    .help {
-    display: none;
-}
-	.col-lg-4.btn-mobile {
-    display: none;
-}
-
-.header-top .col-lg-8 {
+  .footer-top h3 {
     width: 100%;
-}
+  }
+  .help {
+    display: none;
+  }
+  .col-lg-4.btn-mobile {
+    display: none;
+  }
 
-ul.navbar-nav.mb-2.mb-lg-0 {
+  .header-top .col-lg-8 {
+    width: 100%;
+  }
+
+  ul.navbar-nav.mb-2.mb-lg-0 {
     position: relative;
     width: 100%;
-}
+  }
 
-.mobile-btn {
+  .mobile-btn {
     display: flex;
-}
+  }
 
-.logo-o {
+  .logo-o {
     margin: 0 3px;
-}
+  }
 
-.header-top li.nav-item {
+  .header-top li.nav-item {
     padding: 0 0px 0 6px;
-}
+  }
 
-.header-top li.nav-item a.nav-link {
+  .header-top li.nav-item a.nav-link {
     background: #222222;
     padding: 8px 10px;
-}
+  }
 
-.header .col-lg-6 {
+  .header .col-lg-6 {
     width: 90%;
-}
+  }
 
-.header .col-lg-6 {
+  .header .col-lg-6 {
     width: 80%;
     align-items: center;
-}
+  }
 
-img.logo {
+  img.logo {
     width: 260px;
     height: 36px;
-}
+  }
 
-.col-lg-6.btn-header {
+  .col-lg-6.btn-header {
     width: 19%;
-}
+  }
 
-.divider {
+  .divider {
     display: none;
-}
+  }
 
-.filter-bar {
+  .filter-bar {
     gap: 15px;
     justify-content: flex-start;
-}
+  }
 
-.search-btn {
+  .search-btn {
     margin: 0;
-}
-.secure-box {
+  }
+  .secure-box {
     display: inline-grid;
-}
+  }
 
-.secure-box p {
+  .secure-box p {
     color: #fff;
-}
+  }
 
-.popular-button ul li {
+  .popular-button ul li {
     padding: 0 0 0 0px;
-}
+  }
 
-.popular-button ul li a {
+  .popular-button ul li a {
     padding: 11px 10px;
-}
+  }
 
-.about-motokloz .col-lg-5 {
+  .about-motokloz .col-lg-5 {
     width: 100%;
-}
+  }
 
-.car-review {
+  .car-review {
     padding-top: 100px;
     padding-bottom: 50px;
-}
+  }
 
-.car-review h2 {
+  .car-review h2 {
     font-size: 26px;
-}
+  }
 
-.car-review p {
+  .car-review p {
     font-size: 15px;
-}
+  }
 
-.footer-top h3 {
+  .footer-top h3 {
     font-size: 25px;
     line-height: 35px;
     margin-bottom: 20px;
-}
-
-footer .footer-mid .col-lg-4 {
     width: 100%;
-}
+  }
 
-footer .footer-mid .col-lg-2 {
+  footer .footer-mid .col-lg-4 {
+    width: 100%;
+  }
+
+  footer .footer-mid .col-lg-2 {
     width: 100%;
     margin: 20px 0 0 0;
-}
+  }
 
-.footer-bottom .col-lg-6 {
+  .footer-bottom .col-lg-6 {
     width: 100%;
-}
+  }
 
-.footer-bottom p {
+  .footer-bottom p {
     text-align: center;
-}
+  }
 
-.footer-bottom ul {
+  .footer-bottom ul {
     text-align: center;
     float: none;
     padding-top: 9px;
-}
+  }
 
-.footer-bottom ul li {
+  .footer-bottom ul li {
     padding: 0 10px;
-}
+  }
 }

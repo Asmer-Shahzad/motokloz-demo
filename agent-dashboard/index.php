@@ -424,6 +424,9 @@
         /* background: var(--bg-color); */
         border-bottom: 1px solid #E4E6E8;
         padding: 14px 16px;
+        border-bottom: 1px solid var(--border-color);
+        background-color: rgb(33 37 41 / 3%);
+        border-radius: 10px !important;
     }
 
     thead {

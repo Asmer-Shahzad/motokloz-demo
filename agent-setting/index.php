@@ -29,18 +29,21 @@
             <?php require_once(__DIR__ . '/../include/user-account-sidebar.php'); ?>
 
             <div class="col-lg-9">
-                
+
 
                 <div class="form-card shadow-sm">
-                    <h5 class="mb-4 border-bottom pb-3">Update your profile</h5>
+                    <div class="agent-head">
+                        <h5 class="mb-4 border-bottom pb-3 ">Update your profile</h5>
+                    </div>
 
-                    <div class="d-flex align-items-center mb-4 gap-3">
+
+                    <div class="d-flex align-items-center m-4 gap-3">
                         <img src="<?php echo $prefix; ?>/assets/images/Travilla.png" class="rounded" alt="Avatar">
                         <button class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></button>
                         <button class="btn-orange shadow-sm">Change avatar</button>
                     </div>
 
-                    <div class="row g-3">
+                    <div class="row g-3   settng-all ">
                         <div class="col-md-6">
                             <label>Full Name *</label>
                             <input type="text" class="form-control" value="Steven Job">
@@ -71,12 +74,15 @@
                             <input type="text" class="form-control" value="France">
                         </div>
                     </div>
-                    <button class="btn-orange mt-4">Save Changes</button>
+                    <button class="btn-orange mt-4 setting-btt">Save Changes</button>
                 </div>
 
                 <div class="form-card shadow-sm">
-                    <h5 class="mb-4 border-bottom pb-3">Contact Information</h5>
-                    <div class="row g-3">
+                    <div class="agent-head">
+                        <h5 class="mb-4 border-bottom pb-3">Contact Information</h5>
+                    </div>
+
+                    <div class="row g-3   settng-all ">
                         <div class="col-md-6">
                             <label>Country</label>
                             <input type="text" class="form-control" value="United States of America">
@@ -104,12 +110,15 @@
                             <input type="text" class="form-control" placeholder="Address 2">
                         </div>
                     </div>
-                    <button class="btn-orange mt-4">Save Changes</button>
+                    <button class="btn-orange mt-4 setting-btt">Save Changes</button>
                 </div>
 
                 <div class="form-card shadow-sm">
-                    <h5 class="mb-4 border-bottom pb-3">Change Password</h5>
-                    <div class="row g-3">
+                    <div class="agent-head">
+                        <h5 class="mb-4 border-bottom pb-3">Change Password</h5>
+                    </div>
+
+                    <div class="row g-3  settng-all">
                         <div class="col-12">
                             <label>Old Password</label>
                             <input type="password" class="form-control" value="**********">
@@ -123,7 +132,7 @@
                             <input type="password" class="form-control" value="**********">
                         </div>
                     </div>
-                    <button class="btn-orange mt-4">Save Changes</button>
+                    <button class="btn-orange mt-4  setting-btt">Save Changes</button>
                 </div>
 
             </div>
@@ -131,14 +140,29 @@
     </div>
 
 
+    <style>
+    .agent-head {
+
+        background-color: rgb(33 37 41 / 3%);
+        padding: 8px;
+    }
+
+    .settng-all {
+        padding: 20px;
+    }
+
+    .setting-btt {
+        margin: 15px;
+    }
+    </style>
 
 
 
 
-
-<?php require_once(__DIR__ . '/../include/footer-script.php'); ?>
-<?php require_once(__DIR__ . '/../include/footer.php'); ?>
+    <?php require_once(__DIR__ . '/../include/footer-script.php'); ?>
+    <?php require_once(__DIR__ . '/../include/footer.php'); ?>
 </body>
+
 </html>
 
 
@@ -160,5 +184,5 @@
 
 
 
-    <?php require_once(__DIR__ . '/../include/footer-script.php'); ?>
-    <?php require_once(__DIR__ . '/../include/footer.php'); ?>
+<?php require_once(__DIR__ . '/../include/footer-script.php'); ?>
+<?php require_once(__DIR__ . '/../include/footer.php'); ?>

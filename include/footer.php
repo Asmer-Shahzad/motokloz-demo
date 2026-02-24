@@ -2,10 +2,10 @@
     <div class="container">
         <div class="footer-top">
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-8">
                     <h3>Subscribe to see secret deals prices drop the moment you sign up!</h3>
                 </div>
-                <div class="subscribe-box col-lg-6">
+                <div class="subscribe-box col-lg-4">
                     <input type="email" placeholder="Enter your Email">
                     <button type="submit">Subscribe</button>
                 </div>
@@ -14,7 +14,7 @@
         <div class="footer-mid">
             <div class="row">
                 <div class="col-lg-5">
-                    <img src="<?php echo $prefix;?>/assets/images/darklogo.png" class="img-fluid" alt="Motokloz Logo">
+                    <img src="<?php echo $prefix; ?>/assets/images/darklogo.png" class="img-fluid" alt="Motokloz Logo">
                     <ul>
                         <li><i class="fa-sharp fa-solid fa-location-dot"></i><a href="#">2356 Oakwood Drive, Suite
                                 18, San Francisco, California 94111, US</a></li>
@@ -25,7 +25,7 @@
                     </ul>
                     <div class="calltoaction">
                         <h5><i class="fa-sharp fa-solid fa-phone"></i> Need help? Call us</h5>
-                        <h6><a href="tel:+1 222-555-33-99">+1 222-555-33-99</a></h6>
+                        <h6><a href="tel:+8773475569">877-347-5569</a></h6>
                     </div>
                 </div>
                 <div class="col-lg-2">

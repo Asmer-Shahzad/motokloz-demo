@@ -21,9 +21,9 @@
                             <div class="search-wrapper">
                                 <!-- Tabs -->
                                 <div class="tabs">
-                                    <button class="tab active">All</button>
-                                    <button class="tab">New</button>
-                                    <button class="tab">Used</button>
+                                    <a class="tab active">All</a>
+                                    <a class="tab">New</a>
+                                    <a class="tab">Used</a>
 
                                     <div class="help">
                                         <i class="fa-solid fa-user"></i>
@@ -346,7 +346,7 @@
 
 
     <section class="testimonials-section">
-        <div class="container">
+        <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12 testimonials-content">
                     <h4><img src="<?php echo $prefix; ?>/assets/images/persons.png" class="img-fluid">Testimonials</h4>
@@ -358,6 +358,22 @@
             </div>
             <div class="swiper review-swiper">
                 <div class="swiper-wrapper">
+
+                    <div class="swiper-slide">
+                        <div class="review-card">
+                            <img src="<?php echo $prefix; ?>/assets/images/star.png" class="img-fluid">
+
+                            <div class="review-user">
+                                <h4>Sarah M.</h4>
+                                <span class="review-verified">✔</span>
+                            </div>
+
+                            <p>
+                                “Lorem ipsum dolor sit amet consectetur. At morbi pellentesque in ultricies. Accumsan
+                                neque convallis scelerisque mauris. Nam et lorem aliquam cum sagittis.”
+                            </p>
+                        </div>
+                    </div>
 
                     <div class="swiper-slide">
                         <div class="review-card">
@@ -470,10 +486,13 @@
     <section class="car-review">
         <div class="container">
             <div class="col-lg-12">
-                <h4>CAR REVIEW</h4>
+                <h4></h4>
                 <h2>Hyundai Tucson Plug-In <br>Hybrid 2025 review</h2>
                 <p>The Tucson Plug-in Hybrid is easy to drive and<br> provides a sufficient all-electric range.</p>
-                <a href="#" class="btn-custom">Learn More</a>
+                <a href="#" class="btn-custom-home">
+                    View Details
+                    <img src="<?php echo $prefix; ?>/assets/images/bttnarrow.png" alt="arrow" class="btn-arrow-home">
+                </a>
             </div>
         </div>
     </section>
@@ -483,7 +502,25 @@
 
 
 
+    <style>
+    .btn-custom-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: #f7931a;
+        color: #fff;
+        padding: 14px 28px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+    }
 
+    .btn-arrow-home {
+        width: 20px;
+        /* size adjust kar sakte ho */
+        height: auto;
+    }
+    </style>
 
 
 

@@ -121,16 +121,17 @@
                             </select>
                         </div>
 
-                        <div class="row g-2 filter-group">
-                            <div class="col-6">
-                                <label class="sidebar-label">Lowest Price</label>
-                                <input type="text" class="form-control sidebar-input" placeholder="Enter Price">
-                            </div>
-                            <div class="col-6">
-                                <label class="sidebar-label">Max Price</label>
-                                <input type="text" class="form-control sidebar-input" placeholder="Enter Price">
-                            </div>
+                        <div class="filter-group">
+                            <label class="sidebar-label">Lowest Price</label>
+                            <input type="text" class="form-control sidebar-input" placeholder="Enter Price">
                         </div>
+
+                        <div class="filter-group">
+                            <label class="sidebar-label">Max Price</label>
+                            <input type="text" class="form-control sidebar-input" placeholder="Enter Price">
+                        </div>
+
+
 
                         <div class="filter-group">
                             <label class="sidebar-label">Year</label>
@@ -177,20 +178,22 @@
                             </select>
                         </div>
 
-                        <div class="sidebar-map-box mt-4">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="map-label">Show on map</span>
-                                <i class="fa-solid fa-chevron-down map-toggle-icon"></i>
-                            </div>
-                            <img src="<?php echo $prefix; ?>/assets/images/map.png" class="img-fluid rounded-3"
-                                alt="Map">
-                        </div>
+
                     </aside>
+                    <div class="sidebar-map-box mt-4 complete-sidebar">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="map-label">Show on map</span>
+                            <i class="fa-solid fa-chevron-down map-toggle-icon"></i>
+                        </div>
+                        <img src="<?php echo $prefix; ?>/assets/images/map.png" class="img-fluid rounded-3" alt="Map">
+                    </div>
                 </div>
+
 
                 <div class="col-lg-9 col-md-8">
 
-                    <div class="fleet-toolbar d-flex flex-wrap justify-content-between align-items-center mb-4">
+                    <div style="    border-bottom: 1px solid #DDE1DE;     padding-bottom: 10px;"
+                        class="fleet-toolbar d-flex flex-wrap justify-content-between align-items-center mb-4">
                         <div class="toolbar-left d-flex align-items-center">
                             <div class="view-icons me-3">
                                 <i class="fa-solid fa-table-cells-large active"></i>
@@ -224,10 +227,10 @@
                                     <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 12 Km away</p>
 
                                     <div class="car-circle-icons-group">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-1.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-2.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-3.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-4.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/no-accidents.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/low-mileage.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/service-plan.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/powertrain-warranty.png" alt="">
                                         <span class="extra-icons-count">12+</span>
                                     </div>
 
@@ -249,10 +252,10 @@
                                     <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>
                                     <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 5 Km away</p>
                                     <div class="car-circle-icons-group">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-1.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-2.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-3.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-4.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/no-accidents.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/low-mileage.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/service-plan.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/powertrain-warranty.png" alt="">
                                         <span class="extra-icons-count">12+</span>
                                     </div>
                                     <div class="car-price-block text-end">
@@ -273,10 +276,10 @@
                                     <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>
                                     <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 5 Km away</p>
                                     <div class="car-circle-icons-group">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-1.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-2.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-3.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-4.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/no-accidents.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/low-mileage.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/service-plan.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/powertrain-warranty.png" alt="">
                                         <span class="extra-icons-count">12+</span>
                                     </div>
                                     <div class="car-price-block text-end">
@@ -297,10 +300,10 @@
                                     <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>
                                     <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 5 Km away</p>
                                     <div class="car-circle-icons-group">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-1.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-2.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-3.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-4.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/no-accidents.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/low-mileage.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/service-plan.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/powertrain-warranty.png" alt="">
                                         <span class="extra-icons-count">12+</span>
                                     </div>
                                     <div class="car-price-block text-end">
@@ -321,10 +324,10 @@
                                     <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>
                                     <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 5 Km away</p>
                                     <div class="car-circle-icons-group">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-1.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-2.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-3.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-4.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/no-accidents.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/low-mileage.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/service-plan.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/powertrain-warranty.png" alt="">
                                         <span class="extra-icons-count">12+</span>
                                     </div>
                                     <div class="car-price-block text-end">
@@ -345,10 +348,10 @@
                                     <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>
                                     <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 5 Km away</p>
                                     <div class="car-circle-icons-group">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-1.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-2.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-3.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-4.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/no-accidents.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/low-mileage.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/service-plan.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/powertrain-warranty.png" alt="">
                                         <span class="extra-icons-count">12+</span>
                                     </div>
                                     <div class="car-price-block text-end">
@@ -369,10 +372,10 @@
                                     <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>
                                     <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 5 Km away</p>
                                     <div class="car-circle-icons-group">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-1.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-2.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-3.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-4.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/no-accidents.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/low-mileage.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/service-plan.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/powertrain-warranty.png" alt="">
                                         <span class="extra-icons-count">12+</span>
                                     </div>
                                     <div class="car-price-block text-end">
@@ -393,10 +396,10 @@
                                     <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>
                                     <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 5 Km away</p>
                                     <div class="car-circle-icons-group">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-1.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-2.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-3.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-4.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/no-accidents.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/low-mileage.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/service-plan.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/powertrain-warranty.png" alt="">
                                         <span class="extra-icons-count">12+</span>
                                     </div>
                                     <div class="car-price-block text-end">
@@ -417,10 +420,10 @@
                                     <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>
                                     <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 5 Km away</p>
                                     <div class="car-circle-icons-group">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-1.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-2.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-3.png" alt="">
-                                        <img src="<?php echo $prefix; ?>/assets/images/badge-4.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/no-accidents.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/low-mileage.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/service-plan.png" alt="">
+                                        <img src="<?php echo $prefix; ?>/assets/images/powertrain-warranty.png" alt="">
                                         <span class="extra-icons-count">12+</span>
                                     </div>
                                     <div class="car-price-block text-end">
@@ -433,7 +436,7 @@
 
                     </div>
 
-                    <div class="pagination-footer d-flex justify-content-center mt-5">
+                    <div class="pagination-footer d-flex justify-content-start mt-5">
                         <button class="page-nav-btn"><i class="fa-solid fa-chevron-left"></i></button>
                         <button class="page-num-btn active">1</button>
                         <button class="page-num-btn">2</button>
@@ -444,6 +447,9 @@
             </div>
         </div>
     </section>
+
+
+
 
 
 
