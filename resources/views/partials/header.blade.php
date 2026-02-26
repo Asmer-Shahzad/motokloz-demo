@@ -150,6 +150,15 @@
                                         </a>
                                     </li>
 
+
+                                    <li>
+                                        <a class="dropdown-item {{ request()->routeIs('add.listings') ? 'active-link' : '' }}"
+                                            href="{{ route('add.listings') }}">
+                                            Add Listing
+                                        </a>
+                                    </li>
+
+
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('wishlist') ? 'active-link' : '' }}"
                                             href="{{ route('wishlist') }}">
