@@ -509,7 +509,7 @@ select {
 }
 
 .popular-vehicles p {
-    color:  var(--select-color);
+    color: var(--select-color);
     padding-bottom: 5px;
     font-size: 14px;
     margin: 0;
@@ -721,8 +721,8 @@ a.btn-custom {
 }
 
 ::selection {
-    background-color: #ff9300;   /* Selection ka background color */
-    color: white;              /* Selection ke text ka color */
+    background-color: #ff9300; /* Selection ka background color */
+    color: white; /* Selection ke text ka color */
 }
 
 .review-verified {
@@ -1115,7 +1115,36 @@ footer ul li a:hover::after {
     line-height: 70px;
     margin: 0;
 }
+.back-icon img {
+    width: 15px;
+    height: 15px;
+    object-fit: contain;
+}
+.top-back {
+    padding: 20px 0 10px 20px;
+    background: var(--bg-color);
+    color: var(--select-color);
+}
+.dashboard-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 24px;
+    color: var(--select-color);
+    transition: 0.2s ease;
+}
 
+.search-dealer-container {
+    background: var(--banner-bg-color);
+    border-radius: 16px;
+    padding: 30px 30px;
+
+    border: 1px solid #dde1de;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
 .car-listing-cont p {
     text-align: center;
     font-size: 15px;
@@ -1129,7 +1158,9 @@ section.banner-car-listing {
 .fleet-section {
     padding: 70px 0;
 }
-
+.dealer-fleet-section {
+    padding: 20px 0;
+}
 .main-title {
     font-size: 36px;
     font-weight: 800;
@@ -1264,7 +1295,7 @@ section.banner-car-listing {
 /* Badge on top of image */
 .badge-mileage {
     position: absolute;
-    bottom: 12px;
+    bottom: -7px;
     left: 12px;
     background: var(--banner-bg-color);
     padding: 6px 16px;

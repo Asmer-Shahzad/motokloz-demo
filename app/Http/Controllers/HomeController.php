@@ -60,6 +60,10 @@ class HomeController extends Controller
     {
         return view('add-listing', ['pageTitle' => 'Add Listing']);
     }
+    public function dealer()
+    {
+        return view('dealer', ['pageTitle' => 'Dealer']);
+    }
 
     public function accountsettings()
     {

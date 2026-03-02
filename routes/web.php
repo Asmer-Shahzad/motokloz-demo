@@ -49,4 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/add-listings', [HomeController::class, 'addlistings'])->name('add.listings');
 
     Route::get('/account-setting', [HomeController::class, 'accountsettings'])->name('account.settings');
+
+
+    Route::get('/dealer', [HomeController::class, 'dealer'])->name('dealer');
 });
