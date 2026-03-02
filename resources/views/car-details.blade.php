@@ -297,8 +297,10 @@
                                 </div>
 
                             </div>
+                            <a href="/dealer-profile">
                             <button class="mto-btn-orange w-100 mt-4 py-2">Dealer's Inventory <i
                                     class="fa-solid fa-arrow-right ms-2"></i></button>
+                            </a>
                         </div>
                     </div>
                 </div>
