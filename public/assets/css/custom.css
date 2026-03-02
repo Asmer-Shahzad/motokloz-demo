@@ -1315,6 +1315,7 @@ section.banner-car-listing {
 .car-card-bottom {
     padding: 20px;
     background: var(--banner-bg-color);
+    border-radius: 12px !important;
 }
 
 .car-main-title {

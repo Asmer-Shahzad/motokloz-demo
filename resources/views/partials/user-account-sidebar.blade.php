@@ -19,7 +19,7 @@
         <div class="sidebar-bottom user-pagelist">
             <ul>
                 <li>
-                    <a href="{{ route('add.listings') }}"
+                    <a href="{{ route('agent.settings') }}"
                         class="{{ request()->routeIs('add.listings') ? 'active-side' : '' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="11" height="14" viewBox="0 0 11 14" fill="none">
                             <path

@@ -7,15 +7,15 @@
             <div class="row">
                 <div class="col-lg-12">
                     <!-- <nav aria-label="breadcrumb">
-                                                <ol class="breadcrumb mb-1">
-                                                    <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Home</a></li>
-                                                    <li class="breadcrumb-item active" aria-current="page">My Profile</li>
-                                                </ol>
-                                            </nav> -->
+                                                    <ol class="breadcrumb mb-1">
+                                                        <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Home</a></li>
+                                                        <li class="breadcrumb-item active" aria-current="page">My Profile</li>
+                                                    </ol>
+                                                </nav> -->
                     <!-- breadcrumbs -->
 
                     @include('partials.user-account-breadcrumbs')
-                    <h2 class="fw-bold mb-4">My Profile</h2>
+                    <h2 class="fw-bold mb-4">Add Listing</h2>
                 </div>
             </div>
         </div>
