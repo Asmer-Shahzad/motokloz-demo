@@ -86,8 +86,7 @@
 
                     <!-- Language Dropdown -->
                     <div class="dropdownn m-4 lang-dropdown">
-                        <button class="btn btn-light border rounded-pill px-3 py-1 dropdown-toggle"
-                            type="button"
+                        <button class="btn btn-light border rounded-pill px-3 py-1 dropdown-toggle" type="button"
                             data-bs-toggle="dropdown">
                             ENG
                         </button>
@@ -107,13 +106,13 @@
                     <!-- Hidden GTranslate Wrapper -->
                     <div class="gtranslate_wrapper" style="display:none;"></div>
 
-                    <!-- GTranslate Settings -->
+                    {{-- <!-- GTranslate Settings -->
                     <script>
-                    window.gtranslateSettings = {
-                        default_language: "en",
-                        detect_browser_language: true,
-                        wrapper_selector: ".gtranslate_wrapper"
-                    };
+                        window.gtranslateSettings = {
+                            default_language: "en",
+                            detect_browser_language: true,
+                            wrapper_selector: ".gtranslate_wrapper"
+                        };
                     </script>
 
                     <!-- GTranslate Script -->
@@ -121,52 +120,52 @@
 
                     <!-- Custom Language Switch Script -->
                     <script>
-                    document.addEventListener("DOMContentLoaded", function () {
+                        document.addEventListener("DOMContentLoaded", function () {
 
-                        function waitForSelectAndChange(lang) {
+                            function waitForSelectAndChange(lang) {
 
-                            let interval = setInterval(function () {
+                                let interval = setInterval(function () {
 
-                                let select = document.querySelector(".gtranslate_wrapper select");
+                                    let select = document.querySelector(".gtranslate_wrapper select");
 
-                                if (select) {
-                                    select.value = lang;
-                                    select.dispatchEvent(new Event("change"));
-                                    clearInterval(interval);
-                                }
+                                    if (select) {
+                                        select.value = lang;
+                                        select.dispatchEvent(new Event("change"));
+                                        clearInterval(interval);
+                                    }
 
-                            }, 300);
-                        }
+                                }, 300);
+                            }
 
-                        // Change language on click
-                        document.querySelectorAll(".change-lang").forEach(function (el) {
+                            // Change language on click
+                            document.querySelectorAll(".change-lang").forEach(function (el) {
 
-                            el.addEventListener("click", function (e) {
-                                e.preventDefault();
+                                el.addEventListener("click", function (e) {
+                                    e.preventDefault();
 
-                                let lang = this.getAttribute("data-lang");
+                                    let lang = this.getAttribute("data-lang");
 
-                                waitForSelectAndChange(lang);
+                                    waitForSelectAndChange(lang);
 
-                                // Update button text
-                                document.querySelector(".lang-dropdown button").innerText = lang.toUpperCase();
+                                    // Update button text
+                                    document.querySelector(".lang-dropdown button").innerText = lang.toUpperCase();
 
-                                // Save selected language in localStorage
-                                localStorage.setItem("selectedLang", lang);
+                                    // Save selected language in localStorage
+                                    localStorage.setItem("selectedLang", lang);
+                                });
+
                             });
 
+                            // Load saved language on page load
+                            let savedLang = localStorage.getItem("selectedLang");
+
+                            if (savedLang) {
+                                waitForSelectAndChange(savedLang);
+                                document.querySelector(".lang-dropdown button").innerText = savedLang.toUpperCase();
+                            }
+
                         });
-
-                        // Load saved language on page load
-                        let savedLang = localStorage.getItem("selectedLang");
-
-                        if (savedLang) {
-                            waitForSelectAndChange(savedLang);
-                            document.querySelector(".lang-dropdown button").innerText = savedLang.toUpperCase();
-                        }
-
-                    });
-                    </script>
+                    </script> --}}
                     <button id="themeToggle" aria-label="Toggle theme">
                         <img id="themeIcon" src="/assets/images/darkmood.png" alt="Theme toggle" />
                     </button>
