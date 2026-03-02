@@ -198,7 +198,7 @@
                         class="fleet-toolbar d-flex flex-wrap justify-content-between align-items-center mb-4">
                         <div class="toolbar-left d-flex align-items-center">
                             <div class="view-icons me-3">
-                                <i class="fa-solid fa-table-cells-large active"></i>
+                                <i class="fa-solid fa-table-cells-large active light-dark"></i>
                                 <i class="fa-solid fa-list ms-2"></i>
                             </div>
                             <span class="results-info">1 - 10 of 19 tours found</span>
