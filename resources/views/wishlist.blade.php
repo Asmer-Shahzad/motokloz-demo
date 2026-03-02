@@ -4,7 +4,7 @@
 
 
 
-    <div class="container listing-page my-py-80">
+    <div class="container listing-page my-5">
 
         @include('partials.user-account-breadcrumbs')
         <h2 class="main-head">My Wishlist</h2>

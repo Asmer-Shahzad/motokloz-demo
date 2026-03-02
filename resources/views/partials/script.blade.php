@@ -1,4 +1,4 @@
-<!-- Scroll Button with Dynamic Arrow -->
+{{-- <!-- Scroll Button with Dynamic Arrow -->
 <button id="scrollTopBtn" class="btn rounded-circle">
     ↑
 </button>
@@ -71,6 +71,142 @@
                 top: document.body.scrollHeight,
                 behavior: 'smooth'
             });
+        }
+    });
+</script> --}}
+
+
+<!-- Scroll Button with VIP Animation -->
+<button id="scrollTopBtn" class="btn rounded-circle" aria-label="Scroll to top or bottom">
+    ↑
+</button>
+
+<style>
+    #scrollTopBtn {
+        position: fixed;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+        z-index: 1000;
+        /* Premium gold gradient */
+        background: #f58d02;
+        color: #1a1a1a;
+        font-size: 28px;
+        font-weight: bold;
+        width: 56px;
+        height: 56px;
+        border: none;
+        border-radius: 50%;
+        display: none;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4), 0 0 0 2px rgba(255, 215, 0, 0.2);
+        opacity: 0;
+        transition: opacity 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+            transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+            box-shadow 0.3s ease;
+        backdrop-filter: blur(2px);
+        line-height: 1;
+    }
+
+    #scrollTopBtn.show {
+        display: block;
+        opacity: 1;
+        animation: vipAppear 0.5s ease-out forwards;
+    }
+
+    @keyframes vipAppear {
+        0% {
+            transform: translateY(-50%) scale(0.8);
+            opacity: 0;
+            box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.6);
+        }
+
+        50% {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 0 20px 10px rgba(212, 175, 55, 0.5);
+        }
+
+        100% {
+            transform: translateY(-50%) scale(1);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4), 0 0 0 2px rgba(255, 215, 0, 0.2);
+        }
+    }
+
+    #scrollTopBtn:hover {
+        transform: translateY(-50%) scale(1.15);
+        box-shadow: 0 12px 28px rgba(212, 175, 55, 0.7), 0 0 0 4px rgba(255, 215, 0, 0.3);
+        background: linear-gradient(135deg, #ffefb0 0%, #e5c100 50%, #c5a028 100%);
+    }
+
+    /* Direction change with subtle rotation */
+    #scrollTopBtn.changed {
+        animation: arrowFlip 0.3s ease;
+    }
+
+    @keyframes arrowFlip {
+        0% {
+            transform: translateY(-50%) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-50%) rotate(180deg);
+            opacity: 0.7;
+        }
+
+        100% {
+            transform: translateY(-50%) rotate(360deg);
+        }
+    }
+</style>
+
+<script>
+    const scrollBtn = document.getElementById('scrollTopBtn');
+    let lastScroll = 0;
+    let directionChanged = false;
+
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.scrollY;
+
+        // Show/hide with threshold
+        if (currentScroll > 100) {
+            if (!scrollBtn.classList.contains('show')) {
+                scrollBtn.classList.add('show');
+            }
+        } else {
+            scrollBtn.classList.remove('show');
+        }
+
+        // Determine direction and update arrow + trigger flip animation
+        if (currentScroll > lastScroll && currentScroll > 100) {
+            // Scrolling down → show up arrow
+            if (scrollBtn.textContent !== '↑') {
+                scrollBtn.textContent = '↑';
+                triggerFlip();
+            }
+        } else if (currentScroll < lastScroll && currentScroll > 100) {
+            // Scrolling up → show down arrow
+            if (scrollBtn.textContent !== '↓') {
+                scrollBtn.textContent = '↓';
+                triggerFlip();
+            }
+        }
+
+        lastScroll = currentScroll <= 0 ? 0 : currentScroll;
+    });
+
+    function triggerFlip() {
+        scrollBtn.classList.add('changed');
+        setTimeout(() => {
+            scrollBtn.classList.remove('changed');
+        }, 300);
+    }
+
+    // Click action: top or bottom
+    scrollBtn.addEventListener('click', () => {
+        if (scrollBtn.textContent === '↑') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
     });
 </script>

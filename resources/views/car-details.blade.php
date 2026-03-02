@@ -97,7 +97,7 @@
                         <span class="mto-meta-item"><i class="fa-solid fa-location-dot me-1"></i> Las Vegas, USA</span>
                         <a href="#" class="mto-map-link fw-bold">Show on map</a>
                         <span class="mto-meta-item flatt">
-                            <img src="/assets/images/code.png" alt="">
+                            <img src="/assets/images/code.png" class="light-dark" alt="">
                             <span class="">Fleet Code:</span>
                             <span class="value">LVA-4125</span>
                         </span>
@@ -115,7 +115,7 @@
 
                     .mto-meta-item .value {
                         font-weight: 600;
-                        color: #000;
+                        color: var(--select-color);
                         border-bottom: 1px solid #000;
                     }
                 </style>
@@ -247,7 +247,7 @@
                     }
 
                     .q-a.active {
-                        background: #F2F4F6;
+                        background: var(--text-color);
                     }
                 </style>
 
@@ -277,22 +277,22 @@
                             <div class="mto-contact-details small fw-semibold">
 
                                 <div class="mb-2">
-                                    <img src="/assets/images/Background (8).png" alt="phone" class="contact-icon">
+                                    <img src="/assets/images/Background (8).png" alt="phone" class="contact-icon light-dark">
                                     Mobile: 1-222-333-4444
                                 </div>
 
                                 <div class="mb-2">
-                                    <img src="/assets/images/Background (10).png" alt="email" class="contact-icon">
+                                    <img src="/assets/images/Background (10).png" alt="email" class="contact-icon light-dark">
                                     Email: emily-rose@gmail.com
                                 </div>
 
                                 <div class="mb-2">
-                                    <img src="/assets/images/Background (11).png" alt="whatsapp" class="contact-icon">
+                                    <img src="/assets/images/Background (11).png" alt="whatsapp" class="contact-icon light-dark">
                                     WhatsApp: 1-222-333-4444
                                 </div>
 
                                 <div class="mb-2">
-                                    <img src="/assets/images/Background (12).png" alt="fax" class="contact-icon">
+                                    <img src="/assets/images/Background (12).png" alt="fax" class="contact-icon light-dark">
                                     Fax: 1-222-333-4444
                                 </div>
 

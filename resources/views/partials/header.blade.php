@@ -84,6 +84,7 @@
                     <!-- Google Translate Dropdown Container -->
                     {{-- <div class="gtranslate_wrapper"></div> --}}
 
+                    <!-- Language Dropdown -->
                     <div class="dropdownn m-4 lang-dropdown">
                         <button class="btn btn-light border rounded-pill px-3 py-1 dropdown-toggle" type="button"
                             data-bs-toggle="dropdown">
@@ -91,16 +92,80 @@
                         </button>
 
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">English (ENG)</a></li>
-                            <li><a class="dropdown-item" href="#">Spanish (ES)</a></li>
-                            <li><a class="dropdown-item" href="#">French (FR)</a></li>
-                            <li><a class="dropdown-item" href="#">German (DE)</a></li>
-                            <li><a class="dropdown-item" href="#">Chinese (ZH)</a></li>
-                            <li><a class="dropdown-item" href="#">Turkish (TR)</a></li>
-                            <li><a class="dropdown-item" href="#">Russian (RU)</a></li>
-                            <li><a class="dropdown-item" href="#">Indonesian (ID)</a></li>
+                            <li><a class="dropdown-item change-lang" data-lang="en">English</a></li>
+                            <li><a class="dropdown-item change-lang" data-lang="es">Spanish</a></li>
+                            <li><a class="dropdown-item change-lang" data-lang="fr">French</a></li>
+                            <li><a class="dropdown-item change-lang" data-lang="de">German</a></li>
+                            <li><a class="dropdown-item change-lang" data-lang="zh-CN">Chinese</a></li>
+                            <li><a class="dropdown-item change-lang" data-lang="tr">Turkish</a></li>
+                            <li><a class="dropdown-item change-lang" data-lang="ru">Russian</a></li>
+                            <li><a class="dropdown-item change-lang" data-lang="id">Indonesian</a></li>
                         </ul>
                     </div>
+
+                    <!-- Hidden GTranslate Wrapper -->
+                    <div class="gtranslate_wrapper" style="display:none;"></div>
+
+                    {{-- <!-- GTranslate Settings -->
+                    <script>
+                        window.gtranslateSettings = {
+                            default_language: "en",
+                            detect_browser_language: true,
+                            wrapper_selector: ".gtranslate_wrapper"
+                        };
+                    </script>
+
+                    <!-- GTranslate Script -->
+                    <script src="https://cdn.gtranslate.net/widgets/latest/dropdown.js" defer></script>
+
+                    <!-- Custom Language Switch Script -->
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+
+                            function waitForSelectAndChange(lang) {
+
+                                let interval = setInterval(function () {
+
+                                    let select = document.querySelector(".gtranslate_wrapper select");
+
+                                    if (select) {
+                                        select.value = lang;
+                                        select.dispatchEvent(new Event("change"));
+                                        clearInterval(interval);
+                                    }
+
+                                }, 300);
+                            }
+
+                            // Change language on click
+                            document.querySelectorAll(".change-lang").forEach(function (el) {
+
+                                el.addEventListener("click", function (e) {
+                                    e.preventDefault();
+
+                                    let lang = this.getAttribute("data-lang");
+
+                                    waitForSelectAndChange(lang);
+
+                                    // Update button text
+                                    document.querySelector(".lang-dropdown button").innerText = lang.toUpperCase();
+
+                                    // Save selected language in localStorage
+                                    localStorage.setItem("selectedLang", lang);
+                                });
+
+                            });
+
+                            // Load saved language on page load
+                            let savedLang = localStorage.getItem("selectedLang");
+
+                            if (savedLang) {
+                                waitForSelectAndChange(savedLang);
+                                document.querySelector(".lang-dropdown button").innerText = savedLang.toUpperCase();
+                            }
+
+                        });
+                    </script> --}}
                     <button id="themeToggle" aria-label="Toggle theme">
                         <img id="themeIcon" src="/assets/images/darkmood.png" alt="Theme toggle" />
                     </button>
