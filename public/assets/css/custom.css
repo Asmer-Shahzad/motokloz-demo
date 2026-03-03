@@ -241,7 +241,7 @@ a.logo-o-link {
     display: flex;
     align-items: center;
     padding: 20px;
-    gap: 20px;
+    gap: 55px;
 }
 
 .filter {
@@ -270,9 +270,11 @@ select {
     background: none;
     border: none;
     color: var(--select-color);
-    /*color:#fff;*/
+    /* color: #fff; */
     font-size: 14px;
     outline: none;
+    line-height: 22px !important;
+    font-weight: 700;
 }
 
 /* Divider */
@@ -289,9 +291,11 @@ select {
 }
 
 .price-value {
-    font-size: 13px;
     margin-top: 6px;
     color: var(--select-color);
+    font-size: 14px;
+    line-height: 22px !important;
+    font-weight: 700;
 }
 
 /* Button */
@@ -529,7 +533,7 @@ select {
 
 .popular-button ul li a {
     text-decoration: none;
-    background: #faf3e1;
+    background: #e4e6e8;
     color: #101010;
     line-height: 22px;
     font-size: 14px;
@@ -747,11 +751,20 @@ a.btn-custom {
     margin-bottom: 15px;
 }
 
-.car-review {
+/* .car-review {
     background: url(../images/car-reviews.png) no-repeat top right;
     background-size: 100% 100%;
     padding-top: 170px;
     padding-bottom: 100px;
+} */
+
+.car-review {
+    background: url(../images/car-reviews.png) no-repeat top right;
+    background-size: cover;
+    background-position: top right;
+    height: 672px;
+    display: flex;
+    align-items: center;
 }
 
 .car-review h4 {
@@ -1295,7 +1308,7 @@ section.banner-car-listing {
 /* Badge on top of image */
 .badge-mileage {
     position: absolute;
-    bottom: -7px;
+    bottom: 0;
     left: 12px;
     background: var(--banner-bg-color);
     padding: 6px 16px;
@@ -1304,6 +1317,7 @@ section.banner-car-listing {
     font-weight: 700;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     color: var();
+    z-index: 99996;
 }
 
 .badge-mileage i {
@@ -1313,9 +1327,12 @@ section.banner-car-listing {
 
 /* Card Body */
 .car-card-bottom {
-    padding: 20px;
+    padding: 25px 20px 20px 20px;
     background: var(--banner-bg-color);
     border-radius: 12px !important;
+    margin-top: -10px;
+    z-index: 999;
+    position: relative;
 }
 
 .car-main-title {
@@ -1542,7 +1559,7 @@ section.banner-car-listing {
 
 /* Beige Info Grid */
 .mto-info-tile {
-    background-color: #fff4e5;
+    background-color: #FFE1B9;
     padding: 18px 5px;
     border-radius: 10px;
     text-align: center;
@@ -2329,7 +2346,7 @@ h5.mb-4.border-bottom.pb-3 {
     background-color: #f39200;
 }
 .rating-num {
-    font-size: 3rem;
+    font-size:;
     font-weight: 800;
 }
 .gallery-img {

@@ -37,7 +37,7 @@
 
         </div>
         <div class="car-dealer">
-            <div class="container">
+            <div>
                 <div class="row">
                     <div class="col-lg-12">
 
