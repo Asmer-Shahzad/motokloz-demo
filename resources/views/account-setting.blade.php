@@ -11,7 +11,7 @@
 
         @include('partials.user-account-breadcrumbs')
 
-        <h2 class="main-head">Dashboard</h2>
+        <h2 class="main-head">Account Setting</h2>
 
         <div class="row g-4">
 

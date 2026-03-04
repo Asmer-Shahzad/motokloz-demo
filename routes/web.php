@@ -26,6 +26,7 @@ Route::middleware('guest')->group(function () {
 | Protected Routes (login required)
 |--------------------------------------------------------------------------
 */
+Route::get('/dealer', [HomeController::class, 'dealer'])->name('dealer');
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/car-listing', [HomeController::class, 'carlisting'])->name('car.listing');
 Route::get('/car-details', [HomeController::class, 'cardetails'])->name('car.details');
@@ -40,6 +41,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/add-listings', [HomeController::class, 'addlistings'])->name('add.listings');
     Route::get('/account-setting', [HomeController::class, 'accountsettings'])->name('account.settings');
     Route::get('/listings', [HomeController::class, 'listings'])->name('listings');
+
 Route::middleware('auth')->group(function () {
     
 });
+

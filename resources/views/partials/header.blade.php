@@ -195,8 +195,8 @@
                                 </a>
                                 <ul class="dropdown-menu nav-drop dropdown-menu-end" aria-labelledby="userDropdown">
                                     <li>
-                                        <a class="dropdown-item {{ request()->routeIs('add.listings') ? 'active-link' : '' }}"
-                                            href="{{ route('add.listings') }}">
+                                        <a class="dropdown-item {{ request()->routeIs('agent.settings') ? 'active-link' : '' }}"
+                                            href="{{ route('agent.settings') }}">
                                             My Profile
                                         </a>
                                     </li>
