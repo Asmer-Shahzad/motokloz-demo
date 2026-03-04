@@ -715,7 +715,7 @@ a.btn-custom {
 
 .review-card {
     border-radius: 18px;
-    padding: 50px 32px;
+    padding: 50px 32px !important;
     color: #fff;
     height: 100%;
     border: 1px solid var(--border-color);
