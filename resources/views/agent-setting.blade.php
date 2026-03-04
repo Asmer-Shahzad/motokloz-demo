@@ -22,7 +22,7 @@
 
                 <div class="form-card shadow-sm">
                     <div class="agent-head">
-                        <h5 class="mb-4 border-bottom pb-3 ">Update your profile</h5>
+                        <h5 class="mb-4 border-bottom agend-headd">Update your profile</h5>
                     </div>
 
 
@@ -68,7 +68,7 @@
 
                 <div class="form-card shadow-sm">
                     <div class="agent-head">
-                        <h5 class="mb-4 border-bottom pb-3">Contact Information</h5>
+                        <h5 class="mb-4 border-bottom agend-headd">Contact Information</h5>
                     </div>
 
                     <div class="row g-3   settng-all ">
@@ -104,7 +104,7 @@
 
                 <div class="form-card shadow-sm">
                     <div class="agent-head">
-                        <h5 class="mb-4 border-bottom pb-3">Change Password</h5>
+                        <h5 class="mb-4 border-bottom agend-headd">Change Password</h5>
                     </div>
 
                     <div class="row g-3  settng-all">
@@ -133,7 +133,7 @@
         .agent-head {
 
             background-color: rgb(33 37 41 / 3%);
-            padding: 8px;
+
         }
 
         .settng-all {

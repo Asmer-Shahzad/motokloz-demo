@@ -3,6 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-4 btn-mobile">
+
                     <div class="logo-o">Buy
                         <span class="speed-line"></span>
                     </div>
@@ -51,6 +52,7 @@
                                 </li>
                             </ul>
                             <div class="mobile-btn">
+
                                 <div class="logo-o">Buy
                                     <span class="speed-line"></span>
                                 </div>
@@ -171,18 +173,35 @@
                     </button>
                 </div>
                 <div class="col-lg-6 btn-header">
+                    @php
+                        $showImageRoutes = [
+                            'wishlist',
+                            'chat',
+                            'agent.settings',
+                            'agent.dashboard',
+                            'add.listings',
+                            'account.settings',
+                            'listings'
+                        ];
+                    @endphp
+
+                    @if(in_array(Route::currentRouteName(), $showImageRoutes))
+                        <img src="/assets/images/Frame 1707481624.png" alt="Logo">
+                    @endif
                     <div class="logo-o">Buy
                         <span class="speed-line"></span>
                     </div>
                     <div class="logo-o">Sell
                         <span class="speed-line"></span>
                     </div>
-                    <div class="logo-o">Protect
+                    <div class="logo-o logo-2nd">Protect
                         <span class="speed-line"></span>
                     </div>
-                    <div class="logo-o">Borrow
+                    <div class="logo-o logo-2nd ">Borrow
                         <span class="speed-line"></span>
                     </div>
+
+
 
                     {{-- User Profile Dropdown / Login Button --}}
                     <div class="user-profile-btn">
@@ -359,5 +378,17 @@
         background: rgba(245, 141, 2, 0.08);
         color: #F58D02;
         transform: translateX(4px);
+    }
+</style>
+<style>
+    .logo-2nd {
+        background: var(--bg-button);
+        border: 2px solid var(--border-button);
+        color: #fff;
+    }
+
+    .logo-2nd:hover {
+        background: #fff;
+        color: #000;
     }
 </style>

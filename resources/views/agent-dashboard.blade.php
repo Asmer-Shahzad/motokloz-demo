@@ -347,10 +347,11 @@
             width: 14px;
             height: 14px;
             object-fit: contain;
+            margin-right: 0 !important;
         }
 
         .dropdown-toggle::after {
-            margin-left: 10px;
+            margin-left: 3px;
             vertical-align: middle;
         }
 
@@ -423,7 +424,11 @@
             padding: 14px 16px;
             border-bottom: 1px solid var(--border-color);
             background-color: rgb(33 37 41 / 3%);
-            border-radius: 10px !important;
+            border-radius: 0 !important;
+        }
+
+        .table-content tr:last-child td {
+            border: 0;
         }
 
         thead {
@@ -525,6 +530,7 @@
             color: #111827;
             font-weight: 600;
             line-height: 24px;
+            padding: 8px 20px;
         }
 
         .vehicle-table td {

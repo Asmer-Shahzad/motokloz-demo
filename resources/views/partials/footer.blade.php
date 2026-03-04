@@ -13,7 +13,7 @@
         </div>
         <div class="footer-mid">
             <div class="row">
-                <div class="col-lg-5">
+                <div class="col-lg-6">
                     <img src="/assets/images/darklogo.png" class="img-fluid" alt="Motokloz Logo">
                     <ul>
                         <li><i class="fa-sharp fa-solid fa-location-dot"></i><a href="#">#202 – 14204 128 AVE NW<br>
@@ -54,7 +54,7 @@
                             <li><a href="#">Advertise with us</a></li>
                         </ul>
                     </div> -->
-                <div class="col-lg-3">
+                <div class="col-lg-2">
                     <h4>Our Services</h4>
                     <ul>
                         <li><a href="#">Virtual Walk Arounds</a></li>
@@ -86,15 +86,44 @@
                     <p>© 2026 <span>Motokloz</span>. All rights reserved.</p>
                 </div>
                 <div class="col-lg-6">
-                    <ul>
+                    <ul class="social-icons">
                         <li>Follow us</li>
-                        <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
-                        <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
-                        <li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>
-                        <li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
+                        <li>
+                            <a href="#">
+                                <img src="/assets/images/insta (1).png" alt="Instagram" width="20">
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#">
+                                <img src="/assets/images/insta (2).png" alt="Facebook" width="20">
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#">
+                                <img src="/assets/images/insta (3).png" alt="Twitter" width="20">
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#">
+                                <img src="/assets/images/insta.png" alt="YouTube" width="20">
+                            </a>
+                        </li>
+
+
+
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 </footer>
+<style>
+    .social-icons img {
+        width: 22px;
+        height: 22px;
+        object-fit: contain;
+    }
+</style>

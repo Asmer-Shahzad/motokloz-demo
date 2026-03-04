@@ -28,6 +28,12 @@ div#navbarSupportedContent {
     --banner-bg-color: #3b3b3b;
     --border-color: #dde1de33;
     --select-color: #ffffff;
+                --bg-value-color: #d9d9d975;  
+                        --bg-button: #F58D02;  
+                         --border-button: #F58D02;  
+                        
+
+
 }
 ul.dropdown-menu.nav-drop.dropdown-menu-end.show {
     inset: 20px 0px auto auto !important;
@@ -38,6 +44,9 @@ body.dark-mode {
     --banner-bg-color: #ffffff;
     --border-color: #dde1de;
     --select-color: #000000;
+        --bg-value-color: none;  
+                 --bg-button: #101010;  
+                  --border-button: #101010;  
 }
 
 body {
@@ -53,6 +62,7 @@ body {
 .header {
     background: var(--bg-color);
 }
+
 
 button#themeToggle {
     background: transparent !important;
@@ -163,7 +173,7 @@ a.logo-o-link {
 
 .header {
     padding: 10px 0;
-    border-bottom: 1px solid #dadee233;
+    border-bottom: 1px solid #b3b4b5;
 }
 
 .gtranslate_wrapper #gt_float_wrapper {
@@ -245,7 +255,7 @@ a.logo-o-link {
 }
 
 .filter {
-    color: #fff;
+    color:     color: var(--select-color);;
     min-width: 150px;
 }
 
@@ -698,10 +708,10 @@ a.btn-custom {
 
 .review-card {
     border-radius: 18px;
-    padding: 22px;
+    padding: 50px 32px;
     color: #fff;
     height: 100%;
-    border: 1px solid #171717;
+    border: 1px solid var(--border-color);
     text-align: left;
 }
 
@@ -716,12 +726,12 @@ a.btn-custom {
     gap: 6px;
     margin-bottom: 10px;
 }
-
 .review-user h4 {
     margin: 0;
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 20px;
+    font-weight: 700;
     color: var(--select-color);
+    line-height: 22px;
 }
 
 ::selection {
@@ -766,11 +776,10 @@ a.btn-custom {
     display: flex;
     align-items: center;
 }
-
 .car-review h4 {
     color: #f58d02;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 20px;
+    font-weight: 600;
     line-height: 26px;
 }
 
@@ -844,6 +853,7 @@ a.btn-custom {
 .footer-mid li {
     display: flex;
     margin-top: 15px;
+    align-items: center;
 }
 
 .footer-mid ul {
@@ -867,6 +877,9 @@ a.btn-custom {
 
 .footer-mid img.img-fluid {
     margin-bottom: 40px;
+    width: 314px;
+    height: 47px;
+    object-fit: fill;
 }
 
 footer.footer {
@@ -1134,7 +1147,7 @@ footer ul li a:hover::after {
     object-fit: contain;
 }
 .top-back {
-    padding: 20px 0 10px 20px;
+    padding: 25px 0;
     background: var(--bg-color);
     color: var(--select-color);
 }
@@ -1313,8 +1326,8 @@ section.banner-car-listing {
     background: var(--banner-bg-color);
     padding: 6px 16px;
     border-radius: 20px;
-    font-size: 13px;
-    font-weight: 700;
+color: #737373;
+    font-weight: 500;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     color: var();
     z-index: 99996;
@@ -1457,7 +1470,7 @@ section.banner-car-listing {
     color: #ffffff;
     border: none;
     padding: 10px 25px;
-    border-radius: 12px;
+    border-radius: 50px;
     font-weight: 700;
     font-size: 14px;
     display: flex;
@@ -1471,7 +1484,7 @@ section.banner-car-listing {
     color: #111111;
     border: none;
     padding: 10px 25px;
-    border-radius: 12px;
+    border-radius: 50px;
     font-weight: 700;
     font-size: 14px;
     display: flex;
@@ -1559,7 +1572,7 @@ section.banner-car-listing {
 
 /* Beige Info Grid */
 .mto-info-tile {
-    background-color: #FFE1B9;
+    background-color: #ffe1b9;
     padding: 18px 5px;
     border-radius: 10px;
     text-align: center;
@@ -2008,6 +2021,7 @@ span.mto-rating-badge {
 .listing-page svg {
     width: 18px;
     height: 18px;
+    font-weight: 500;
 }
 
 .listing-page .listing {
@@ -2080,7 +2094,7 @@ span.mto-rating-badge {
     align-items: center;
     width: 316px;
     gap: 6px;
-    padding: 12px 10px;
+padding: 10px 9px;
     border-radius: 24px;
 }
 
@@ -2288,8 +2302,9 @@ h2.fw-bold.mb-4 {
 section.agent-header {
     padding-top: 50px;
 }
-h5.mb-4.border-bottom.pb-3 {
+.agend-headd {
     color: var(--select-color);
+        padding: 14px;
 }
 .form-card.shadow-sm input.form-control {
     background-color: #f9f9f9;
@@ -2533,3 +2548,108 @@ h2.section-title {
 .card-container h2.section-title {
     color: #000;
 }
+/* Swiper container ko target karein */
+.review-swiper {
+    padding: 40px 0; /* Cards ke upar niche thodi jagah */
+    position: relative;
+    overflow: hidden; /* Zaroori hai */
+    
+    /* Ye edges par blur/fade effect banayega */
+    -webkit-mask-image: linear-gradient(to right, 
+        transparent 0%, 
+        black 15%, 
+        black 85%, 
+        transparent 100%
+    );
+    mask-image: linear-gradient(to right, 
+        transparent 0%, 
+        black 15%, 
+        black 85%, 
+        transparent 100%
+    );
+}
+
+/* Card ka size control karne ke liye */
+.review-card {
+    background: #1e1e1e; /* Apne background se match karein */
+    border-radius: 15px;
+    padding: 33px;
+    border: 1px solid #333;
+    height: 100%;
+}
+
+
+
+.filter-all {
+            background: none;
+            border: none;
+            color: var(--select-color);
+            /* color: #fff; */
+            font-size: 14px;
+            outline: none;
+            line-height: 22px !important;
+            font-weight: 700;
+        }
+
+        .price-box {
+
+            font-family: sans-serif;
+        }
+
+        .range-container {
+            position: relative;
+            width: 95%;
+            height: 10px
+        }
+
+        .slider-track {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 6px;
+            width: 100%;
+            background: #d9d9d9;
+            border-radius: 5px;
+            z-index: 1;
+        }
+
+        input[type="range"] {
+            position: absolute;
+            width: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            pointer-events: none;
+            -webkit-appearance: none;
+            z-index: 2;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 18px;
+            width: 18px;
+            background: #f7941d;
+            border-radius: 50%;
+            cursor: pointer;
+            pointer-events: auto;
+            border: none;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            height: 18px;
+            width: 18px;
+            background: #f7941d;
+            border-radius: 50%;
+            cursor: pointer;
+            pointer-events: auto;
+            border: none;
+        }
+
+        .values {
+            margin-top: 10px;
+            font-weight: 600;
+            background: var(--bg-value-color);
+            color: #fff;
+            padding: 3px 5px;
+            border-radius: 6px;
+        }

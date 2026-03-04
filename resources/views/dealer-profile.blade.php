@@ -444,10 +444,9 @@
             <div class="col-lg-3 col-sm-6">
                 <div class="modern-car-card shadow-sm">
                     <div class="car-card-top">
-                        <img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=500" alt="Car">
-                        <div class="badge-mileage">
-                            <i class="fa-solid fa-gauge-high"></i> 25,100 Km
-                        </div>
+                        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500" alt="Car">
+                        <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
+                                style="width:20px; height:12px;"> 18,500 Km</div>
                     </div>
                     <div class="car-card-bottom">
                         <h5 class="car-main-title">2022 Cadillac XT6 Premium Luxury</h5>
@@ -472,7 +471,8 @@
                 <div class="modern-car-card shadow-sm">
                     <div class="car-card-top">
                         <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500" alt="Car">
-                        <div class="badge-mileage"><i class="fa-solid fa-gauge-high"></i> 18,500 Km</div>
+                        <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
+                                style="width:20px; height:12px;"> 18,500 Km</div>
                     </div>
                     <div class="car-card-bottom">
                         <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>
@@ -496,7 +496,8 @@
                 <div class="modern-car-card shadow-sm">
                     <div class="car-card-top">
                         <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500" alt="Car">
-                        <div class="badge-mileage"><i class="fa-solid fa-gauge-high"></i> 18,500 Km</div>
+                        <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
+                                style="width:20px; height:12px;"> 18,500 Km</div>
                     </div>
                     <div class="car-card-bottom">
                         <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>
@@ -520,7 +521,8 @@
                 <div class="modern-car-card shadow-sm">
                     <div class="car-card-top">
                         <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500" alt="Car">
-                        <div class="badge-mileage"><i class="fa-solid fa-gauge-high"></i> 18,500 Km</div>
+                        <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
+                                style="width:20px; height:12px;"> 18,500 Km</div>
                     </div>
                     <div class="car-card-bottom">
                         <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>

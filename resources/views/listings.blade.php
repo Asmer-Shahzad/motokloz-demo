@@ -77,51 +77,51 @@
                                                 </svg>
                                             </div>
                                             <!-- <div class="sort">
-                                                                                                sort
-                                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="4"
-                                                                                                    viewBox="0 0 8 4" fill="none">
-                                                                                                    <mask id="path-1-inside-1_286_3048" fill="white">
-                                                                                                        <path d="M0 0H8V4H0V0Z" />
-                                                                                                    </mask>
-                                                                                                    <g clip-path="url(#paint0_diamond_286_3048_clip_path)"
-                                                                                                        data-figma-skip-parse="true"
-                                                                                                        mask="url(#path-1-inside-1_286_3048)">
-                                                                                                        <g transform="matrix(0.004 0 0 0.004 4 0)">
-                                                                                                            <rect x="0" y="0" width="1250" height="1250"
-                                                                                                                fill="url(#paint0_diamond_286_3048)" opacity="1"
-                                                                                                                shape-rendering="crispEdges" />
-                                                                                                            <rect x="0" y="0" width="1250" height="1250"
-                                                                                                                transform="scale(1 -1)"
-                                                                                                                fill="url(#paint0_diamond_286_3048)" opacity="1"
-                                                                                                                shape-rendering="crispEdges" />
-                                                                                                            <rect x="0" y="0" width="1250" height="1250"
-                                                                                                                transform="scale(-1 1)"
-                                                                                                                fill="url(#paint0_diamond_286_3048)" opacity="1"
-                                                                                                                shape-rendering="crispEdges" />
-                                                                                                            <rect x="0" y="0" width="1250" height="1250"
-                                                                                                                transform="scale(-1)"
-                                                                                                                fill="url(#paint0_diamond_286_3048)" opacity="1"
-                                                                                                                shape-rendering="crispEdges" />
-                                                                                                        </g>
-                                                                                                    </g>
-                                                                                                    <path
-                                                                                                        d="M0 0V-4H-4V0H0ZM8 0H12V-4H8V0ZM0 0V4H8V0V-4H0V0ZM8 0H4V4H8H12V0H8ZM0 4H4V0H0H-4V4H0Z"
-                                                                                                        data-figma-gradient-fill="{&quot;type&quot;:&quot;GRADIENT_DIAMOND&quot;,&quot;stops&quot;:[{&quot;color&quot;:{&quot;r&quot;:0.45098039507865906,&quot;g&quot;:0.45098039507865906,&quot;b&quot;:0.45098039507865906,&quot;a&quot;:1.0},&quot;position&quot;:0.99999988079071045},{&quot;color&quot;:{&quot;r&quot;:0.0,&quot;g&quot;:0.0,&quot;b&quot;:0.0,&quot;a&quot;:0.0},&quot;position&quot;:1.0}],&quot;stopsVar&quot;:[{&quot;color&quot;:{&quot;r&quot;:0.45098039507865906,&quot;g&quot;:0.45098039507865906,&quot;b&quot;:0.45098039507865906,&quot;a&quot;:1.0},&quot;position&quot;:0.99999988079071045},{&quot;color&quot;:{&quot;r&quot;:0.0,&quot;g&quot;:0.0,&quot;b&quot;:0.0,&quot;a&quot;:0.0},&quot;position&quot;:1.0}],&quot;transform&quot;:{&quot;m00&quot;:8.0,&quot;m01&quot;:0.0,&quot;m02&quot;:0.0,&quot;m10&quot;:0.0,&quot;m11&quot;:8.0,&quot;m12&quot;:-4.0},&quot;opacity&quot;:1.0,&quot;blendMode&quot;:&quot;NORMAL&quot;,&quot;visible&quot;:true}"
-                                                                                                        mask="url(#path-1-inside-1_286_3048)" />
-                                                                                                    <defs>
-                                                                                                        <clipPath id="paint0_diamond_286_3048_clip_path">
-                                                                                                            <path
-                                                                                                                d="M0 0V-4H-4V0H0ZM8 0H12V-4H8V0ZM0 0V4H8V0V-4H0V0ZM8 0H4V4H8H12V0H8ZM0 4H4V0H0H-4V4H0Z"
-                                                                                                                mask="url(#path-1-inside-1_286_3048)" />
-                                                                                                        </clipPath>
-                                                                                                        <linearGradient id="paint0_diamond_286_3048" x1="0" y1="0"
-                                                                                                            x2="500" y2="500" gradientUnits="userSpaceOnUse">
-                                                                                                            <stop offset="1" stop-color="#737373" />
-                                                                                                            <stop offset="1" stop-opacity="0" />
-                                                                                                        </linearGradient>
-                                                                                                    </defs>
-                                                                                                </svg>
-                                                                                            </div> -->
+                                                                                                                        sort
+                                                                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="4"
+                                                                                                                            viewBox="0 0 8 4" fill="none">
+                                                                                                                            <mask id="path-1-inside-1_286_3048" fill="white">
+                                                                                                                                <path d="M0 0H8V4H0V0Z" />
+                                                                                                                            </mask>
+                                                                                                                            <g clip-path="url(#paint0_diamond_286_3048_clip_path)"
+                                                                                                                                data-figma-skip-parse="true"
+                                                                                                                                mask="url(#path-1-inside-1_286_3048)">
+                                                                                                                                <g transform="matrix(0.004 0 0 0.004 4 0)">
+                                                                                                                                    <rect x="0" y="0" width="1250" height="1250"
+                                                                                                                                        fill="url(#paint0_diamond_286_3048)" opacity="1"
+                                                                                                                                        shape-rendering="crispEdges" />
+                                                                                                                                    <rect x="0" y="0" width="1250" height="1250"
+                                                                                                                                        transform="scale(1 -1)"
+                                                                                                                                        fill="url(#paint0_diamond_286_3048)" opacity="1"
+                                                                                                                                        shape-rendering="crispEdges" />
+                                                                                                                                    <rect x="0" y="0" width="1250" height="1250"
+                                                                                                                                        transform="scale(-1 1)"
+                                                                                                                                        fill="url(#paint0_diamond_286_3048)" opacity="1"
+                                                                                                                                        shape-rendering="crispEdges" />
+                                                                                                                                    <rect x="0" y="0" width="1250" height="1250"
+                                                                                                                                        transform="scale(-1)"
+                                                                                                                                        fill="url(#paint0_diamond_286_3048)" opacity="1"
+                                                                                                                                        shape-rendering="crispEdges" />
+                                                                                                                                </g>
+                                                                                                                            </g>
+                                                                                                                            <path
+                                                                                                                                d="M0 0V-4H-4V0H0ZM8 0H12V-4H8V0ZM0 0V4H8V0V-4H0V0ZM8 0H4V4H8H12V0H8ZM0 4H4V0H0H-4V4H0Z"
+                                                                                                                                data-figma-gradient-fill="{&quot;type&quot;:&quot;GRADIENT_DIAMOND&quot;,&quot;stops&quot;:[{&quot;color&quot;:{&quot;r&quot;:0.45098039507865906,&quot;g&quot;:0.45098039507865906,&quot;b&quot;:0.45098039507865906,&quot;a&quot;:1.0},&quot;position&quot;:0.99999988079071045},{&quot;color&quot;:{&quot;r&quot;:0.0,&quot;g&quot;:0.0,&quot;b&quot;:0.0,&quot;a&quot;:0.0},&quot;position&quot;:1.0}],&quot;stopsVar&quot;:[{&quot;color&quot;:{&quot;r&quot;:0.45098039507865906,&quot;g&quot;:0.45098039507865906,&quot;b&quot;:0.45098039507865906,&quot;a&quot;:1.0},&quot;position&quot;:0.99999988079071045},{&quot;color&quot;:{&quot;r&quot;:0.0,&quot;g&quot;:0.0,&quot;b&quot;:0.0,&quot;a&quot;:0.0},&quot;position&quot;:1.0}],&quot;transform&quot;:{&quot;m00&quot;:8.0,&quot;m01&quot;:0.0,&quot;m02&quot;:0.0,&quot;m10&quot;:0.0,&quot;m11&quot;:8.0,&quot;m12&quot;:-4.0},&quot;opacity&quot;:1.0,&quot;blendMode&quot;:&quot;NORMAL&quot;,&quot;visible&quot;:true}"
+                                                                                                                                mask="url(#path-1-inside-1_286_3048)" />
+                                                                                                                            <defs>
+                                                                                                                                <clipPath id="paint0_diamond_286_3048_clip_path">
+                                                                                                                                    <path
+                                                                                                                                        d="M0 0V-4H-4V0H0ZM8 0H12V-4H8V0ZM0 0V4H8V0V-4H0V0ZM8 0H4V4H8H12V0H8ZM0 4H4V0H0H-4V4H0Z"
+                                                                                                                                        mask="url(#path-1-inside-1_286_3048)" />
+                                                                                                                                </clipPath>
+                                                                                                                                <linearGradient id="paint0_diamond_286_3048" x1="0" y1="0"
+                                                                                                                                    x2="500" y2="500" gradientUnits="userSpaceOnUse">
+                                                                                                                                    <stop offset="1" stop-color="#737373" />
+                                                                                                                                    <stop offset="1" stop-opacity="0" />
+                                                                                                                                </linearGradient>
+                                                                                                                            </defs>
+                                                                                                                        </svg>
+                                                                                                                    </div> -->
                                         </div>
                                     </div>
                                     <div class="listing-body">
@@ -129,11 +129,11 @@
                                             <div class="col-lg-4 col-sm-6">
                                                 <div class="modern-car-card shadow-sm">
                                                     <div class="car-card-top">
-                                                        <img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=500"
+                                                        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500"
                                                             alt="Car">
-                                                        <div class="badge-mileage">
-                                                            <i class="fa-solid fa-gauge-high"></i> 25,100 Km
-                                                        </div>
+                                                        <div class="badge-mileage"><img src="/assets/images/mile1.png"
+                                                                alt="Mileage" class="me-2" style="width:20px; height:12px;">
+                                                            18,500 Km</div>
                                                     </div>
                                                     <div class="car-card-bottom">
                                                         <h5 class="car-main-title">2022 Cadillac XT6 Premium Luxury</h5>
@@ -160,7 +160,8 @@
                                                     <div class="car-card-top">
                                                         <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500"
                                                             alt="Car">
-                                                        <div class="badge-mileage"><i class="fa-solid fa-gauge-high"></i>
+                                                        <div class="badge-mileage"><img src="/assets/images/mile1.png"
+                                                                alt="Mileage" class="me-2" style="width:20px; height:12px;">
                                                             18,500 Km</div>
                                                     </div>
                                                     <div class="car-card-bottom">
@@ -186,7 +187,8 @@
                                                     <div class="car-card-top">
                                                         <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500"
                                                             alt="Car">
-                                                        <div class="badge-mileage"><i class="fa-solid fa-gauge-high"></i>
+                                                        <div class="badge-mileage"><img src="/assets/images/mile1.png"
+                                                                alt="Mileage" class="me-2" style="width:20px; height:12px;">
                                                             18,500 Km</div>
                                                     </div>
                                                     <div class="car-card-bottom">
@@ -212,7 +214,8 @@
                                                     <div class="car-card-top">
                                                         <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500"
                                                             alt="Car">
-                                                        <div class="badge-mileage"><i class="fa-solid fa-gauge-high"></i>
+                                                        <div class="badge-mileage"><img src="/assets/images/mile1.png"
+                                                                alt="Mileage" class="me-2" style="width:20px; height:12px;">
                                                             18,500 Km</div>
                                                     </div>
                                                     <div class="car-card-bottom">
@@ -238,7 +241,8 @@
                                                     <div class="car-card-top">
                                                         <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500"
                                                             alt="Car">
-                                                        <div class="badge-mileage"><i class="fa-solid fa-gauge-high"></i>
+                                                        <div class="badge-mileage"><img src="/assets/images/mile1.png"
+                                                                alt="Mileage" class="me-2" style="width:20px; height:12px;">
                                                             18,500 Km</div>
                                                     </div>
                                                     <div class="car-card-bottom">
@@ -264,7 +268,8 @@
                                                     <div class="car-card-top">
                                                         <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500"
                                                             alt="Car">
-                                                        <div class="badge-mileage"><i class="fa-solid fa-gauge-high"></i>
+                                                        <div class="badge-mileage"><img src="/assets/images/mile1.png"
+                                                                alt="Mileage" class="me-2" style="width:20px; height:12px;">
                                                             18,500 Km</div>
                                                     </div>
                                                     <div class="car-card-bottom">
@@ -290,7 +295,8 @@
                                                     <div class="car-card-top">
                                                         <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500"
                                                             alt="Car">
-                                                        <div class="badge-mileage"><i class="fa-solid fa-gauge-high"></i>
+                                                        <div class="badge-mileage"><img src="/assets/images/mile1.png"
+                                                                alt="Mileage" class="me-2" style="width:20px; height:12px;">
                                                             18,500 Km</div>
                                                     </div>
                                                     <div class="car-card-bottom">
@@ -316,7 +322,8 @@
                                                     <div class="car-card-top">
                                                         <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500"
                                                             alt="Car">
-                                                        <div class="badge-mileage"><i class="fa-solid fa-gauge-high"></i>
+                                                        <div class="badge-mileage"><img src="/assets/images/mile1.png"
+                                                                alt="Mileage" class="me-2" style="width:20px; height:12px;">
                                                             18,500 Km</div>
                                                     </div>
                                                     <div class="car-card-bottom">
@@ -342,7 +349,8 @@
                                                     <div class="car-card-top">
                                                         <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500"
                                                             alt="Car">
-                                                        <div class="badge-mileage"><i class="fa-solid fa-gauge-high"></i>
+                                                        <div class="badge-mileage"><img src="/assets/images/mile1.png"
+                                                                alt="Mileage" class="me-2" style="width:20px; height:12px;">
                                                             18,500 Km</div>
                                                     </div>
                                                     <div class="car-card-bottom">

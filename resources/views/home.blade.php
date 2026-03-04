@@ -40,10 +40,8 @@
                                     <div class="filter">
                                         <label>Make</label>
                                         <div class="select">
-                                            <i class="fa-solid fa-car-side"></i>
-                                            <select class="filter-options">
-                                                <option>Modern compact</option>
-                                            </select>
+                                            <i class="fa-solid fa-car-side me-2"></i>
+                                            <span class="filter-all">Modern Compact</span>
                                         </div>
                                     </div>
 
@@ -52,21 +50,36 @@
                                     <div class="filter">
                                         <label>Model</label>
                                         <div class="select">
-                                            <i class="fa-solid fa-calendar"></i>
-                                            <select class="filter-options">
-                                                <option>2022</option>
-                                            </select>
+                                            <i class="fa-solid fa-calendar me-2"></i>
+                                            <span class="filter-all">2022</span>
                                         </div>
                                     </div>
 
                                     <div class="divider"></div>
-
+                                    {{--
                                     <div class="filter price">
                                         <label>Price Range</label>
                                         <input type="range" min="10000" max="12000" value="11000" id="priceRange">
                                         <div class="price-value">$ <span id="priceVal">10,000 - 12,000</span></div>
-                                    </div>
+                                    </div> --}}
 
+                                    <div class="price-box filter">
+                                        <label>Model</label>
+
+                                        <div class="range-container ">
+                                            <div class="slider-track" id="track"></div>
+                                            <input class="filter-all " type="range" min="0" max="1000000" step="10000"
+                                                value="100000" id="slider-1">
+                                            <input class="filter-all " type="range" min="0" max="1000000" step="10000"
+                                                value="500000" id="slider-2">
+                                        </div>
+
+                                        <div class="values">
+                                            $ <span id="min-value"></span>
+                                            &nbsp; - &nbsp;
+                                            <span id="max-value"></span>
+                                        </div>
+                                    </div>
                                     <button class="search-btn">
                                         <i class="fa-solid fa-magnifying-glass"></i>
                                         Find a Vehicle
@@ -75,6 +88,7 @@
                                 </div>
 
                             </div>
+
 
 
                             <div class="browse-slider">
@@ -184,7 +198,7 @@
 
     <section class="popular-vehicles">
         <div class="container">
-            <div class="row align-items-center">
+            <div class="row align-items-center pb-5">
                 <div class="col-lg-6">
                     <h2>Popular Vehicles</h2>
                     <p>Favorite vehicles based on customer reviews</p>
@@ -202,10 +216,9 @@
                 <div class="col-lg-3 col-sm-6">
                     <div class="modern-car-card shadow-sm">
                         <div class="car-card-top">
-                            <img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=500" alt="Car">
-                            <div class="badge-mileage">
-                                <i class="fa-solid fa-gauge-high"></i> 25,100 Km
-                            </div>
+                            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500" alt="Car">
+                            <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
+                                    style="width:20px; height:12px;"> 18,500 Km</div>
                         </div>
                         <div class="car-card-bottom">
                             <h5 class="car-main-title">2022 Cadillac XT6 Premium Luxury</h5>
@@ -230,7 +243,8 @@
                     <div class="modern-car-card shadow-sm">
                         <div class="car-card-top">
                             <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500" alt="Car">
-                            <div class="badge-mileage"><i class="fa-solid fa-gauge-high"></i> 18,500 Km</div>
+                            <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
+                                    style="width:20px; height:12px;"> 18,500 Km</div>
                         </div>
                         <div class="car-card-bottom">
                             <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>
@@ -253,7 +267,8 @@
                     <div class="modern-car-card shadow-sm">
                         <div class="car-card-top">
                             <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500" alt="Car">
-                            <div class="badge-mileage"><i class="fa-solid fa-gauge-high"></i> 18,500 Km</div>
+                            <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
+                                    style="width:20px; height:12px;"> 18,500 Km</div>
                         </div>
                         <div class="car-card-bottom">
                             <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>
@@ -276,7 +291,8 @@
                     <div class="modern-car-card shadow-sm">
                         <div class="car-card-top">
                             <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500" alt="Car">
-                            <div class="badge-mileage"><i class="fa-solid fa-gauge-high"></i> 18,500 Km</div>
+                            <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
+                                    style="width:20px; height:12px;"> 18,500 Km</div>
                         </div>
                         <div class="car-card-bottom">
                             <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>
@@ -513,6 +529,10 @@
         }
     </style>
 
+
+
+
+   
 
 
 @endsection

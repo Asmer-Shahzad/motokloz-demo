@@ -333,30 +333,44 @@ toggleBtn.addEventListener("click", () => {
     });
 </script>
 <script>
-    const reviewSwiper = new Swiper(".review-swiper", {
-        slidesPerView: 3,
-        spaceBetween: 30,
-
-        loop: true,
-        speed: 5000,
-
-        autoplay: {
-            delay: 0,
-            disableOnInteraction: false,
+    var swiper = new Swiper(".review-swiper", {
+    slidesPerView: 1.2, // Mobile par ek poora aur ek thoda sa dikhega
+    centeredSlides: true, // Main card hamesha beech mein rahega
+    spaceBetween: 20,
+    loop: true, // Is se side wale empty nahi lagenge
+    breakpoints: {
+        640: {
+            slidesPerView: 2.5,
         },
+        1024: {
+            slidesPerView: 3.5, // Desktop par side wale cards cut honge (jaisa image mein tha)
+        },
+    },
+});
+    // const reviewSwiper = new Swiper(".review-swiper", {
+    //     slidesPerView: 3,
+    //     spaceBetween: 30,
 
-        breakpoints: {
-            0: {
-                slidesPerView: 1.2
-            },
-            768: {
-                slidesPerView: 2
-            },
-            1024: {
-                slidesPerView: 4
-            },
-        }
-    });
+    //     loop: true,
+    //     speed: 5000,
+
+    //     autoplay: {
+    //         delay: 0,
+    //         disableOnInteraction: false,
+    //     },
+
+    //     breakpoints: {
+    //         0: {
+    //             slidesPerView: 1.2
+    //         },
+    //         768: {
+    //             slidesPerView: 2
+    //         },
+    //         1024: {
+    //             slidesPerView: 4
+    //         },
+    //     }
+    // });
 
     // hover pause
     const reviewEl = document.querySelector('.review-swiper');
@@ -444,4 +458,57 @@ toggleBtn.addEventListener("click", () => {
         });
 
     });
+</script>
+
+
+
+<script>
+    const slider1 = document.getElementById("slider-1");
+    const slider2 = document.getElementById("slider-2");
+    const track = document.getElementById("track");
+    const minValue = document.getElementById("min-value");
+    const maxValue = document.getElementById("max-value");
+
+    const minGap = 0;
+    const sliderMaxValue = slider1.max;
+
+    function slideOne() {
+        if (parseInt(slider2.value) - parseInt(slider1.value) <= minGap) {
+            slider1.value = parseInt(slider2.value) - minGap;
+        }
+        fillColor();
+        updateValues();
+    }
+
+    function slideTwo() {
+        if (parseInt(slider2.value) - parseInt(slider1.value) <= minGap) {
+            slider2.value = parseInt(slider1.value) + minGap;
+        }
+        fillColor();
+        updateValues();
+    }
+
+    function fillColor() {
+        let percent1 = (slider1.value / sliderMaxValue) * 100;
+        let percent2 = (slider2.value / sliderMaxValue) * 100;
+
+        track.style.background = `linear-gradient(
+                                                                                                        to right,
+                                                                                                        #d9d9d9 ${percent1}%,
+                                                                                                        #f7941d ${percent1}%,
+                                                                                                        #f7941d ${percent2}%,
+                                                                                                        #d9d9d9 ${percent2}%
+                                                                                                    )`;
+    }
+
+    function updateValues() {
+        minValue.textContent = Number(slider1.value).toLocaleString();
+        maxValue.textContent = Number(slider2.value).toLocaleString();
+    }
+
+    slider1.addEventListener("input", slideOne);
+    slider2.addEventListener("input", slideTwo);
+
+    updateValues();
+    fillColor();
 </script>
