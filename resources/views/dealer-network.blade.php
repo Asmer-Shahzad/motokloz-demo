@@ -30,14 +30,15 @@
                             <div class="search-field">
                                 <input type="text" placeholder="Enter Postal Code" aria-label="Postal Code">
                             </div>
+
+                            <button class="btn-search" type="submit">
+                                <img src="/assets/images/Vector (4).png" alt="Search icon">
+                                Find a Vehicle
+                            </button>
+
                         </div>
 
-                        <button class="btn-search" type="submit">
-                            <img src="/assets/images/Vector (4).png" alt="Search icon">
-                            Find a Vehicle
-                        </button>
-
-                        <button class="btn-dealer" type="button">
+                        <button class="btn-dealer btn-dealer-22" type="button">
                             Become a Dealer
                             <img src="/assets/images/Vector (3).png" alt="Dealer icon">
                         </button>
@@ -381,6 +382,10 @@
             flex-shrink: 0;
         }
 
+        .btn-dealer-22 {
+            padding: 18px 24px !important;
+        }
+
         .btn-search,
         .btn-dealer {
             background: #F58D02;
@@ -412,8 +417,8 @@
         }
 
         /* ────────────────────────────────────────
-               Mobile-first responsive adjustments
-            ───────────────────────────────────────── */
+                                   Mobile-first responsive adjustments
+                                ───────────────────────────────────────── */
 
         @media (max-width: 640px) {
             .dealer-search-inner {

@@ -16,12 +16,13 @@
                 <div class="col-lg-5">
                     <img src="/assets/images/darklogo.png" class="img-fluid" alt="Motokloz Logo">
                     <ul>
-                        <li><i class="fa-sharp fa-solid fa-location-dot"></i><a href="#">2356 Oakwood Drive, Suite
-                                18, San Francisco, California 94111, US</a></li>
+                        <li><i class="fa-sharp fa-solid fa-location-dot"></i><a href="#">#202 – 14204 128 AVE NW<br>
+                                EDMONTON AB T5H 3L5
+                            </a></li>
                         <li><i class="fa-sharp fa-solid fa-clock"></i><a href="#">Hours: 8:00 - 17:00, Mon - Sat</a>
                         </li>
                         <li><i class="fa-sharp fa-solid fa-envelope"></i><a
-                                href="mailto:support@carento.com">support@carento.com</a></li>
+                                href="mailto:websitesupport@motokloz.com">websitesupport@motokloz.com</a></li>
                     </ul>
                     <div class="calltoaction">
                         <h5><i class="fa-sharp fa-solid fa-phone"></i> Need help? Call us</h5>
@@ -32,12 +33,12 @@
                     <h4>Company</h4>
                     <ul>
                         <li><a href="#">About Us</a></li>
-                        <li><a href="#">Our Awards</a></li>
+                        <li><a href="#">Our Mission</a></li>
                         <li><a href="#">Careers</a></li>
                         <li><a href="#">Merchandise</a></li>
                         <li><a href="#">Terms of Use</a></li>
                         <li><a href="#">Privacy Notice</a></li>
-                        <li><a href="#">Press Releases</a></li>
+                        <li><a href="#">Press Releases </a></li>
                     </ul>
                 </div>
 

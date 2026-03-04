@@ -165,44 +165,44 @@
 
                         <!-- Sent message (You) - RIGHT -->
                         <!-- <div class="message sent">
-                                <div class="msg-content">
-                                    <div class="msg-header">
+                                    <div class="msg-content">
+                                        <div class="msg-header">
 
-                                        <span class="msg-time">12:15 AM</span>
+                                            <span class="msg-time">12:15 AM</span>
+                                        </div>
+                                        <div class="msg-text">
+                                            Hi, Oscar! Nice to meet you<br>
+                                            We will work with new project together
+                                        </div>
                                     </div>
-                                    <div class="msg-text">
-                                        Hi, Oscar! Nice to meet you<br>
-                                        We will work with new project together
-                                    </div>
-                                </div>
-                            </div> -->
+                                </div> -->
 
                         <!-- Another received message
-                            <div class="message received">
-                                <img src="https://i.pravatar.cc/40?img=4" class="msg-avatar" alt="">
-                                <div class="msg-content">
-                                    <div class="msg-header">
-                                        <span class="msg-name">Oscar Holloway</span>
-                                        <span class="msg-time">12:18 AM</span>
+                                <div class="message received">
+                                    <img src="https://i.pravatar.cc/40?img=4" class="msg-avatar" alt="">
+                                    <div class="msg-content">
+                                        <div class="msg-header">
+                                            <span class="msg-name">Oscar Holloway</span>
+                                            <span class="msg-time">12:18 AM</span>
+                                        </div>
+                                        <div class="msg-text">
+                                            Great! I'll share the wireframes soon.
+                                        </div>
                                     </div>
-                                    <div class="msg-text">
-                                        Great! I'll share the wireframes soon.
-                                    </div>
-                                </div>
-                            </div> -->
+                                </div> -->
 
                         <!-- Another sent message -->
                         <!-- <div class="message sent">
-                                <div class="msg-content">
-                                    <div class="msg-header">
+                                    <div class="msg-content">
+                                        <div class="msg-header">
 
-                                        <span class="msg-time">12:22 AM</span>
+                                            <span class="msg-time">12:22 AM</span>
+                                        </div>
+                                        <div class="msg-text">
+                                            Perfect, looking forward to it!
+                                        </div>
                                     </div>
-                                    <div class="msg-text">
-                                        Perfect, looking forward to it!
-                                    </div>
-                                </div>
-                            </div> -->
+                                </div> -->
                     </div>
                 </div>
 
@@ -410,7 +410,7 @@
             overflow-y: auto;
             padding: 20px 15px;
             /* scrollbar-width: thin;
-            scrollbar-color: #C1C7D0 #F5F7FA; */
+                scrollbar-color: #C1C7D0 #F5F7FA; */
         }
 
 
@@ -749,7 +749,7 @@
             height: 36px;
             border-radius: 50%;
             object-fit: cover;
-            align-self: flex-end;
+            align-self: flex-start;
         }
 
         .message.sent .msg-avatar {
@@ -1162,8 +1162,8 @@
 
     <style>
         /* ===============================
-       GLOBAL FIXES
-    =================================*/
+           GLOBAL FIXES
+        =================================*/
         html,
         body {
             height: 100%;
@@ -1185,15 +1185,15 @@
         }
 
         /* ===============================
-       SIDEBAR FIX
-    =================================*/
+           SIDEBAR FIX
+        =================================*/
         .chat-sidebar {
             min-width: 280px;
         }
 
         /* ===============================
-       MESSAGE AREA IMPROVEMENTS
-    =================================*/
+           MESSAGE AREA IMPROVEMENTS
+        =================================*/
         .chat-messages {
             padding: 20px;
         }
@@ -1220,8 +1220,8 @@
         }
 
         /* ===============================
-       INPUT BAR FIX
-    =================================*/
+           INPUT BAR FIX
+        =================================*/
         .chat-input {
             position: sticky;
             bottom: 0;
@@ -1230,8 +1230,8 @@
         }
 
         /* ===============================
-       TABLET (<=1024px)
-    =================================*/
+           TABLET (<=1024px)
+        =================================*/
         @media (max-width: 1024px) {
 
             .chat-sidebar {
@@ -1248,8 +1248,8 @@
         }
 
         /* ===============================
-       MOBILE MAIN MODE (<=768px)
-    =================================*/
+           MOBILE MAIN MODE (<=768px)
+        =================================*/
         @media (max-width: 768px) {
 
             .main-chat {
@@ -1302,8 +1302,8 @@
         }
 
         /* ===============================
-       SMALL PHONES (<=480px)
-    =================================*/
+           SMALL PHONES (<=480px)
+        =================================*/
         @media (max-width: 480px) {
 
             .message {
@@ -1341,8 +1341,8 @@
         }
 
         /* ===============================
-       EXTRA SMALL (<=360px)
-    =================================*/
+           EXTRA SMALL (<=360px)
+        =================================*/
         @media (max-width: 360px) {
 
             .msg-text {

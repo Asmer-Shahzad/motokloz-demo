@@ -29,7 +29,7 @@
                                         <label>Type</label>
                                         <div class="select">
                                             <i class="fa-solid fa-car"></i>
-                                            <select>
+                                            <select class="filter-options">
                                                 <option>Auto</option>
                                             </select>
                                         </div>
@@ -41,7 +41,7 @@
                                         <label>Make</label>
                                         <div class="select">
                                             <i class="fa-solid fa-car-side"></i>
-                                            <select>
+                                            <select class="filter-options">
                                                 <option>Modern compact</option>
                                             </select>
                                         </div>
@@ -53,7 +53,7 @@
                                         <label>Model</label>
                                         <div class="select">
                                             <i class="fa-solid fa-calendar"></i>
-                                            <select>
+                                            <select class="filter-options">
                                                 <option>2022</option>
                                             </select>
                                         </div>
@@ -308,17 +308,22 @@
                 <div class="col-lg-5">
                     <div class="about-bg">
                         <h2>About <span>Motokloz</span></h2>
-                        <p>Lorem ipsum dolor sit amet consectetur. Aenean nisl elit blandit egestas consectetur feugiat
-                            gravida bibendum dictum. Nisl sed sit feugiat phasellus odio. A id nunc non pellentesque
-                            nunc sed. Diam nullam duis eget ante a nunc vitae eget. Volutpat mattis curabitur mauris
-                            amet gravida est turpis purus porttitor. Praesent sollicitudin morbi fermentum urna eu nec
-                            purus fermentum sit.</p>
-                        <p>Dictum eget aliquam a ac leo eu maecenas. Accumsan pulvinar justo nec odio quam. Amet augue
-                            massa consectetur purus luctus odio. Mi at cras adipiscing donec tortor. Commodo fermentum
-                            cursus aliquam egestas lobortis felis risus elementum pharetra. Vel ut lobortis donec non
-                            risus.</p>
-                        <p>Commodo fermentum cursus aliquam egestas lobortis felis risus elementum pharetra. Vel ut
-                            lobortis donec non risus.</p>
+                        <p>Motokloz is Canada’s newest buy-and-sell marketplace dedicated exclusively to motorized assets.
+                            Built with transparency and trust at its core, Motokloz connects buyers and sellers in a
+                            smarter, safer,
+                            and more informed environment — whether you’re shopping for motorcycles, cars, boats,
+                            powersports, RVs, or specialty vehicles. </p>
+                        <p>Our platform is designed around full disclosure and user confidence. We believe great
+                            transactions start with clear information, honest listings, and tools that empower both sides of
+                            the deal. Sellers gain access to structured listing features that highlight key details and
+                            build credibility, while buyers benefit from streamlined search, verified information, and an
+                            intuitive browsing experience that removes guesswork from major purchases. </p>
+                        <p>Motokloz isn’t just another classifieds site — it’s a purpose-built ecosystem focused on the
+                            ultimate buying and selling experience. From discovery to decision, every feature is created to
+                            reduce friction, increase transparency, and help Canadians move forward with confidence when
+                            purchasing or selling motorized assets. </p>
+                        <p>Whether you’re upgrading, downsizing, or finding your next ride, Motokloz delivers a modern
+                            marketplace where trust, clarity, and performance drive every transaction.</p>
                         <a href="#" class="btn-custom">Learn More</a>
                     </div>
                 </div>
@@ -472,7 +477,7 @@
     <section class="car-review">
         <div class="container">
             <div class="col-lg-12">
-                <h4></h4>
+                <h4>CAR REVIEW</h4>
                 <h2>Hyundai Tucson Plug-In <br>Hybrid 2025 review</h2>
                 <p>The Tucson Plug-in Hybrid is easy to drive and<br> provides a sufficient all-electric range.</p>
                 <a href="#" class="btn-custom-home">

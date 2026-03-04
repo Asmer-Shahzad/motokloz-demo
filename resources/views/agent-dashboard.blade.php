@@ -41,10 +41,19 @@
 
                             </div>
                         </div>
+                        <style>
+                            .agent-table {
+                                text-align: start;
+                            }
+
+                            .table-content {
+                                text-align: start;
+                            }
+                        </style>
 
                         <div class="table-responsive">
                             <table class="table vehicle-table align-middle mb-0">
-                                <thead>
+                                <thead class="agent-table">
                                     <tr>
                                         <th>ID</th>
                                         <th>Car & Type</th>
@@ -53,7 +62,7 @@
                                         <th>Status</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="table-content">
                                     <tr>
                                         <td class="id"># CR-5236</td>
                                         <td>
@@ -167,7 +176,7 @@
                                                 successfully confirmed.</p>
                                         </div>
                                     </div>
-                                    <small class="time text-success">2 mins ago</small>
+                                    <small class="time  text-success">2 mins ago</small>
                                 </div>
 
                                 <!-- Item -->
@@ -182,7 +191,7 @@
                                                 successfully.</p>
                                         </div>
                                     </div>
-                                    <small class="time text-success">25 mins ago</small>
+                                    <small class="time  text-success">25 mins ago</small>
                                 </div>
 
                                 <!-- Item -->
@@ -211,7 +220,7 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <small class="time text-success">2 hours ago</small>
+                                    <small class="time  text-success">2 hours ago</small>
                                 </div>
 
                             </div>
@@ -244,7 +253,7 @@
                                     <img src="/assets/images/Img (4).png" class="purchase-img">
                                     <div class="flex-grow-1 text-start">
                                         <div class="fw-semibold">GMC Sierra 2500HD Denali ( Australia )</div>
-                                        <small class="text-muted time">Date : 01 Jan 2025</small>
+                                        <small class="text-muted time border-and-gap">Date : 01 Jan 2025</small>
                                         <small class="text-muted date">Time: 06:30 AM </small>
                                     </div>
                                     <span class="text-muted small">Paid</span>
@@ -254,7 +263,7 @@
                                     <img src="/assets/images/Img (5).png" class="purchase-img">
                                     <div class="flex-grow-1 text-start">
                                         <div class="fw-semibold">Ford Mustang GT Premium ( Australia ) </div>
-                                        <small class="text-muted time">Date : 01 Jan 2025</small>
+                                        <small class="text-muted time border-and-gap">Date : 01 Jan 2025</small>
                                         <small class="text-muted date">Time: 06:30 AM </small>
                                     </div>
                                     <span class="text-muted small">Paid</span>
@@ -264,7 +273,7 @@
                                     <img src="/assets/images/Img (6).png" class="purchase-img">
                                     <div class="flex-grow-1 text-start">
                                         <div class="fw-semibold">Subaru Impreza WRX STI ( Australia ) </div>
-                                        <small class="text-muted time">Date : 01 Jan 2025</small>
+                                        <small class="text-muted time border-and-gap">Date : 01 Jan 2025</small>
                                         <small class="text-muted date">Time: 06:30 AM </small>
                                     </div>
                                     <span class="text-muted small">Paid</span>
@@ -275,7 +284,7 @@
                                     <img src="/assets/images/Img (7).png" class="purchase-img">
                                     <div class="flex-grow-1 text-start">
                                         <div class="fw-semibold">Mazda MX-5 Miata Club ( Australia )</div>
-                                        <small class="text-muted time">Date : 01 Jan 2025</small>
+                                        <small class="text-muted time border-and-gap">Date : 01 Jan 2025</small>
                                         <small class="text-muted date">Time: 06:30 AM </small>
                                     </div>
                                     <span class="text-muted small">Paid</span>
@@ -365,9 +374,16 @@
             color: #666;
         }
 
+        .border-and-gap {
+            border-right: 1px solid #DDE1DE;
+            margin-right: 10px;
+            padding-right: 10px;
+        }
+
         .time {
             font-size: 14px;
             white-space: nowrap;
+
         }
 
         .time-vehicles {

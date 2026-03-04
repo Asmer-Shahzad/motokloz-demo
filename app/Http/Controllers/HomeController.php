@@ -48,12 +48,12 @@ class HomeController extends Controller
 
     public function agentsettings()
     {
-        return view('agent-setting', ['pageTitle' => 'Agent Settings']);
+        return view('agent-setting', ['pageTitle' => 'My Profile']);
     }
 
     public function agentdashboard()
     {
-        return view('agent-dashboard', ['pageTitle' => 'Agent Dashboard']);
+        return view('agent-dashboard', ['pageTitle' => ' Dashboard']);
     }
 
     public function addlistings()
