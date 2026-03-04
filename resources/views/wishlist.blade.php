@@ -143,12 +143,12 @@
                             </div>
                         </div>
 
-                        <!-- Item 1 -->
+                        <!-- Item 2 -->
                         <div class=" wishlist-card mb-4">
                             <div class="row g-0">
                                 <div class="col-md-5">
-                                    <img src="/assets/images/wish-1 (1).png" class="img-fluid rounded-start wishlist-img"
-                                        alt="Mini Cooper S Hardtop 2 Door">
+                                    <img src="/assets/images/Link.png" class="img-fluid rounded-start wishlist-img"
+                                        alt="Volvo XC90 T6 Inscription">
                                 </div>
                                 <div class="col-md-7 cards-wish-all">
                                     <div class="card-body">
@@ -164,7 +164,7 @@
                                             </p>
                                         </div>
 
-                                        <h5 class="card-title fw-bold">Mini Cooper S Hardtop 2 Door</h5>
+                                        <h5 class="card-title fw-bold">Volvo XC90 T6 Inscription</h5>
 
                                         <p class="card-text location mb-3">
                                             <img src="/assets/images/Vector (11).png" class="icon light-dark">
@@ -212,7 +212,7 @@
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="price-wrap">
                                                 <span class="text-span">From</span>
-                                                <span class="price-span">$202.87</span>
+                                                <span class="price-span">$778.35</span>
                                                 <span class="text-span">/ USD</span>
                                             </div>
                                             <button class=" book-btn">Book Now</button>
@@ -224,12 +224,12 @@
                             </div>
                         </div>
 
-                        <!-- Item 1 -->
+                        <!-- Item 3 -->
                         <div class=" wishlist-card mb-4">
                             <div class="row g-0">
                                 <div class="col-md-5">
-                                    <img src="/assets/images/wish-1 (1).png" class="img-fluid rounded-start wishlist-img"
-                                        alt="Mini Cooper S Hardtop 2 Door">
+                                    <img src="/assets/images/Link (2).png" class="img-fluid rounded-start wishlist-img"
+                                        alt="Cadillac Escalade ESV Premium Luxury">
                                 </div>
                                 <div class="col-md-7 cards-wish-all">
                                     <div class="card-body">
@@ -245,7 +245,7 @@
                                             </p>
                                         </div>
 
-                                        <h5 class="card-title fw-bold">Mini Cooper S Hardtop 2 Door</h5>
+                                        <h5 class="card-title fw-bold">Cadillac Escalade ESV Premium Luxury</h5>
 
                                         <p class="card-text location mb-3">
                                             <img src="/assets/images/Vector (11).png" class="icon light-dark">
@@ -294,7 +294,7 @@
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="price-wrap">
                                                 <span class="text-span">From</span>
-                                                <span class="price-span">$202.87</span>
+                                                <span class="price-span">$779.58</span>
                                                 <span class="text-span">/ USD</span>
                                             </div>
 

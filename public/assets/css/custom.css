@@ -50,6 +50,13 @@ body {
     color: var(--select-color);
 }
 
+.services-list{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+}
+
 .header {
     background: var(--bg-color);
 }
@@ -2338,15 +2345,15 @@ h5.mb-4.border-bottom.pb-3 {
     color: #f39200;
 }
 .progress {
-    height: 8px;
-    background-color: #eee;
-    border-radius: 10px;
+    height: 12px;
+    background-color: #E4E6E8;
+    border-radius: 2px;
 }
 .progress-bar {
-    background-color: #f39200;
+    background-color: #FFC700;
 }
 .rating-num {
-    font-size:;
+    /* font-size:; */
     font-weight: 800;
 }
 .gallery-img {
@@ -2398,7 +2405,12 @@ ul.list-unstyled.service-list li {
 }
 
 .content-box input.form-control {
-    background-color: #fbfbfb;
+    background-color: #fff;
+    border: 1px solid #eee;
+}
+
+.content-box textarea.form-control {
+    background-color: #fff;
     border: 1px solid #eee;
 }
 
