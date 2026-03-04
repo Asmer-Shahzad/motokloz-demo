@@ -2,9 +2,13 @@
 
 @section('content')
 
-    <div class="map-banner">
-        <img src="/assets/images/map2.png" alt="Map" class="w-100 object-fit-cover" style="height: 550px;">
-    </div>
+    <!-- DEALER PROFILE BANNER -->
+    <section class="dealer-network-section p-3">
+
+        <div class="dealer-profile-banner">
+            <img src="/assets/images/map2(1)(1).png" alt="Map" class="w-100 object-fit-cover" style="height: 550px;">
+        </div>
+    </section>
 
     <div class="container my-5">
         <div class="row">
@@ -23,16 +27,15 @@
                     <!-- Collapsible Content -->
                     <div class="collapse show" id="overviewContent">
 
-                        <div class="d-flex align-items-center mb-4 border-bottom pb-4">
-                            <img src="/assets/images/Carento2.png" class="me-3 rounded" alt="Logo">
+                        <div class="d-flex align-items-start mb-4 border-bottom p-4">
+                            <img src="/assets/images/Carento2.png" class="me-4 rounded" alt="Logo">
                             <div>
-                                <h3 class="mb-0 fw-bold">Peugeot Sheffield</h3>
-                                <p class="mb-0">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    123 Kingway Greenland, Manchester, M20 2XE
+                                <h3 class="mb-3 fw-bold">Peugeot Sheffield</h3>
+                                <p class="mb-3">
+                                    123 Kingsway Strandeif, Manchester, M19 2XS
                                 </p>
-                                <span class="badge bg-light text-dark border mt-2">
-                                    112 reviews
+                                <span class="badge bg-light text-dark border mt-2 px-3 py-2 rounded-5">
+                                    180 Vehicles
                                 </span>
                             </div>
                         </div>
@@ -90,25 +93,47 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <ul class="list-unstyled service-list">
-                                    <li><i class="fas fa-circle"></i> Exclusive car vehicle sales with customization
-                                        options</li>
-                                    <li><i class="fas fa-circle"></i> Certified pre-owned vehicles with comprehensive
-                                        inspections</li>
-                                    <li><i class="fas fa-circle"></i> Flexible financing and leasing solutions tailored
-                                        to your needs</li>
-                                    <li><i class="fas fa-circle"></i> Full-service vehicle maintenance and repair center
+                                    <li class="services-list">
+                                        <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
+                                        Exclusive car vehicle sales with customization options
                                     </li>
-                                    <li><i class="fas fa-circle"></i> Authentic parts and accessories for optimal
-                                        vehicle performance</li>
+                                    <li class="services-list">
+                                        <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
+                                        Certified pre-owned vehicles with comprehensive inspections
+                                    </li>
+                                    <li class="services-list">
+                                        <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
+                                        Flexible financing and leasing solutions tailored to your needs
+                                    </li>
+                                    <li class="services-list">
+                                        <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
+                                        Full-service vehicle maintenance and repair center
+                                    </li>
+                                    <li class="services-list">
+                                        <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
+                                        Authentic parts and accessories for optimal vehicle performance
+                                    </li>
                                 </ul>
                             </div>
 
                             <div class="col-md-6">
                                 <ul class="list-unstyled service-list">
-                                    <li><i class="fas fa-circle"></i> Comprehensive Vehicle Maintenance</li>
-                                    <li><i class="fas fa-circle"></i> Genuine Parts & Accessories</li>
-                                    <li><i class="fas fa-circle"></i> Trade-in evaluation</li>
-                                    <li><i class="fas fa-circle"></i> Extended Warranty Plans</li>
+                                    <li class="services-list">
+                                        <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
+                                         Comprehensive Vehicle Maintenance
+                                    </li>
+                                    <li class="services-list">
+                                        <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
+                                         Genuine Parts & Accessories
+                                    </li>
+                                    <li class="services-list">
+                                        <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
+                                         Trade-in evaluation
+                                    </li>
+                                    <li class="services-list">
+                                        <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
+                                         Extended Warranty Plans
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -128,7 +153,7 @@
                     <!-- Collapsible Body -->
                     <div class="collapse show" id="rateReviewContent">
 
-                        <div class="row align-items-center mb-5 ">
+                        <div class="row align-items-center mb-5 p-3">
                             <div class="col-md-4 text-center rate-review-starting">
                                 <div class="rating-num">4.95 / 5</div>
                                 <p class="mb-1">6472 reviews</p>
@@ -342,22 +367,41 @@
                             Leave feedback
 
                         </h5>
-                        <div class="row g-4">
+                        <form action="#" method="POST">
 
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" placeholder="Your name">
-                            </div>
-                            <div class="col-md-6">
-                                <input type="email" class="form-control" placeholder="Email address">
-                            </div>
-                            <div class="col-12">
-                                <textarea class="form-control" rows="5" placeholder="Your comment"></textarea>
-                            </div>
-                        </div>
+                            <div class="row g-4">
 
-                        <button class="btn btn-orange mt-4 px-5">
-                            Submit review
-                        </button>
+                                <div class="col-md-6">
+                                    <input type="text" 
+                                        name="name"
+                                        class="form-control" 
+                                        placeholder="Your name"
+                                        required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <input type="email" 
+                                        name="email"
+                                        class="form-control" 
+                                        placeholder="Email address"
+                                        required>
+                                </div>
+
+                                <div class="col-12">
+                                    <textarea class="form-control" 
+                                            name="comment"
+                                            rows="5" 
+                                            placeholder="Your comment"
+                                            required></textarea>
+                                </div>
+
+                            </div>
+
+                            <button type="submit" class="btn btn-orange mt-4 px-5">
+                                Submit review
+                            </button>
+
+                        </form>
 
                     </div>
                 </div>
@@ -392,33 +436,62 @@
                 }
             </style>
             <div class="col-lg-4">
-                <div class="content-box shadow-sm">
-                    <h5 class="fw-bold mb-4">Get in touch</h5>
-                    <div class="mb-3"><input type="text" class="form-control" placeholder="Your name"></div>
-                    <div class="mb-3"><input type="email" class="form-control" placeholder="Your email"></div>
-                    <div class="mb-3"><textarea class="form-control" rows="4" placeholder="Message"></textarea></div>
-                    <button class="btn btn-orange w-100 mb-4">Send message <i class="fas fa-arrow-right ms-2"></i></button>
+                <div class="content-box shadow-sm p-4">
+                <h5 class="fw-bold mb-4">Get in touch</h5>
 
-                    <div class="small">
-                        <p class="mb-2"><i class="fas fa-phone-alt me-2"></i> <strong>Mobile:</strong> 1-222-333-4444
-                        </p>
-                        <p class="mb-2"><i class="fas fa-envelope me-2"></i> <strong>Email:</strong>
-                            emily.rose@gmail.com</p>
-                        <p class="mb-2"><i class="fab fa-whatsapp me-2"></i> <strong>WhatsApp:</strong> 1-222-333-4444
-                        </p>
-                        <p class="mb-2"><i class="fas fa-fax me-2"></i></i> <strong>Fax:</strong> 1-222-333-4444
+                <form action="#" method="POST">
 
-                        </p>
+                    <!-- Name Field with Image -->
+                    <div class="mb-3 position-relative">
+                        <img src="/assets/images/userlogin.png" class="input-icon" alt="">
+                        <input type="text" 
+                            class="form-control ps-5" 
+                            placeholder="Your name">
                     </div>
+
+                    <!-- Email Field -->
+                    <div class="mb-3 position-relative">
+                        <img src="/assets/images/email.png" class="input-icon" alt="">
+                        <input type="email" 
+                            class="form-control ps-5" 
+                            placeholder="Your email">
+                    </div>
+
+                    <!-- Message Field -->
+                    <div class="mb-3">
+                        <textarea class="form-control" 
+                                rows="10" 
+                                placeholder="Message"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-orange w-100 mb-4 text-white">
+                        Send message <i class="fas fa-arrow-right ms-2"></i>
+                    </button>
+
+                </form>
+
+                <!-- Contact Info -->
+                <div class="small">
+                    <p class="mb-2">
+                        <img src="/assets/images/Background (8).png" width="20"  alt="phone" class="contact-icon light-dark me-2"> <strong>Mobile:</strong> 1-222-333-4444
+                    </p>
+                    <p class="mb-2">
+                        <img src="/assets/images/Background (10).png" width="20" alt="email" class="contact-icon light-dark me-2"> <strong>Email:</strong> emily.rose@gmail.com
+                    </p>
+                    <p class="mb-2">
+                        <img src="/assets/images/Background (11).png" width="20" alt="whatsapp" class="contact-icon light-dark me-2"> <strong>WhatsApp:</strong> 1-222-333-4444
+                    </p>
+                    <p class="mb-2">
+                        <img src="/assets/images/Background (12).png" width="20" alt="fax" class="contact-icon light-dark me-2"><strong>Fax:</strong> 1-222-333-4444
+                    </p>
                 </div>
+            </div>
 
                 <div class="content-box shadow-sm">
                     <h5 class="fw-bold mb-3">Dealer Location</h5>
                     <img src="/assets/images/map.png" class="img-fluid rounded mb-3" alt="Location Map">
-                    <p class="small  mb-0"><i class="fas fa-map-marker-alt"></i> 123 Kingway Greenland, Manchester, M20
-                        2XE</p>
+                    <p class="small  mb-0"><i class="fas fa-map-marker-alt"></i> 123 Kingsway Strandeif, Manchester, M19 2XS</p>
                 </div>
-
 
                 <a href="/car-listing">
                     <button class="btn btn-dark-custom w-100 mb-3">View all inventory <i
@@ -432,15 +505,13 @@
 
         </div>
 
-
-
-
         <div class="row g-4">
-            <div class="dealer-top-section">
-                <h4 class="dealer-top-title">Listed by this dealer</h4>
-                <p class="dealer-top-subtitle">Top Cars are listed</p>
+            <div class="container mt-5">
+                <div class="dealer-top-section">
+                    <h4 class="dealer-top-title">Listed by this dealer</h4>
+                    <p class="dealer-top-subtitle">Top Cars are listed</p>
+                </div>
             </div>
-
             <div class="col-lg-3 col-sm-6">
                 <div class="modern-car-card shadow-sm">
                     <div class="car-card-top">
@@ -549,12 +620,12 @@
     <style>
         .dealer-top-title {
             font-weight: 600;
-            font-size: 36px;
+            font-size: 40px;
             color: var(--select-color);
         }
 
         .dealer-top-section {
-            padding: 20px 0;
+            /* padding: 10px 0; */
             border-top: 1px solid #DDE1 DE;
         }
 
@@ -563,7 +634,40 @@
             font-weight: 400;
             font-size: 16px;
             color: #9E9E9E;
-            margin-top: 8px;
+            /* margin-top: 8px; */
+        }
+
+        .dealer-profile-banner {
+            position: relative;
+            min-height: 465px;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .input-img {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+        }
+
+        .input-icon {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .form-control {
+            height: 50px;
+            border-radius: 8px;
+        }
+
+        textarea.form-control{
+            height:170px;
         }
     </style>
 @endsection

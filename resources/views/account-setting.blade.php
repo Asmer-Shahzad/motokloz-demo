@@ -49,7 +49,7 @@
                     <div class="notify-row">
                         <div class="notify-text">
                             <h6 class="notify-head">Policy</h6>
-                            <p class="notify-para">Stay informed about changes to our guidelines</p>
+                            <p class="notify-para">Stay informed about changes to our guidelines, rules and initiatives</p>
                         </div>
 
                         <div class="notify-switches">
