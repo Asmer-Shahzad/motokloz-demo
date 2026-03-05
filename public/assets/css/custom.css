@@ -262,8 +262,8 @@ a.logo-o-link {
 }
 
 .filter {
-    color:     color: var(--select-color);;
-    min-width: 150px;
+   color: var(--select-color);
+   min-width: 150px;
 }
 
 .filter label {
