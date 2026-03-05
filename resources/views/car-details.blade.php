@@ -121,7 +121,7 @@
                 </style>
                 <div class="col-lg-4">
                     <div class="mto-utility-btns d-flex gap-2 justify-content-lg-end mt-3 mt-lg-0">
-                        <button class="mto-pill-btn"><img src="/assets/images/printer.png" class="me-1" alt=""> Print Details</button>
+                        <button class="mto-pill-btn"><img src="/assets/images/Printer.png" class="me-1" alt=""> Print Details</button>
                         <button class="mto-pill-btn"><img src="/assets/images/SVG.png" class="me-1" alt=""> Share</button>
                         <button class="mto-pill-btn"><img src="/assets/images/Wishlish.png" class="me-1" alt=""> Wishlist</button>
                     </div>
