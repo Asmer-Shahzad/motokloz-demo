@@ -2583,7 +2583,7 @@ h2.section-title {
 
 /* Card ka size control karne ke liye */
 .review-card {
-    background: #1e1e1e; /* Apne background se match karein */
+
     border-radius: 15px;
     padding: 33px;
     border: 1px solid #333;
@@ -2661,7 +2661,7 @@ h2.section-title {
             margin-top: 10px;
             font-weight: 600;
             background: var(--bg-value-color);
-            color: #fff;
+            /* color: #fff; */
             padding: 3px 5px;
             border-radius: 6px;
         }
