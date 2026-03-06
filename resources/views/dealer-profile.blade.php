@@ -547,21 +547,25 @@
                             @endphp --}}
                             @php
                                 $detailUrl = route('inventory_product_details', $recent_vehicle->id);
+
+                                $defaultImage = asset('assets/images/defaultimage.jpg');
+
+                                $img = $recent_vehicle->primary_image
+                                    ? (Str::startsWith($recent_vehicle->primary_image, 'http')
+                                        ? $recent_vehicle->primary_image
+                                        : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$recent_vehicle->primary_image)
+                                    : $defaultImage;
                             @endphp
-                            @if ($recent_vehicle->primary_image != null)
-                            <a href="{{ route('inventory_product_details', $recent_vehicle->id) }}">
-                                            <img style="width: 100%"
-                                                    src="{{ Str::startsWith($recent_vehicle->primary_image, 'http') ? $recent_vehicle->primary_image : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$recent_vehicle->primary_image }}"
-                                                    alt="Vehicle Image" class="img-box img-fluid">
-                                            </a>
-                            @else
-                                <a href="{{ $detailUrl }}">
-                                    <img style="width: 100%"
-                                        src="/assets/images/defaultimage.jpg"
-                                        alt="Vehicle Image"
-                                        class="img-box img-fluid">
-                                </a>
-                            @endif
+
+                            <a href="{{ $detailUrl }}">
+                                <img
+                                    style="width:100%"
+                                    src="{{ $img }}"
+                                    alt="Vehicle Image"
+                                    class="img-box img-fluid"
+                                    onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
+                                >
+                            </a>
                             <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
                                     style="width:20px; height:12px;"> {{ $recent_vehicle->mileage ? $recent_vehicle->mileage . ' km' : '0 km' }}</div>
                         </div>

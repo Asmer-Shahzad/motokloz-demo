@@ -1375,6 +1375,30 @@ section.banner-car-listing {
     cursor: pointer;
 }
 
+/* Default SVG color */
+.gridbtn path {
+    fill: #afafaf; /* default gray */
+}
+
+/* Active SVG color */
+.gridbtn.active path {
+    fill: #ff9d00; /* active view color */
+}
+
+.vehicle-card{
+    transition: all 0.55s ease;
+}
+
+.vehicle-card.animating{
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+.vehicle-card.show{
+    opacity: 1;
+    transform: scale(1);
+}
+
 .col-12 .car-main-title{
    font-size: 26px;
    font-weight: 800;

@@ -29,25 +29,27 @@
                     <!-- MAIN GALLERY -->
                     <div class="swiper main-gallery-slider">
                         <div class="swiper-wrapper">
+
                             @php
                                 $images = $logo ?? [];
 
-                                // Agar empty ho ya sirf empty value ho
+                                // empty values remove
                                 $images = array_filter($images);
 
-                                // Agar koi image nahi to default image add karo
+                                // agar koi image nahi
                                 if(empty($images)){
                                     $images = ['default'];
                                 }
+
+                                $defaultImage = asset('assets/images/defaultimage.jpg');
                             @endphp
 
                             @foreach ($images as $eachLogo)
 
                                 @php
                                     if($eachLogo == 'default' || str_contains($eachLogo,'car_thumb.png')){
-                                        $img = '/assets/images/defaultimage.jpg';
-                                    }
-                                    else{
+                                        $img = $defaultImage;
+                                    }else{
                                         $img = Str::startsWith($eachLogo,'http')
                                             ? $eachLogo
                                             : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$eachLogo;
@@ -55,24 +57,30 @@
                                 @endphp
 
                                 <div class="swiper-slide">
-                                    <img src="{{ $img }}" class="img-fluid" alt="Vehicle Image">
+                                    <img 
+                                        src="{{ $img }}"
+                                        class="img-fluid"
+                                        alt="Vehicle Image"
+                                        onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
+                                    >
                                 </div>
 
                             @endforeach
 
-                            
                         </div>
-                            <div class="gallery-action-overlay">
-                                <button class="btn-lexus-orange">
-                                    <i class="fa-solid fa-table-cells-large"></i> See All Photos
-                                </button>
-                                <button class="btn-lexus-white">
-                                    <i class="fa-solid fa-circle-play"></i> Video Clips
-                                </button>
-                            </div>
 
-                            <div class="swiper-button-next arrow-round"></div>
-                            <div class="swiper-button-prev arrow-round"></div>
+                        <div class="gallery-action-overlay">
+                            <button class="btn-lexus-orange">
+                                <i class="fa-solid fa-table-cells-large"></i> See All Photos
+                            </button>
+
+                            <button class="btn-lexus-white">
+                                <i class="fa-solid fa-circle-play"></i> Video Clips
+                            </button>
+                        </div>
+
+                        <div class="swiper-button-next arrow-round"></div>
+                        <div class="swiper-button-prev arrow-round"></div>
                     </div>
 
 
@@ -82,22 +90,26 @@
 
                             @foreach ($images as $eachLogo)
 
-                            @php
-                                if($eachLogo == 'default' || str_contains($eachLogo,'car_thumb.png')){
-                                    $img = '/assets/images/defaultimage.jpg';
-                                }
-                                else{
-                                    $img = Str::startsWith($eachLogo,'http')
-                                        ? $eachLogo
-                                        : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$eachLogo;
-                                }
-                            @endphp
+                                @php
+                                    if($eachLogo == 'default' || str_contains($eachLogo,'car_thumb.png')){
+                                        $img = $defaultImage;
+                                    }else{
+                                        $img = Str::startsWith($eachLogo,'http')
+                                            ? $eachLogo
+                                            : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$eachLogo;
+                                    }
+                                @endphp
 
-                            <div class="swiper-slide">
-                                <div class="thumbnail">
-                                    <img src="{{ $img }}" class="img-thumbnail" alt="Thumbnail">
+                                <div class="swiper-slide">
+                                    <div class="thumbnail">
+                                        <img 
+                                            src="{{ $img }}"
+                                            class="img-thumbnail"
+                                            alt="Thumbnail"
+                                            onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
+                                        >
+                                    </div>
                                 </div>
-                            </div>
 
                             @endforeach
 
