@@ -512,3 +512,41 @@ toggleBtn.addEventListener("click", () => {
     updateValues();
     fillColor();
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const gridBtn = document.getElementById("gridViewBtn");
+    const listBtn = document.getElementById("listViewBtn");
+    const cards = document.querySelectorAll(".vehicle-card");
+
+    // Function to set view
+    function setView(view) {
+        if (view === 'grid') {
+            cards.forEach(card => {
+                card.classList.remove("col-12");
+                card.classList.add("col-lg-4", "col-sm-6");
+            });
+            gridBtn.classList.add("active");
+            listBtn.classList.remove("active");
+        } else {
+            cards.forEach(card => {
+                card.classList.remove("col-lg-4", "col-sm-6");
+                card.classList.add("col-12");
+            });
+            listBtn.classList.add("active");
+            gridBtn.classList.remove("active");
+        }
+
+        // Save to localStorage
+        localStorage.setItem('vehicleView', view);
+    }
+
+    // Load saved view from localStorage
+    const savedView = localStorage.getItem('vehicleView') || 'grid';
+    setView(savedView);
+
+    // Event listeners
+    gridBtn.addEventListener("click", () => setView('grid'));
+    listBtn.addEventListener("click", () => setView('list'));
+});
+</script>

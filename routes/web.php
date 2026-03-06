@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\DealerProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,13 +28,12 @@ Route::middleware('guest')->group(function () {
 | Protected Routes (login required)
 |--------------------------------------------------------------------------
 */
-Route::get('/dealer', [HomeController::class, 'dealer'])->name('dealer');
+Route::get('/dealer/{id}', [DealerProfileController::class, 'dealer_inventory'])->name('dealer_inventory');
 Route::get('/', [HomeController::class, 'home'])->name('home');
-Route::get('/car-listing', [HomeController::class, 'carlisting'])->name('car.listing');
-Route::get('/car-details', [HomeController::class, 'cardetails'])->name('car.details');
-Route::get('/dealer-profile', [HomeController::class, 'dealerprofile'])->name('dealer.profile');
+Route::get('/car-listing', [InventoryController::class, 'inventory'])->name('car.listing');
+Route::get('/car-details/{id}', [InventoryController::class, 'inventory_product_details'])->name('inventory_product_details');
+Route::get('/dealer-profile/{id}', [DealerProfileController::class, 'dealer_inventory_details'])->name('dealer_inventory_details');
 Route::get('/dealer-network', [HomeController::class, 'dealernetwork'])->name('dealer.network');
-
 
 Route::middleware('auth')->group(function () {
 

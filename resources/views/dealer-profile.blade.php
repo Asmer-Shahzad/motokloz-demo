@@ -27,17 +27,36 @@
                     <!-- Collapsible Content -->
                     <div class="collapse show" id="overviewContent">
 
+                        @php
+                            $dealerLogo = $dealer->logo
+                                ? (Str::startsWith($dealer->logo, 'http')
+                                    ? $dealer->logo
+                                    : env('diskloz_base_url') . '/admin_assets/images/dealer_images/' . $dealer->logo)
+                                : asset('assets/images/defaultdealerlogo.png');
+                        @endphp
+
                         <div class="d-flex align-items-start mb-4 border-bottom p-4">
-                            <img src="/assets/images/Carento2.png" class="me-4 rounded" alt="Logo">
+
+                            <img src="{{ $dealerLogo }}"
+                                class="me-4 dealerprofilelogo"
+                                alt="Logo"
+                                width="80"
+                                onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultdealerlogo.png') }}';">
+
                             <div>
-                                <h3 class="mb-3 fw-bold">Peugeot Sheffield</h3>
+                                <h3 class="mb-3 fw-bold">
+                                    {{ $dealer->first_name }} {{ $dealer->last_name }}
+                                </h3>
+
                                 <p class="mb-3">
-                                    123 Kingsway Strandeif, Manchester, M19 2XS
+                                    {{ $dealer->physical_address }}
                                 </p>
-                                <span class="badge bg-light text-dark border mt-2 px-3 py-2 rounded-5">
-                                    180 Vehicles
+
+                                <span class="badge bg-light text-dark border mt-2 p-2 rounded-5">
+                                    {{ $total_inventory }} Vehicles
                                 </span>
                             </div>
+
                         </div>
 
                         <div class="mb-4">
@@ -473,16 +492,20 @@
                 <!-- Contact Info -->
                 <div class="small">
                     <p class="mb-2">
-                        <img src="/assets/images/Background (8).png" width="20"  alt="phone" class="contact-icon light-dark me-2"> <strong>Mobile:</strong> 1-222-333-4444
+                        <img src="/assets/images/Background (8).png" width="20"  alt="phone" class="contact-icon light-dark me-2"> 
+                        <strong>Mobile:</strong> {{ $dealer->phone_no }}
                     </p>
                     <p class="mb-2">
-                        <img src="/assets/images/Background (10).png" width="20" alt="email" class="contact-icon light-dark me-2"> <strong>Email:</strong> emily.rose@gmail.com
+                        <img src="/assets/images/Background (10).png" width="20" alt="email" class="contact-icon light-dark me-2"> 
+                        <strong>Email:</strong> {{ $dealer->email }}
                     </p>
                     <p class="mb-2">
-                        <img src="/assets/images/Background (11).png" width="20" alt="whatsapp" class="contact-icon light-dark me-2"> <strong>WhatsApp:</strong> 1-222-333-4444
+                        <img src="/assets/images/Background (11).png" width="20" alt="whatsapp" class="contact-icon light-dark me-2"> 
+                        <strong>WhatsApp:</strong> {{ $dealer->phone_no }}
                     </p>
                     <p class="mb-2">
-                        <img src="/assets/images/Background (12).png" width="20" alt="fax" class="contact-icon light-dark me-2"><strong>Fax:</strong> 1-222-333-4444
+                        <img src="/assets/images/Background (12).png" width="20" alt="fax" class="contact-icon light-dark me-2">
+                        <strong>Fax:</strong> {{ $dealer->phone_no }}
                     </p>
                 </div>
             </div>
@@ -490,12 +513,11 @@
                 <div class="content-box shadow-sm">
                     <h5 class="fw-bold mb-3">Dealer Location</h5>
                     <img src="/assets/images/map.png" class="img-fluid rounded mb-3" alt="Location Map">
-                    <p class="small  mb-0"><i class="fas fa-map-marker-alt"></i> 123 Kingsway Strandeif, Manchester, M19 2XS</p>
+                    <p class="small  mb-0"><i class="fas fa-map-marker-alt"></i>  {{ $dealer->physical_address }}</p>
                 </div>
 
                 <a href="/car-listing">
-                    <button class="btn btn-dark-custom w-100 mb-3">View all inventory <i
-                            class="fas fa-arrow-right ms-2"></i></button>
+                    <button class="mto-btn-black w-100 mb-3">View all inventory  <i class="fa-solid fa-arrow-right ms-2"></i></button>
                 </a>
                 <a href="/dealer-network">
                     <button class="btn btn-orange w-100 shadow-sm">View all dealers <i
@@ -512,109 +534,58 @@
                     <p class="dealer-top-subtitle">Top Cars are listed</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="modern-car-card shadow-sm">
-                    <div class="car-card-top">
-                        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500" alt="Car">
-                        <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
-                                style="width:20px; height:12px;"> 18,500 Km</div>
-                    </div>
-                    <div class="car-card-bottom">
-                        <h5 class="car-main-title">2022 Cadillac XT6 Premium Luxury</h5>
-                        <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 12 Km away</p>
-
-                        <div class="car-circle-icons-group">
-                            <img src="/assets/images/no-accidents.png" alt="">
-                            <img src="/assets/images/low-mileage.png" alt="">
-                            <img src="/assets/images/service-plan.png" alt="">
-                            <img src="/assets/images/powertrain-warranty.png" alt="">
-                            <span class="extra-icons-count">12+</span>
+            @foreach ($inventory as $recent_vehicle)
+                <div class="col-lg-3 col-sm-6">
+                    <div class="modern-car-card shadow-sm">
+                        <div class="car-card-top">
+                            {{-- @php
+                            if ($recent_vehicle->inventory_logo != null) {
+                                $logo = explode('|', $recent_vehicle->inventory_logo);
+                            } else {
+                                $logo[0] = 'car_thumb.png';
+                            }
+                            @endphp --}}
+                            @php
+                                $detailUrl = route('inventory_product_details', $recent_vehicle->id);
+                            @endphp
+                            @if ($recent_vehicle->primary_image != null)
+                            <a href="{{ route('inventory_product_details', $recent_vehicle->id) }}">
+                                            <img style="width: 100%"
+                                                    src="{{ Str::startsWith($recent_vehicle->primary_image, 'http') ? $recent_vehicle->primary_image : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$recent_vehicle->primary_image }}"
+                                                    alt="Vehicle Image" class="img-box img-fluid">
+                                            </a>
+                            @else
+                                <a href="{{ $detailUrl }}">
+                                    <img style="width: 100%"
+                                        src="/assets/images/defaultimage.jpg"
+                                        alt="Vehicle Image"
+                                        class="img-box img-fluid">
+                                </a>
+                            @endif
+                            <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
+                                    style="width:20px; height:12px;"> {{ $recent_vehicle->mileage ? $recent_vehicle->mileage . ' km' : '0 km' }}</div>
                         </div>
+                        <div class="car-card-bottom">
+                            <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
+                            {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}</h5>
+                            <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 12 Km away</p>
 
-                        <div class="car-price-block text-end">
-                            <h4 class="price-value">$60089.32</h4>
-                            <p class="price-sub-text">In sapien eu diam eu</p>
+                            <div class="car-circle-icons-group">
+                                <img src="/assets/images/no-accidents.png" alt="">
+                                <img src="/assets/images/low-mileage.png" alt="">
+                                <img src="/assets/images/service-plan.png" alt="">
+                                <img src="/assets/images/powertrain-warranty.png" alt="">
+                                <span class="extra-icons-count">12+</span>
+                            </div>
+
+                            <div class="car-price-block text-end">
+                                <h4 class="price-value">${{ $recent_vehicle->disclosed_price ? $recent_vehicle->disclosed_price . '0' : '0'}}</h4>
+                                <p class="price-sub-text">In sapien eu diam eu</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="modern-car-card shadow-sm">
-                    <div class="car-card-top">
-                        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500" alt="Car">
-                        <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
-                                style="width:20px; height:12px;"> 18,500 Km</div>
-                    </div>
-                    <div class="car-card-bottom">
-                        <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>
-                        <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 5 Km away</p>
-                        <div class="car-circle-icons-group">
-                            <img src="/assets/images/no-accidents.png" alt="">
-                            <img src="/assets/images/low-mileage.png" alt="">
-                            <img src="/assets/images/service-plan.png" alt="">
-                            <img src="/assets/images/powertrain-warranty.png" alt="">
-                            <span class="extra-icons-count">12+</span>
-                        </div>
-                        <div class="car-price-block text-end">
-                            <h4 class="price-value">$95400.00</h4>
-                            <p class="price-sub-text">In sapien eu diam eu</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-sm-6">
-                <div class="modern-car-card shadow-sm">
-                    <div class="car-card-top">
-                        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500" alt="Car">
-                        <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
-                                style="width:20px; height:12px;"> 18,500 Km</div>
-                    </div>
-                    <div class="car-card-bottom">
-                        <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>
-                        <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 5 Km away</p>
-                        <div class="car-circle-icons-group">
-                            <img src="/assets/images/no-accidents.png" alt="">
-                            <img src="/assets/images/low-mileage.png" alt="">
-                            <img src="/assets/images/service-plan.png" alt="">
-                            <img src="/assets/images/powertrain-warranty.png" alt="">
-                            <span class="extra-icons-count">12+</span>
-                        </div>
-                        <div class="car-price-block text-end">
-                            <h4 class="price-value">$95400.00</h4>
-                            <p class="price-sub-text">In sapien eu diam eu</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-sm-6">
-                <div class="modern-car-card shadow-sm">
-                    <div class="car-card-top">
-                        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500" alt="Car">
-                        <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
-                                style="width:20px; height:12px;"> 18,500 Km</div>
-                    </div>
-                    <div class="car-card-bottom">
-                        <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>
-                        <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 5 Km away</p>
-                        <div class="car-circle-icons-group">
-                            <img src="/assets/images/no-accidents.png" alt="">
-                            <img src="/assets/images/low-mileage.png" alt="">
-                            <img src="/assets/images/service-plan.png" alt="">
-                            <img src="/assets/images/powertrain-warranty.png" alt="">
-                            <span class="extra-icons-count">12+</span>
-                        </div>
-                        <div class="car-price-block text-end">
-                            <h4 class="price-value">$95400.00</h4>
-                            <p class="price-sub-text">In sapien eu diam eu</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
+            @endforeach
         </div>
     </div>
     <style>
