@@ -353,7 +353,8 @@
             
                                     <div>
                                         <h6 class="mb-0 fw-bold">
-                                            {{ $searched_vehicle->dealer->first_name }} {{ $searched_vehicle->dealer->last_name }}
+                                            {{$searched_vehicle->dealer->legal_name}}
+                                            <!--{{ $searched_vehicle->dealer->first_name }} {{ $searched_vehicle->dealer->last_name }}-->
                                         </h6>
                                         <p class="small text-muted mb-0">
                                             {{ $searched_vehicle->dealer->physical_address }}

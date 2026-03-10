@@ -26,7 +26,6 @@
 
                     <!-- Collapsible Content -->
                     <div class="collapse show" id="overviewContent">
-
                         @php
                             $dealerLogo = $dealer->logo
                                 ? (Str::startsWith($dealer->logo, 'http')
@@ -45,7 +44,8 @@
 
                             <div>
                                 <h3 class="mb-3 fw-bold">
-                                    {{ $dealer->first_name }} {{ $dealer->last_name }}
+                                    {{$dealer->legal_name}}
+                                    <!--{{ $dealer->first_name }} {{ $dealer->last_name }}-->
                                 </h3>
 
                                 <p class="mb-3">
