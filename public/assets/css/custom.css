@@ -30,12 +30,10 @@ div#navbarSupportedContent {
     --banner-bg-color: #3b3b3b;
     --border-color: #dde1de33;
     --select-color: #ffffff;
-                --bg-value-color: #d9d9d975;  
-                        --bg-button: #F58D02;  
-                         --border-button: #F58D02;  
-                        
-
-
+    --bg-value-color: #d9d9d975;  
+    --bg-button: #F58D02;  
+    --border-button: #F58D02;  
+    --car-details-feutures: #fff;
 }
 ul.dropdown-menu.nav-drop.dropdown-menu-end.show {
     inset: 20px 0px auto auto !important;
@@ -46,9 +44,10 @@ body.dark-mode {
     --banner-bg-color: #ffffff;
     --border-color: #dde1de;
     --select-color: #000000;
-        --bg-value-color: none;  
-                 --bg-button: #101010;  
-                  --border-button: #101010;  
+    --bg-value-color: none;  
+    --bg-button: #101010;  
+    --border-button: #101010;  
+    --car-details-feutures: #a6a6a67a;
 }
 
 body {
@@ -378,15 +377,35 @@ select {
 .card span {
     font-size: 12px;
     background: #f1f1f1;
-    padding: 4px 10px;
+    padding: 5px 8px;
     border-radius: 20px;
-    width: 42%;
+    width: 55%;
     margin: 0 auto;
     color: #4d4d4d;
     position: relative;
     top: -12px;
     text-decoration: none !important;
     border: 1px solid #dde1de;
+}
+
+.support-btn{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 12px 28px;
+    background: #ff6b00;
+    color: #fff;
+    border-radius: 40px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.support-btn:hover{
+    background:#e55f00;
+    color:#fff;
 }
 
 .card h4 {
@@ -1644,7 +1663,7 @@ section.banner-car-listing {
 
 /* Beige Info Grid */
 .mto-info-tile {
-    background-color: #a6a6a67a;
+    background-color: var(--car-details-feutures);
     padding: 18px 5px;
     border-radius: 10px;
     text-align: center;

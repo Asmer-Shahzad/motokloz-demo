@@ -10,12 +10,12 @@
                     <div class="logo-o">Sell
                         <span class="speed-line"></span>
                     </div>
-                    <div class="logo-o">Protect
+                    <!-- <div class="logo-o">Protect
                         <span class="speed-line"></span>
                     </div>
                     <div class="logo-o">Borrow
                         <span class="speed-line"></span>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="col-lg-8">
                     <nav class="navbar navbar-expand-lg">
@@ -59,12 +59,12 @@
                                 <div class="logo-o">Sell
                                     <span class="speed-line"></span>
                                 </div>
-                                <div class="logo-o">Protect
+                                <!-- <div class="logo-o">Protect
                                     <span class="speed-line"></span>
                                 </div>
                                 <div class="logo-o">Borrow
                                     <span class="speed-line"></span>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
 
@@ -194,12 +194,12 @@
                     <div class="logo-o">Sell
                         <span class="speed-line"></span>
                     </div>
-                    <div class="logo-o logo-2nd">Protect
+                    <!-- <div class="logo-o logo-2nd">Protect
                         <span class="speed-line"></span>
                     </div>
                     <div class="logo-o logo-2nd ">Borrow
                         <span class="speed-line"></span>
-                    </div>
+                    </div> -->
 
 
 
