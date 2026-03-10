@@ -98,7 +98,7 @@
                                     <div class="swiper-wrapper">
 
                                         <div class="swiper-slide">
-                                            <a href="/car-listing/" class="card">
+                                            <a href="/car-listing?selected_asset=AUTO" class="card">
                                                 <img src="/assets/images/Auto.png" class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>Auto</h4>
@@ -106,7 +106,7 @@
                                         </div>
 
                                         <div class="swiper-slide">
-                                            <a href="#" class="card">
+                                            <a href="/car-listing?selected_asset=RV / TRAILER" class="card">
                                                 <img src="/assets/images/RV.png" class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>RV</h4>
@@ -114,7 +114,7 @@
                                         </div>
 
                                         <div class="swiper-slide">
-                                            <a href="#" class="card">
+                                            <a href="/car-listing?selected_asset=MOTORCYCLE" class="card">
                                                 <img src="/assets/images/Motorcycle.png" class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>Motorcycle</h4>
@@ -122,7 +122,7 @@
                                         </div>
 
                                         <div class="swiper-slide">
-                                            <a href="#" class="card">
+                                            <a href="/car-listing?selected_asset=POWERSPORTS" class="card">
                                                 <img src="/assets/images/Powersports.png" class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>Powersports</h4>
@@ -130,7 +130,7 @@
                                         </div>
 
                                         <div class="swiper-slide">
-                                            <a href="#" class="card">
+                                            <a href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT" class="card">
                                                 <img src="/assets/images/Heavy Truck.png" class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>Heavy Truck</h4>
@@ -138,7 +138,7 @@
                                         </div>
 
                                         <div class="swiper-slide">
-                                            <a href="#" class="card">
+                                            <a href="/car-listing?selected_asset=HEAVY DUTY TRAILERS" class="card">
                                                 <img src="/assets/images/Trailers.png" class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>Trailers</h4>
@@ -146,7 +146,7 @@
                                         </div>
 
                                         <div class="swiper-slide">
-                                            <a href="#" class="card">
+                                            <a href="/car-listing?selected_asset=FARM EQUIPMENT" class="card">
                                                 <img src="/assets/images/Farm Equipment.png" class="img-fluid">
                                                 <span>24 vehicles</span>
                                                 <h4>Farm Equipment</h4>

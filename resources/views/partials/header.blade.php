@@ -30,25 +30,25 @@
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav  mb-2 mb-lg-0">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/search_inventory?selected_asset=AUTO">Auto</a>
+                                    <a class="nav-link" href="/car-listing?selected_asset=AUTO">Auto</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/search_inventory?selected_asset=RV / TRAILER">RV</a>
+                                    <a class="nav-link" href="/car-listing?selected_asset=RV / TRAILER">RV</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/search_inventory?selected_asset=MOTORCYCLE">Motorcycle</a>
+                                    <a class="nav-link" href="/car-listing?selected_asset=MOTORCYCLE">Motorcycle</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/search_inventory?selected_asset=POWERSPORTS">Powersports</a>
+                                    <a class="nav-link" href="/car-listing?selected_asset=POWERSPORTS">Powersports</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/search_inventory?selected_asset=HEAVY TRUCK/EQUIPMENT">Heavy Truck</a>
+                                    <a class="nav-link" href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT">Heavy Truck</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/search_inventory?selected_asset=HEAVY DUTY TRAILERS">Trailers</a>
+                                    <a class="nav-link" href="/car-listing?selected_asset=HEAVY DUTY TRAILERS">Trailers</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/search_inventory?selected_asset=FARM EQUIPMENT">Farm Equipment</a>
+                                    <a class="nav-link" href="/car-listing?selected_asset=FARM EQUIPMENT">Farm Equipment</a>
                                 </li>
                             </ul>
                             <div class="mobile-btn">
