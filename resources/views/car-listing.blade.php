@@ -10,9 +10,9 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="car-listing-cont">
-                                <h4>Find cars for sale and for rent near you</h4>
-                                <h2>Find Your Perfect Car</h2>
-                                <p>Search and find your best car to buy with easy way</p>
+                                <h4>Find for sale and for rent near you</h4>
+                                <h2>Find Your Perfect {{ $assetWord }}</h2>
+                                <p>Search and find your best to buy with easy way</p>
                             </div>
                             <div class="search-wrapper">
                                 <!-- Tabs -->
@@ -69,7 +69,7 @@
                                     </div> --}}
 
                                     <div class="price-box filter">
-                                        <label>Model</label>
+                                        <label>Price Range</label>
 
                                         <div class="range-container ">
                                             <div class="slider-track" id="track"></div>
@@ -208,7 +208,7 @@
 
                 <div class="col-lg-9 col-md-8">
 
-                    <div style="    border-bottom: 1px solid #DDE1DE;     padding-bottom: 10px;"
+                    <div style="border-bottom: 1px solid #DDE1DE;     padding-bottom: 10px;"
                         class="fleet-toolbar d-flex flex-wrap justify-content-between align-items-center mb-4">
                         <div class="toolbar-left d-flex align-items-center">
                             <div class="view-icons me-3">
@@ -251,65 +251,68 @@
 
                     <div class="row g-4" id="vehicleContainer">
                         {{-- vehicle div start Car listing page --}}
-                        @foreach ($buying_products as $recent_vehicle)
-                            <div class="col-lg-4 col-sm-6 vehicle-card">
-                                <div class="modern-car-card shadow-sm">
-                                    <div class="car-card-top">
-                                        {{-- @php
-                                        if ($recent_vehicle->inventory_logo != null) {
-                                            $logo = explode('|', $recent_vehicle->inventory_logo);
-                                        } else {
-                                            $logo[0] = 'defaultimage.jpg';
-                                        }
-                                        @endphp --}}
-                                        @php
-                                            $detailUrl = route('inventory_product_details', $recent_vehicle->id);
-                                        @endphp
+                        @if ($search_inventory_result != null)
+                            @foreach ($search_inventory_result as $recent_vehicle)
+                                <div class="col-lg-4 col-sm-6 vehicle-card">
+                                    <div class="modern-car-card shadow-sm">
+                                        <div class="car-card-top">
+                                            {{-- @php
+                                            if ($recent_vehicle->inventory_logo != null) {
+                                                $logo = explode('|', $recent_vehicle->inventory_logo);
+                                            } else {
+                                                $logo[0] = 'defaultimage.jpg';
+                                            }
+                                            @endphp --}}
+                                            @php
+                                                $detailUrl = route('inventory_product_details', $recent_vehicle->id);
+                                            @endphp
 
-                                        <a href="{{ $detailUrl }}">
-                                            <img style="width:100%"
-                                                src="{{ $recent_vehicle->primary_image 
-                                                    ? (Str::startsWith($recent_vehicle->primary_image,'http') 
-                                                        ? $recent_vehicle->primary_image 
-                                                        : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$recent_vehicle->primary_image)
-                                                    : asset('assets/images/defaultimage.jpg') }}"
-                                                alt="Vehicle Image"
-                                                class="img-box img-fluid"
-                                                onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
-                                        </a>
-                                        <div class="badge-mileage d-flex align-items-center">
+                                            <a href="{{ $detailUrl }}">
+                                                <img style="width:100%"
+                                                    src="{{ $recent_vehicle->primary_image 
+                                                        ? (Str::startsWith($recent_vehicle->primary_image,'http') 
+                                                            ? $recent_vehicle->primary_image 
+                                                            : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$recent_vehicle->primary_image)
+                                                        : asset('assets/images/defaultimage.jpg') }}"
+                                                    alt="Vehicle Image"
+                                                    class="img-box img-fluid"
+                                                    onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
+                                            </a>
+                                            <div class="badge-mileage d-flex align-items-center">
 
-                                            <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
-                                                style="width:20px; height:12px;">
+                                                <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
+                                                    style="width:20px; height:12px;">
 
-                                            {{ $recent_vehicle->mileage ? $recent_vehicle->mileage . ' km' : '0 km' }}
+                                                {{ $recent_vehicle->mileage ? $recent_vehicle->mileage . ' km' : '0 km' }}
+
+                                            </div>
 
                                         </div>
+                                        <div class="car-card-bottom">
+                                            <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
+                                                {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}</h5>
+                                            <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 12 Km away</p>
 
-                                    </div>
-                                    <div class="car-card-bottom">
-                                        <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
-                                            {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}</h5>
-                                        <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 12 Km away</p>
+                                            <div class="car-circle-icons-group">
+                                                <img src="/assets/images/no-accidents.png" alt="">
+                                                <img src="/assets/images/low-mileage.png" alt="">
+                                                <img src="/assets/images/service-plan.png" alt="">
+                                                <img src="/assets/images/powertrain-warranty.png" alt="">
+                                                <span class="extra-icons-count">12+</span>
+                                            </div>
 
-                                        <div class="car-circle-icons-group">
-                                            <img src="/assets/images/no-accidents.png" alt="">
-                                            <img src="/assets/images/low-mileage.png" alt="">
-                                            <img src="/assets/images/service-plan.png" alt="">
-                                            <img src="/assets/images/powertrain-warranty.png" alt="">
-                                            <span class="extra-icons-count">12+</span>
-                                        </div>
-
-                                        <div class="car-price-block text-end">
-                                            <h4 class="price-value">${{ $recent_vehicle->disclosed_price ? $recent_vehicle->disclosed_price . '0' : '0'}}</h4>
-                                            <p class="price-sub-text">In sapien eu diam eu</p>
+                                            <div class="car-price-block text-end">
+                                                <h4 class="price-value">${{ $recent_vehicle->disclosed_price ? $recent_vehicle->disclosed_price . '0' : '0'}}</h4>
+                                                <p class="price-sub-text">In sapien eu diam eu</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
-                        {{-- vehicle div end for welcome page --}}
-                        
+                            @endforeach
+                            {{-- vehicle div end for welcome page --}}
+                        @else
+                            <h2 class="no-result-found text-center">No results found</h2>
+                        @endif
                     </div>
                     <div class="my-4">
                         @include('partials.pagination')

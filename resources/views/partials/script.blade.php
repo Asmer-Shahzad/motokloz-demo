@@ -90,7 +90,7 @@
         z-index: 1000;
         /* Premium gold gradient */
         background: #f58d02;
-        color: #1a1a1a;
+        color: #fff;
         font-size: 28px;
         font-weight: bold;
         width: 56px;
@@ -132,11 +132,11 @@
         }
     }
 
-    #scrollTopBtn:hover {
+    /* #scrollTopBtn:hover {
         transform: translateY(-50%) scale(1.15);
         box-shadow: 0 12px 28px rgba(212, 175, 55, 0.7), 0 0 0 4px rgba(255, 215, 0, 0.3);
         background: linear-gradient(135deg, #ffefb0 0%, #e5c100 50%, #c5a028 100%);
-    }
+    } */
 
     /* Direction change with subtle rotation */
     #scrollTopBtn.changed {

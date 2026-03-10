@@ -5,6 +5,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\DealerProfileController;
+use App\Http\Controllers\SearchController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +33,7 @@ Route::middleware('guest')->group(function () {
 Route::get('/dealer/{id}', [DealerProfileController::class, 'dealer_inventory'])->name('dealer_inventory');
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/car-listing', [InventoryController::class, 'inventory'])->name('car.listing');
+Route::get('/search_inventory', [SearchController::class, 'search_inventory'])->name('search_inventory');
 Route::get('/car-details/{id}', [InventoryController::class, 'inventory_product_details'])->name('inventory_product_details');
 Route::get('/dealer-profile/{id}', [DealerProfileController::class, 'dealer_inventory_details'])->name('dealer_inventory_details');
 Route::get('/dealer-network', [HomeController::class, 'dealernetwork'])->name('dealer.network');

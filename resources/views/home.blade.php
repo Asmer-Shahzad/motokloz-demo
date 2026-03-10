@@ -64,7 +64,7 @@
                                     </div> --}}
 
                                     <div class="price-box filter">
-                                        <label>Model</label>
+                                        <label>Price Range</label>
 
                                         <div class="range-container ">
                                             <div class="slider-track" id="track"></div>
@@ -201,7 +201,7 @@
             <div class="row align-items-center pb-5">
                 <div class="col-lg-6">
                     <h2>Popular Vehicles</h2>
-                    <p>Favorite vehicles based on customer reviews</p>
+                    <!-- <p>Favorite vehicles based on customer reviews</p> -->
                 </div>
                 <div class="col-lg-6 popular-button">
                     <ul>
@@ -352,7 +352,7 @@
 
 
 
-    <section class="testimonials-section">
+    <!-- <section class="testimonials-section">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12 testimonials-content">
@@ -484,13 +484,9 @@
 
 
 
-    </section>
+    </section> -->
 
-
-
-
-
-    <section class="car-review">
+    <!-- <section class="car-review">
         <div class="container">
             <div class="col-lg-12">
                 <h4>CAR REVIEW</h4>
@@ -502,12 +498,7 @@
                 </a>
             </div>
         </div>
-    </section>
-
-
-
-
-
+    </section> -->
 
     <style>
         .btn-custom-home {

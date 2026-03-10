@@ -422,8 +422,8 @@ select {
 
 .secure-box p {
     color: #878c91;
-    font-size: 12px;
-    width: 350px;
+    font-size: 14px;
+    width: 420px;
 }
 
 .secure-box i.fa-solid.fa-arrow-right {
@@ -1634,9 +1634,17 @@ section.banner-car-listing {
     color: #444;
 }
 
+.no-result-found{
+    color: var(--select-color);
+    font-size: 38px;
+    font-weight: 500;
+    line-height: 45px;
+    padding-top: 50px;
+}
+
 /* Beige Info Grid */
 .mto-info-tile {
-    background-color: #ffe1b9;
+    background-color: #a6a6a67a;
     padding: 18px 5px;
     border-radius: 10px;
     text-align: center;

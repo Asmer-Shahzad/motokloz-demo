@@ -160,16 +160,17 @@
                     </div>
                 </div>
 
-                <div class="content-box shadow-sm">
+                <!-- Rate Reviews Section -->
+                <!-- <div class="content-box shadow-sm">
 
-                    <!-- Header -->
+                    Header
                     <h5 class="fw-bold mb-4 d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
                         data-bs-target="#rateReviewContent" style="cursor:pointer;">
                         Rate Reviews
                         <i class="fas fa-chevron-down"></i>
                     </h5>
 
-                    <!-- Collapsible Body -->
+                    Collapsible Body
                     <div class="collapse show" id="rateReviewContent">
 
                         <div class="row align-items-center mb-5 p-3">
@@ -237,7 +238,7 @@
                             </div>
                         </div>
 
-                        <!-- Single Review -->
+                        Single Review
                         <div class="review mb-4">
                             <div class="d-flex justify-content-between align-items-center  review-header-custom">
                                 <div class="d-flex align-items-center">
@@ -311,7 +312,9 @@
                         </div>
                         @include('partials.pagination')
                     </div>
-                </div>
+                </div> -->
+                <!-- Rate Reviews Section -->
+
 
                 <div class="content-box shadow-sm">
 

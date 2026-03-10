@@ -110,7 +110,7 @@
                                 </div> --}}
 
                                 <div class="price-box filter">
-                                    <label>Model</label>
+                                    <label>Price Range</label>
 
                                     <div class="range-container ">
                                         <div class="slider-track" id="track"></div>
