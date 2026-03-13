@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -12,31 +13,38 @@ use GuzzleHttp\Psr7\MultipartStream;
 class HomeController extends Controller
 {
     public function home()
-{
-    $assets = [
-        'AUTO',
-        'RV / TRAILER',
-        'MOTORCYCLE',
-        'POWERSPORTS',
-        'HEAVY TRUCK/EQUIPMENT',
-        'HEAVY DUTY TRAILERS',
-        'FARM EQUIPMENT'
-    ];
+    {
+        $assets = [
+            'AUTO',
+            'RV / TRAILER',
+            'MOTORCYCLE',
+            'POWERSPORTS',
+            'HEAVY TRUCK/EQUIPMENT',
+            'HEAVY DUTY TRAILERS',
+            'FARM EQUIPMENT'
+        ];
 
-    $assetCounts = [];
+        $assetCounts = [];
 
-    foreach ($assets as $asset) {
+        foreach ($assets as $asset) {
 
-        $response = Http::get(env("diskloz_base_url").'/api/search_inventory', [
-            'selected_asset' => $asset,
-            'page' => 1
+            $response = Http::get(env("diskloz_base_url") . '/api/search_inventory', [
+                'selected_asset' => $asset,
+                'page' => 1
+            ]);
+
+            $inventory = json_decode($response->body());
+
+            $assetCounts[$asset] = $inventory->total ?? 0;
+        }
+
+
+
+        return view('home', [
+            'pageTitle' => 'Home',
+            'assetCounts' => $assetCounts
         ]);
-
-        $inventory = json_decode($response->body());
-
-        $assetCounts[$asset] = $inventory->total ?? 0;
     }
-
     public function buyFlowStep1()
     {
         return view('buy-flow-step-1', ['pageTitle' => 'Step 1']);
@@ -66,11 +74,6 @@ class HomeController extends Controller
     {
         return view('buy-flow-step-6', ['pageTitle' => 'Step 6']);
     }
-    return view('home', [
-        'pageTitle' => 'Home',
-        'assetCounts' => $assetCounts
-    ]);
-}
 
 
     public function wishlist()

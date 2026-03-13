@@ -549,31 +549,32 @@ toggleBtn.addEventListener("click", () => {
     maxRange.addEventListener("input", updateSlider);
 
     updateSlider();
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
 
-    const gridBtn = document.getElementById("gridViewBtn");
+        const gridBtn = document.getElementById("gridViewBtn");
         const listBtn = document.getElementById("listViewBtn");
         const cards = document.querySelectorAll(".vehicle-card");
 
-        function animateCards(callback){
+        function animateCards(callback) {
 
             cards.forEach(card => {
                 card.classList.add("animating");
             });
 
-        setTimeout(()=>{
-            callback();
+            setTimeout(() => {
+                callback();
 
-            cards.forEach(card=>{
-            card.classList.remove("animating");
-        card.classList.add("show");
-            });
+                cards.forEach(card => {
+                    card.classList.remove("animating");
+                    card.classList.add("show");
+                });
 
-        },200);
-    }
+            }, 200);
+        }
 
-        function setView(view){
+        function setView(view) {
 
             animateCards(() => {
 
@@ -599,15 +600,15 @@ toggleBtn.addEventListener("click", () => {
 
             });
 
-        localStorage.setItem("vehicleView", view);
-    }
+            localStorage.setItem("vehicleView", view);
+        }
 
         const savedView = localStorage.getItem("vehicleView") || "grid";
         setView(savedView);
 
-    gridBtn.addEventListener("click", ()=>setView("grid"));
-    listBtn.addEventListener("click", ()=>setView("list"));
+        gridBtn.addEventListener("click", () => setView("grid"));
+        listBtn.addEventListener("click", () => setView("list"));
 
-});
+    });
 
 </script>
