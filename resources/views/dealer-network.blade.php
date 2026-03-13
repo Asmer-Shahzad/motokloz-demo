@@ -33,7 +33,7 @@
 
                             <button class="btn-search" type="submit">
                                 <img src="/assets/images/Vector (4).png" alt="Search icon">
-                                Find a Vehicle
+                                Find a Dealer
                             </button>
 
                         </div>
@@ -279,10 +279,10 @@
     </section>
 
     <!-- MISSION SECTION -->
-    <section class="mission-section py-5">
+    <!-- <section class="mission-section py-5">
         <div class="container">
             <div class="row align-items-center g-4">
-                <!-- LEFT CONTENT -->
+                LEFT CONTENT
                 <div class="col-lg-6">
                     <button class="btn-dealer">Our Mission</button>
                     <h2 class="mission-title mt-3">
@@ -306,7 +306,7 @@
                     </button>
                 </div>
 
-                <!-- RIGHT IMAGES (responsive grid) -->
+                RIGHT IMAGES (responsive grid)
                 <div class="col-lg-6">
                     <div class="row g-3">
                         <div class="col-6">
@@ -325,7 +325,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
 
     <style>
@@ -555,14 +555,14 @@
             min-height: 465px;
             border-radius: 20px;
             overflow: hidden;
-            background: url('/assets/images/Carento.png') center/cover no-repeat;
+            background: url('/assets/images/dealernetworkheader.png') center/cover no-repeat;
         }
 
         .banner-overlay {
             position: absolute;
             inset: 0;
             background: linear-gradient(90deg,
-                    rgba(0, 0, 0, 0.70) 0%,
+                    rgba(0, 0, 0, 0.82) 0%,
                     rgba(0, 0, 0, 0.35) 40%,
                     rgba(0, 0, 0, 0) 70%);
         }

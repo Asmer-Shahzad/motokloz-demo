@@ -64,7 +64,7 @@
                                     </div> --}}
 
                                     <div class="price-box filter">
-                                        <label>Model</label>
+                                        <label>Price Range</label>
 
                                         <div class="range-container ">
                                             <div class="slider-track" id="track"></div>
@@ -98,60 +98,61 @@
                                     <div class="swiper-wrapper">
 
                                         <div class="swiper-slide">
-                                            <a href="/car-listing/" class="card">
+                                            <a href="/car-listing?selected_asset=AUTO" class="card">
                                                 <img src="/assets/images/Auto.png" class="img-fluid">
-                                                <span>24 vehicles</span>
+                                                <span>{{ $assetCounts['AUTO'] ?? 0 }} vehicles</span>    
                                                 <h4>Auto</h4>
                                             </a>
                                         </div>
 
                                         <div class="swiper-slide">
-                                            <a href="#" class="card">
+                                            <a href="/car-listing?selected_asset=RV / TRAILER" class="card">
                                                 <img src="/assets/images/RV.png" class="img-fluid">
-                                                <span>24 vehicles</span>
+                                                <span>{{ $assetCounts['RV / TRAILER'] ?? 0 }} vehicles</span>
                                                 <h4>RV</h4>
                                             </a>
                                         </div>
 
                                         <div class="swiper-slide">
-                                            <a href="#" class="card">
+                                            <a href="/car-listing?selected_asset=MOTORCYCLE" class="card">
                                                 <img src="/assets/images/Motorcycle.png" class="img-fluid">
-                                                <span>24 vehicles</span>
+                                                <span>{{ $assetCounts['MOTORCYCLE'] ?? 0 }} vehicles</span>
                                                 <h4>Motorcycle</h4>
                                             </a>
                                         </div>
 
                                         <div class="swiper-slide">
-                                            <a href="#" class="card">
+                                            <a href="/car-listing?selected_asset=POWERSPORTS" class="card">
                                                 <img src="/assets/images/Powersports.png" class="img-fluid">
-                                                <span>24 vehicles</span>
+                                                <span>{{ $assetCounts['POWERSPORTS'] ?? 0 }} vehicles</span>
                                                 <h4>Powersports</h4>
                                             </a>
                                         </div>
 
                                         <div class="swiper-slide">
-                                            <a href="#" class="card">
+                                            <a href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT" class="card">
                                                 <img src="/assets/images/Heavy Truck.png" class="img-fluid">
-                                                <span>24 vehicles</span>
+                                                <span>{{ $assetCounts['HEAVY TRUCK/EQUIPMENT'] ?? 0 }} vehicles</span>
                                                 <h4>Heavy Truck</h4>
                                             </a>
                                         </div>
 
                                         <div class="swiper-slide">
-                                            <a href="#" class="card">
+                                            <a href="/car-listing?selected_asset=HEAVY DUTY TRAILERS" class="card">
                                                 <img src="/assets/images/Trailers.png" class="img-fluid">
-                                                <span>24 vehicles</span>
+                                                <span>{{ $assetCounts['HEAVY DUTY TRAILERS'] ?? 0 }} vehicles</span>
                                                 <h4>Trailers</h4>
                                             </a>
                                         </div>
 
                                         <div class="swiper-slide">
-                                            <a href="#" class="card">
+                                            <a href="/car-listing?selected_asset=FARM EQUIPMENT" class="card">
                                                 <img src="/assets/images/Farm Equipment.png" class="img-fluid">
-                                                <span>24 vehicles</span>
+                                                <span>{{ $assetCounts['FARM EQUIPMENT'] ?? 0 }} vehicles</span>
                                                 <h4>Farm Equipment</h4>
                                             </a>
                                         </div>
+
 
                                     </div>
                                 </div>
@@ -201,7 +202,7 @@
             <div class="row align-items-center pb-5">
                 <div class="col-lg-6">
                     <h2>Popular Vehicles</h2>
-                    <p>Favorite vehicles based on customer reviews</p>
+                    <!-- <p>Favorite vehicles based on customer reviews</p> -->
                 </div>
                 <div class="col-lg-6 popular-button">
                     <ul>
@@ -352,7 +353,7 @@
 
 
 
-    <section class="testimonials-section">
+    <!-- <section class="testimonials-section">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12 testimonials-content">
@@ -484,13 +485,9 @@
 
 
 
-    </section>
+    </section> -->
 
-
-
-
-
-    <section class="car-review">
+    <!-- <section class="car-review">
         <div class="container">
             <div class="col-lg-12">
                 <h4>CAR REVIEW</h4>
@@ -502,12 +499,7 @@
                 </a>
             </div>
         </div>
-    </section>
-
-
-
-
-
+    </section> -->
 
     <style>
         .btn-custom-home {

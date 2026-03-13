@@ -27,6 +27,11 @@
                     <div class="calltoaction">
                         <h5><i class="fa-sharp fa-solid fa-phone"></i> Need help? Call us</h5>
                         <h6><a href="tel:+8773475569">877-347-5569</a></h6>
+
+                        <!-- Customer Support Button -->
+                        <a href="#" class="support-btn">
+                            <i class="fa-solid fa-headset"></i> Customer Support
+                        </a>
                     </div>
                 </div>
                 <div class="col-lg-2">

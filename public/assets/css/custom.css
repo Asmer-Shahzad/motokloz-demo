@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Vend+Sans:ital,wght@0,300..700;1,300..700&display=swap');
+
 /*body {
     font-family: "Vend Sans", sans-serif;
     background: #222222;
@@ -28,9 +30,10 @@ div#navbarSupportedContent {
     --banner-bg-color: #3b3b3b;
     --border-color: #dde1de33;
     --select-color: #ffffff;
-    --bg-value-color: #d9d9d975;
-    --bg-button: #f58d02;
-    --border-button: #f58d02;
+    --bg-value-color: #d9d9d975;  
+    --bg-button: #F58D02;  
+    --border-button: #F58D02;  
+    --car-details-feutures: #fff;
 }
 ul.dropdown-menu.nav-drop.dropdown-menu-end.show {
     inset: 20px 0px auto auto !important;
@@ -41,9 +44,10 @@ body.dark-mode {
     --banner-bg-color: #ffffff;
     --border-color: #dde1de;
     --select-color: #000000;
-    --bg-value-color: none;
-    --bg-button: #101010;
-    --border-button: #101010;
+    --bg-value-color: none;  
+    --bg-button: #101010;  
+    --border-button: #101010;  
+    --car-details-feutures: #a6a6a67a;
 }
 
 body {
@@ -372,15 +376,35 @@ select {
 .card span {
     font-size: 12px;
     background: #f1f1f1;
-    padding: 4px 10px;
+    padding: 5px 8px;
     border-radius: 20px;
-    width: 42%;
+    width: 55%;
     margin: 0 auto;
     color: #4d4d4d;
     position: relative;
     top: -12px;
     text-decoration: none !important;
     border: 1px solid #dde1de;
+}
+
+.support-btn{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 12px 28px;
+    background: #ff6b00;
+    color: #fff;
+    border-radius: 40px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.support-btn:hover{
+    background:#e55f00;
+    color:#fff;
 }
 
 .card h4 {
@@ -416,8 +440,8 @@ select {
 
 .secure-box p {
     color: #878c91;
-    font-size: 12px;
-    width: 350px;
+    font-size: 14px;
+    width: 420px;
 }
 
 .secure-box i.fa-solid.fa-arrow-right {
@@ -1326,7 +1350,7 @@ section.banner-car-listing {
     position: absolute;
     bottom: 0;
     left: 12px;
-    background: var(--banner-bg-color);
+    background: #fff;
     padding: 6px 16px;
     border-radius: 20px;
     color: #737373;
@@ -1345,10 +1369,65 @@ section.banner-car-listing {
 .car-card-bottom {
     padding: 25px 20px 20px 20px;
     background: var(--banner-bg-color);
-    border-radius: 12px !important;
+    border-radius: 12px;
     margin-top: -10px;
     z-index: 999;
     position: relative;
+}
+
+.col-12 .modern-car-card{
+    display:flex;
+}
+
+.col-12 .car-card-top{
+    width:300px;
+    height:auto;
+    max-height: 300px !important;
+}
+
+.col-12 .badge-mileage{
+    bottom:15px;
+}
+
+.gridbtn{
+    cursor: pointer;
+}
+
+/* Default SVG color */
+.gridbtn path {
+    fill: #afafaf; /* default gray */
+}
+
+/* Active SVG color */
+.gridbtn.active path {
+    fill: #ff9d00; /* active view color */
+}
+
+.vehicle-card{
+    transition: all 0.55s ease;
+}
+
+.vehicle-card.animating{
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+.vehicle-card.show{
+    opacity: 1;
+    transform: scale(1);
+}
+
+.col-12 .car-main-title{
+   font-size: 26px;
+   font-weight: 800;
+   margin-bottom: 6px;
+   color: var(--select-color);
+   min-height: 44px;
+}
+
+.col-12 .car-card-bottom{
+    flex:1;
+    border-radius:unset;
 }
 
 .car-main-title {
@@ -1573,9 +1652,17 @@ section.banner-car-listing {
     color: #444;
 }
 
+.no-result-found{
+    color: var(--select-color);
+    font-size: 38px;
+    font-weight: 500;
+    line-height: 45px;
+    padding-top: 50px;
+}
+
 /* Beige Info Grid */
 .mto-info-tile {
-    background-color: #ffe1b9;
+    background-color: var(--car-details-feutures);
     padding: 18px 5px;
     border-radius: 10px;
     text-align: center;
@@ -1615,10 +1702,28 @@ section.banner-car-listing {
     display: none;
     font-size: 15px;
     line-height: 1.8;
+    text-transform: none; 
+}
+
+.link-text-decoration{
+    text-decoration: none;
+    color: unset !important;
 }
 
 .mto-stack-content.show {
     display: block;
+}
+
+.dealerlogo{
+    height: 75px;
+    width: 75px;
+    object-fit: cover;
+}
+
+.dealerprofilelogo{
+    height: 80px;
+    width: 80px;
+    border-radius: 50px;
 }
 
 .mto-arrow {

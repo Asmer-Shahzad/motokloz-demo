@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\DealerProfileController;
+use App\Http\Controllers\SearchController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -26,11 +30,12 @@ Route::middleware('guest')->group(function () {
 | Protected Routes (login required)
 |--------------------------------------------------------------------------
 */
-Route::get('/dealer', [HomeController::class, 'dealer'])->name('dealer');
+Route::get('/dealer/{id}', [DealerProfileController::class, 'dealer_inventory'])->name('dealer_inventory');
 Route::get('/', [HomeController::class, 'home'])->name('home');
-Route::get('/car-listing', [HomeController::class, 'carlisting'])->name('car.listing');
-Route::get('/car-details', [HomeController::class, 'cardetails'])->name('car.details');
-Route::get('/dealer-profile', [HomeController::class, 'dealerprofile'])->name('dealer.profile');
+// Route::get('/car-listing', [InventoryController::class, 'inventory'])->name('car.listing');
+Route::get('/car-listing', [SearchController::class, 'search_inventory'])->name('search_inventory');
+Route::get('/car-details/{id}', [InventoryController::class, 'inventory_product_details'])->name('inventory_product_details');
+Route::get('/dealer-profile/{id}', [DealerProfileController::class, 'dealer_inventory_details'])->name('dealer_inventory_details');
 Route::get('/dealer-network', [HomeController::class, 'dealernetwork'])->name('dealer.network');
 Route::get('/buy/step-1', [HomeController::class, 'buyFlowStep1'])->name('buy.step1');
 Route::get('/buy/step-2', [HomeController::class, 'buyFlowStep2'])->name('buy.step2');
@@ -39,13 +44,14 @@ Route::get('/buy/step-4', [HomeController::class, 'buyFlowStep4'])->name('buy.st
 Route::get('/buy/step-5', [HomeController::class, 'buyFlowStep5'])->name('buy.step5');
 Route::get('/buy/step-6', [HomeController::class, 'buyFlowStep6'])->name('buy.step6');
 
-Route::middleware('auth')->group(function () {});
+Route::middleware('auth')->group(function () {
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/wishlist', [HomeController::class, 'wishlist'])->name('wishlist');
-Route::get('/chat', [HomeController::class, 'chat'])->name('chat');
-Route::get('/agent-settings', [HomeController::class, 'agentsettings'])->name('agent.settings');
-Route::get('/agent-dashboard', [HomeController::class, 'agentdashboard'])->name('agent.dashboard');
-Route::get('/add-listings', [HomeController::class, 'addlistings'])->name('add.listings');
-Route::get('/account-setting', [HomeController::class, 'accountsettings'])->name('account.settings');
-Route::get('/listings', [HomeController::class, 'listings'])->name('listings');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/wishlist', [HomeController::class, 'wishlist'])->name('wishlist');
+    Route::get('/chat', [HomeController::class, 'chat'])->name('chat');
+    Route::get('/agent-settings', [HomeController::class, 'agentsettings'])->name('agent.settings');
+    Route::get('/agent-dashboard', [HomeController::class, 'agentdashboard'])->name('agent.dashboard');
+    Route::get('/add-listings', [HomeController::class, 'addlistings'])->name('add.listings');
+    Route::get('/account-setting', [HomeController::class, 'accountsettings'])->name('account.settings');
+    Route::get('/listings', [HomeController::class, 'listings'])->name('listings');
+});
