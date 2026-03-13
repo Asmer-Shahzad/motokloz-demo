@@ -11,6 +11,36 @@ class HomeController extends Controller
         return view('home', ['pageTitle' => 'Home']);
     }
 
+    public function buyFlowStep1()
+    {
+        return view('buy-flow-step-1', ['pageTitle' => 'Step 1']);
+    }
+
+    public function buyFlowStep2()
+    {
+        return view('buy-flow-step-2', ['pageTitle' => 'Step 2']);
+    }
+
+    public function buyFlowStep3()
+    {
+        return view('buy-flow-step-3', ['pageTitle' => 'Step 3']);
+    }
+
+    public function buyFlowStep4()
+    {
+        return view('buy-flow-step-4', ['pageTitle' => 'Step 4']);
+    }
+
+    public function buyFlowStep5()
+    {
+        return view('buy-flow-step-5', ['pageTitle' => 'Step 5']);
+    }
+
+    public function buyFlowStep6()
+    {
+        return view('buy-flow-step-6', ['pageTitle' => 'Step 6']);
+    }
+
     public function wishlist()
     {
         return view('wishlist', ['pageTitle' => 'Wishlist']);

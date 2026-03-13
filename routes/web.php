@@ -32,16 +32,20 @@ Route::get('/car-listing', [HomeController::class, 'carlisting'])->name('car.lis
 Route::get('/car-details', [HomeController::class, 'cardetails'])->name('car.details');
 Route::get('/dealer-profile', [HomeController::class, 'dealerprofile'])->name('dealer.profile');
 Route::get('/dealer-network', [HomeController::class, 'dealernetwork'])->name('dealer.network');
+Route::get('/buy/step-1', [HomeController::class, 'buyFlowStep1'])->name('buy.step1');
+Route::get('/buy/step-2', [HomeController::class, 'buyFlowStep2'])->name('buy.step2');
+Route::get('/buy/step-3', [HomeController::class, 'buyFlowStep3'])->name('buy.step3');
+Route::get('/buy/step-4', [HomeController::class, 'buyFlowStep4'])->name('buy.step4');
+Route::get('/buy/step-5', [HomeController::class, 'buyFlowStep5'])->name('buy.step5');
+Route::get('/buy/step-6', [HomeController::class, 'buyFlowStep6'])->name('buy.step6');
 
+Route::middleware('auth')->group(function () {});
 
-Route::middleware('auth')->group(function () {
-
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/wishlist', [HomeController::class, 'wishlist'])->name('wishlist');
-    Route::get('/chat', [HomeController::class, 'chat'])->name('chat');
-    Route::get('/agent-settings', [HomeController::class, 'agentsettings'])->name('agent.settings');
-    Route::get('/agent-dashboard', [HomeController::class, 'agentdashboard'])->name('agent.dashboard');
-    Route::get('/add-listings', [HomeController::class, 'addlistings'])->name('add.listings');
-    Route::get('/account-setting', [HomeController::class, 'accountsettings'])->name('account.settings');
-    Route::get('/listings', [HomeController::class, 'listings'])->name('listings');
-});
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/wishlist', [HomeController::class, 'wishlist'])->name('wishlist');
+Route::get('/chat', [HomeController::class, 'chat'])->name('chat');
+Route::get('/agent-settings', [HomeController::class, 'agentsettings'])->name('agent.settings');
+Route::get('/agent-dashboard', [HomeController::class, 'agentdashboard'])->name('agent.dashboard');
+Route::get('/add-listings', [HomeController::class, 'addlistings'])->name('add.listings');
+Route::get('/account-setting', [HomeController::class, 'accountsettings'])->name('account.settings');
+Route::get('/listings', [HomeController::class, 'listings'])->name('listings');

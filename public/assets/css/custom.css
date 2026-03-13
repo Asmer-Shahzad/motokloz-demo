@@ -28,12 +28,9 @@ div#navbarSupportedContent {
     --banner-bg-color: #3b3b3b;
     --border-color: #dde1de33;
     --select-color: #ffffff;
-                --bg-value-color: #d9d9d975;  
-                        --bg-button: #F58D02;  
-                         --border-button: #F58D02;  
-                        
-
-
+    --bg-value-color: #d9d9d975;
+    --bg-button: #f58d02;
+    --border-button: #f58d02;
 }
 ul.dropdown-menu.nav-drop.dropdown-menu-end.show {
     inset: 20px 0px auto auto !important;
@@ -44,9 +41,9 @@ body.dark-mode {
     --banner-bg-color: #ffffff;
     --border-color: #dde1de;
     --select-color: #000000;
-        --bg-value-color: none;  
-                 --bg-button: #101010;  
-                  --border-button: #101010;  
+    --bg-value-color: none;
+    --bg-button: #101010;
+    --border-button: #101010;
 }
 
 body {
@@ -59,7 +56,7 @@ body {
     color: var(--select-color);
 }
 
-.services-list{
+.services-list {
     display: flex;
     align-items: center;
     justify-content: start;
@@ -69,7 +66,6 @@ body {
 .header {
     background: var(--bg-color);
 }
-
 
 button#themeToggle {
     background: transparent !important;
@@ -262,8 +258,8 @@ a.logo-o-link {
 }
 
 .filter {
-   color: var(--select-color);
-   min-width: 150px;
+    color: var(--select-color);
+    min-width: 150px;
 }
 
 .filter label {
@@ -1333,7 +1329,7 @@ section.banner-car-listing {
     background: var(--banner-bg-color);
     padding: 6px 16px;
     border-radius: 20px;
-color: #737373;
+    color: #737373;
     font-weight: 500;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     color: var();
@@ -2101,7 +2097,7 @@ span.mto-rating-badge {
     align-items: center;
     width: 316px;
     gap: 6px;
-padding: 10px 9px;
+    padding: 10px 9px;
     border-radius: 24px;
 }
 
@@ -2311,7 +2307,7 @@ section.agent-header {
 }
 .agend-headd {
     color: var(--select-color);
-        padding: 14px;
+    padding: 14px;
 }
 .form-card.shadow-sm input.form-control {
     background-color: #f9f9f9;
@@ -2361,11 +2357,11 @@ section.agent-header {
 }
 .progress {
     height: 12px;
-    background-color: #E4E6E8;
+    background-color: #e4e6e8;
     border-radius: 2px;
 }
 .progress-bar {
-    background-color: #FFC700;
+    background-color: #ffc700;
 }
 .rating-num {
     /* font-size:; */
@@ -2565,103 +2561,101 @@ h2.section-title {
     padding: 40px 0; /* Cards ke upar niche thodi jagah */
     position: relative;
     overflow: hidden; /* Zaroori hai */
-    
+
     /* Ye edges par blur/fade effect banayega */
-    -webkit-mask-image: linear-gradient(to right, 
-        transparent 0%, 
-        black 15%, 
-        black 85%, 
+    -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 15%,
+        black 85%,
         transparent 100%
     );
-    mask-image: linear-gradient(to right, 
-        transparent 0%, 
-        black 15%, 
-        black 85%, 
+    mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 15%,
+        black 85%,
         transparent 100%
     );
 }
 
 /* Card ka size control karne ke liye */
 .review-card {
-
     border-radius: 15px;
     padding: 33px;
     border: 1px solid #333;
     height: 100%;
 }
 
-
-
 .filter-all {
-            background: none;
-            border: none;
-            color: var(--select-color);
-            /* color: #fff; */
-            font-size: 14px;
-            outline: none;
-            line-height: 22px !important;
-            font-weight: 700;
-        }
+    background: none;
+    border: none;
+    color: var(--select-color);
+    /* color: #fff; */
+    font-size: 14px;
+    outline: none;
+    line-height: 22px !important;
+    font-weight: 700;
+}
 
-        .price-box {
+.price-box {
+    font-family: sans-serif;
+}
 
-            font-family: sans-serif;
-        }
+.range-container {
+    position: relative;
+    width: 95%;
+    height: 10px;
+}
 
-        .range-container {
-            position: relative;
-            width: 95%;
-            height: 10px
-        }
+.slider-track {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 6px;
+    width: 100%;
+    background: #d9d9d9;
+    border-radius: 5px;
+    z-index: 1;
+}
 
-        .slider-track {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            height: 6px;
-            width: 100%;
-            background: #d9d9d9;
-            border-radius: 5px;
-            z-index: 1;
-        }
+input[type="range"] {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    pointer-events: none;
+    -webkit-appearance: none;
+    z-index: 2;
+}
 
-        input[type="range"] {
-            position: absolute;
-            width: 100%;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            pointer-events: none;
-            -webkit-appearance: none;
-            z-index: 2;
-        }
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 18px;
+    width: 18px;
+    background: #f7941d;
+    border-radius: 50%;
+    cursor: pointer;
+    pointer-events: auto;
+    border: none;
+}
 
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 18px;
-            width: 18px;
-            background: #f7941d;
-            border-radius: 50%;
-            cursor: pointer;
-            pointer-events: auto;
-            border: none;
-        }
+input[type="range"]::-moz-range-thumb {
+    height: 18px;
+    width: 18px;
+    background: #f7941d;
+    border-radius: 50%;
+    cursor: pointer;
+    pointer-events: auto;
+    border: none;
+}
 
-        input[type="range"]::-moz-range-thumb {
-            height: 18px;
-            width: 18px;
-            background: #f7941d;
-            border-radius: 50%;
-            cursor: pointer;
-            pointer-events: auto;
-            border: none;
-        }
-
-        .values {
-            margin-top: 10px;
-            font-weight: 600;
-            background: var(--bg-value-color);
-            /* color: #fff; */
-            padding: 3px 5px;
-            border-radius: 6px;
-        }
+.values {
+    margin-top: 10px;
+    font-weight: 600;
+    background: var(--bg-value-color);
+    /* color: #fff; */
+    padding: 3px 5px;
+    border-radius: 6px;
+}

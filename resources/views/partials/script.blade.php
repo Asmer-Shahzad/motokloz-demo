@@ -334,19 +334,19 @@ toggleBtn.addEventListener("click", () => {
 </script>
 <script>
     var swiper = new Swiper(".review-swiper", {
-    slidesPerView: 1.2, // Mobile par ek poora aur ek thoda sa dikhega
-    centeredSlides: true, // Main card hamesha beech mein rahega
-    spaceBetween: 20,
-    loop: true, // Is se side wale empty nahi lagenge
-    breakpoints: {
-        640: {
-            slidesPerView: 2.5,
+        slidesPerView: 1.2, // Mobile par ek poora aur ek thoda sa dikhega
+        centeredSlides: true, // Main card hamesha beech mein rahega
+        spaceBetween: 20,
+        loop: true, // Is se side wale empty nahi lagenge
+        breakpoints: {
+            640: {
+                slidesPerView: 2.5,
+            },
+            1024: {
+                slidesPerView: 3.5, // Desktop par side wale cards cut honge (jaisa image mein tha)
+            },
         },
-        1024: {
-            slidesPerView: 3.5, // Desktop par side wale cards cut honge (jaisa image mein tha)
-        },
-    },
-});
+    });
     // const reviewSwiper = new Swiper(".review-swiper", {
     //     slidesPerView: 3,
     //     spaceBetween: 30,
@@ -511,4 +511,43 @@ toggleBtn.addEventListener("click", () => {
 
     updateValues();
     fillColor();
+</script>
+
+
+
+<script>
+
+    let minRange = document.getElementById("minRange");
+    let maxRange = document.getElementById("maxRange");
+    let track = document.querySelector(".slider-track");
+
+    function updateSlider() {
+
+        let min = parseInt(minRange.value);
+        let max = parseInt(maxRange.value);
+
+        if (min > max - 10) {
+            minRange.value = max - 10;
+        }
+
+        if (max < min + 10) {
+            maxRange.value = min + 10;
+        }
+
+        let percent1 = (minRange.value / minRange.max) * 100;
+        let percent2 = (maxRange.value / maxRange.max) * 100;
+
+        track.style.background =
+            `linear-gradient(to right,#dcdcdc ${percent1}%,
+            #f58d02 ${percent1}%,
+            #f58d02 ${percent2}%,
+            #dcdcdc ${percent2}%)`;
+
+    }
+
+    minRange.addEventListener("input", updateSlider);
+    maxRange.addEventListener("input", updateSlider);
+
+    updateSlider();
+
 </script>
