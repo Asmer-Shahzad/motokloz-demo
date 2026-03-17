@@ -1,3 +1,9 @@
+@php
+    $perPage = 10;
+    $start = ($current_page - 1) * $perPage + 1;
+    $end = $start + count($search_inventory_result) - 1;
+@endphp
+
 @extends('layouts.app')
 
 
@@ -236,7 +242,9 @@
                                         />
                                 </svg>
                             </div>
-                            <span class="results-info">1 - 10 of 19 tours found</span>
+                            <span class="results-info">
+                                {{ $start }} - {{ $end }} of {{ $total_inventory }} {{ $assetWord }} found
+                            </span>
                         </div>
                         <div class="toolbar-right d-flex gap-2">
                             <button class="btn-clear-filters">Clear Filters</button>
@@ -286,7 +294,6 @@
                                                 {{ $recent_vehicle->mileage ? $recent_vehicle->mileage . ' km' : '0 km' }}
 
                                             </div>
-
                                         </div>
                                         <div class="car-card-bottom">
                                             <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}

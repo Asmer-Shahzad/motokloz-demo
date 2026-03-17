@@ -2,20 +2,25 @@
     <div class="header-top">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-1 btn-mobile">
-
-                    <div class="logo-o">Buy
-                        <span class="speed-line"></span>
-                    </div>
-                    <div class="logo-o">Sell
-                        <span class="speed-line"></span>
-                    </div>
-                    <div class="logo-o">Protect
+                <div class="col-lg-4 btn-mobile">
+                    <a href="{{ route('buy.step1') }}" style="text-decoration: none; color: inherit;">
+                        <div class="logo-o">
+                            Buy
+                            <span class="speed-line"></span>
+                        </div>
+                    </a>
+                    <a href="{{ route('sell') }}" style="text-decoration: none; color: inherit;">
+                        <div class="logo-o">
+                            Sell
+                            <span class="speed-line"></span>
+                        </div>
+                    </a>
+                    <!-- <div class="logo-o">Protect
                         <span class="speed-line"></span>
                     </div>
                     <div class="logo-o">Borrow
                         <span class="speed-line"></span>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="col-lg-11">
                     <nav class="navbar navbar-expand-lg">
@@ -28,46 +33,53 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <div class="mob-menu">
-                                <ul class="navbar-nav  mb-2 mb-lg-0">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=AUTO">Auto</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=RV / TRAILER">RV</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=MOTORCYCLE">Motorcycle</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=POWERSPORTS">Powersports</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT">Heavy Truck</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=HEAVY DUTY TRAILERS">Trailers</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=FARM EQUIPMENT">Farm Equipment</a>
-                                    </li>
-                                </ul>
-                                <div class="mobile-btn">
-    
-                                    <div class="logo-o">Buy
+                            <ul class="navbar-nav  mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/car-listing?selected_asset=AUTO">Auto</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/car-listing?selected_asset=RV / TRAILER">RV</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/car-listing?selected_asset=MOTORCYCLE">Motorcycle</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/car-listing?selected_asset=POWERSPORTS">Powersports</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT">Heavy
+                                        Truck</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                        href="/car-listing?selected_asset=HEAVY DUTY TRAILERS">Trailers</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/car-listing?selected_asset=FARM EQUIPMENT">Farm
+                                        Equipment</a>
+                                </li>
+                            </ul>
+                            <div class="mobile-btn">
+
+                                <a href="{{ route('buy.step1') }}" style="text-decoration: none; color: inherit;">
+                                    <div class="logo-o">
+                                        Buy
                                         <span class="speed-line"></span>
                                     </div>
-                                    <div class="logo-o">Sell
+                                </a>
+                                <a href="{{ route('sell') }}" style="text-decoration: none; color: inherit;">
+                                    <div class="logo-o">
+                                        Sell
                                         <span class="speed-line"></span>
                                     </div>
-                                    <div class="logo-o">Protect
-                                        <span class="speed-line"></span>
-                                    </div>
-                                    <div class="logo-o">Borrow
-                                        <span class="speed-line"></span>
-                                    </div>
+                                </a>
+                                <!-- <div class="logo-o">Protect
+                                    <span class="speed-line"></span>
                                 </div>
-                            </div>    
+                                <div class="logo-o">Borrow
+                                    <span class="speed-line"></span>
+                                </div> -->
+                            </div>
                         </div>
 
                     </nav>
@@ -190,18 +202,24 @@
                     @if(in_array(Route::currentRouteName(), $showImageRoutes))
                         <img src="/assets/images/Frame 1707481624.png" alt="Logo">
                     @endif
-                    <div class="logo-o">Buy
-                        <span class="speed-line"></span>
-                    </div>
-                    <div class="logo-o">Sell
-                        <span class="speed-line"></span>
-                    </div>
-                    <div class="logo-o logo-2nd">Protect
+                    <a href="{{ route('buy.step1') }}" style="text-decoration: none; color: inherit;">
+                        <div class="logo-o">
+                            Buy
+                            <span class="speed-line"></span>
+                        </div>
+                    </a>
+                    <a href="{{ route('sell') }}" style="text-decoration: none; color: inherit;">
+                        <div class="logo-o">
+                            Sell
+                            <span class="speed-line"></span>
+                        </div>
+                    </a>
+                    <!-- <div class="logo-o logo-2nd">Protect
                         <span class="speed-line"></span>
                     </div>
                     <div class="logo-o logo-2nd ">Borrow
                         <span class="speed-line"></span>
-                    </div>
+                    </div> -->
 
 
 
@@ -291,7 +309,7 @@
                                             Support
                                         </a>
                                     </li>
-                                    
+
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('signup') ? 'active-link' : '' }}"
                                             href="{{ route('signup') }}">
