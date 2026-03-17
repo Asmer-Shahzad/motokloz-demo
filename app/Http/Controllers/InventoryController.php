@@ -19,6 +19,7 @@ class InventoryController extends Controller
 
         // Build API URL with all parameters
         $url = env("diskloz_base_url").'/api/inventory?';
+        // dd(env("diskloz_base_url"));
         $params = [
             'page' => $page,
             'per_page' => $perPage,

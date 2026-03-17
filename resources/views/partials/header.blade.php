@@ -2,7 +2,7 @@
     <div class="header-top">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-4 btn-mobile">
+                <div class="col-lg-1 btn-mobile">
 
                     <div class="logo-o">Buy
                         <span class="speed-line"></span>
@@ -17,7 +17,7 @@
                         <span class="speed-line"></span>
                     </div>
                 </div>
-                <div class="col-lg-8">
+                <div class="col-lg-11">
                     <nav class="navbar navbar-expand-lg">
                         <!-- <a class="navbar-brand" href="/">
                             <img src="/assets/images/logo.png" class="img-fluid" alt="Logo">
@@ -28,44 +28,46 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav  mb-2 mb-lg-0">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/car-listing?selected_asset=AUTO">Auto</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/car-listing?selected_asset=RV / TRAILER">RV</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/car-listing?selected_asset=MOTORCYCLE">Motorcycle</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/car-listing?selected_asset=POWERSPORTS">Powersports</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT">Heavy Truck</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/car-listing?selected_asset=HEAVY DUTY TRAILERS">Trailers</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/car-listing?selected_asset=FARM EQUIPMENT">Farm Equipment</a>
-                                </li>
-                            </ul>
-                            <div class="mobile-btn">
-
-                                <div class="logo-o">Buy
-                                    <span class="speed-line"></span>
+                            <div class="mob-menu">
+                                <ul class="navbar-nav  mb-2 mb-lg-0">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/car-listing?selected_asset=AUTO">Auto</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/car-listing?selected_asset=RV / TRAILER">RV</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/car-listing?selected_asset=MOTORCYCLE">Motorcycle</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/car-listing?selected_asset=POWERSPORTS">Powersports</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT">Heavy Truck</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/car-listing?selected_asset=HEAVY DUTY TRAILERS">Trailers</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/car-listing?selected_asset=FARM EQUIPMENT">Farm Equipment</a>
+                                    </li>
+                                </ul>
+                                <div class="mobile-btn">
+    
+                                    <div class="logo-o">Buy
+                                        <span class="speed-line"></span>
+                                    </div>
+                                    <div class="logo-o">Sell
+                                        <span class="speed-line"></span>
+                                    </div>
+                                    <div class="logo-o">Protect
+                                        <span class="speed-line"></span>
+                                    </div>
+                                    <div class="logo-o">Borrow
+                                        <span class="speed-line"></span>
+                                    </div>
                                 </div>
-                                <div class="logo-o">Sell
-                                    <span class="speed-line"></span>
-                                </div>
-                                <div class="logo-o">Protect
-                                    <span class="speed-line"></span>
-                                </div>
-                                <div class="logo-o">Borrow
-                                    <span class="speed-line"></span>
-                                </div>
-                            </div>
+                            </div>    
                         </div>
 
                     </nav>
