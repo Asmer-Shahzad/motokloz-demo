@@ -43,7 +43,16 @@ Route::get('/buy/step-3', [HomeController::class, 'buyFlowStep3'])->name('buy.st
 Route::get('/buy/step-4', [HomeController::class, 'buyFlowStep4'])->name('buy.step4');
 Route::get('/buy/step-5', [HomeController::class, 'buyFlowStep5'])->name('buy.step5');
 Route::get('/buy/step-6', [HomeController::class, 'buyFlowStep6'])->name('buy.step6');
+Route::get('/sell', function () {
 
+    if (Auth::check()) {
+        // user logged in
+        return redirect()->route('add.listings');
+    }
+
+    // agar login nahi hai to login page
+    return redirect()->route('login');
+})->name('sell');
 Route::middleware('auth')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

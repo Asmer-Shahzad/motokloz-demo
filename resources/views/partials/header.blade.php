@@ -3,13 +3,18 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-4 btn-mobile">
-
-                    <div class="logo-o">Buy
-                        <span class="speed-line"></span>
-                    </div>
-                    <div class="logo-o">Sell
-                        <span class="speed-line"></span>
-                    </div>
+                    <a href="{{ route('buy.step1') }}" style="text-decoration: none; color: inherit;">
+                        <div class="logo-o">
+                            Buy
+                            <span class="speed-line"></span>
+                        </div>
+                    </a>
+                    <a href="{{ route('sell') }}" style="text-decoration: none; color: inherit;">
+                        <div class="logo-o">
+                            Sell
+                            <span class="speed-line"></span>
+                        </div>
+                    </a>
                     <!-- <div class="logo-o">Protect
                         <span class="speed-line"></span>
                     </div>
@@ -42,23 +47,32 @@
                                     <a class="nav-link" href="/car-listing?selected_asset=POWERSPORTS">Powersports</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT">Heavy Truck</a>
+                                    <a class="nav-link" href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT">Heavy
+                                        Truck</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/car-listing?selected_asset=HEAVY DUTY TRAILERS">Trailers</a>
+                                    <a class="nav-link"
+                                        href="/car-listing?selected_asset=HEAVY DUTY TRAILERS">Trailers</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/car-listing?selected_asset=FARM EQUIPMENT">Farm Equipment</a>
+                                    <a class="nav-link" href="/car-listing?selected_asset=FARM EQUIPMENT">Farm
+                                        Equipment</a>
                                 </li>
                             </ul>
                             <div class="mobile-btn">
 
-                                <div class="logo-o">Buy
-                                    <span class="speed-line"></span>
-                                </div>
-                                <div class="logo-o">Sell
-                                    <span class="speed-line"></span>
-                                </div>
+                                <a href="{{ route('buy.step1') }}" style="text-decoration: none; color: inherit;">
+                                    <div class="logo-o">
+                                        Buy
+                                        <span class="speed-line"></span>
+                                    </div>
+                                </a>
+                                <a href="{{ route('sell') }}" style="text-decoration: none; color: inherit;">
+                                    <div class="logo-o">
+                                        Sell
+                                        <span class="speed-line"></span>
+                                    </div>
+                                </a>
                                 <!-- <div class="logo-o">Protect
                                     <span class="speed-line"></span>
                                 </div>
@@ -188,12 +202,18 @@
                     @if(in_array(Route::currentRouteName(), $showImageRoutes))
                         <img src="/assets/images/Frame 1707481624.png" alt="Logo">
                     @endif
-                    <div class="logo-o">Buy
-                        <span class="speed-line"></span>
-                    </div>
-                    <div class="logo-o">Sell
-                        <span class="speed-line"></span>
-                    </div>
+                    <a href="{{ route('buy.step1') }}" style="text-decoration: none; color: inherit;">
+                        <div class="logo-o">
+                            Buy
+                            <span class="speed-line"></span>
+                        </div>
+                    </a>
+                    <a href="{{ route('sell') }}" style="text-decoration: none; color: inherit;">
+                        <div class="logo-o">
+                            Sell
+                            <span class="speed-line"></span>
+                        </div>
+                    </a>
                     <!-- <div class="logo-o logo-2nd">Protect
                         <span class="speed-line"></span>
                     </div>
@@ -289,7 +309,7 @@
                                             Support
                                         </a>
                                     </li>
-                                    
+
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('signup') ? 'active-link' : '' }}"
                                             href="{{ route('signup') }}">

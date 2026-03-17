@@ -57,7 +57,7 @@
                 4
             @endif
         </a>
-
+        {{--
         <div class="line"></div>
 
         <!-- Step 5 -->
@@ -65,9 +65,9 @@
             {{ request()->routeIs('buy.step5') ? 'active' : '' }} 
             {{ request()->routeIs('buy.step6') ? 'completed' : '' }}">
             @if(request()->routeIs('buy.step6'))
-                ✓
+            ✓
             @else
-                5
+            5
             @endif
         </a>
 
@@ -77,8 +77,8 @@
         <a href="{{ route('buy.step6') }}" class="step 
             {{ request()->routeIs('buy.step6') ? 'active' : '' }}">
             6
-        </a>
-
+        </a> --}}
+ 
     </div>
 
 </div>

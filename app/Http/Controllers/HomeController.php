@@ -45,6 +45,7 @@ class HomeController extends Controller
             'assetCounts' => $assetCounts
         ]);
     }
+
     public function buyFlowStep1()
     {
         return view('buy-flow-step-1', ['pageTitle' => 'Step 1']);
