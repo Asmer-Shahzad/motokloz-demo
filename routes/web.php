@@ -38,7 +38,6 @@ Route::get('/car-listing', [SearchController::class, 'search_inventory'])->name(
 Route::get('/car-details/{id}', [InventoryController::class, 'inventory_product_details'])->name('inventory_product_details');
 Route::get('/dealer-profile/{id}', [DealerProfileController::class, 'dealer_inventory_details'])->name('dealer_inventory_details');
 Route::get('/dealer-network', [DealerNetworkController::class, 'fetch_dealers'])->name('fetch_dealers');
-Route::get('/dealer-network', [HomeController::class, 'dealernetwork'])->name('dealer.network');
 Route::get('/buy/step-1', [HomeController::class, 'buyFlowStep1'])->name('buy.step1');
 Route::get('/buy/step-2', [HomeController::class, 'buyFlowStep2'])->name('buy.step2');
 Route::get('/buy/step-3', [HomeController::class, 'buyFlowStep3'])->name('buy.step3');
