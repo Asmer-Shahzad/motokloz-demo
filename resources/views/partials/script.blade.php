@@ -334,19 +334,19 @@ toggleBtn.addEventListener("click", () => {
 </script>
 <script>
     var swiper = new Swiper(".review-swiper", {
-    slidesPerView: 1.2, // Mobile par ek poora aur ek thoda sa dikhega
-    centeredSlides: true, // Main card hamesha beech mein rahega
-    spaceBetween: 20,
-    loop: true, // Is se side wale empty nahi lagenge
-    breakpoints: {
-        640: {
-            slidesPerView: 2.5,
+        slidesPerView: 1.2, // Mobile par ek poora aur ek thoda sa dikhega
+        centeredSlides: true, // Main card hamesha beech mein rahega
+        spaceBetween: 20,
+        loop: true, // Is se side wale empty nahi lagenge
+        breakpoints: {
+            640: {
+                slidesPerView: 2.5,
+            },
+            1024: {
+                slidesPerView: 3.5, // Desktop par side wale cards cut honge (jaisa image mein tha)
+            },
         },
-        1024: {
-            slidesPerView: 3.5, // Desktop par side wale cards cut honge (jaisa image mein tha)
-        },
-    },
-});
+    });
     // const reviewSwiper = new Swiper(".review-swiper", {
     //     slidesPerView: 3,
     //     spaceBetween: 30,
@@ -513,65 +513,102 @@ toggleBtn.addEventListener("click", () => {
     fillColor();
 </script>
 
+
+
 <script>
-document.addEventListener("DOMContentLoaded", function () {
 
-    const gridBtn = document.getElementById("gridViewBtn");
-    const listBtn = document.getElementById("listViewBtn");
-    const cards = document.querySelectorAll(".vehicle-card");
+    let minRange = document.getElementById("minRange");
+    let maxRange = document.getElementById("maxRange");
+    let track = document.querySelector(".slider-track");
 
-    function animateCards(callback){
+    function updateSlider() {
 
-        cards.forEach(card=>{
-            card.classList.add("animating");
-        });
+        let min = parseInt(minRange.value);
+        let max = parseInt(maxRange.value);
 
-        setTimeout(()=>{
-            callback();
+        if (min > max - 10) {
+            minRange.value = max - 10;
+        }
 
-            cards.forEach(card=>{
-                card.classList.remove("animating");
-                card.classList.add("show");
+        if (max < min + 10) {
+            maxRange.value = min + 10;
+        }
+
+        let percent1 = (minRange.value / minRange.max) * 100;
+        let percent2 = (maxRange.value / maxRange.max) * 100;
+
+        track.style.background =
+            `linear-gradient(to right,#dcdcdc ${percent1}%,
+            #f58d02 ${percent1}%,
+            #f58d02 ${percent2}%,
+            #dcdcdc ${percent2}%)`;
+
+    }
+
+    minRange.addEventListener("input", updateSlider);
+    maxRange.addEventListener("input", updateSlider);
+
+    updateSlider();
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const gridBtn = document.getElementById("gridViewBtn");
+        const listBtn = document.getElementById("listViewBtn");
+        const cards = document.querySelectorAll(".vehicle-card");
+
+        function animateCards(callback) {
+
+            cards.forEach(card => {
+                card.classList.add("animating");
             });
 
-        },200);
-    }
+            setTimeout(() => {
+                callback();
 
-    function setView(view){
-
-        animateCards(()=>{
-
-            if(view === "grid"){
-                cards.forEach(card=>{
-                    card.classList.remove("col-12");
-                    card.classList.add("col-lg-4","col-sm-6");
+                cards.forEach(card => {
+                    card.classList.remove("animating");
+                    card.classList.add("show");
                 });
 
-                gridBtn.classList.add("active");
-                listBtn.classList.remove("active");
-            }
-            else{
+            }, 200);
+        }
 
-                cards.forEach(card=>{
-                    card.classList.remove("col-lg-4","col-sm-6");
-                    card.classList.add("col-12");
-                });
+        function setView(view) {
 
-                listBtn.classList.add("active");
-                gridBtn.classList.remove("active");
-            }
+            animateCards(() => {
 
-        });
+                if (view === "grid") {
+                    cards.forEach(card => {
+                        card.classList.remove("col-12");
+                        card.classList.add("col-lg-4", "col-sm-6");
+                    });
 
-        localStorage.setItem("vehicleView", view);
-    }
+                    gridBtn.classList.add("active");
+                    listBtn.classList.remove("active");
+                }
+                else {
 
-    const savedView = localStorage.getItem("vehicleView") || "grid";
-    setView(savedView);
+                    cards.forEach(card => {
+                        card.classList.remove("col-lg-4", "col-sm-6");
+                        card.classList.add("col-12");
+                    });
 
-    gridBtn.addEventListener("click", ()=>setView("grid"));
-    listBtn.addEventListener("click", ()=>setView("list"));
+                    listBtn.classList.add("active");
+                    gridBtn.classList.remove("active");
+                }
 
-});
+            });
+
+            localStorage.setItem("vehicleView", view);
+        }
+
+        const savedView = localStorage.getItem("vehicleView") || "grid";
+        setView(savedView);
+
+        gridBtn.addEventListener("click", () => setView("grid"));
+        listBtn.addEventListener("click", () => setView("list"));
+
+    });
 
 </script>

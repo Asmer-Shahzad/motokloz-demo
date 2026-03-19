@@ -12,49 +12,49 @@ use GuzzleHttp\Psr7\MultipartStream;
 class HomeController extends Controller
 {
     public function home()
-{
-    $assets = [
-        'AUTO',
-        'RV / TRAILER',
-        'MOTORCYCLE',
-        'POWERSPORTS',
-        'HEAVY TRUCK/EQUIPMENT',
-        'HEAVY DUTY TRAILERS',
-        'FARM EQUIPMENT'
-    ];
+    {
+        $assets = [
+            'AUTO',
+            'RV / TRAILER',
+            'MOTORCYCLE',
+            'POWERSPORTS',
+            'HEAVY TRUCK/EQUIPMENT',
+            'HEAVY DUTY TRAILERS',
+            'FARM EQUIPMENT'
+        ];
 
-    $assetCounts = [];
-    $allVehicles = collect();
+        $assetCounts = [];
+        $allVehicles = collect();
 
-    foreach ($assets as $asset) {
+        foreach ($assets as $asset) {
 
-        $response = Http::get(env("diskloz_base_url").'/api/search_inventory', [
-            'selected_asset' => $asset,
-            'page' => 1
-        ]);
+            $response = Http::get(env("diskloz_base_url").'/api/search_inventory', [
+                'selected_asset' => $asset,
+                'page' => 1
+            ]);
 
-        $inventory = json_decode($response->body());
+            $inventory = json_decode($response->body());
 
-        // count backend me preserve
-        $assetCounts[$asset] = $inventory->total ?? 0;
+            // count backend me preserve
+            $assetCounts[$asset] = $inventory->total ?? 0;
 
-        if (!empty($inventory->data)) {
-            $allVehicles = $allVehicles->merge(collect($inventory->data));
+            if (!empty($inventory->data)) {
+                $allVehicles = $allVehicles->merge(collect($inventory->data));
+            }
         }
+
+        // 🔥 overall latest 4 vehicles only
+        $latestVehicles = $allVehicles
+            ->sortByDesc('created_at') // ya id agar created_at nahi hai
+            ->take(4)
+            ->values();
+
+        return view('home', [
+            'pageTitle' => 'Home',
+            'assetCounts' => $assetCounts, // backend use ke liye
+            'assetData' => $latestVehicles // Blade me sirf ye use hoga
+        ]);
     }
-
-    // 🔥 overall latest 4 vehicles only
-    $latestVehicles = $allVehicles
-        ->sortByDesc('created_at') // ya id agar created_at nahi hai
-        ->take(4)
-        ->values();
-
-    return view('home', [
-        'pageTitle' => 'Home',
-        'assetCounts' => $assetCounts, // backend use ke liye
-        'assetData' => $latestVehicles // Blade me sirf ye use hoga
-    ]);
-}
 
 
     public function wishlist()
