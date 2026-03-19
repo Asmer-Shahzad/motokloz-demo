@@ -47,234 +47,42 @@
             </div>
             <!-- DEALER CARDS (FIXED BOOTSTRAP GRID) -->
             <div class="row g-3">
-                <!-- card 1 -->
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="dealer-card">
-                        <div class="d-flex align-items-start gap-3">
-                            <img src="/assets/images/Ellipse 6493.png" class="dealer-avatar" alt="">
-                            <div>
-                                <h6 class="dealer-card-head">Opel Manchester</h6>
-                                <p class="dealer-address mb-2">
-                                    123 Kingsway StranddRt, Manchester, M19 2XS
-                                </p>
-                                <span class="vehicle-badge">180 Vehicles</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- card 2 -->
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="dealer-card">
-                        <div class="d-flex align-items-start gap-3">
-                            <img src="/assets/images/Ellipse 6493 (1).png" class="dealer-avatar" alt="">
-                            <div>
-                                <h6 class="dealer-card-head">BMW Birmingham</h6>
-                                <p class="dealer-address mb-2">
-                                    45 SouthRd Road, Birmingham, B91 2DA
-                                </p>
-                                <span class="vehicle-badge">180 Vehicles</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- card 3 -->
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="dealer-card">
-                        <div class="d-flex align-items-start gap-3">
-                            <img src="/assets/images/Ellipse 6493 (2).png" class="dealer-avatar" alt="">
-                            <div>
-                                <h6 class="dealer-card-head">Toyota London</h6>
-                                <p class="dealer-address mb-2">
-                                    78 High Street Roadman, London, E1 6RL
-                                </p>
-                                <span class="vehicle-badge">180 Vehicles</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- card 4 -->
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="dealer-card">
-                        <div class="d-flex align-items-start gap-3">
-                            <img src="/assets/images/Ellipse 6493 (3).png" class="dealer-avatar" alt="">
-                            <div>
-                                <h6 class="dealer-card-head">Ford Glasgow</h6>
-                                <p class="dealer-address mb-2">
-                                    15 Buchanan Street, Glasgow, G1 3HL
-                                </p>
-                                <span class="vehicle-badge">180 Vehicles</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- card 5 -->
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="dealer-card">
-                        <div class="d-flex align-items-start gap-3">
-                            <img src="/assets/images/Ellipse 6493 (4).png" class="dealer-avatar" alt="">
-                            <div>
-                                <h6 class="dealer-card-head">Volkswagen Leeds</h6>
-                                <p class="dealer-address mb-2">
-                                    230 block 90 Kirkstall Road, Leeds, LS3 1HS
-                                </p>
-                                <span class="vehicle-badge">180 Vehicles</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- card 6 -->
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="dealer-card">
-                        <div class="d-flex align-items-start gap-3">
-                            <img src="/assets/images/Ellipse 6493 (5).png" class="dealer-avatar" alt="">
-                            <div>
-                                <h6 class="dealer-card-head">Honda Edinburgh</h6>
-                                <p class="dealer-address mb-2">
-                                    62 Princes Street, Edinburgh, EH2 4AD
-                                </p>
-                                <span class="vehicle-badge">180 Vehicles</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- card 7 -->
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="dealer-card">
-                        <div class="d-flex align-items-start gap-3">
-                            <img src="/assets/images/Ellipse 6493 (6).png" class="dealer-avatar" alt="">
-                            <div>
-                                <h6 class="dealer-card-head">Nissan Bristol</h6>
-                                <p class="dealer-address mb-2">
-                                    11 Clifton Down Road, Bristol, BS8 4AB
-                                </p>
-                                <span class="vehicle-badge">180 Vehicles</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- card 8 -->
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="dealer-card">
-                        <div class="d-flex align-items-start gap-3">
-                            <img src="/assets/images/Ellipse 6493 (7).png" class="dealer-avatar" alt="">
-                            <div>
-                                <h6 class="dealer-card-head">Kia Liverpool</h6>
-                                <p class="dealer-address mb-2">
-                                    29 Hope Street, Liverpool, L1 9BX
-                                </p>
-                                <span class="vehicle-badge">180 Vehicles</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- card 9 -->
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="dealer-card">
-                        <div class="d-flex align-items-start gap-3">
-                            <img src="/assets/images/Ellipse 6493 (8).png" class="dealer-avatar" alt="">
-                            <div>
-                                <h6 class="dealer-card-head">Peugeot Sheffield</h6>
-                                <p class="dealer-address mb-2">
-                                    Block 123 / 90 Kirkstall Road, Leeds, LS3 1HS
-                                </p>
-                                <span class="vehicle-badge">180 Vehicles</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- card 10 -->
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="dealer-card">
-                        <div class="d-flex align-items-start gap-3">
-                            <img src="/assets/images/Ellipse 6493 (9).png" class="dealer-avatar" alt="">
-                            <div>
-                                <h6 class="dealer-card-head">Volvo Oxford</h6>
-                                <p class="dealer-address mb-2">
-                                    45 Solihull Road, Birmingham, B91 2DA
-                                </p>
-                                <span class="vehicle-badge">180 Vehicles</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- card 11 -->
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="dealer-card">
-                        <div class="d-flex align-items-start gap-3">
-                            <img src="/assets/images/Ellipse 6493 (10).png" class="dealer-avatar" alt="">
-                            <div>
-                                <h6 class="dealer-card-head">Mazda Southampton</h6>
-                                <p class="dealer-address mb-2">
-                                    123 Kingsway Strandeif, Manchester, M19 2XS
-                                </p>
-                                <span class="vehicle-badge">180 Vehicles</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- card 12 -->
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="dealer-card">
-                        <div class="d-flex align-items-start gap-3">
-                            <img src="/assets/images/Ellipse 6493 (11).png" class="dealer-avatar" alt="">
-                            <div>
-                                <h6 class="dealer-card-head">Land Rover Norwich</h6>
-                                <p class="dealer-address mb-2">
-                                    45 Solihull Road, Birmingham, B91 2DA
-                                </p>
-                                <span class="vehicle-badge">180 Vehicles</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- card 13 -->
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="dealer-card">
-                        <div class="d-flex align-items-start gap-3">
-                            <img src="/assets/images/Ellipse 6493 (12).png" class="dealer-avatar" alt="">
-                            <div>
-                                <h6 class="dealer-card-head">Jeep Nottingham</h6>
-                                <p class="dealer-address mb-2">
-                                    123 Kingsway Strandeif, Manchester, M19 2XS
-                                </p>
-                                <span class="vehicle-badge">180 Vehicles</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- card 14 -->
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="dealer-card">
-                        <div class="d-flex align-items-start gap-3">
-                            <img src="/assets/images/Ellipse 6493 (13).png" class="dealer-avatar" alt="">
-                            <div>
-                                <h6 class="dealer-card-head">BMW Manchester</h6>
-                                <p class="dealer-address mb-2">
-                                    11 Clifton Down Road, Bristol, BS8 4AB
-                                </p>
-                                <span class="vehicle-badge">180 Vehicles</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- card 15 -->
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="dealer-card">
-                        <div class="d-flex align-items-start gap-3">
-                            <img src="/assets/images/Ellipse 6493 (14).png" class="dealer-avatar" alt="">
-                            <div>
-                                <h6 class="dealer-card-head">Ford Manchester</h6>
-                                <p class="dealer-address mb-2">
-                                    123 Kingsway Strandeif, Manchester, M19 2XS
-                                </p>
-                                <span class="vehicle-badge">180 Vehicles</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @include('partials.pagination')
+                @foreach($dealers as $dealer)
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <a href="{{ route('dealer_inventory_details', $dealer['id']) }}" class="text-decoration-none">
+                            <div class="dealer-card">
+                                <div class="d-flex align-items-start gap-3">
+                                    @php
+                                        $dealerLogo = isset($dealer['logo']) && $dealer['logo']
+                                            ? (Str::startsWith($dealer['logo'], 'http')
+                                                ? $dealer['logo']
+                                                : env('diskloz_base_url') . '/admin_assets/images/dealer_images/' . $dealer['logo'])
+                                            : asset('assets/images/defaultdealerlogo.png');
+                                    @endphp
+                                    <img src="{{ $dealerLogo }}"
+                                        class="me-4 dealerprofilelogo"
+                                        alt="Logo"
+                                        width="80"
+                                        onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultdealerlogo.png') }}';">
 
-            </div> <!-- end row -->
+                                    <div>
+                                        <h6 class="dealer-card-head">{{ ucwords(strtolower($dealer['legal_name'] ?? 'Name not available')) }}</h6>
+                                        <p class="dealer-address mb-2">
+                                            {{ $dealer['physical_address'] ?? 'Address not available' }}
+                                        </p>
+                                        <span class="vehicle-badge">{{ $dealer['inventory_count'] }} Vehicles</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+            <div class="my-4">
+                @include('partials.pagination')
+            </div>
+
+            <!-- end row -->
         </div> <!-- end container -->
     </section>
 

@@ -24,6 +24,7 @@ class HomeController extends Controller
     ];
 
     $assetCounts = [];
+    $allVehicles = collect();
 
     foreach ($assets as $asset) {
 
@@ -34,12 +35,24 @@ class HomeController extends Controller
 
         $inventory = json_decode($response->body());
 
+        // count backend me preserve
         $assetCounts[$asset] = $inventory->total ?? 0;
+
+        if (!empty($inventory->data)) {
+            $allVehicles = $allVehicles->merge(collect($inventory->data));
+        }
     }
+
+    // 🔥 overall latest 4 vehicles only
+    $latestVehicles = $allVehicles
+        ->sortByDesc('created_at') // ya id agar created_at nahi hai
+        ->take(4)
+        ->values();
 
     return view('home', [
         'pageTitle' => 'Home',
-        'assetCounts' => $assetCounts
+        'assetCounts' => $assetCounts, // backend use ke liye
+        'assetData' => $latestVehicles // Blade me sirf ye use hoga
     ]);
 }
 
