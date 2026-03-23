@@ -101,7 +101,7 @@
                     {{-- <div class="gtranslate_wrapper"></div> --}}
 
                     <!-- Language Dropdown -->
-                    <div class="dropdownn m-4 lang-dropdown">
+                    {{-- <div class="dropdownn m-4 lang-dropdown">
                         <button class="btn btn-light border rounded-pill px-3 py-1 dropdown-toggle" type="button"
                             data-bs-toggle="dropdown">
                             ENG
@@ -117,7 +117,8 @@
                             <li><a class="dropdown-item change-lang" data-lang="ru">Russian</a></li>
                             <li><a class="dropdown-item change-lang" data-lang="id">Indonesian</a></li>
                         </ul>
-                    </div>
+                    </div> --}}
+                    <div class="gtranslate_wrapper"></div>
 
                     <!-- Hidden GTranslate Wrapper -->
                     <div class="gtranslate_wrapper" style="display:none;"></div>
