@@ -43,7 +43,7 @@ class HomeController extends Controller
             }
         }
 
-        // 🔥 overall latest 4 vehicles only
+        // overall latest 4 vehicles only
         $latestVehicles = $allVehicles
             ->sortByDesc('created_at') // ya id agar created_at nahi hai
             ->take(4)
