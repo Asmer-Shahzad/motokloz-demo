@@ -150,7 +150,7 @@
 
                                                         <div class="car-price-block text-end">
                                                             <h4 class="price-value">$60089.32</h4>
-                                                            <p class="price-sub-text">In sapien eu diam eu</p>
+                                                            <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -177,7 +177,7 @@
                                                         </div>
                                                         <div class="car-price-block text-end">
                                                             <h4 class="price-value">$95400.00</h4>
-                                                            <p class="price-sub-text">In sapien eu diam eu</p>
+                                                            <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -204,7 +204,7 @@
                                                         </div>
                                                         <div class="car-price-block text-end">
                                                             <h4 class="price-value">$95400.00</h4>
-                                                            <p class="price-sub-text">In sapien eu diam eu</p>
+                                                            <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -231,7 +231,7 @@
                                                         </div>
                                                         <div class="car-price-block text-end">
                                                             <h4 class="price-value">$95400.00</h4>
-                                                            <p class="price-sub-text">In sapien eu diam eu</p>
+                                                            <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -258,7 +258,7 @@
                                                         </div>
                                                         <div class="car-price-block text-end">
                                                             <h4 class="price-value">$95400.00</h4>
-                                                            <p class="price-sub-text">In sapien eu diam eu</p>
+                                                            <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -285,7 +285,7 @@
                                                         </div>
                                                         <div class="car-price-block text-end">
                                                             <h4 class="price-value">$95400.00</h4>
-                                                            <p class="price-sub-text">In sapien eu diam eu</p>
+                                                            <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -312,7 +312,7 @@
                                                         </div>
                                                         <div class="car-price-block text-end">
                                                             <h4 class="price-value">$95400.00</h4>
-                                                            <p class="price-sub-text">In sapien eu diam eu</p>
+                                                            <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -339,7 +339,7 @@
                                                         </div>
                                                         <div class="car-price-block text-end">
                                                             <h4 class="price-value">$95400.00</h4>
-                                                            <p class="price-sub-text">In sapien eu diam eu</p>
+                                                            <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -366,7 +366,7 @@
                                                         </div>
                                                         <div class="car-price-block text-end">
                                                             <h4 class="price-value">$95400.00</h4>
-                                                            <p class="price-sub-text">In sapien eu diam eu</p>
+                                                            <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                                         </div>
                                                     </div>
                                                 </div>

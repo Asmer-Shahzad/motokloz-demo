@@ -253,7 +253,7 @@
 
                                 <div class="car-price-block text-end">
                                     <h4 class="price-value">${{ $recent_vehicle->price_retail_date ? $recent_vehicle->price_retail_date . '0' : '0'}}</h4>
-                                    <p class="price-sub-text">In sapien eu diam eu</p>
+                                    <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                 </div>
                             </div>
                         </div>
@@ -276,16 +276,16 @@
                             Built with transparency and trust at its core, Motokloz connects buyers and sellers in a
                             smarter, safer,
                             and more informed environment — whether you’re shopping for motorcycles, cars, boats,
-                            powersports, RVs, or specialty vehicles. </p>
+                            powersports, RVs, or specialty vehicles.</p>
                         <p>Our platform is designed around full disclosure and user confidence. We believe great
                             transactions start with clear information, honest listings, and tools that empower both sides of
                             the deal. Sellers gain access to structured listing features that highlight key details and
                             build credibility, while buyers benefit from streamlined search, verified information, and an
-                            intuitive browsing experience that removes guesswork from major purchases. </p>
+                            intuitive browsing experience that removes guesswork from major purchases.</p>
                         <p>Motokloz isn’t just another classifieds site — it’s a purpose-built ecosystem focused on the
                             ultimate buying and selling experience. From discovery to decision, every feature is created to
                             reduce friction, increase transparency, and help Canadians move forward with confidence when
-                            purchasing or selling motorized assets. </p>
+                            purchasing or selling motorized assets.</p>
                         <p>Whether you’re upgrading, downsizing, or finding your next ride, Motokloz delivers a modern
                             marketplace where trust, clarity, and performance drive every transaction.</p>
                         <a href="#" class="btn-custom">Learn More</a>
