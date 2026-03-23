@@ -22,7 +22,7 @@
                         <span class="speed-line"></span>
                     </div> -->
                 </div>
-                <div class="col-lg-8">
+                <div class="col-lg-11">
                     <nav class="navbar navbar-expand-lg">
                         <!-- <a class="navbar-brand" href="/">
                             <img src="/assets/images/logo.png" class="img-fluid" alt="Logo">

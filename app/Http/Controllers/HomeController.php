@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -25,55 +24,36 @@ class HomeController extends Controller
         ];
 
         $assetCounts = [];
+        $allVehicles = collect();
 
         foreach ($assets as $asset) {
 
-            $response = Http::get(env("diskloz_base_url") . '/api/search_inventory', [
+            $response = Http::get(env("diskloz_base_url").'/api/search_inventory', [
                 'selected_asset' => $asset,
                 'page' => 1
             ]);
 
             $inventory = json_decode($response->body());
 
+            // count backend me preserve
             $assetCounts[$asset] = $inventory->total ?? 0;
+
+            if (!empty($inventory->data)) {
+                $allVehicles = $allVehicles->merge(collect($inventory->data));
+            }
         }
 
-
+        // overall latest 4 vehicles only
+        $latestVehicles = $allVehicles
+            ->sortByDesc('created_at') // ya id agar created_at nahi hai
+            ->take(4)
+            ->values();
 
         return view('home', [
             'pageTitle' => 'Home',
-            'assetCounts' => $assetCounts
+            'assetCounts' => $assetCounts, // backend use ke liye
+            'assetData' => $latestVehicles // Blade me sirf ye use hoga
         ]);
-    }
-
-    public function buyFlowStep1()
-    {
-        return view('buy-flow-step-1', ['pageTitle' => 'Step 1']);
-    }
-
-    public function buyFlowStep2()
-    {
-        return view('buy-flow-step-2', ['pageTitle' => 'Step 2']);
-    }
-
-    public function buyFlowStep3()
-    {
-        return view('buy-flow-step-3', ['pageTitle' => 'Step 3']);
-    }
-
-    public function buyFlowStep4()
-    {
-        return view('buy-flow-step-4', ['pageTitle' => 'Step 4']);
-    }
-
-    public function buyFlowStep5()
-    {
-        return view('buy-flow-step-5', ['pageTitle' => 'Step 5']);
-    }
-
-    public function buyFlowStep6()
-    {
-        return view('buy-flow-step-6', ['pageTitle' => 'Step 6']);
     }
 
 
