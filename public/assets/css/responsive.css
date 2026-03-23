@@ -1,761 +1,909 @@
 @media only screen and (max-width: 1399px) {
     .card-body {
-    padding: 15px !important;
-}
-   
+        padding: 15px !important;
+    }
+
     .filter-bar {
-    gap: 30px;
-}
-.car-circle-icons-group {
-    gap: 2px;
-}
-.logo-o {
-    height: 40px;
-}
-#themeToggle img#themeIcon {
-    height: 40px;
-}
-#themeToggle {
-    width: 40px;
-    height: 40px;
-}
-.card span {
-    width: 60%;
-}
-/*.car-circle-icons-group img {*/
-/*    width: 18%;*/
-/*}*/
-.car-price-block .price-value {
-    font-size: 20px;
-}
-.car-main-title {
-    font-size: 16px;
-}
-.search-wrapper.search-dealer-container {
-    margin-bottom: 25px;
-}
-section.dealer-fleet-section.container .my-4 {
-    margin-top: 0 !important;
-}
+        gap: 30px;
+    }
+
+    .car-circle-icons-group {
+        gap: 2px;
+    }
+
+    .logo-o {
+        height: 40px;
+    }
+
+    #themeToggle img#themeIcon {
+        height: 40px;
+    }
+
+    #themeToggle {
+        width: 40px;
+        height: 40px;
+    }
+
+    .card span {
+        width: 60%;
+    }
+
+    /*.car-circle-icons-group img {*/
+    /*    width: 18%;*/
+    /*}*/
+    .car-price-block .price-value {
+        font-size: 20px;
+    }
+
+    .car-main-title {
+        font-size: 16px;
+    }
+
+    .search-wrapper.search-dealer-container {
+        margin-bottom: 25px;
+    }
+
+    section.dealer-fleet-section.container .my-4 {
+        margin-top: 0 !important;
+    }
+
     .listing-page .page-title {
         padding: 0 0 0 15px;
     }
 }
+
 @media only screen and (max-width: 1199px) {
-     
+
     .col-lg-6.btn-header img {
-    margin: 0 0 0 5px;
-}
+        margin: 0 0 0 5px;
+    }
+
     .container.account-setting.my-py-80 {
-    padding-top: 34px;
-}
+        padding-top: 34px;
+    }
+
     .sidebar-top.user-info {
-    padding: 16px 10px;
-}
+        padding: 16px 10px;
+    }
 
-.sidebar-center .username {
-    font-size: 15px;
-}
+    .sidebar-center .username {
+        font-size: 15px;
+    }
+
     .fw-semibold {
-    font-size: 15px;
-}
+        font-size: 15px;
+    }
+
     .offer-content .title {
-    font-size: 13px;
-}
+        font-size: 13px;
+    }
+
     .dropdownn.m-4.lang-dropdown {
-    margin-top: 10px !important;
-    margin-bottom: 10px !important;
-}
+        margin-top: 10px !important;
+        margin-bottom: 10px !important;
+    }
+
     .mto-pill-btn {
-    padding: 3px 8px;
-}
-.mto-card-unit {
-    padding: 15px !important;
-    margin-bottom: 15px !important;
-}
-.mto-specs-container.mb-5 {
-    padding: 15px;
-    margin-bottom: 15px !important;
-}
-.mto-info-tile {
-    padding: 12px 0px;
-}
-.mto-stack-trigger {
-    padding: 15px;
-}
-.mto-stack-content {
-    padding: 0 15px 15px;
-}
-section.mto-main-wrapper.py-5 {
-    padding-top: 20px !important;
-}
+        padding: 3px 8px;
+    }
+
+    .mto-card-unit {
+        padding: 15px !important;
+        margin-bottom: 15px !important;
+    }
+
+    .mto-specs-container.mb-5 {
+        padding: 15px;
+        margin-bottom: 15px !important;
+    }
+
+    .mto-info-tile {
+        padding: 12px 0px;
+    }
+
+    .mto-stack-trigger {
+        padding: 15px;
+    }
+
+    .mto-stack-content {
+        padding: 0 15px 15px;
+    }
+
+    section.mto-main-wrapper.py-5 {
+        padding-top: 20px !important;
+    }
+
     .fleet-section {
-    padding-top: 30px;
-}
-     .filter-group {
-    margin-bottom: 10px;
-}
-.complete-sidebar {
-    padding: 20px 10px;
-}
-  .search-btn {
-    margin: 0 auto;
-  }
-  .header-top .col-lg-8 {
-    width: 100%;
-  }
-  .filter-bar {
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-  }
+        padding-top: 30px;
+    }
 
-  .popular-button ul li a {
-    font-size: 11px;
-    padding: 11px 15px;
-  }
+    .filter-group {
+        margin-bottom: 10px;
+    }
 
-  .popular-vehicles h2 {
-    font-size: 35px;
-    line-height: 100%;
-  }
+    .complete-sidebar {
+        padding: 20px 10px;
+    }
 
-  .secure-box p {
-    width: auto;
-  }
+    .search-btn {
+        margin: 0 auto;
+    }
 
-  .about-motokloz .col-lg-5 {
-    width: 60%;
-  }
+    .header-top .col-lg-8 {
+        width: 100%;
+    }
 
-  .about-bg h2 {
-    font-size: 35px;
-    line-height: 100%;
-  }
+    .filter-bar {
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+    }
 
-  .testimonials-content h2 {
-    font-size: 35px;
-    line-height: 110%;
-  }
+    .popular-button ul li a {
+        font-size: 11px;
+        padding: 11px 15px;
+    }
 
-  .car-review h2 {
-    font-size: 35px;
-  }
-  footer .footer-mid {
-  }
+    .popular-vehicles h2 {
+        font-size: 35px;
+        line-height: 100%;
+    }
 
-  footer .footer-mid .col-lg-4 {
-    width: 33%;
-  }
+    .secure-box p {
+        width: auto;
+    }
 
-  footer .footer-mid .col-lg-2 {
-    width: 33%;
-    margin-bottom: 40px;
-  }
-  .header-top li.nav-item {
-    padding: 0 0px 0 20px;
-}
-img.logo {
-    width: 250px;
-}
-.subscribe-box button {
+    .about-motokloz .col-lg-5 {
+        width: 60%;
+    }
+
+    .about-bg h2 {
+        font-size: 35px;
+        line-height: 100%;
+    }
+
+    .testimonials-content h2 {
+        font-size: 35px;
+        line-height: 110%;
+    }
+
+    .car-review h2 {
+        font-size: 35px;
+    }
+
+    footer .footer-mid {}
+
+    footer .footer-mid .col-lg-4 {
+        width: 33%;
+    }
+
+    footer .footer-mid .col-lg-2 {
+        width: 33%;
+        margin-bottom: 40px;
+    }
+
+    .header-top li.nav-item {
+        padding: 0 0px 0 20px;
+    }
+
+    img.logo {
+        width: 250px;
+    }
+
+    .subscribe-box button {
         margin-left: 0px;
         padding: 14px 20px;
-}
+    }
+
     .logo-o {
         height: 32px;
         font-size: 13px;
     }
+
     #themeToggle img#themeIcon {
         height: 50px;
     }
+
     .dropdownn .btn {
-    padding: 5px 28px !important;
-}
-.header-top a.nav-link {
-    font-size: 14px;
-}
+        padding: 5px 28px !important;
+    }
+
+    .header-top a.nav-link {
+        font-size: 14px;
+    }
+
     .car-main-title {
         font-size: 14px;
     }
+
     .badge-mileage {
-    padding: 4px 10px;
-    font-size: 13px;
-}
-.footer-top h3 {
-    font-size: 25px;
-}
-.secure-box i.fa-solid.fa-arrow-right {
-    width: 50px;
-    border-radius: 100px;
-    height: 50px;
-}
-.secure-box {
-    align-items: flex-end;
-    justify-content: space-between;
-    flex-direction: row;
-    flex-wrap: wrap;
-            margin: 0;
-            padding: 25px 30px 25px 30px;
-}
-.secure-box p {
+        padding: 4px 10px;
+        font-size: 13px;
+    }
+
+    .footer-top h3 {
+        font-size: 25px;
+    }
+
+    .secure-box i.fa-solid.fa-arrow-right {
+        width: 50px;
+        border-radius: 100px;
+        height: 50px;
+    }
+
+    .secure-box {
+        align-items: flex-end;
+        justify-content: space-between;
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin: 0;
+        padding: 25px 30px 25px 30px;
+    }
+
+    .secure-box p {
         color: #fff;
     }
+
     .card-title {
-    margin-bottom: 6px !important;
+        margin-bottom: 6px !important;
+    }
+
+    .card-body .location {
+        margin-bottom: 10px !important;
+        font-size: 14px !important;
+    }
+
+    .features.d-flex.flex-wrap.gap-3.mb-3 {
+        margin-bottom: 10px !important;
+    }
+
+    .book-btn {
+        padding: 4px 18px !important;
+    }
 }
 
-.card-body .location {
-    margin-bottom: 10px !important;
-    font-size: 14px !important;
-}
-
-.features.d-flex.flex-wrap.gap-3.mb-3 {
-    margin-bottom: 10px !important;
-}
-   .book-btn {
-    padding: 4px 18px !important;
-}
-}
 @media only screen and (max-width: 991px) {
-        .purchase-img {
+    .purchase-img {
         width: auto !important;
     }
+
     .col-12 .car-main-title {
-    font-size: 18px;
-}
+        font-size: 18px;
+    }
+
     .mission-title br {
-    display: none;
-}
+        display: none;
+    }
 
-.mission-text {
-    max-width: 100% !important;
-}
+    .mission-text {
+        max-width: 100% !important;
+    }
+
     .dealer-card {
-    padding: 15px !important;
-}
+        padding: 15px !important;
+    }
+
     .dealer-search-inner {
-    align-items: center;
-    justify-content: center;
-}
+        align-items: center;
+        justify-content: center;
+    }
+
     .content-box {
-    padding: 25px 15px !important;
-}
+        padding: 25px 15px !important;
+    }
+
     .dealer-profile-banner {
-    height: auto !important;
-    min-height: auto !important;
-}
+        height: auto !important;
+        min-height: auto !important;
+    }
 
-.dealer-profile-banner img.w-100.object-fit-cover {
-    height: auto !important;
-}
+    .dealer-profile-banner img.w-100.object-fit-cover {
+        height: auto !important;
+    }
 
-.container.my-5 {
-    margin-top: 20px !important;
-}
+    .container.my-5 {
+        margin-top: 20px !important;
+    }
+
     .search-dealer-container {
-    padding: 15px 15px;
-}
-div#overviewContent .d-flex.align-items-start.mb-4.border.p-4.rounded-3 {
-    padding: 15px !important;
-}
+        padding: 15px 15px;
+    }
+
+    div#overviewContent .d-flex.align-items-start.mb-4.border.p-4.rounded-3 {
+        padding: 15px !important;
+    }
+
     .car-main-title {
-    line-height: 21px;
-    min-height: auto;
-}
+        line-height: 21px;
+        min-height: auto;
+    }
+
     .car-card-bottom {
-    padding: 25px 12px 20px 12px;
-}
+        padding: 25px 12px 20px 12px;
+    }
+
     .page-square {
-    font-size: 14px;
-    width: 35px;
-    height: 35px;
-}
-    .form-control, .form-select {
-   
-    padding: 6px 12px;
-}
+        font-size: 14px;
+        width: 35px;
+        height: 35px;
+    }
+
+    .form-control,
+    .form-select {
+
+        padding: 6px 12px;
+    }
+
     .car-listing-bg {
-    padding: 70px 0 0px 0;
-    height: auto;
-}
+        padding: 70px 0 0px 0;
+        height: auto;
+    }
 
-section.banner-car-listing {
-    margin-bottom: 0;
-}
+    section.banner-car-listing {
+        margin-bottom: 0;
+    }
 
-.fleet-section {
-    padding-top: 0;
-}
+    .fleet-section {
+        padding-top: 0;
+    }
 
-.btn-clear-filters {
-    padding: 4px 10px;
-    font-size: 10px;
-}
+    .btn-clear-filters {
+        padding: 4px 10px;
+        font-size: 10px;
+    }
 
-.tool-select {
-    font-size: 10px;
-    padding: 5px 29px 5px 10px !important;
-}
+    .tool-select {
+        font-size: 10px;
+        padding: 5px 29px 5px 10px !important;
+    }
 
-.toolbar-right.d-flex.gap-2 {
-    gap: 2px !important;
-}
+    .toolbar-right.d-flex.gap-2 {
+        gap: 2px !important;
+    }
 
-.toolbar-left.d-flex.align-items-center {}
+    .toolbar-left.d-flex.align-items-center {}
 
-.toolbar-left.d-flex.align-items-center .view-icons.me-3 {
-    margin-right: 9px !important;
-}
+    .toolbar-left.d-flex.align-items-center .view-icons.me-3 {
+        margin-right: 9px !important;
+    }
 
-.toolbar-left.d-flex.align-items-center .view-icons.me-3 svg#gridViewBtn {
-    margin-right: 1px !important;
-}
+    .toolbar-left.d-flex.align-items-center .view-icons.me-3 svg#gridViewBtn {
+        margin-right: 1px !important;
+    }
 
-.fleet-section .col-lg-9.col-md-8 {
-    padding-left: 0;
-}
-        .footer-top h3 {
+    .fleet-section .col-lg-9.col-md-8 {
+        padding-left: 0;
+    }
+
+    .footer-top h3 {
         width: 100%;
         margin-bottom: 20px;
     }
+
     .mob-menu {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-}
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
     /*.car-circle-icons-group img {*/
     /*    width: 14%;*/
     /*}*/
-/*    .dropdown img.img-fluid.light-dark {*/
-/*    width: 68%;*/
-/*}*/
+    /*    .dropdown img.img-fluid.light-dark {*/
+    /*    width: 68%;*/
+    /*}*/
     .mobile-btn {
-    display: block;
+        display: block;
+    }
+
+    .header-top .col-lg-8 {
+        width: 10%;
+    }
+
+    .header-top .row {
+        align-items: center;
+    }
+
+    .navbar-toggler-icon {
+        filter: invert(1);
+    }
+
+    .logo-o {
+        width: 95px;
+        height: 33px;
+        font-size: 12px;
+        margin: 8px 0 20px 0;
+    }
+
+    .col-lg-6.btn-header .logo-o {
+        display: none;
+    }
+
+    .header .col-lg-6 {
+        width: 80%;
+    }
+
+    .col-lg-6.btn-header {
+        width: 20%;
+    }
+
+    .btn-mobile {
+        width: 90%;
+        display: flex;
+        flex-direction: row-reverse;
+    }
+
+    .section-two .row {}
+
+    .secure-box {
+        margin-bottom: 20px;
+    }
+
+    .popular-vehicles .row.align-items-center {
+        text-align: center;
+    }
+
+    .popular-button ul {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .about-motokloz .col-lg-5 {
+        width: 70%;
+    }
+
+    .footer-top {
+        text-align: center;
+    }
+
+    .footer-bottom .col-lg-6 {
+        width: 50%;
+    }
+
+    ul.navbar-nav.mb-2.mb-lg-0 {
+        background: #101010;
+        /*width: 745px;*/
+        /*position: absolute;*/
+        order: 0;
+    }
+
+    .header-top li.nav-item {
+        padding: 0;
+    }
+
+    .header-top a.nav-link {
+        font-size: 14px;
+    }
+
+    .btn-mobile {
+        display: none;
+    }
+
+    .thumb-strip-slider {
+        height: 107px;
+    }
+
+    section.gallery-section {
+        padding-top: 15px;
+    }
+
+    .mto-stack-item {
+        margin-bottom: 15px !important;
+    }
 }
-  .header-top .col-lg-8 {
-    width: 10%;
-  }
-  .header-top .row {
-    align-items: center;
-  }
-  .navbar-toggler-icon {
-    filter: invert(1);
-  }
-  .logo-o {
-    width: 95px;
-    height: 33px;
-    font-size: 12px;
-    margin: 8px 0 20px 0;
-  }
-  .col-lg-6.btn-header .logo-o {
-    display: none;
-  }
-  .header .col-lg-6 {
-    width: 80%;
-  }
-  .col-lg-6.btn-header {
-    width: 20%;
-  }
-  .btn-mobile {
-    width: 90%;
-    display: flex;
-    flex-direction: row-reverse;
-  }
-  .section-two .row {
-  }
 
-  .secure-box {
-    margin-bottom: 20px;
-  }
-
-  .popular-vehicles .row.align-items-center {
-    text-align: center;
-  }
-
-  .popular-button ul {
-    text-align: center;
-    margin-top: 20px;
-  }
-
-  .about-motokloz .col-lg-5 {
-    width: 70%;
-  }
-
-  .footer-top {
-    text-align: center;
-  }
-
-  .footer-bottom .col-lg-6 {
-    width: 50%;
-  }
-
-  ul.navbar-nav.mb-2.mb-lg-0 {
-    background: #101010;
-    /*width: 745px;*/
-    /*position: absolute;*/
-    order: 0;
-  }
-  .header-top li.nav-item {
-    padding: 0;
-  }
-
-  .header-top a.nav-link {
-    font-size: 14px;
-  }
-  .btn-mobile {
-    display: none;
-}
-.thumb-strip-slider {
-    height: 107px;
-}
-section.gallery-section {
-    padding-top: 15px;
-}
-.mto-stack-item {
-    margin-bottom: 15px !important;
-}
-}
 @media (max-width: 768px) {
-    
+
     .dealer-top-title {
-    font-size: 25px;
-}
+        font-size: 25px;
+    }
+
     .content-box h5.fw-bold.mb-4.d-flex.justify-content-between.align-items-center.collapsed {
-    margin-bottom: 0 !important;
-}
+        margin-bottom: 0 !important;
+    }
+
     div#overviewContent h3.mb-3.fw-bold {
-    font-size: 20px;
+        font-size: 20px;
+    }
+
+    div#overviewContent .d-flex.align-items-start.mb-4.border-bottom.p-4 {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .search-box {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .divider {
+        display: none;
+    }
+
+    .filter-item {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .find-btn {
+        width: 100%;
+        justify-content: center;
+    }
 }
-div#overviewContent .d-flex.align-items-start.mb-4.border-bottom.p-4 {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-}
-  .search-box {
-    flex-direction: column;
-    padding: 20px;
-  }
-  .divider {
-    display: none;
-  }
-  .filter-item {
-    width: 100%;
-    margin-bottom: 20px;
-  }
-  .find-btn {
-    width: 100%;
-    justify-content: center;
-  }
-}
+
 @media only screen and (max-width: 767px) {
-   
+
     h2.main-head {
-    font-size: 30px;
-    margin: 0 !important;
-    line-height: 40px;
-}
+        font-size: 30px;
+        margin: 0 !important;
+        line-height: 40px;
+    }
+
     #themeToggle img#themeIcon {
         height: 33px;
     }
+
     .wishlist-card .wishlist-img {
-        height:auto !important;
+        height: auto !important;
     }
+
     .card-container {
-    padding: 15px;
-}
-    
+        padding: 15px;
+    }
+
     h2.fw-bold.mb-4 {
-    margin: 0  0 12px 0 !important;
-    font-size: 25px;
-}
+        margin: 0 0 12px 0 !important;
+        font-size: 25px;
+    }
+
     .car-listing-bg {
-    padding: 35px 0 0px 0;
-}
+        padding: 35px 0 0px 0;
+    }
+
     a#userDropdown img.img-fluid.light-dark {
-    width: 60%;
-}
+        width: 60%;
+    }
 
-.col-lg-6.btn-header img {
-    width: 34%;
-    margin: 0 0 0 7px;
-}
+    .col-lg-6.btn-header img {
+        width: 34%;
+        margin: 0 0 0 7px;
+    }
+
     .listing-page .listing {
-    padding-left: 12px !important;
-}
+        padding-left: 12px !important;
+    }
+
     .listing-page .listing-bottom .listing-main .listing-head .listing-left h2 {
-    font-size: 14px;
-}
+        font-size: 14px;
+    }
 
-.listing-page .listing-bottom .listing-main .listing-head .search-form form {
-    width: auto;
-}
+    .listing-page .listing-bottom .listing-main .listing-head .search-form form {
+        width: auto;
+    }
 
-.listing-page .listing-bottom .listing-main .listing-head {
-    padding: 9px 8px;
-    gap: 4px;
-}
+    .listing-page .listing-bottom .listing-main .listing-head {
+        padding: 9px 8px;
+        gap: 4px;
+    }
+
     .container.account-setting.my-py-80 .row {
-    margin: 0;
-}
+        margin: 0;
+    }
 
-h2.main-head {
-    padding: 0 0 5px 16px;
-    margin: 0;
-}
+    h2.main-head {
+        padding: 0 0 5px 16px;
+        margin: 0;
+    }
+
     .page-title h1 {
-    font-size: 25px;
-}
+        font-size: 25px;
+    }
 
-.col-lg-2.user-breadcrumbs {
-    margin-bottom: 15px;
-    margin-left: 10px;
-}
+    .col-lg-2.user-breadcrumbs {
+        margin-bottom: 15px;
+        margin-left: 10px;
+    }
 
-.sidebar {
-    margin-bottom: 20px;
-}
+    .sidebar {
+        margin-bottom: 20px;
+    }
 
-.btn-orange {
-    padding: 10px 27px;
-}
+    .btn-orange {
+        padding: 10px 27px;
+    }
+
     .modern-car-card.shadow-sm {
-    align-content: flex-end;
-    flex-wrap: wrap;
-}
+        align-content: flex-end;
+        flex-wrap: wrap;
+    }
 
-.modern-car-card.shadow-sm .car-card-top {
-    width: 100%;
-}
-    
-   .deal-sec {
-    border-radius: 10px !important;
-}
+    .modern-car-card.shadow-sm .car-card-top {
+        width: 100%;
+    }
 
-.deal-sec .search-field {
-    border-bottom: 1px solid;
-    width: 100%;
-}
-        .dealer-banner {
+    .deal-sec {
+        border-radius: 10px !important;
+    }
+
+    .deal-sec .search-field {
+        border-bottom: 1px solid;
+        width: 100%;
+    }
+
+    .dealer-banner {
         min-height: auto !important;
     }
+
     .banner-content {
-    height: 150px !important;
-    padding-bottom: 15px;
-}
-.banner-content h2.fw-bold.mb-0 {
-    font-size: 20px;
-}
+        height: 150px !important;
+        padding-bottom: 15px;
+    }
+
+    .banner-content h2.fw-bold.mb-0 {
+        font-size: 20px;
+    }
+
     .container.py-3.border-bottom.mb-4 {
-    padding-left: 0;
-    padding-right: 0;
-}
+        padding-left: 0;
+        padding-right: 0;
+    }
+
     .dealer-fleet-section .top-back {
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
     .dealer-fleet-section {
-    padding-left: 15px;
-    padding-right: 15px;
-}
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
     .main-gallery-slider img {
-    height: auto !important;
-}
-.swiper-slide {
-    height: auto !important;
-}
-.swiper-wrapper {
-    height: auto !important;
-}
-.main-gallery-slider {
-    height: 255px;
-}
-.gallery-action-overlay {
-            left: 7%;
+        height: auto !important;
+    }
+
+    .swiper-slide {
+        height: auto !important;
+    }
+
+    .swiper-wrapper {
+        height: auto !important;
+    }
+
+    .main-gallery-slider {
+        height: 255px;
+    }
+
+    .gallery-action-overlay {
+        left: 7%;
         transform: translateX(-3%);
         bottom: 25px;
-}
-.thumb-strip-slider {
-    height: 75px;
-}
-section.mto-main-wrapper.py-5 {
-    padding-top: 0px !important;
-}
-.mto-top-headline {
-    font-size: 25px;
-}
+    }
+
+    .thumb-strip-slider {
+        height: 75px;
+    }
+
+    section.mto-main-wrapper.py-5 {
+        padding-top: 0px !important;
+    }
+
+    .mto-top-headline {
+        font-size: 25px;
+    }
+
     .page-square {
-    width: 25px;
-    height: 25px;
-}
+        width: 25px;
+        height: 25px;
+    }
+
     .fleet-section .col-lg-9.col-md-8 {
-    padding-left: 15px;
-}
+        padding-left: 15px;
+    }
+
     .fleet-section .container {
-    padding: 0 30px;
-}
+        padding: 0 30px;
+    }
+
     .fleet-toolbar.d-flex.flex-wrap.justify-content-between.align-items-center.mb-4 {
-    align-items: center;
-    justify-content: center !important;
-    display: flex;
-    gap: 10px !important;
-}
+        align-items: center;
+        justify-content: center !important;
+        display: flex;
+        gap: 10px !important;
+    }
+
     .main-title {
-    font-size: 25px;
-}
+        font-size: 25px;
+    }
+
     .car-listing-cont h2 {
-   font-size: 20px;
+        font-size: 20px;
         line-height: 30px;
-}
+    }
+
     .subscribe-box button {
         padding: 14px 15px;
         margin-left: 6px;
     }
-        .secure-box i.fa-solid.fa-arrow-right {
+
+    .secure-box i.fa-solid.fa-arrow-right {
         width: 35px;
         height: 35px;
     }
-        
+
     .secure-box h4 {
-    font-size: 20px;
-}
+        font-size: 20px;
+    }
+
     .secure-box {
         padding: 15px 15px 15px 15px;
         height: 200px;
     }
+
     .header .col-lg-6 {
         width: 75%;
     }
-        .dropdownn .btn {
+
+    .dropdownn .btn {
         padding: 2px 10px !important;
         font-size: 12px;
     }
+
     .dropdownn.m-4.lang-dropdown {
-    margin: 0 !important;
-}
-  .footer-top h3 {
-    width: 100%;
-  }
-  .help {
-    display: none;
-  }
-  .col-lg-4.btn-mobile {
-    display: none;
-  }
+        margin: 0 !important;
+    }
 
-  .header-top .col-lg-8 {
-    width: 100%;
-  }
+    .footer-top h3 {
+        width: 100%;
+    }
 
-  ul.navbar-nav.mb-2.mb-lg-0 {
-    position: relative;
-    width: 100%;
-  }
+    .help {
+        display: none;
+    }
 
-  /*.mobile-btn {*/
-  /*  display: flex;*/
-  /*}*/
+    .col-lg-4.btn-mobile {
+        display: none;
+    }
 
-  .logo-o {
+    .header-top .col-lg-8 {
+        width: 100%;
+    }
+
+    ul.navbar-nav.mb-2.mb-lg-0 {
+        position: relative;
+        width: 100%;
+    }
+
+    /*.mobile-btn {*/
+    /*  display: flex;*/
+    /*}*/
+
+    .logo-o {
         margin: 10px 0px 10px 0;
     }
 
-  .header-top li.nav-item {
-    padding: 0 0px 0 6px;
-  }
+    .header-top li.nav-item {
+        padding: 0 0px 0 6px;
+    }
 
-  .header-top li.nav-item a.nav-link {
-    /*background: #222222;*/
-    padding: 8px 10px;
-  }
+    .header-top li.nav-item a.nav-link {
+        /*background: #222222;*/
+        padding: 8px 10px;
+    }
 
-  
-  img.logo {
-   width: 150px;
+
+    img.logo {
+        width: 150px;
         height: auto;
-  }
+    }
 
-  .col-lg-6.btn-header {
-    width: 25%;
+    .col-lg-6.btn-header {
+        width: 25%;
         padding: 0;
-  }
+    }
 
-  .divider {
-    display: none;
-  }
+    .divider {
+        display: none;
+    }
 
-  .filter-bar {
-    gap: 15px;
-    justify-content: flex-start;
-  }
+    .filter-bar {
+        gap: 15px;
+        justify-content: flex-start;
+    }
 
-  .search-btn {
-    margin: 0;
-  }
-  .secure-box {
-    display: inline-grid;
-  }
+    .search-btn {
+        margin: 0;
+    }
 
-  .secure-box p {
-    color: #fff;
-    font-size: 13px;
-    margin:0;
-  }
+    .secure-box {
+        display: inline-grid;
+    }
 
-  .popular-button ul li {
-    padding: 0 0 0 0px;
-  }
+    .secure-box p {
+        color: #fff;
+        font-size: 13px;
+        margin: 0;
+    }
 
-  .popular-button ul li a {
-    padding: 7px 4px;
-  }
+    .popular-button ul li {
+        padding: 0 0 0 0px;
+    }
 
-  .about-motokloz .col-lg-5 {
-    width: 100%;
-  }
+    .popular-button ul li a {
+        padding: 7px 4px;
+    }
 
-  .car-review {
-    padding-top: 100px;
-    padding-bottom: 50px;
-  }
+    .about-motokloz .col-lg-5 {
+        width: 100%;
+    }
 
-  .car-review h2 {
-    font-size: 26px;
-  }
+    .car-review {
+        padding-top: 100px;
+        padding-bottom: 50px;
+    }
 
-  .car-review p {
-    font-size: 15px;
-  }
+    .car-review h2 {
+        font-size: 26px;
+    }
 
-  .footer-top h3 {
-    font-size: 25px;
-    line-height: 35px;
-    margin-bottom: 20px;
-    width: 100%;
-  }
+    .car-review p {
+        font-size: 15px;
+    }
 
-  footer .footer-mid .col-lg-4 {
-    width: 100%;
-  }
+    .footer-top h3 {
+        font-size: 25px;
+        line-height: 35px;
+        margin-bottom: 20px;
+        width: 100%;
+    }
 
-  footer .footer-mid .col-lg-2 {
-    width: 100%;
-    margin: 20px 0 0 0;
-  }
+    footer .footer-mid .col-lg-4 {
+        width: 100%;
+    }
 
-  .footer-bottom .col-lg-6 {
-    width: 100%;
-  }
+    footer .footer-mid .col-lg-2 {
+        width: 100%;
+        margin: 20px 0 0 0;
+    }
 
-  .footer-bottom p {
-    text-align: center;
-  }
+    .footer-bottom .col-lg-6 {
+        width: 100%;
+    }
 
-  .footer-bottom ul {
-    text-align: center;
-    float: none;
-    padding-top: 9px;
-  }
+    .footer-bottom p {
+        text-align: center;
+    }
 
-  .footer-bottom ul li {
-    padding: 0 10px;
-  }
+    .footer-bottom ul {
+        text-align: center;
+        float: none;
+        padding-top: 9px;
+    }
+
+    .footer-bottom ul li {
+        padding: 0 10px;
+    }
+}
+
+@media (max-width: 470px) {
+    .gt_float_switcher .gt-selected .gt-current-lang {
+        padding: 2px 4px !important;
+    }
+
+    .gtranslate_wrapper .gt_float_switcher {
+        font-size: 10px !important;
+    }
+
+    .gtranslate_wrapper .gt_float_switcher img {
+        width: 10px !important;
+    }
+
+    .header .col-lg-6 {
+        width: 85%;
+    }
+
+    .col-lg-6.btn-header {
+        width: 15%;
+        padding: 0;
+    }
+
 }
