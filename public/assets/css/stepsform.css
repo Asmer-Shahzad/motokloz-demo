@@ -493,27 +493,87 @@ a.step.completed {
 ====================== */
 
 /* Tablet (max-width: 992px) */
-@media (max-width: 992px) {
+@media (max-width: 991px) {
     .banner-img {
-        position: relative;
-        width: 180px;
-        margin: auto;
-        display: block;
-    }
-
-    .banner {
-        text-align: center;
-    }
-
-    .steps {
-        gap: 10px;
-    }
-
-    .line {
-        width: 25px;
-    }
+    width: 54%;
+    height: auto;
+}
+    .banner-text h2 {
+    font-size: 17px;
 }
 
+.banner-text p {
+           width: 275px;
+}
+    /*.banner-img {*/
+    /*    position: relative;*/
+    /*    width: 180px;*/
+    /*    margin: auto;*/
+    /*    display: block;*/
+    /*}*/
+
+    /*.banner {*/
+    /*    text-align: center;*/
+    /*}*/
+
+    /*.steps {*/
+    /*    gap: 10px;*/
+    /*}*/
+
+    /*.line {*/
+    /*    width: 25px;*/
+    /*}*/
+}
+
+
+@media (max-width: 767px) {
+     label.check-content {
+    font-size: 14px;
+    line-height: 25px;
+}
+
+.pref-title {
+    font-size: 16px;
+    line-height: 26px;
+}
+    .form-label {
+    font-size: 16px;
+    line-height: 26px;
+}
+    .price-inputs {
+    display: block;
+}
+.price-box {
+    margin-bottom: 15px;
+}
+    .form-heading, .form-title {
+    font-size: 16px !important;
+}
+    .form-area {
+    padding: 20px 16px !important;
+}
+    .steps {
+    gap: 6px !important;
+}
+    .banner {
+    padding: 15px 15px 0 15px !important;
+}
+
+.banner-text h2 {
+    font-size: 18px !important;
+}
+
+.banner-text p {
+    width: 100%;
+}
+
+.banner-img {
+    position: relative;
+    left: 0;
+    right: 0;
+    width: 100%;
+}
+}
 /* Mobile (max-width: 576px) */
 @media (max-width: 576px) {
     .progress-top {
