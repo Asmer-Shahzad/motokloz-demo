@@ -88,7 +88,7 @@
         <div class="footer-bottom">
             <div class="row">
                 <div class="col-lg-6">
-                    <p>© 2026 <span>Motokloz</span>. All rights reserved.</p>
+                    <p>© 2026 <a href="/">Motokloz</a>. All rights reserved.</p>
                 </div>
                 <div class="col-lg-6">
                     <ul class="social-icons">
