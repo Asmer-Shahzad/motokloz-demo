@@ -447,6 +447,7 @@ div#overviewContent .d-flex.align-items-start.mb-4.border-bottom.p-4 {
   }
 }
 @media only screen and (max-width: 767px) {
+   
     h2.main-head {
     font-size: 30px;
     margin: 0 !important;
