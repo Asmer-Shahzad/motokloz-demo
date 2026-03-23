@@ -206,112 +206,59 @@
                 </div>
                 <div class="col-lg-6 popular-button">
                     <ul>
-                        <li><a href="#">Categories <i class="fa-solid fa-angle-down"></i></a></li>
-                        <li><a href="#">Fuel Type <i class="fa-solid fa-angle-down"></i></a></li>
-                        <li><a href="#">Review / Rating <i class="fa-solid fa-angle-down"></i></a></li>
-                        <li><a href="#">Price range <i class="fa-solid fa-angle-down"></i></a></li>
+                        <li><a href="javascript:void(0)">Categories <i class="fa-solid fa-angle-down"></i></a></li>
+                        <li><a href="javascript:void(0)">Fuel Type <i class="fa-solid fa-angle-down"></i></a></li>
+                        <li><a href="javascript:void(0)">Review / Rating <i class="fa-solid fa-angle-down"></i></a></li>
+                        <li><a href="javascript:void(0)">Price range <i class="fa-solid fa-angle-down"></i></a></li>
                     </ul>
                 </div>
             </div>
             <div class="row g-4">
-                <div class="col-lg-3 col-sm-6">
-                    <div class="modern-car-card shadow-sm">
-                        <div class="car-card-top">
-                            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500" alt="Car">
-                            <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
-                                    style="width:20px; height:12px;"> 18,500 Km</div>
-                        </div>
-                        <div class="car-card-bottom">
-                            <h5 class="car-main-title">2022 Cadillac XT6 Premium Luxury</h5>
-                            <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 12 Km away</p>
+                @foreach ($assetData as $recent_vehicle)
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="modern-car-card shadow-sm">
+                            <div class="car-card-top">
+                                @php
+                                    $detailUrl = route('inventory_product_details', $recent_vehicle->id);
+                                @endphp
 
-                            <div class="car-circle-icons-group">
-                                <img src="/assets/images/no-accidents.png" alt="">
-                                <img src="/assets/images/low-mileage.png" alt="">
-                                <img src="/assets/images/service-plan.png" alt="">
-                                <img src="/assets/images/powertrain-warranty.png" alt="">
-                                <span class="extra-icons-count">12+</span>
+                                <a href="{{ $detailUrl }}">
+                                    <img style="width:100%"
+                                        src="{{ $recent_vehicle->primary_image 
+                                            ? (Str::startsWith($recent_vehicle->primary_image,'http') 
+                                                ? $recent_vehicle->primary_image 
+                                                : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$recent_vehicle->primary_image)
+                                            : asset('assets/images/defaultimage.jpg') }}"
+                                        alt="Vehicle Image"
+                                        class="img-box img-fluid"
+                                        onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
+                                </a>
+                                <div class="badge-mileage d-flex align-items-center">
+                                    <img src="/assets/images/mile1.png" alt="Mileage" class="me-2" style="width:20px; height:12px;">
+                                    {{ $recent_vehicle->mileage ? $recent_vehicle->mileage . ' km' : '0 km' }}
+                                </div>
                             </div>
+                            <div class="car-card-bottom">
+                                <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
+                                    {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}</h5>
+                                <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 12 Km away</p>
 
-                            <div class="car-price-block text-end">
-                                <h4 class="price-value">$60089.32</h4>
-                                <p class="price-sub-text">In sapien eu diam eu</p>
+                                <div class="car-circle-icons-group">
+                                    <img src="/assets/images/no-accidents.png" alt="">
+                                    <img src="/assets/images/low-mileage.png" alt="">
+                                    <img src="/assets/images/service-plan.png" alt="">
+                                    <img src="/assets/images/powertrain-warranty.png" alt="">
+                                    <span class="extra-icons-count">12+</span>
+                                </div>
+
+                                <div class="car-price-block text-end">
+                                    <h4 class="price-value">${{ $recent_vehicle->price_retail_date ? $recent_vehicle->price_retail_date . '0' : '0'}}</h4>
+                                    <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="modern-car-card shadow-sm">
-                        <div class="car-card-top">
-                            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500" alt="Car">
-                            <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
-                                    style="width:20px; height:12px;"> 18,500 Km</div>
-                        </div>
-                        <div class="car-card-bottom">
-                            <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>
-                            <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 5 Km away</p>
-                            <div class="car-circle-icons-group">
-                                <img src="/assets/images/no-accidents.png" alt="">
-                                <img src="/assets/images/low-mileage.png" alt="">
-                                <img src="/assets/images/service-plan.png" alt="">
-                                <img src="/assets/images/powertrain-warranty.png" alt="">
-                                <span class="extra-icons-count">12+</span>
-                            </div>
-                            <div class="car-price-block text-end">
-                                <h4 class="price-value">$95400.00</h4>
-                                <p class="price-sub-text">In sapien eu diam eu</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="modern-car-card shadow-sm">
-                        <div class="car-card-top">
-                            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500" alt="Car">
-                            <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
-                                    style="width:20px; height:12px;"> 18,500 Km</div>
-                        </div>
-                        <div class="car-card-bottom">
-                            <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>
-                            <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 5 Km away</p>
-                            <div class="car-circle-icons-group">
-                                <img src="/assets/images/no-accidents.png" alt="">
-                                <img src="/assets/images/low-mileage.png" alt="">
-                                <img src="/assets/images/service-plan.png" alt="">
-                                <img src="/assets/images/powertrain-warranty.png" alt="">
-                                <span class="extra-icons-count">12+</span>
-                            </div>
-                            <div class="car-price-block text-end">
-                                <h4 class="price-value">$95400.00</h4>
-                                <p class="price-sub-text">In sapien eu diam eu</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="modern-car-card shadow-sm">
-                        <div class="car-card-top">
-                            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500" alt="Car">
-                            <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
-                                    style="width:20px; height:12px;"> 18,500 Km</div>
-                        </div>
-                        <div class="car-card-bottom">
-                            <h5 class="car-main-title">2023 Porsche Cayenne Turbo</h5>
-                            <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 5 Km away</p>
-                            <div class="car-circle-icons-group">
-                                <img src="/assets/images/no-accidents.png" alt="">
-                                <img src="/assets/images/low-mileage.png" alt="">
-                                <img src="/assets/images/service-plan.png" alt="">
-                                <img src="/assets/images/powertrain-warranty.png" alt="">
-                                <span class="extra-icons-count">12+</span>
-                            </div>
-                            <div class="car-price-block text-end">
-                                <h4 class="price-value">$95400.00</h4>
-                                <p class="price-sub-text">In sapien eu diam eu</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
 
 
             </div>
@@ -329,16 +276,16 @@
                             Built with transparency and trust at its core, Motokloz connects buyers and sellers in a
                             smarter, safer,
                             and more informed environment — whether you’re shopping for motorcycles, cars, boats,
-                            powersports, RVs, or specialty vehicles. </p>
+                            powersports, RVs, or specialty vehicles.</p>
                         <p>Our platform is designed around full disclosure and user confidence. We believe great
                             transactions start with clear information, honest listings, and tools that empower both sides of
                             the deal. Sellers gain access to structured listing features that highlight key details and
                             build credibility, while buyers benefit from streamlined search, verified information, and an
-                            intuitive browsing experience that removes guesswork from major purchases. </p>
+                            intuitive browsing experience that removes guesswork from major purchases.</p>
                         <p>Motokloz isn’t just another classifieds site — it’s a purpose-built ecosystem focused on the
                             ultimate buying and selling experience. From discovery to decision, every feature is created to
                             reduce friction, increase transparency, and help Canadians move forward with confidence when
-                            purchasing or selling motorized assets. </p>
+                            purchasing or selling motorized assets.</p>
                         <p>Whether you’re upgrading, downsizing, or finding your next ride, Motokloz delivers a modern
                             marketplace where trust, clarity, and performance drive every transaction.</p>
                         <a href="#" class="btn-custom">Learn More</a>

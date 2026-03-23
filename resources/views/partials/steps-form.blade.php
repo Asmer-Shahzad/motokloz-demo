@@ -1,9 +1,24 @@
 <div class="progress-top">
+    @php
+        if (request()->routeIs('buy.step6')) {
+            $backRoute = route('buy.step5');
+        } elseif (request()->routeIs('buy.step5')) {
+            $backRoute = route('buy.step4');
+        } elseif (request()->routeIs('buy.step4')) {
+            $backRoute = route('buy.step3');
+        } elseif (request()->routeIs('buy.step3')) {
+            $backRoute = route('buy.step2');
+        } elseif (request()->routeIs('buy.step2')) {
+            $backRoute = route('buy.step1');
+        } else {
+            $backRoute = route('home'); // default
+        }
+    @endphp
 
-    <span class="back">
+    <a href="{{ $backRoute }}" class="back">
         <img src="/assets/images/Vector (14).png" class="back-arrow">
         Back
-    </span>
+    </a>
 
     <div class="steps">
 
@@ -78,7 +93,7 @@
             {{ request()->routeIs('buy.step6') ? 'active' : '' }}">
             6
         </a> --}}
- 
+
     </div>
 
 </div>
