@@ -531,6 +531,9 @@
 }
 
 @media only screen and (max-width: 767px) {
+    .popular-button ul li {
+        margin-bottom: 12px !important;
+    }
 
     h2.main-head {
         font-size: 30px;
