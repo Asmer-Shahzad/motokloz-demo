@@ -41,6 +41,7 @@
         padding: 0 0 0 15px;
     }
 }
+
 @media only screen and (max-width: 1199px) {
     .col-lg-6.btn-header img {
         margin: 0 0 0 5px;
@@ -164,9 +165,11 @@
         height: 32px;
         font-size: 13px;
     }
+
     #themeToggle img#themeIcon {
         height: 50px;
     }
+
     .dropdownn .btn {
         padding: 5px 28px !important;
     }
@@ -176,6 +179,7 @@
     .car-main-title {
         font-size: 14px;
     }
+
     .badge-mileage {
         padding: 4px 10px;
         font-size: 13px;
@@ -199,6 +203,7 @@
     .secure-box p {
         color: #fff;
     }
+
     .card-title {
         margin-bottom: 6px !important;
     }
@@ -219,6 +224,7 @@
     .purchase-img {
         width: auto !important;
     }
+
     .col-12 .car-main-title {
         font-size: 18px;
     }
@@ -318,6 +324,7 @@
         width: 100%;
         margin-bottom: 20px;
     }
+
     .mob-menu {
         display: flex;
         justify-content: space-between;
@@ -446,7 +453,12 @@
         justify-content: center;
     }
 }
+
 @media only screen and (max-width: 767px) {
+    .popular-button ul li {
+        margin-bottom: 12px !important;
+    }
+
     h2.main-head {
         font-size: 30px;
         margin: 0 !important;
@@ -455,9 +467,11 @@
     #themeToggle img#themeIcon {
         height: 33px;
     }
+
     .wishlist-card .wishlist-img {
         height: auto !important;
     }
+
     .card-container {
         padding: 15px;
     }
@@ -541,6 +555,7 @@
     .dealer-banner {
         min-height: auto !important;
     }
+
     .banner-content {
         height: 150px !important;
         padding-bottom: 15px;
@@ -625,6 +640,7 @@
         padding: 15px 15px 15px 15px;
         height: 200px;
     }
+
     .header .col-lg-6 {
         width: 75%;
     }
@@ -632,6 +648,7 @@
         padding: 2px 10px !important;
         font-size: 12px;
     }
+
     .dropdownn.m-4.lang-dropdown {
         margin: 0 !important;
     }
@@ -782,5 +799,22 @@
 @media (max-width: 470px) {
     .gt_float_switcher .gt-selected .gt-current-lang {
         padding: 2px 4px !important;
+    }
+
+    .gtranslate_wrapper .gt_float_switcher {
+        font-size: 10px !important;
+    }
+
+    .gtranslate_wrapper .gt_float_switcher img {
+        width: 10px !important;
+    }
+
+    .header .col-lg-6 {
+        width: 85%;
+    }
+
+    .col-lg-6.btn-header {
+        width: 15%;
+        padding: 0;
     }
 }

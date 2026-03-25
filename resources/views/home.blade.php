@@ -10,80 +10,92 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="search-wrapper">
-                                <!-- Tabs -->
-                                <div class="tabs">
-                                    <a class="tab active">All</a>
-                                    <a class="tab">New</a>
-                                    <a class="tab">Used</a>
+                                <form id="vehicleFilterForm" action="{{ route('search_inventory') }}" method="GET" class="search-wrapper">
+                                    <!-- Tabs -->
+                                    <div class="tabs">
+                                        <a class="tab active" data-condition="">All</a>
+                                        <a class="tab" data-condition="NEW">New</a>
+                                        <a class="tab" data-condition="USED">Used</a>
 
-                                    <div class="help">
-                                        <i class="fa-solid fa-user"></i>
-                                        <span>Need help?</span>
-                                    </div>
-                                </div>
-
-                                <!-- Filter Bar -->
-                                <div class="filter-bar">
-
-                                    <div class="filter">
-                                        <label>Type</label>
-                                        <div class="select">
-                                            <i class="fa-solid fa-car"></i>
-                                            <select class="filter-options">
-                                                <option>Auto</option>
-                                            </select>
+                                        <div class="help">
+                                            <i class="fa-solid fa-user"></i>
+                                            <span>Need help?</span>
                                         </div>
                                     </div>
 
-                                    <div class="divider"></div>
+                                    <!-- Hidden input for tabs -->
+                                    <input type="hidden" name="selected_condition" id="selected_condition_input">
 
-                                    <div class="filter">
-                                        <label>Make</label>
-                                        <div class="select">
-                                            <i class="fa-solid fa-car-side me-2"></i>
-                                            <span class="filter-all">Modern Compact</span>
+                                    <!-- Filter Bar -->
+                                    <div class="filter-bar">
+
+                                        <!-- Type -->
+                                        <div class="filter">
+                                            <label>Type</label>
+                                            <div class="select">
+                                                <i class="fa-solid fa-car"></i>
+                                                <select id="filter-type" name="selected_asset" class="filter-options">
+                                                    <option value="">Select Type</option>
+                                                    @foreach($assets as $asset)
+                                                        <option value="{{ $asset }}">{{ $asset }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         </div>
+
+                                        <div class="divider"></div>
+
+                                        <!-- Make -->
+                                        <div class="filter">
+                                            <label>Make</label>
+                                            <div class="select">
+                                                <i class="fa-solid fa-car-side me-2"></i>
+                                                <select id="filter-make" name="selected_make" class="filter-options">
+                                                    <option value="">Select Make</option>
+                                                    @foreach($makeTypes as $type => $makes)
+                                                        @foreach($makes as $make)
+                                                            <option value="{{ $make['name'] }}" data-type="{{ $type }}">{{ $make['name'] }}</option>
+                                                        @endforeach
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="divider"></div>
+
+                                        <!-- Model -->
+                                        <div class="filter">
+                                            <label>Model</label>
+                                            <div class="select">
+                                                <input class="form-control" type="text" name="selected_model" id="Model" placeholder="Enter Model">
+                                            </div>
+                                        </div>
+
+                                        <div class="divider"></div>
+
+                                        <!-- Price Range -->
+                                        <div class="price-box filter">
+                                            <label>Price Range</label>
+                                            <div class="range-container">
+                                                <div class="slider-track" id="track"></div>
+                                                <input class="filter-all" type="range" min="0" max="1000000" step="10000"
+                                                    value="100000" id="slider-1" name="selected_lowest_price">
+                                                <input class="filter-all" type="range" min="0" max="1000000" step="10000"
+                                                    value="500000" id="slider-2" name="selected_highest_price">
+                                            </div>
+
+                                            <div class="values">
+                                                $ <span id="min-value"></span> - <span id="max-value"></span>
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="search-btn">
+                                            <i class="fa-solid fa-magnifying-glass"></i>
+                                            Find a Vehicle
+                                        </button>
+
                                     </div>
-
-                                    <div class="divider"></div>
-
-                                    <div class="filter">
-                                        <label>Model</label>
-                                        <div class="select">
-                                            <i class="fa-solid fa-calendar me-2"></i>
-                                            <span class="filter-all">2022</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="divider"></div>
-                                    {{--
-                                    <div class="filter price">
-                                        <label>Price Range</label>
-                                        <input type="range" min="10000" max="12000" value="11000" id="priceRange">
-                                        <div class="price-value">$ <span id="priceVal">10,000 - 12,000</span></div>
-                                    </div> --}}
-
-                                    <div class="price-box filter">
-                                        <label>Price Range</label>
-
-                                        <div class="range-container ">
-                                            <div class="slider-track" id="track"></div>
-                                            <input class="filter-all " type="range" min="0" max="1000000" step="10000"
-                                                value="100000" id="slider-1">
-                                            <input class="filter-all " type="range" min="0" max="1000000" step="10000"
-                                                value="500000" id="slider-2">
-                                        </div>
-
-                                        <div class="values">
-                                            $ <span id="min-value"></span>
-                                            &nbsp; - &nbsp;
-                                            <span id="max-value"></span>
-                                        </div>
-                                    </div>
-                                    <button class="search-btn">
-                                        <i class="fa-solid fa-magnifying-glass"></i>
-                                        Find a Vehicle
-                                    </button>
+                                </form>
 
                                 </div>
 
@@ -253,7 +265,7 @@
 
                                 <div class="car-price-block text-end">
                                     <h4 class="price-value">${{ $recent_vehicle->price_retail_date ? $recent_vehicle->price_retail_date . '0' : '0'}}</h4>
-                                    <p class="price-sub-text">In sapien eu diam eu</p>
+                                    <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                 </div>
                             </div>
                         </div>
@@ -276,16 +288,16 @@
                             Built with transparency and trust at its core, Motokloz connects buyers and sellers in a
                             smarter, safer,
                             and more informed environment — whether you’re shopping for motorcycles, cars, boats,
-                            powersports, RVs, or specialty vehicles. </p>
+                            powersports, RVs, or specialty vehicles.</p>
                         <p>Our platform is designed around full disclosure and user confidence. We believe great
                             transactions start with clear information, honest listings, and tools that empower both sides of
                             the deal. Sellers gain access to structured listing features that highlight key details and
                             build credibility, while buyers benefit from streamlined search, verified information, and an
-                            intuitive browsing experience that removes guesswork from major purchases. </p>
+                            intuitive browsing experience that removes guesswork from major purchases.</p>
                         <p>Motokloz isn’t just another classifieds site — it’s a purpose-built ecosystem focused on the
                             ultimate buying and selling experience. From discovery to decision, every feature is created to
                             reduce friction, increase transparency, and help Canadians move forward with confidence when
-                            purchasing or selling motorized assets. </p>
+                            purchasing or selling motorized assets.</p>
                         <p>Whether you’re upgrading, downsizing, or finding your next ride, Motokloz delivers a modern
                             marketplace where trust, clarity, and performance drive every transaction.</p>
                         <a href="#" class="btn-custom">Learn More</a>
@@ -469,9 +481,103 @@
     </style>
 
 
+<script>
+const typeSelect = document.getElementById('filter-type');
+const makeSelect = document.getElementById('filter-make');
 
+function populateMakes(makes) {
 
-   
+    makeSelect.innerHTML = '<option value="">Select Make</option>';
+
+    makes.forEach(make => {
+        const option = document.createElement('option');
+
+        option.value = make.name;  
+        option.textContent = make.name;
+
+        makeSelect.appendChild(option);
+    });
+}
+
+function fetchMakesByType(type) {
+    return fetch(`{{ env('diskloz_base_url') }}/api/search_inventory?selected_asset=${encodeURIComponent(type)}&per_page=1`)
+        .then(res => res.json())
+        .then(data => {
+            switch(type) {
+                case 'AUTO': return data.filters.MfgAuto || [];
+                case 'MARINE': return data.filters.MfgMarine || [];
+                case 'RV / TRAILER': return data.filters.MfgRvTrailer || [];
+                case 'SNOWSPORTS': return data.filters.MfgSnowsport || [];
+                case 'MOTORCYCLE': return data.filters.MfgMotorcycleAtv || [];
+                case 'POWERSPORTS': return data.filters.MfgMotorcycleAtv || [];
+                case 'WATERSPORT': return data.filters.MfgWatersport || [];
+                case 'FARM EQUIPMENT': return data.filters.MfgFarmEquipment || [];
+                case 'HEAVY TRUCK/EQUIPMENT': return data.filters.MfgHeavyTruckEquipment || [];
+                case 'HEAVY DUTY TRAILERS': return data.filters.MfgHeavyDutyTrailer || [];
+                default: return [];
+            }
+        });
+}
+
+// On type change
+typeSelect.addEventListener('change', function () {
+    const type = this.value;
+    if (!type) {
+        // If no type selected, show all makes
+        fetchAllMakes();
+        return;
+    }
+    fetchMakesByType(type)
+        .then(populateMakes)
+        .catch(err => console.error('Error fetching makes:', err));
+});
+
+// Function to fetch all makes from all types
+function fetchAllMakes() {
+    const types = [
+        'AUTO', 'MARINE', 'RV / TRAILER', 'SNOWSPORTS', 'MOTORCYCLE','POWERSPORTS',
+        'WATERSPORT', 'FARM EQUIPMENT', 'HEAVY TRUCK/EQUIPMENT', 'HEAVY DUTY TRAILERS'
+    ];
+
+    Promise.all(types.map(fetchMakesByType))
+        .then(results => {
+            // Flatten the array of arrays into a single list
+            const allMakes = results.flat();
+            populateMakes(allMakes);
+        })
+        .catch(err => console.error('Error fetching all makes:', err));
+}
+
+// Initial load: populate all makes
+fetchAllMakes();
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const slider1 = document.getElementById('slider-1');
+    const slider2 = document.getElementById('slider-2');
+    const minValueSpan = document.getElementById('min-value');
+    const maxValueSpan = document.getElementById('max-value');
+    const form = document.getElementById('vehicleFilterForm');
+
+    // Initialize slider display
+    minValueSpan.textContent = slider1.value;
+    maxValueSpan.textContent = slider2.value;
+
+    slider1.addEventListener('input', () => { minValueSpan.textContent = slider1.value; });
+    slider2.addEventListener('input', () => { maxValueSpan.textContent = slider2.value; });
+
+    // Tabs redirect
+    document.querySelectorAll('.tabs .tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+
+            document.getElementById('selected_condition_input').value = this.dataset.condition || '';
+            form.submit(); // redirect with filters
+        });
+    });
+});
+</script>
 
 
 @endsection
