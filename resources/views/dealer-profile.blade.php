@@ -537,62 +537,62 @@
                     <p class="dealer-top-subtitle">Top Cars are listed</p>
                 </div>
             </div>
-            @foreach ($inventory as $recent_vehicle)
-                <div class="col-lg-3 col-sm-6">
-                    <div class="modern-car-card shadow-sm">
-                        <div class="car-card-top">
-                            {{-- @php
-                            if ($recent_vehicle->inventory_logo != null) {
-                                $logo = explode('|', $recent_vehicle->inventory_logo);
-                            } else {
-                                $logo[0] = 'car_thumb.png';
-                            }
-                            @endphp --}}
-                            @php
-                                $detailUrl = route('inventory_product_details', $recent_vehicle->id);
+                @foreach ($inventory as $recent_vehicle)
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="modern-car-card shadow-sm">
+                            <div class="car-card-top">
+                                {{-- @php
+                                if ($recent_vehicle->inventory_logo != null) {
+                                    $logo = explode('|', $recent_vehicle->inventory_logo);
+                                } else {
+                                    $logo[0] = 'car_thumb.png';
+                                }
+                                @endphp --}}
+                                @php
+                                    $detailUrl = route('inventory_product_details', $recent_vehicle->id);
 
-                                $defaultImage = asset('assets/images/defaultimage.jpg');
+                                    $defaultImage = asset('assets/images/defaultimage.jpg');
 
-                                $img = $recent_vehicle->primary_image
-                                    ? (Str::startsWith($recent_vehicle->primary_image, 'http')
-                                        ? $recent_vehicle->primary_image
-                                        : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$recent_vehicle->primary_image)
-                                    : $defaultImage;
-                            @endphp
+                                    $img = $recent_vehicle->primary_image
+                                        ? (Str::startsWith($recent_vehicle->primary_image, 'http')
+                                            ? $recent_vehicle->primary_image
+                                            : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$recent_vehicle->primary_image)
+                                        : $defaultImage;
+                                @endphp
 
-                            <a href="{{ $detailUrl }}">
-                                <img
-                                    style="width:100%"
-                                    src="{{ $img }}"
-                                    alt="Vehicle Image"
-                                    class="img-box img-fluid"
-                                    onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
-                                >
-                            </a>
-                            <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
-                                    style="width:20px; height:12px;"> {{ $recent_vehicle->mileage ? $recent_vehicle->mileage . ' km' : '0 km' }}</div>
-                        </div>
-                        <div class="car-card-bottom">
-                            <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
-                            {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}</h5>
-                            <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 12 Km away</p>
-
-                            <div class="car-circle-icons-group">
-                                <img src="/assets/images/no-accidents.png" alt="">
-                                <img src="/assets/images/low-mileage.png" alt="">
-                                <img src="/assets/images/service-plan.png" alt="">
-                                <img src="/assets/images/powertrain-warranty.png" alt="">
-                                <span class="extra-icons-count">12+</span>
+                                <a href="{{ $detailUrl }}">
+                                    <img
+                                        style="width:100%"
+                                        src="{{ $img }}"
+                                        alt="Vehicle Image"
+                                        class="img-box img-fluid"
+                                        onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
+                                    >
+                                </a>
+                                <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
+                                        style="width:20px; height:12px;"> {{ $recent_vehicle->mileage ? $recent_vehicle->mileage . ' km' : '0 km' }}</div>
                             </div>
+                            <div class="car-card-bottom">
+                                <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
+                                {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}</h5>
+                                <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 12 Km away</p>
 
-                            <div class="car-price-block text-end">
-                                <h4 class="price-value">${{ $recent_vehicle->price_retail_date ? $recent_vehicle->price_retail_date . '0' : '0'}}</h4>
-                                <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
+                                <div class="car-circle-icons-group">
+                                    <img src="/assets/images/no-accidents.png" alt="">
+                                    <img src="/assets/images/low-mileage.png" alt="">
+                                    <img src="/assets/images/service-plan.png" alt="">
+                                    <img src="/assets/images/powertrain-warranty.png" alt="">
+                                    <span class="extra-icons-count">12+</span>
+                                </div>
+
+                                <div class="car-price-block text-end">
+                                    <h4 class="price-value">${{ $recent_vehicle->price_retail_date ? $recent_vehicle->price_retail_date : '0'}}</h4>
+                                    <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
         </div>
     </div>
     <style>

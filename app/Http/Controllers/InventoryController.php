@@ -36,7 +36,7 @@ class InventoryController extends Controller
 
         $response = Http::get($url);
         $result = json_decode($response->body());
-
+        
         // Items for the loop
         $data['buying_products'] = $result->data ?? [];
 

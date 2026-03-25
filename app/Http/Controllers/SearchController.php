@@ -48,21 +48,18 @@ class SearchController extends Controller
 
     public function search_inventory(Request $request)
     {
-        $selected_make = '';
+        $assets = [
+            'AUTO',
+            'RV / TRAILER',
+            'MOTORCYCLE',
+            'POWERSPORTS',
+            'HEAVY TRUCK/EQUIPMENT',
+            'HEAVY DUTY TRAILERS',
+            'FARM EQUIPMENT'
+        ];
 
-        if($request->selected_make_1) $selected_make = $request->selected_make_1;
-        elseif($request->selected_make_2) $selected_make = $request->selected_make_2;
-        elseif($request->selected_make_3) $selected_make = $request->selected_make_3;
-        elseif($request->selected_make_4) $selected_make = $request->selected_make_4;
-        elseif($request->selected_make_5) $selected_make = $request->selected_make_5;
-        elseif($request->selected_make_6) $selected_make = $request->selected_make_6;
-        elseif($request->selected_make_7) $selected_make = $request->selected_make_7;
-        elseif($request->selected_make_8) $selected_make = $request->selected_make_8;
-        elseif($request->selected_make_9) $selected_make = $request->selected_make_9;
-
-        // Inventory search API
-        $response_inventory = Http::get(env("diskloz_base_url").'/api/search_inventory', [
-            'selected_make' => $selected_make,
+        $apiData = [
+            'selected_make' => $request->selected_make,
             'selected_year' => $request->selected_year,
             'selected_model' => $request->selected_model,
             'selected_body_style' => $request->selected_body_style,
@@ -75,44 +72,61 @@ class SearchController extends Controller
             'selected_fuel' => $request->selected_fuel,
             'keywords' => $request->keywords,
             'client_id' => auth()->check() ? auth()->user()->id : '',
-            'page' => $request->page ?? 1
-        ]);
+            'page' => $request->page ?? 1,
+            'per_page' => 9,
+        ];
 
-        $inventory = json_decode($response_inventory->body());
+        $makeTypes = []; // initialize before the loop
 
-        // Inventory results
-        $data['search_inventory_result'] = $inventory->data ?? [];
+        foreach ($assets as $asset) {
+            $res = Http::get(env("diskloz_base_url").'/api/search_inventory', [
+                'selected_asset' => $asset,
+                'per_page' => 1, // only need filters
+            ]);
 
-        $data['current_page'] = $inventory->current_page ?? 1;
-        $data['last_page'] = $inventory->last_page ?? 1;
-        $data['total_inventory'] = $inventory->total ?? count($inventory->data ?? []);
-
-        // Other APIs
-        $response_make = json_decode($this->curl_get('/api/make')->getContent());
-        $data['makes'] = $response_make->data;
-
-        $response_assetType = json_decode($this->curl_get('/api/assetType')->getContent());
-        $data['assetType'] = $response_assetType->data;
-
-        $response_body_styles = json_decode($this->curl_get('/api/body_styles')->getContent());
-        $data['body_styles'] = $response_body_styles->data;
-
-        $response_conditions = json_decode($this->curl_get('/api/conditions')->getContent());
-        $data['conditions'] = $response_conditions->data;
-
-        // Dynamic heading word
-        $assetWord = 'Car';
-
-        if ($request->selected_asset) {
-            $assetWord = ucfirst(strtolower($request->selected_asset));
+            if ($res->successful()) {
+                $inv = json_decode($res->body());
+                if (!empty($inv->filters) && !empty($inv->filters->MfgAuto)) {
+                    $makeTypes[$asset] = collect($inv->filters->MfgAuto)
+                        ->map(fn($m) => ['id' => $m->id, 'name' => $m->name])
+                        ->sortBy('name')
+                        ->values();
+                } else {
+                    $makeTypes[$asset] = collect(); // empty collection if no makes
+                }
+            } else {
+                $makeTypes[$asset] = collect(); // also empty if API fails
+            }
         }
 
-        $data['assetWord'] = $assetWord;
+        $response = Http::get(env('diskloz_base_url') . '/api/search_inventory', $apiData);
+        $result = json_decode($response->body());
 
+        $inventory = $result->inventory ?? null;    
+
+        $data = [
+            'search_inventory_result' => $inventory->data ?? [],
+            'current_page' => $inventory->current_page ?? 1,
+            'last_page' => $inventory->last_page ?? 1,
+            'total_inventory' => $inventory->total ?? 0,
+            'per_page' => $inventory->per_page ?? 9,
+        ];
+
+        // Filters
+        // $data['makeTypes'] = json_decode($this->curl_get('/api/make')->getContent())->data ?? [];
+        $data['assetType'] = json_decode($this->curl_get('/api/assetType')->getContent())->data ?? [];
+        $data['body_styles'] = json_decode($this->curl_get('/api/body_styles')->getContent())->data ?? [];
+        $data['conditions'] = json_decode($this->curl_get('/api/conditions')->getContent())->data ?? [];
+
+        $data['assetWord'] = $request->selected_asset
+            ? ucfirst(strtolower($request->selected_asset))
+            : 'Car';
+
+        $data['assets'] = $assets;
+        $data['makeTypes'] = $makeTypes;
 
         return view('car-listing', $data);
     }
-
 
 
     

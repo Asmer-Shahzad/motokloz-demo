@@ -21,84 +21,100 @@
                                 <p>Search and find your best to buy with easy way</p>
                             </div>
                             <div class="search-wrapper">
-                                <!-- Tabs -->
-                                <div class="tabs">
-                                    <a class="tab active">All</a>
-                                    <a class="tab">New</a>
-                                    <a class="tab">Used</a>
+                                <form action="{{ route('search_inventory') }}" method="GET" class="search-wrapper">
 
-                                    <div class="help">
-                                        <i class="fa-solid fa-user"></i>
-                                        <span>Need help?</span>
+                                    <!-- Tabs -->
+                                    <div class="tabs">
+                                        <a class="tab {{ request('selected_condition') == '' ? 'active' : '' }}" data-condition="">All</a>
+                                        <a class="tab {{ request('selected_condition') == 'NEW' ? 'active' : '' }}" data-condition="NEW">New</a>
+                                        <a class="tab {{ request('selected_condition') == 'USED' ? 'active' : '' }}" data-condition="USED">Used</a>
+
+                                        <div class="help">
+                                            <i class="fa-solid fa-user"></i>
+                                            <span>Need help?</span>
+                                        </div>
                                     </div>
+
+                                    <!-- Hidden input for condition -->
+                                    <input type="hidden" name="selected_condition" id="selected_condition_input_2" value="{{ request('selected_condition') }}">
+
+                                    <!-- Filter Bar -->
+                                    <div class="filter-bar">
+
+                                        <!-- Type -->
+                                        <div class="filter">
+                                            <label>Type</label>
+                                            <div class="select">
+                                                <i class="fa-solid fa-car"></i>
+                                                <select name="selected_asset" id="filter-type" class="filter-options">
+                                                    <option value="">Select Type</option>
+                                                    @foreach($assets as $asset)
+                                                        <option value="{{ $asset }}" {{ request('selected_asset') == $asset ? 'selected' : '' }}>
+                                                            {{ $asset }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="divider"></div>
+
+                                        <!-- Make -->
+                                        <div class="filter">
+                                            <label>Make</label>
+                                            <div class="select">
+                                                <i class="fa-solid fa-car-side me-2"></i>
+                                                <select name="selected_make" id="filter-make" class="filter-options">
+                                                    <option value="">Select Make</option>
+                                                    @if(request('selected_asset') && isset($makeTypes[request('selected_asset')]))
+                                                        @foreach($makeTypes[request('selected_asset')] as $make)
+                                                            <option value="{{ $make['name'] }}" {{ request('selected_make') == $make['name'] ? 'selected' : '' }}>
+                                                                {{ $make['name'] }}
+                                                            </option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="divider"></div>
+
+                                        <!-- Model -->
+                                        <div class="filter">
+                                            <label>Model</label>
+                                            <div class="select">
+                                                <input type="text" name="selected_model" class="form-control" placeholder="Enter Model"
+                                                        value="{{ request('selected_model') }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="divider"></div>
+
+                                        <!-- Price -->
+                                        <div class="price-box filter">
+                                            <label>Price Range</label>
+                                            <div class="range-container">
+                                                <div class="slider-track" id="track"></div>
+
+                                                <input class="filter-all" type="range" min="0" max="1000000" step="10000"
+                                                    value="{{ request('selected_lowest_price', 100000) }}" id="slider-1" name="selected_lowest_price">
+                                                <input class="filter-all" type="range" min="0" max="1000000" step="10000"
+                                                    value="{{ request('selected_highest_price', 500000) }}" id="slider-2" name="selected_highest_price">
+                                            </div>
+
+                                            <div class="values">
+                                                $ <span id="min-value"></span> - $ <span id="max-value"></span>
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="search-btn">
+                                            <i class="fa-solid fa-magnifying-glass"></i>
+                                            Find a Vehicle
+                                        </button>
+
+                                    </div>
+                                </form>
                                 </div>
-
-                                <!-- Filter Bar -->
-                                <div class="filter-bar">
-
-                                    <div class="filter">
-                                        <label>Type</label>
-                                        <div class="select">
-                                            <i class="fa-solid fa-car"></i>
-                                            <select class="filter-options">
-                                                <option>Auto</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="divider"></div>
-
-                                    <div class="filter">
-                                        <label>Make</label>
-                                        <div class="select">
-                                            <i class="fa-solid fa-car-side me-2"></i>
-                                            <span class="filter-all">Modern Compact</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="divider"></div>
-
-                                    <div class="filter">
-                                        <label>Model</label>
-                                        <div class="select">
-                                            <i class="fa-solid fa-calendar me-2"></i>
-                                            <span class="filter-all">2022</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="divider"></div>
-                                    {{--
-                                    <div class="filter price">
-                                        <label>Price Range</label>
-                                        <input type="range" min="10000" max="12000" value="11000" id="priceRange">
-                                        <div class="price-value">$ <span id="priceVal">10,000 - 12,000</span></div>
-                                    </div> --}}
-
-                                    <div class="price-box filter">
-                                        <label>Price Range</label>
-
-                                        <div class="range-container ">
-                                            <div class="slider-track" id="track"></div>
-                                            <input class="filter-all " type="range" min="0" max="1000000" step="10000"
-                                                value="100000" id="slider-1">
-                                            <input class="filter-all " type="range" min="0" max="1000000" step="10000"
-                                                value="500000" id="slider-2">
-                                        </div>
-
-                                        <div class="values">
-                                            $ <span id="min-value"></span>
-                                            &nbsp; - &nbsp;
-                                            <span id="max-value"></span>
-                                        </div>
-                                    </div>
-                                    <button class="search-btn">
-                                        <i class="fa-solid fa-magnifying-glass"></i>
-                                        Find a Vehicle
-                                    </button>
-
-                                </div>
-
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -246,15 +262,24 @@
                                 {{ $start }} - {{ $end }} of {{ $total_inventory }} {{ $assetWord }} found
                             </span>
                         </div>
-                        <div class="toolbar-right d-flex gap-2">
-                            <button class="btn-clear-filters">Clear Filters</button>
-                            <select class="form-select form-select-sm tool-select">
-                                <option>Show 10</option>
+                        <form id="vehicleFilterForm" class="toolbar-right d-flex gap-2">
+                            <button type="button" class="btn-clear-filters" id="clearFilters">Clear Filters</button>
+
+                            <!-- Example: Show X results per page (optional) -->
+                            <!--
+                            <select class="form-select form-select-sm tool-select" name="per_page">
+                                <option value="10">Show 10</option>
+                                <option value="20">Show 20</option>
                             </select>
-                            <select class="form-select form-select-sm tool-select">
-                                <option>Sort by: Name</option>
+                            -->
+
+                            <!-- Sort dropdown -->
+                            <select class="form-select form-select-sm tool-select" id="sortSelect" name="sort">
+                                <option value="name">Sort by: Name</option>
+                                <option value="price_asc">Price: Low to High</option>
+                                <option value="price_desc">Price: High to Low</option>
                             </select>
-                        </div>
+                        </form>
                     </div>
 
                     <div class="row g-4" id="vehicleContainer">
@@ -309,7 +334,7 @@
                                             </div>
 
                                             <div class="car-price-block text-end">
-                                                <h4 class="price-value">${{ $recent_vehicle->price_retail_date ? $recent_vehicle->price_retail_date . '0' : '0'}}</h4>
+                                                <h4 class="price-value">${{ $recent_vehicle->price_retail_date ?? '0'}}</h4>
                                                 <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                             </div>
                                         </div>
@@ -330,4 +355,59 @@
             </div>
         </div>
     </section>
+   <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const typeSelect = document.getElementById('filter-type');
+            const makeSelect = document.getElementById('filter-make');
+            const selectedMake = "{{ request('selected_make') }}"; // previously selected Make
+
+            function populateMakes(makes) {
+                makeSelect.innerHTML = '<option value="">Select Make</option>';
+                makes.forEach(make => {
+                    const option = document.createElement('option');
+                    option.value = make.name;
+                    option.textContent = make.name;
+                    if (make.name === selectedMake) {
+                        option.selected = true;
+                    }
+                    makeSelect.appendChild(option);
+                });
+            }
+
+            function fetchMakesByType(type) {
+                return fetch(`{{ env('diskloz_base_url') }}/api/search_inventory?selected_asset=${encodeURIComponent(type)}&per_page=1`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (!data.filters) return [];
+                        switch(type) {
+                            case 'AUTO': return data.filters.MfgAuto || [];
+                            case 'RV / TRAILER': return data.filters.MfgRvTrailer || [];
+                            case 'MOTORCYCLE': 
+                            case 'POWERSPORTS': return data.filters.MfgMotorcycleAtv || [];
+                            case 'HEAVY TRUCK/EQUIPMENT': return data.filters.MfgHeavyTruckEquipment || [];
+                            case 'HEAVY DUTY TRAILERS': return data.filters.MfgHeavyDutyTrailer || [];
+                            case 'FARM EQUIPMENT': return data.filters.MfgFarmEquipment || [];
+                            default: return [];
+                        }
+                    });
+            }
+
+            typeSelect.addEventListener('change', function() {
+                const type = this.value;
+                if (!type) {
+                    makeSelect.innerHTML = '<option value="">Select Make</option>';
+                    return;
+                }
+                fetchMakesByType(type)
+                    .then(populateMakes)
+                    .catch(err => console.error('Error fetching makes:', err));
+            });
+
+            // If page loaded with a selected Type, fetch its makes via AJAX
+            if (typeSelect.value) {
+                fetchMakesByType(typeSelect.value).then(populateMakes);
+            }
+        });
+    </script>
 @endsection

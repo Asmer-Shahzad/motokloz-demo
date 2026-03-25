@@ -337,7 +337,7 @@
                                         </div>
 
                                         <div class="car-price-block text-end">
-                                            <h4 class="price-value">${{ $recent_vehicle->price_retail_date ? $recent_vehicle->price_retail_date . '0' : '0'}}</h4>
+                                            <h4 class="price-value">${{ $recent_vehicle->price_retail_date ? $recent_vehicle->price_retail_date : '0'}}</h4>
                                             <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                         </div>
                                     </div>

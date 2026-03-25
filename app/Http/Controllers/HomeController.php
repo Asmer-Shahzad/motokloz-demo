@@ -25,37 +25,60 @@ class HomeController extends Controller
 
         $assetCounts = [];
         $allVehicles = collect();
+        $makeTypes = []; // will hold grouped makes
 
         foreach ($assets as $asset) {
-
             $response = Http::get(env("diskloz_base_url").'/api/search_inventory', [
                 'selected_asset' => $asset,
-                'page' => 1
+                'per_page' => 4,
             ]);
 
-            $inventory = json_decode($response->body());
+            if ($response->successful()) {
+                $inventory = json_decode($response->body());
 
-            // count backend me preserve
-            $assetCounts[$asset] = $inventory->total ?? 0;
+                // Count vehicles per asset type
+                $assetCounts[$asset] = $inventory->inventory->total ?? 0;
 
-            if (!empty($inventory->data)) {
-                $allVehicles = $allVehicles->merge(collect($inventory->data));
+                // Merge latest vehicles
+                if (!empty($inventory->inventory->data)) {
+                    $allVehicles = $allVehicles->merge(collect($inventory->inventory->data));
+                }
+
+                // Merge makes grouped by type
+                if (!empty($inventory->filters)) {
+                    // Convert stdClass to collection
+                    $filters = collect($inventory->filters);
+
+                    // Use only MfgAuto for this asset
+                    if (!empty($filters->MfgAuto)) {
+                        $makeTypes[$asset] = collect($filters->MfgAuto)
+                            ->map(function($m) {
+                                return ['id' => $m->id, 'name' => $m->name];
+                            })
+                            ->sortBy('name')
+                            ->values();
+                    } else {
+                        $makeTypes[$asset] = collect(); // empty collection if none
+                    }
+                }
             }
         }
 
-        // overall latest 4 vehicles only
+        // Get latest 4 vehicles overall
         $latestVehicles = $allVehicles
-            ->sortByDesc('created_at') // ya id agar created_at nahi hai
+            ->sortByDesc('created_at')
             ->take(4)
             ->values();
 
         return view('home', [
             'pageTitle' => 'Home',
-            'assetCounts' => $assetCounts, // backend use ke liye
-            'assetData' => $latestVehicles // Blade me sirf ye use hoga
+            'assetCounts' => $assetCounts,
+            'assetData' => $latestVehicles,
+            'assets' => $assets,
+            'makeTypes' => $makeTypes, // send grouped makes to frontend
         ]);
     }
-
+    
     public function buyFlowStep1()
     {
         return view('buy-flow-step-1', ['pageTitle' => 'Step 1']);
