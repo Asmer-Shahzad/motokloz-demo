@@ -120,8 +120,7 @@
                     </div> --}}
                     <div class="gtranslate_wrapper"></div>
 
-                    <!-- Hidden GTranslate Wrapper -->
-                    <div class="gtranslate_wrapper" style="display:none;"></div>
+
 
                     {{-- <!-- GTranslate Settings -->
                     <script>
