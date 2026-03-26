@@ -222,14 +222,14 @@
                     <h2>Popular Vehicles</h2>
                     <!-- <p>Favorite vehicles based on customer reviews</p> -->
                 </div>
-                <div class="col-lg-6 popular-button">
+                {{-- <div class="col-lg-6 popular-button">
                     <ul>
                         <li><a href="javascript:void(0)">Categories <i class="fa-solid fa-angle-down"></i></a></li>
                         <li><a href="javascript:void(0)">Fuel Type <i class="fa-solid fa-angle-down"></i></a></li>
                         <li><a href="javascript:void(0)">Review / Rating <i class="fa-solid fa-angle-down"></i></a></li>
                         <li><a href="javascript:void(0)">Price range <i class="fa-solid fa-angle-down"></i></a></li>
                     </ul>
-                </div>
+                </div> --}}
             </div>
             <div class="row g-4">
                 @foreach ($assetData as $recent_vehicle)

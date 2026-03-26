@@ -133,14 +133,12 @@ $end = $start + count($search_inventory_result) - 1;
 
 <section class="fleet-section">
     <div class="container">
-
         <div class="row fleet-top">
             <div class="col-12">
                 <h2 class="main-title">Our Vehicle Fleet</h2>
                 <p class="main-subtitle">Turning dreams into reality with versatile vehicles.</p>
             </div>
         </div>
-
         <div class="row g-4">
             <div class="col-lg-3 col-md-4">
                 <form id="sidebarFilterForm" method="GET" action="{{ route('search_inventory') }}">
@@ -251,9 +249,9 @@ $end = $start + count($search_inventory_result) - 1;
                             <option value="">Select Body Style</option>
                             @if(!empty($body_styles) && count($body_styles) > 0)
                                 @foreach($body_styles as $style)
-                                    <option value="{{ $style['name'] }}" 
-                                        {{ (isset($selected_body_style) && $selected_body_style == $style['name']) ? 'selected' : '' }}>
-                                        {{ $style['name'] }}
+                                    <option value="{{ $style->name }}" 
+                                        {{ (isset($selected_body_style) && $selected_body_style == $style->name) ? 'selected' : '' }}>
+                                        {{ $style->name }}
                                     </option>
                                 @endforeach
                             @endif
@@ -302,10 +300,7 @@ $end = $start + count($search_inventory_result) - 1;
                     <img src="/assets/images/map.png" class="img-fluid rounded-3" alt="Map">
                 </div>
             </div>
-
-
             <div class="col-lg-9 col-md-8">
-
                 <div style="border-bottom: 1px solid #DDE1DE;     padding-bottom: 10px;"
                     class="fleet-toolbar d-flex flex-wrap justify-content-between align-items-center mb-4">
                     <div class="toolbar-left d-flex align-items-center">
@@ -353,109 +348,87 @@ $end = $start + count($search_inventory_result) - 1;
                     </form>
                    
                 </div>
+                    <div class="row g-4" id="vehicleContainer">
+                        @if ($search_inventory_result != null)
+                        @foreach ($search_inventory_result as $recent_vehicle)
+                        <div class="col-lg-4 col-sm-6 vehicle-card">
+                            <div class="modern-car-card shadow-sm">
+                                <div class="car-card-top">
+                                            @php $detailUrl = route('inventory_product_details', $recent_vehicle->id); @endphp
+                                                <a href="{{ $detailUrl }}">
+                                                            <img style="width:100%" src="{{ $recent_vehicle->primary_image 
+                                                                ? (Str::startsWith($recent_vehicle->primary_image,'http') 
+                                                                    ? $recent_vehicle->primary_image 
+                                                                    : $disklozBaseUrl.'/admin_assets/images/inventory_images/'.$recent_vehicle->primary_image)
+                                                                : asset('assets/images/defaultimage.jpg') }}"
+                                                            alt="Vehicle Image"
+                                                            class="img-box img-fluid"
+                                                            onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
+                                                </a>
+                                                <div class="badge-mileage d-flex align-items-center">
 
-                <div class="row g-4" id="vehicleContainer">
-                    @if ($search_inventory_result != null)
-                    @foreach ($search_inventory_result as $recent_vehicle)
-                    <div class="col-lg-4 col-sm-6 vehicle-card">
-                        <div class="modern-car-card shadow-sm">
-                            <div class="car-card-top">
-                                @php $detailUrl = route('inventory_product_details', $recent_vehicle->id); @endphp
-                                <a href="{{ $detailUrl }}">
-                                    <img style="width:100%" src="{{ $recent_vehicle->primary_image 
-                                                        ? (Str::startsWith($recent_vehicle->primary_image,'http') 
-                                                            ? $recent_vehicle->primary_image 
-                                                            : $disklozBaseUrl.'/admin_assets/images/inventory_images/'.$recent_vehicle->primary_image)
-                                                        : asset('assets/images/defaultimage.jpg') }}"
-                                                    alt="Vehicle Image"
-                                                    class="img-box img-fluid"
-                                                    onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
-                                            </a>
-                                            <div class="badge-mileage d-flex align-items-center">
+                                                    <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
+                                                        style="width:20px; height:12px;">
 
-                                                <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
-                                                    style="width:20px; height:12px;">
+                                                    {{ $recent_vehicle->mileage ? $recent_vehicle->mileage . ' km' : '0 km' }}
 
-                                                {{ $recent_vehicle->mileage ? $recent_vehicle->mileage . ' km' : '0 km' }}
+                                                </div>
+                                </div>
+                                <div class="car-card-bottom">
+                                    <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
+                                        {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}</h5>
+                                    @php
+                                        $dealerPostalCode = data_get($recent_vehicle, 'dealer.postal_code')
+                                            ?? $recent_vehicle->dealer_postal_code
+                                            ?? $recent_vehicle->postal_code
+                                            ?? '';
+                                        $dealerCity = data_get($recent_vehicle, 'dealer.city')
+                                            ?? $recent_vehicle->dealer_city
+                                            ?? '';
+                                        $dealerProvince = data_get($recent_vehicle, 'dealer.province')
+                                            ?? $recent_vehicle->dealer_province
+                                            ?? '';
+                                        $dealerCountry = data_get($recent_vehicle, 'dealer.country')
+                                            ?? $recent_vehicle->dealer_country
+                                            ?? '';
+                                    @endphp
+                                    <p class="car-distance-away"
+                                        data-dealer-postal="{{ $dealerPostalCode }}"
+                                        data-dealer-city="{{ $dealerCity }}"
+                                        data-dealer-province="{{ $dealerProvince }}"
+                                        data-dealer-country="{{ $dealerCountry }}">
+                                        <i class="fa-solid fa-location-dot"></i>
+                                        <span class="distance-value">Loading...</span>
+                                    </p>
 
-                                            </div>
-                                        </div>
-                                        <div class="car-card-bottom">
-                                            <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
-                                                {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}</h5>
-                                            @php
-                                                $dealerPostalCode = data_get($recent_vehicle, 'dealer.postal_code')
-                                                    ?? $recent_vehicle->dealer_postal_code
-                                                    ?? $recent_vehicle->postal_code
-                                                    ?? '';
-                                                $dealerCity = data_get($recent_vehicle, 'dealer.city')
-                                                    ?? $recent_vehicle->dealer_city
-                                                    ?? '';
-                                                $dealerProvince = data_get($recent_vehicle, 'dealer.province')
-                                                    ?? $recent_vehicle->dealer_province
-                                                    ?? '';
-                                                $dealerCountry = data_get($recent_vehicle, 'dealer.country')
-                                                    ?? $recent_vehicle->dealer_country
-                                                    ?? '';
-                                            @endphp
-                                            <p class="car-distance-away"
-                                               data-dealer-postal="{{ $dealerPostalCode }}"
-                                               data-dealer-city="{{ $dealerCity }}"
-                                               data-dealer-province="{{ $dealerProvince }}"
-                                               data-dealer-country="{{ $dealerCountry }}">
-                                                <i class="fa-solid fa-location-dot"></i>
-                                                <span class="distance-value">Loading...</span>
-                                            </p>
+                                    <div class="car-circle-icons-group">
+                                        <img src="/assets/images/no-accidents.png" alt="">
+                                        <img src="/assets/images/low-mileage.png" alt="">
+                                        <img src="/assets/images/service-plan.png" alt="">
+                                        <img src="/assets/images/powertrain-warranty.png" alt="">
+                                        <span class="extra-icons-count">12+</span>
+                                    </div>
 
-                                            <div class="car-circle-icons-group">
-                                                <img src="/assets/images/no-accidents.png" alt="">
-                                                <img src="/assets/images/low-mileage.png" alt="">
-                                                <img src="/assets/images/service-plan.png" alt="">
-                                                <img src="/assets/images/powertrain-warranty.png" alt="">
-                                                <span class="extra-icons-count">12+</span>
-                                            </div>
-
-                                            <div class="car-price-block text-end">
-                                                <h4 class="price-value">${{ $recent_vehicle->price_retail_date ?? '0'}}</h4>
-                                                <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
-                                            </div>
-                                        </div>
+                                    <div class="car-price-block text-end">
+                                        <h4 class="price-value">${{ formatPrice($recent_vehicle->price_retail_date ?? '0') }}</h4>
+                                        <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                     </div>
                                 </div>
                             </div>
-                            <div class="car-card-bottom">
-                                <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
-                                    {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}</h5>
-                                <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 12 Km away</p>
-
-                                <div class="car-circle-icons-group">
-                                    <img src="/assets/images/no-accidents.png" alt="">
-                                    <img src="/assets/images/low-mileage.png" alt="">
-                                    <img src="/assets/images/service-plan.png" alt="">
-                                    <img src="/assets/images/powertrain-warranty.png" alt="">
-                                    <span class="extra-icons-count">12+</span>
-                                </div>
-
-                                
-                                <div class="car-price-block text-end">
-                                    <h4 class="price-value">
-                                        ${{ formatPrice($recent_vehicle->price_retail_date ?? 0) }}
-                                    </h4>
-                                    <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
-                                </div>
-                            </div>
                         </div>
-                    </div>
-                    @endforeach
-                    @else
-                    <h2 class="no-result-found text-center">No results found</h2>
-                    @endif
-                </div>
-                <div class="my-4">
+                        @endforeach
+                           <div class="my-4">
                     @include('partials.pagination')
                 </div>
-
-
+                        @else
+                        <h2 class="no-result-found text-center">No results found</h2>
+                        @endif
+                      
+                    </div>
+                </div>
+            </div>
+        </div>
+               
             </div>
         </div>
     </div>
