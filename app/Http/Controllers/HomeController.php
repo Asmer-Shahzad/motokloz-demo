@@ -11,6 +11,43 @@ use GuzzleHttp\Psr7\MultipartStream;
 
 class HomeController extends Controller
 {
+    private function disklozBaseUrl(): string
+    {
+        return rtrim(config('services.diskloz.base_url', 'http://127.0.0.1:98'), '/');
+    }
+
+    private function dealerLocationMap(): array
+    {
+        $map = [];
+        $response = Http::get($this->disklozBaseUrl() . '/api/all_dealers_with_inventory_count');
+        if (!$response->successful()) {
+            return $map;
+        }
+
+        $dealers = $response->json('data', []);
+        foreach ($dealers as $dealer) {
+            $locationPayload = [
+                'postal_code' => $dealer['postal_code'] ?? null,
+                'city' => $dealer['city'] ?? null,
+                'province' => $dealer['province'] ?? null,
+                'country' => $dealer['country'] ?? null,
+            ];
+
+            if (!$locationPayload['postal_code'] && !$locationPayload['city']) {
+                continue;
+            }
+
+            if (!empty($dealer['id'])) {
+                $map[(string) $dealer['id']] = $locationPayload;
+            }
+            if (!empty($dealer['user_id'])) {
+                $map[(string) $dealer['user_id']] = $locationPayload;
+            }
+        }
+
+        return $map;
+    }
+
     public function home()
     {
         $assets = [
@@ -26,9 +63,10 @@ class HomeController extends Controller
         $assetCounts = [];
         $allVehicles = collect();
         $makeTypes = []; // will hold grouped makes
+        $dealerLocationMap = $this->dealerLocationMap();
 
         foreach ($assets as $asset) {
-            $response = Http::get(env("diskloz_base_url").'/api/search_inventory', [
+            $response = Http::get($this->disklozBaseUrl() . '/api/search_inventory', [
                 'selected_asset' => $asset,
                 'per_page' => 4,
             ]);
@@ -41,7 +79,16 @@ class HomeController extends Controller
 
                 // Merge latest vehicles
                 if (!empty($inventory->inventory->data)) {
-                    $allVehicles = $allVehicles->merge(collect($inventory->inventory->data));
+                    $enrichedVehicles = collect($inventory->inventory->data)->map(function ($vehicle) use ($dealerLocationMap) {
+                        $dealerKey = (string) ($vehicle->user_id ?? $vehicle->dealer_id ?? '');
+                        $location = $dealerLocationMap[$dealerKey] ?? [];
+                        $vehicle->dealer_postal_code = $location['postal_code'] ?? null;
+                        $vehicle->dealer_city = $location['city'] ?? null;
+                        $vehicle->dealer_province = $location['province'] ?? null;
+                        $vehicle->dealer_country = $location['country'] ?? null;
+                        return $vehicle;
+                    });
+                    $allVehicles = $allVehicles->merge($enrichedVehicles);
                 }
 
                 // Merge makes grouped by type
@@ -76,6 +123,7 @@ class HomeController extends Controller
             'assetData' => $latestVehicles,
             'assets' => $assets,
             'makeTypes' => $makeTypes, // send grouped makes to frontend
+            'disklozBaseUrl' => $this->disklozBaseUrl(),
         ]);
     }
     

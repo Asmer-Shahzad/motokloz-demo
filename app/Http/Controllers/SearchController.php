@@ -10,6 +10,42 @@ use Illuminate\Support\Facades\Http;
 
 class SearchController extends Controller
 {
+    private function disklozBaseUrl(): string
+    {
+        return rtrim(config('services.diskloz.base_url', 'http://127.0.0.1:98'), '/');
+    }
+
+    private function dealerLocationMap(): array
+    {
+        $map = [];
+        $response = Http::get($this->disklozBaseUrl() . '/api/all_dealers_with_inventory_count');
+        if (!$response->successful()) {
+            return $map;
+        }
+
+        $dealers = $response->json('data', []);
+        foreach ($dealers as $dealer) {
+            $locationPayload = [
+                'postal_code' => $dealer['postal_code'] ?? null,
+                'city' => $dealer['city'] ?? null,
+                'province' => $dealer['province'] ?? null,
+                'country' => $dealer['country'] ?? null,
+            ];
+
+            if (!$locationPayload['postal_code'] && !$locationPayload['city']) {
+                continue;
+            }
+
+            if (!empty($dealer['id'])) {
+                $map[(string) $dealer['id']] = $locationPayload;
+            }
+            if (!empty($dealer['user_id'])) {
+                $map[(string) $dealer['user_id']] = $locationPayload;
+            }
+        }
+
+        return $map;
+    }
 
 
     public function curl_get($url):JsonResponse
@@ -17,7 +53,7 @@ class SearchController extends Controller
         $json = ["status"=>false, "message" => "", "data"=>[]];
         // $url = "https://portaldesignunit.com/terminal/agents";
         // for sending data as json type
-        $apiUrl = env("diskloz_base_url").$url;
+        $apiUrl = $this->disklozBaseUrl() . $url;
         $ch = curl_init($apiUrl);
         curl_setopt(
             $ch,
@@ -123,6 +159,45 @@ class SearchController extends Controller
         } else {
             $makeTypes[$asset] = collect();
         }
+
+        $response = Http::get($this->disklozBaseUrl() . '/api/search_inventory', $apiData);
+        $result = json_decode($response->body());
+
+        $inventory = $result->inventory ?? null;
+        $dealerLocationMap = $this->dealerLocationMap();
+        $inventoryData = collect($inventory->data ?? [])->map(function ($vehicle) use ($dealerLocationMap) {
+            $dealerKey = (string) ($vehicle->user_id ?? $vehicle->dealer_id ?? '');
+            $location = $dealerLocationMap[$dealerKey] ?? [];
+            $vehicle->dealer_postal_code = $location['postal_code'] ?? null;
+            $vehicle->dealer_city = $location['city'] ?? null;
+            $vehicle->dealer_province = $location['province'] ?? null;
+            $vehicle->dealer_country = $location['country'] ?? null;
+            return $vehicle;
+        })->values();
+
+        $data = [
+            'search_inventory_result' => $inventoryData,
+            'current_page' => $inventory->current_page ?? 1,
+            'last_page' => $inventory->last_page ?? 1,
+            'total_inventory' => $inventory->total ?? 0,
+            'per_page' => $inventory->per_page ?? 9,
+        ];
+
+        // Filters
+        // $data['makeTypes'] = json_decode($this->curl_get('/api/make')->getContent())->data ?? [];
+        $data['assetType'] = json_decode($this->curl_get('/api/assetType')->getContent())->data ?? [];
+        $data['body_styles'] = json_decode($this->curl_get('/api/body_styles')->getContent())->data ?? [];
+        $data['conditions'] = json_decode($this->curl_get('/api/conditions')->getContent())->data ?? [];
+
+        $data['assetWord'] = $request->selected_asset
+            ? ucfirst(strtolower($request->selected_asset))
+            : 'Car';
+
+        $data['assets'] = $assets;
+        $data['makeTypes'] = $makeTypes;
+        $data['disklozBaseUrl'] = $this->disklozBaseUrl();
+
+        return view('car-listing', $data);
     }
 
     $response = Http::get(env('diskloz_base_url') . '/api/search_inventory', $apiData);
@@ -216,4 +291,3 @@ class SearchController extends Controller
     
 
 }
-

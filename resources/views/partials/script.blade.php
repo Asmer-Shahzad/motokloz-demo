@@ -604,5 +604,310 @@ toggleBtn.addEventListener("click", () => {
     });
 
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const distanceNodes = Array.from(document.querySelectorAll(".car-distance-away[data-dealer-postal]"));
+        if (!distanceNodes.length) {
+            return;
+        }
+
+        const formatDistance = (distanceKm) => {
+            if (!Number.isFinite(distanceKm)) {
+                return "Distance unavailable";
+            }
+            if (distanceKm < 10) {
+                return `${distanceKm.toFixed(1)} Km away`;
+            }
+            return `${Math.round(distanceKm)} Km away`;
+        };
+
+        const haversineDistanceKm = (lat1, lon1, lat2, lon2) => {
+            const toRad = (deg) => (deg * Math.PI) / 180;
+            const earthRadiusKm = 6371;
+            const dLat = toRad(lat2 - lat1);
+            const dLon = toRad(lon2 - lon1);
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return earthRadiusKm * c;
+        };
+
+        const normalizePostalCode = (postalCode) => (postalCode || "").toString().toUpperCase().replace(/\s+/g, "").trim();
+        const getDistanceLabelNode = (container) => container.querySelector(".distance-value");
+
+        const formatPostalForQuery = (postalCode) => {
+            const normalized = normalizePostalCode(postalCode);
+            if (normalized.length === 6) {
+                return `${normalized.slice(0, 3)} ${normalized.slice(3)}`;
+            }
+            return normalized;
+        };
+
+        const normalizeText = (value) => (value || "").toString().trim();
+
+        const geocodePostalCode = async (postalCode, city = "", province = "", country = "") => {
+            const normalizedPostal = normalizePostalCode(postalCode);
+            if (!normalizedPostal) {
+                return null;
+            }
+
+            const countryText = normalizeText(country);
+            const cityText = normalizeText(city);
+            const provinceText = normalizeText(province);
+            const cacheKey = `dealer_geo_${normalizedPostal}_${countryText.toLowerCase() || "any"}`;
+            try {
+                const cached = localStorage.getItem(cacheKey);
+                if (cached) {
+                    const parsed = JSON.parse(cached);
+                    if (Number.isFinite(parsed.lat) && Number.isFinite(parsed.lon)) {
+                        return parsed;
+                    }
+                }
+            } catch (err) {
+                // ignore cache read issues
+            }
+
+            const postalWithSpace = formatPostalForQuery(normalizedPostal);
+            const queryVariants = [
+                [postalWithSpace, cityText, provinceText, countryText].filter(Boolean).join(", "),
+                [postalWithSpace, cityText, countryText].filter(Boolean).join(", "),
+                [postalWithSpace, countryText].filter(Boolean).join(", "),
+                [normalizedPostal, countryText].filter(Boolean).join(", "),
+                postalWithSpace,
+                normalizedPostal,
+            ];
+
+            const providers = [
+                (query) => `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=${encodeURIComponent(query)}`,
+                () => {
+                    const params = new URLSearchParams({
+                        format: "jsonv2",
+                        limit: "1",
+                        postalcode: postalWithSpace,
+                    });
+                    if (countryText) {
+                        params.set("country", countryText);
+                    }
+                    return `https://nominatim.openstreetmap.org/search?${params.toString()}`;
+                },
+                (query) => `https://geocode.maps.co/search?q=${encodeURIComponent(query)}`
+            ];
+
+            for (const queryText of queryVariants) {
+                for (const provider of providers) {
+                    try {
+                        const response = await fetch(provider(queryText));
+                        if (!response.ok) {
+                            continue;
+                        }
+                        const rows = await response.json();
+                        if (!Array.isArray(rows) || !rows.length) {
+                            continue;
+                        }
+                        const lat = Number(rows[0].lat);
+                        const lon = Number(rows[0].lon);
+                        if (Number.isFinite(lat) && Number.isFinite(lon)) {
+                            try {
+                                localStorage.setItem(cacheKey, JSON.stringify({ lat, lon }));
+                            } catch (err) {
+                                // ignore cache write issues
+                            }
+                            return { lat, lon };
+                        }
+                    } catch (err) {
+                        // Try next provider/query variant
+                    }
+                }
+            }
+
+            // Final fallback for Canadian postals
+            try {
+                const zippopotamPostal = postalWithSpace.replace(/\s+/g, "").toLowerCase();
+                const zippopotamCountries = ["ca", "us"];
+                for (const countryCode of zippopotamCountries) {
+                    const response = await fetch(`https://api.zippopotam.us/${countryCode}/${zippopotamPostal}`);
+                    if (response.ok) {
+                        const payload = await response.json();
+                        const place = Array.isArray(payload.places) ? payload.places[0] : null;
+                        const lat = Number(place?.latitude);
+                        const lon = Number(place?.longitude);
+                        if (Number.isFinite(lat) && Number.isFinite(lon)) {
+                            try {
+                                localStorage.setItem(cacheKey, JSON.stringify({ lat, lon }));
+                            } catch (err) {
+                                // ignore cache write issues
+                            }
+                            return { lat, lon };
+                        }
+                    }
+                }
+            } catch (err) {
+                // no-op
+            }
+
+            return null;
+        };
+
+        const setAllLabels = (text) => {
+            distanceNodes.forEach((node) => {
+                const label = getDistanceLabelNode(node);
+                if (label) {
+                    label.textContent = text;
+                }
+            });
+        };
+
+        const groupedByPostalCode = new Map();
+        distanceNodes.forEach((node) => {
+            const label = getDistanceLabelNode(node);
+            if (!label) {
+                return;
+            }
+            const normalized = normalizePostalCode(node.dataset.dealerPostal);
+            const dealerCity = normalizeText(node.dataset.dealerCity);
+            const dealerProvince = normalizeText(node.dataset.dealerProvince);
+            const dealerCountry = normalizeText(node.dataset.dealerCountry);
+            if (!normalized) {
+                label.textContent = "Distance unavailable";
+                return;
+            }
+
+            const groupKey = [normalized, dealerCountry.toLowerCase() || "any"].join("|");
+            if (!groupedByPostalCode.has(groupKey)) {
+                groupedByPostalCode.set(groupKey, {
+                    postalCode: normalized,
+                    city: dealerCity,
+                    province: dealerProvince,
+                    country: dealerCountry,
+                    labels: [],
+                });
+            }
+            groupedByPostalCode.get(groupKey).labels.push(label);
+        });
+
+        if (!groupedByPostalCode.size) {
+            return;
+        }
+
+        const updateDistancesForUser = async (userLat, userLon) => {
+            const geocodeCache = new Map();
+            for (const [groupKey, locationGroup] of groupedByPostalCode.entries()) {
+                let dealerCoords = geocodeCache.get(groupKey);
+                if (typeof dealerCoords === "undefined") {
+                    dealerCoords = await geocodePostalCode(
+                        locationGroup.postalCode,
+                        locationGroup.city,
+                        locationGroup.province,
+                        locationGroup.country
+                    );
+                    geocodeCache.set(groupKey, dealerCoords);
+                }
+
+                const distanceText = dealerCoords
+                    ? formatDistance(haversineDistanceKm(userLat, userLon, dealerCoords.lat, dealerCoords.lon))
+                    : "Distance unavailable";
+
+                locationGroup.labels.forEach((label) => {
+                    label.textContent = distanceText;
+                });
+            }
+        };
+
+        const fetchIpLocation = async () => {
+            try {
+                const response = await fetch("https://ipapi.co/json/");
+                if (!response.ok) {
+                    return null;
+                }
+                const payload = await response.json();
+                const lat = Number(payload.latitude);
+                const lon = Number(payload.longitude);
+                if (Number.isFinite(lat) && Number.isFinite(lon)) {
+                    return { lat, lon };
+                }
+            } catch (err) {
+                return null;
+            }
+            return null;
+        };
+
+        const tryGetBrowserLocation = (options) => new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, options);
+        });
+
+        const runDistanceFlow = async () => {
+            if (!window.isSecureContext) {
+                // Non-HTTPS custom domains often block geolocation silently.
+                const ipLocation = await fetchIpLocation();
+                if (ipLocation) {
+                    await updateDistancesForUser(ipLocation.lat, ipLocation.lon);
+                    return;
+                }
+                setAllLabels("Enable location");
+                return;
+            }
+
+            if (!("geolocation" in navigator)) {
+                const ipLocation = await fetchIpLocation();
+                if (ipLocation) {
+                    await updateDistancesForUser(ipLocation.lat, ipLocation.lon);
+                    return;
+                }
+                setAllLabels("Enable location");
+                return;
+            }
+
+            try {
+                let position = null;
+                try {
+                    position = await tryGetBrowserLocation({
+                        enableHighAccuracy: false,
+                        timeout: 30000,
+                        maximumAge: 300000,
+                    });
+                } catch (firstError) {
+                    // Retry once with high accuracy if first attempt timed out or unavailable.
+                    position = await tryGetBrowserLocation({
+                        enableHighAccuracy: true,
+                        timeout: 30000,
+                        maximumAge: 0,
+                    });
+                }
+
+                await updateDistancesForUser(position.coords.latitude, position.coords.longitude);
+            } catch (geoError) {
+                const ipLocation = await fetchIpLocation();
+                if (ipLocation) {
+                    await updateDistancesForUser(ipLocation.lat, ipLocation.lon);
+                    return;
+                }
+
+                // Show permission message only for real permission denials.
+                if (geoError && geoError.code === 1) {
+                    setAllLabels("Enable location");
+                    return;
+                }
+
+                setAllLabels("Distance unavailable");
+            }
+        };
+
+        if (navigator.permissions && typeof navigator.permissions.query === "function") {
+            navigator.permissions.query({ name: "geolocation" }).then((permissionStatus) => {
+                if (permissionStatus.state === "denied") {
+                    setAllLabels("Enable location");
+                    return;
+                }
+                runDistanceFlow();
+            }).catch(() => {
+                runDistanceFlow();
+            });
+        } else {
+            runDistanceFlow();
+        }
+    });
+</script>
 <script>window.gtranslateSettings = { "default_language": "en", "native_language_names": true, "detect_browser_language": true, "wrapper_selector": ".gtranslate_wrapper", "flag_style": "3d" }</script>
 <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
