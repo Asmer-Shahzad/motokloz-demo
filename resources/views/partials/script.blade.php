@@ -463,93 +463,85 @@ toggleBtn.addEventListener("click", () => {
 
 
 <script>
-    const slider1 = document.getElementById("slider-1");
-    const slider2 = document.getElementById("slider-2");
-    const track = document.getElementById("track");
-    const minValue = document.getElementById("min-value");
-    const maxValue = document.getElementById("max-value");
+    // Wait for DOM to fully load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get DOM elements
+        const slider1 = document.getElementById("slider-1");
+        const slider2 = document.getElementById("slider-2");
+        const track = document.getElementById("track");
+        const minValue = document.getElementById("min-value");
+        const maxValue = document.getElementById("max-value");
 
-    const minGap = 0;
-    const sliderMaxValue = slider1.max;
-
-    function slideOne() {
-        if (parseInt(slider2.value) - parseInt(slider1.value) <= minGap) {
-            slider1.value = parseInt(slider2.value) - minGap;
+        // Check if elements exist
+        if (!slider1 || !slider2 || !track || !minValue || !maxValue) {
+            console.error("Price range slider elements not found");
+            return;
         }
-        fillColor();
-        updateValues();
-    }
 
-    function slideTwo() {
-        if (parseInt(slider2.value) - parseInt(slider1.value) <= minGap) {
-            slider2.value = parseInt(slider1.value) + minGap;
+        const minGap = 0;
+        const sliderMaxValue = parseInt(slider1.max);
+
+        // Format amount with commas
+        function formatAmount(amount) {
+            return new Intl.NumberFormat('en-US').format(amount);
         }
-        fillColor();
+
+        // Handle left slider
+        function slideOne() {
+            let val1 = parseInt(slider1.value);
+            let val2 = parseInt(slider2.value);
+            
+            if (val2 - val1 <= minGap) {
+                slider1.value = val2 - minGap;
+            }
+            
+            fillColor();
+            updateValues();
+        }
+
+        // Handle right slider
+        function slideTwo() {
+            let val1 = parseInt(slider1.value);
+            let val2 = parseInt(slider2.value);
+            
+            if (val2 - val1 <= minGap) {
+                slider2.value = val1 + minGap;
+            }
+            
+            fillColor();
+            updateValues();
+        }
+
+        // Update slider track color
+        function fillColor() {
+            let percent1 = (slider1.value / sliderMaxValue) * 100;
+            let percent2 = (slider2.value / sliderMaxValue) * 100;
+
+            track.style.background = `linear-gradient(
+                to right,
+                #d9d9d9 ${percent1}%,
+                #f7941d ${percent1}%,
+                #f7941d ${percent2}%,
+                #d9d9d9 ${percent2}%
+            )`;
+        }
+
+        // Update displayed values
+        function updateValues() {
+            minValue.textContent = formatAmount(slider1.value);
+            maxValue.textContent = formatAmount(slider2.value);
+        }
+
+        // Add event listeners
+        slider1.addEventListener("input", slideOne);
+        slider2.addEventListener("input", slideTwo);
+
+        // Initialize
         updateValues();
-    }
-
-    function fillColor() {
-        let percent1 = (slider1.value / sliderMaxValue) * 100;
-        let percent2 = (slider2.value / sliderMaxValue) * 100;
-
-        track.style.background = `linear-gradient(
-                                                                                                        to right,
-                                                                                                        #d9d9d9 ${percent1}%,
-                                                                                                        #f7941d ${percent1}%,
-                                                                                                        #f7941d ${percent2}%,
-                                                                                                        #d9d9d9 ${percent2}%
-                                                                                                    )`;
-    }
-
-    function updateValues() {
-        minValue.textContent = Number(slider1.value).toLocaleString();
-        maxValue.textContent = Number(slider2.value).toLocaleString();
-    }
-
-    slider1.addEventListener("input", slideOne);
-    slider2.addEventListener("input", slideTwo);
-
-    updateValues();
-    fillColor();
+        fillColor();
+    });
 </script>
 
-
-
-<script>
-
-    let minRange = document.getElementById("minRange");
-    let maxRange = document.getElementById("maxRange");
-    let track = document.querySelector(".slider-track");
-
-    function updateSlider() {
-
-        let min = parseInt(minRange.value);
-        let max = parseInt(maxRange.value);
-
-        if (min > max - 10) {
-            minRange.value = max - 10;
-        }
-
-        if (max < min + 10) {
-            maxRange.value = min + 10;
-        }
-
-        let percent1 = (minRange.value / minRange.max) * 100;
-        let percent2 = (maxRange.value / maxRange.max) * 100;
-
-        track.style.background =
-            `linear-gradient(to right,#dcdcdc ${percent1}%,
-            #f58d02 ${percent1}%,
-            #f58d02 ${percent2}%,
-            #dcdcdc ${percent2}%)`;
-
-    }
-
-    minRange.addEventListener("input", updateSlider);
-    maxRange.addEventListener("input", updateSlider);
-
-    updateSlider();
-</script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
 
