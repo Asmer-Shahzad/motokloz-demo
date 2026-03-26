@@ -305,7 +305,7 @@
                                                     src="{{ $recent_vehicle->primary_image 
                                                         ? (Str::startsWith($recent_vehicle->primary_image,'http') 
                                                             ? $recent_vehicle->primary_image 
-                                                            : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$recent_vehicle->primary_image)
+                                                            : $disklozBaseUrl.'/admin_assets/images/inventory_images/'.$recent_vehicle->primary_image)
                                                         : asset('assets/images/defaultimage.jpg') }}"
                                                     alt="Vehicle Image"
                                                     class="img-box img-fluid"
@@ -323,7 +323,29 @@
                                         <div class="car-card-bottom">
                                             <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
                                                 {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}</h5>
-                                            <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 12 Km away</p>
+                                            @php
+                                                $dealerPostalCode = data_get($recent_vehicle, 'dealer.postal_code')
+                                                    ?? $recent_vehicle->dealer_postal_code
+                                                    ?? $recent_vehicle->postal_code
+                                                    ?? '';
+                                                $dealerCity = data_get($recent_vehicle, 'dealer.city')
+                                                    ?? $recent_vehicle->dealer_city
+                                                    ?? '';
+                                                $dealerProvince = data_get($recent_vehicle, 'dealer.province')
+                                                    ?? $recent_vehicle->dealer_province
+                                                    ?? '';
+                                                $dealerCountry = data_get($recent_vehicle, 'dealer.country')
+                                                    ?? $recent_vehicle->dealer_country
+                                                    ?? '';
+                                            @endphp
+                                            <p class="car-distance-away"
+                                               data-dealer-postal="{{ $dealerPostalCode }}"
+                                               data-dealer-city="{{ $dealerCity }}"
+                                               data-dealer-province="{{ $dealerProvince }}"
+                                               data-dealer-country="{{ $dealerCountry }}">
+                                                <i class="fa-solid fa-location-dot"></i>
+                                                <span class="distance-value">Loading...</span>
+                                            </p>
 
                                             <div class="car-circle-icons-group">
                                                 <img src="/assets/images/no-accidents.png" alt="">
@@ -376,7 +398,7 @@
             }
 
             function fetchMakesByType(type) {
-                return fetch(`{{ env('diskloz_base_url') }}/api/search_inventory?selected_asset=${encodeURIComponent(type)}&per_page=1`)
+                return fetch(`{{ $disklozBaseUrl }}/api/search_inventory?selected_asset=${encodeURIComponent(type)}&per_page=1`)
                     .then(res => res.json())
                     .then(data => {
                         if (!data.filters) return [];
