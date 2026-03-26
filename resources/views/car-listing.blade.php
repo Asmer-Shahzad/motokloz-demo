@@ -1,7 +1,7 @@
 @php
-    $perPage = 10;
-    $start = ($current_page - 1) * $perPage + 1;
-    $end = $start + count($search_inventory_result) - 1;
+$perPage = 10;
+$start = ($current_page - 1) * $perPage + 1;
+$end = $start + count($search_inventory_result) - 1;
 @endphp
 
 @extends('layouts.app')
@@ -9,405 +9,702 @@
 
 @section('content')
 
-    <section class="banner-car-listing">
-        <div class="container-fluid">
-            <div class="car-listing-bg">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="car-listing-cont">
-                                <h4>Find for sale and for rent near you</h4>
-                                <h2>Find Your Perfect {{ $assetWord }}</h2>
-                                <p>Search and find your best to buy with easy way</p>
-                            </div>
-                            <div class="search-wrapper">
-                                <form action="{{ route('search_inventory') }}" method="GET" class="search-wrapper">
+<section class="banner-car-listing">
+    <div class="container-fluid">
+        <div class="car-listing-bg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="car-listing-cont">
+                            <h4>Find for sale and for rent near you</h4>
+                            <h2>Find Your Perfect {{ $assetWord }}</h2>
+                            <p>Search and find your best to buy with easy way</p>
+                        </div>
+                        <div class="search-wrapper">
+                            <form action="{{ route('search_inventory') }}" method="GET" class="search-wrapper">
 
-                                    <!-- Tabs -->
-                                    <div class="tabs">
-                                        <a class="tab {{ request('selected_condition') == '' ? 'active' : '' }}" data-condition="">All</a>
-                                        <a class="tab {{ request('selected_condition') == 'NEW' ? 'active' : '' }}" data-condition="NEW">New</a>
-                                        <a class="tab {{ request('selected_condition') == 'USED' ? 'active' : '' }}" data-condition="USED">Used</a>
+                                <!-- Tabs -->
+                                <div class="tabs">
+                                    <a class="tab {{ request('selected_condition') == '' ? 'active' : '' }}"
+                                        data-condition="">All</a>
+                                    <a class="tab {{ request('selected_condition') == 'NEW' ? 'active' : '' }}"
+                                        data-condition="NEW">New</a>
+                                    <a class="tab {{ request('selected_condition') == 'USED' ? 'active' : '' }}"
+                                        data-condition="USED">Used</a>
 
-                                        <div class="help">
-                                            <i class="fa-solid fa-user"></i>
-                                            <span>Need help?</span>
-                                        </div>
+                                    <div class="help">
+                                        <i class="fa-solid fa-user"></i>
+                                        <span>Need help?</span>
                                     </div>
-
-                                    <!-- Hidden input for condition -->
-                                    <input type="hidden" name="selected_condition" id="selected_condition_input_2" value="{{ request('selected_condition') }}">
-
-                                    <!-- Filter Bar -->
-                                    <div class="filter-bar">
-
-                                        <!-- Type -->
-                                        <div class="filter">
-                                            <label>Type</label>
-                                            <div class="select">
-                                                <i class="fa-solid fa-car"></i>
-                                                <select name="selected_asset" id="filter-type" class="filter-options">
-                                                    <option value="">Select Type</option>
-                                                    @foreach($assets as $asset)
-                                                        <option value="{{ $asset }}" {{ request('selected_asset') == $asset ? 'selected' : '' }}>
-                                                            {{ $asset }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="divider"></div>
-
-                                        <!-- Make -->
-                                        <div class="filter">
-                                            <label>Make</label>
-                                            <div class="select">
-                                                <i class="fa-solid fa-car-side me-2"></i>
-                                                <select name="selected_make" id="filter-make" class="filter-options">
-                                                    <option value="">Select Make</option>
-                                                    @if(request('selected_asset') && isset($makeTypes[request('selected_asset')]))
-                                                        @foreach($makeTypes[request('selected_asset')] as $make)
-                                                            <option value="{{ $make['name'] }}" {{ request('selected_make') == $make['name'] ? 'selected' : '' }}>
-                                                                {{ $make['name'] }}
-                                                            </option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="divider"></div>
-
-                                        <!-- Model -->
-                                        <div class="filter">
-                                            <label>Model</label>
-                                            <div class="select">
-                                                <input type="text" name="selected_model" class="form-control" placeholder="Enter Model"
-                                                        value="{{ request('selected_model') }}">
-                                            </div>
-                                        </div>
-
-                                        <div class="divider"></div>
-
-                                        <!-- Price -->
-                                        <div class="price-box filter">
-                                            <label>Price Range</label>
-                                            <div class="range-container">
-                                                <div class="slider-track" id="track"></div>
-
-                                                <input class="filter-all" type="range" min="0" max="1000000" step="10000"
-                                                    value="{{ request('selected_lowest_price', 100000) }}" id="slider-1" name="selected_lowest_price">
-                                                <input class="filter-all" type="range" min="0" max="1000000" step="10000"
-                                                    value="{{ request('selected_highest_price', 500000) }}" id="slider-2" name="selected_highest_price">
-                                            </div>
-
-                                            <div class="values">
-                                                $ <span id="min-value"></span> - $ <span id="max-value"></span>
-                                            </div>
-                                        </div>
-
-                                        <button type="submit" class="search-btn">
-                                            <i class="fa-solid fa-magnifying-glass"></i>
-                                            Find a Vehicle
-                                        </button>
-
-                                    </div>
-                                </form>
                                 </div>
+
+                                <!-- Hidden input for condition -->
+                                <input type="hidden" name="selected_condition" id="selected_condition_input_2"
+                                    value="{{ request('selected_condition') }}">
+
+                                <!-- Filter Bar -->
+                                <div class="filter-bar">
+
+                                    <!-- Type -->
+                                    <div class="filter">
+                                        <label>Type</label>
+                                        <div class="select">
+                                            <i class="fa-solid fa-car"></i>
+                                            <select name="selected_asset" id="filter-type" class="filter-options">
+                                                <option value="">Select Type</option>
+                                                @foreach($assets as $asset)
+                                                <option value="{{ $asset }}" {{ request('selected_asset')==$asset
+                                                    ? 'selected' : '' }}>
+                                                    {{ $asset }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="divider"></div>
+
+                                    <!-- Make -->
+                                    <div class="filter">
+                                        <label>Make</label>
+                                        <div class="select">
+                                            <i class="fa-solid fa-car-side me-2"></i>
+                                            <select name="selected_make" id="filter-make" class="filter-options">
+                                                <option value="">Select Make</option>
+                                                @if(request('selected_asset') &&
+                                                isset($makeTypes[request('selected_asset')]))
+                                                @foreach($makeTypes[request('selected_asset')] as $make)
+                                                <option value="{{ $make['name'] }}" {{
+                                                    request('selected_make')==$make['name'] ? 'selected' : '' }}>
+                                                    {{ $make['name'] }}
+                                                </option>
+                                                @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="divider"></div>
+
+                                    <!-- Model -->
+                                    <div class="filter">
+                                        <label>Model</label>
+                                        <div class="select">
+                                            <input type="text" name="selected_model" class="form-control"
+                                                placeholder="Enter Model" value="{{ request('selected_model') }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="divider"></div>
+
+                                    <!-- Price -->
+                                    <div class="price-box filter">
+                                        <label>Price Range</label>
+                                        <div class="range-container">
+                                            <div class="slider-track" id="track"></div>
+
+                                            <input class="filter-all" type="range" min="0" max="1000000" step="10000"
+                                                value="{{ request('selected_lowest_price', 100000) }}" id="slider-1"
+                                                name="selected_lowest_price">
+                                            <input class="filter-all" type="range" min="0" max="1000000" step="10000"
+                                                value="{{ request('selected_highest_price', 500000) }}" id="slider-2"
+                                                name="selected_highest_price">
+                                        </div>
+
+                                        <div class="values">
+                                            $ <span id="min-value"></span> - $ <span id="max-value"></span>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="search-btn">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                        Find a Vehicle
+                                    </button>
+
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
 
-    <section class="fleet-section">
-        <div class="container">
+<section class="fleet-section">
+    <div class="container">
 
-            <div class="row fleet-top">
-                <div class="col-12">
-                    <h2 class="main-title">Our Vehicle Fleet</h2>
-                    <p class="main-subtitle">Turning dreams into reality with versatile vehicles.</p>
-                </div>
+        <div class="row fleet-top">
+            <div class="col-12">
+                <h2 class="main-title">Our Vehicle Fleet</h2>
+                <p class="main-subtitle">Turning dreams into reality with versatile vehicles.</p>
             </div>
+        </div>
 
-            <div class="row g-4">
-                <div class="col-lg-3 col-md-4">
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-4">
+                <form id="sidebarFilterForm" method="GET" action="{{ route('search_inventory') }}">
                     <aside class="complete-sidebar">
                         <h5 class="sidebar-main-heading">Filter Search</h5>
 
+                        <!-- Condition -->
                         <div class="filter-group">
                             <label class="sidebar-label">Condition</label>
-                            <select class="form-select sidebar-input">
-                                <option>Select Condition</option>
+                            <select name="selected_condition" class="form-select sidebar-input">
+                                <option value="">Select Condition</option>
+                                <option value="ALL" {{ request('selected_condition')=='ALL' ? 'selected' : '' }}>All</option>
+                                <option value="NEW" {{ request('selected_condition')=='NEW' ? 'selected' : '' }}>New</option>
+                                <option value="USED" {{ request('selected_condition')=='USED' ? 'selected' : '' }}>Used</option>
                             </select>
                         </div>
 
+                        <!-- Asset -->
                         <div class="filter-group">
                             <label class="sidebar-label">Asset Type</label>
-                            <select class="form-select sidebar-input">
-                                <option>Select Asset Type</option>
+                            <select name="selected_asset" id="sidebar-type" class="form-select sidebar-input">
+                                <option value="">Select Asset Type</option>
+                                @foreach($assets as $asset)
+                                <option value="{{ $asset }}" {{ request('selected_asset')==$asset ? 'selected' : '' }}>
+                                    {{ $asset }}
+                                </option>
+                                @endforeach
                             </select>
                         </div>
 
+                        <!-- Power Type -->
                         <div class="filter-group">
                             <label class="sidebar-label">Power Type</label>
-                            <select class="form-select sidebar-input">
-                                <option>Select Power Type</option>
+                            <select name="selected_power_type" class="form-select sidebar-input">
+                                <option value="">Select Power Type</option>
+                                <option value="GAS" {{ request('selected_power_type')=='GAS' ? 'selected' : '' }}>GAS</option>
+                                <option value="DIESEL" {{ request('selected_power_type')=='DIESEL' ? 'selected' : '' }}>DIESEL</option>
+                                <option value="PROPANE" {{ request('selected_power_type')=='PROPANE' ? 'selected' : '' }}>PROPANE</option>
+                                <option value="ELECTRIC" {{ request('selected_power_type')=='ELECTRIC' ? 'selected' : '' }}>ELECTRIC</option>
+                                <option value="OTHER" {{ request('selected_power_type')=='OTHER' ? 'selected' : '' }}>OTHER</option>
+                                <option value="HYBRID" {{ request('selected_power_type')=='HYBRID' ? 'selected' : '' }}>HYBRID</option>
                             </select>
                         </div>
 
+                        <!-- Price -->
                         <div class="filter-group">
                             <label class="sidebar-label">Lowest Price</label>
-                            <input type="text" class="form-control sidebar-input" placeholder="Enter Price">
+                            <input type="text" name="selected_lowest_price" class="form-control sidebar-input"
+                                placeholder="Enter Price" value="{{ request('selected_lowest_price') }}">
                         </div>
 
                         <div class="filter-group">
                             <label class="sidebar-label">Max Price</label>
-                            <input type="text" class="form-control sidebar-input" placeholder="Enter Price">
+                            <input type="text" name="selected_highest_price" class="form-control sidebar-input"
+                                placeholder="Enter Price" value="{{ request('selected_highest_price') }}">
                         </div>
 
-
-
+                        <!-- Year -->
                         <div class="filter-group">
                             <label class="sidebar-label">Year</label>
-                            <select class="form-select sidebar-input">
-                                <option>Select Year</option>
+                            <select name="selected_year" id="year-select" class="form-select sidebar-input">
+                                <option value="">Select Year</option>
+                                @php
+                                    $currentYear = date('Y');
+                                    $selectedYear = request('selected_year');
+                                @endphp
+                                @for($year = $currentYear; $year >= 1950; $year--)
+                                    <option value="{{ $year }}" {{ $selectedYear == $year ? 'selected' : '' }}>
+                                        {{ $year }}
+                                    </option>
+                                @endfor
                             </select>
                         </div>
 
+                        <!-- Make -->
                         <div class="filter-group">
                             <label class="sidebar-label">Make</label>
-                            <select class="form-select sidebar-input">
-                                <option>Select Make</option>
+                            <select name="selected_make" id="filter-make" class="form-select sidebar-input w-100">
+                                <option value="">Select Make</option>
+                                @if(request('selected_asset') && isset($makeTypes[request('selected_asset')]))
+                                @foreach($makeTypes[request('selected_asset')] as $make)
+                                <option value="{{ $make['name'] }}" {{ request('selected_make')==$make['name'] ? 'selected' : '' }}>
+                                    {{ $make['name'] }}
+                                </option>
+                                @endforeach
+                                @endif
                             </select>
                         </div>
 
+                        <!-- Model -->
                         <div class="filter-group">
                             <label class="sidebar-label">Model</label>
-                            <input type="text" class="form-control sidebar-input" placeholder="Enter Model">
+                            <input type="text" name="selected_model" class="form-control sidebar-input"
+                                placeholder="Enter Model" value="{{ request('selected_model') }}">
                         </div>
 
+                        <!-- Mileage -->
                         <div class="filter-group">
                             <label class="sidebar-label">Max Mileage</label>
-                            <input type="text" class="form-control sidebar-input" placeholder="Enter Max Mileage">
+                            <input type="text" name="selected_mileage" class="form-control sidebar-input"
+                                placeholder="Enter Max Mileage" value="{{ request('selected_mileage') }}">
                         </div>
 
-                        <div class="filter-group">
-                            <label class="sidebar-label">Body Style</label>
-                            <select class="form-select sidebar-input">
-                                <option>Select Body Style</option>
-                            </select>
-                        </div>
+                        <!-- Body Style -->
+                    <div class="filter-group">
+                        <label class="sidebar-label">Body Style</label>
+                        <select name="selected_body_style" id="body-style-select" class="form-select sidebar-input">
+                            <option value="">Select Body Style</option>
+                            @if(!empty($body_styles) && count($body_styles) > 0)
+                                @foreach($body_styles as $style)
+                                    <option value="{{ $style['name'] }}" 
+                                        {{ (isset($selected_body_style) && $selected_body_style == $style['name']) ? 'selected' : '' }}>
+                                        {{ $style['name'] }}
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
 
+                        <!-- Fuel -->
                         <div class="filter-group">
                             <label class="sidebar-label">Fuel Type</label>
-                            <select class="form-select sidebar-input">
-                                <option>Select Fuel Type</option>
+                            <select name="selected_fuel_type" class="form-select sidebar-input">
+                                <option value="">Select Fuel Type</option>
+                                <option value="PREMIUM REQUIRED" {{ request('selected_fuel_type')=='PREMIUM REQUIRED' ? 'selected' : '' }}>
+                                    PREMIUM REQUIRED
+                                </option>
+                                <option value="PREMIUM RECOMMENDED" {{ request('selected_fuel_type')=='PREMIUM RECOMMENDED' ? 'selected' : '' }}>
+                                    PREMIUM RECOMMENDED
+                                </option>
+                                <option value="REGULAR" {{ request('selected_fuel_type')=='REGULAR' ? 'selected' : '' }}>
+                                    REGULAR
+                                </option>
+                                <option value="ELECTRIC" {{ request('selected_fuel_type')=='ELECTRIC' ? 'selected' : '' }}>
+                                    ELECTRIC
+                                </option>
                             </select>
                         </div>
 
+                        <!-- Seller -->
                         <div class="filter-group">
                             <label class="sidebar-label">Add for sale by</label>
-                            <select class="form-select sidebar-input">
-                                <option>Select Any</option>
+                            <select name="selected_seller" id="seller-select" class="form-select sidebar-input">
+                                <option value="">Select Any</option>
+                                <!-- <option value="DEALER" {{ request('selected_seller')=='DEALER' ? 'selected' : '' }}>Dealer</option>
+                                <option value="PRIVATE" {{ request('selected_seller')=='PRIVATE' ? 'selected' : '' }}>Private Seller</option>
+                                <option value="AUCTION" {{ request('selected_seller')=='AUCTION' ? 'selected' : '' }}>Auction</option>
+                                <option value="RENTAL" {{ request('selected_seller')=='RENTAL' ? 'selected' : '' }}>Rental Company</option>
+                                <option value="FLEET" {{ request('selected_seller')=='FLEET' ? 'selected' : '' }}>Fleet</option> -->
                             </select>
                         </div>
-
-
                     </aside>
-                    <div class="sidebar-map-box mt-4 complete-sidebar">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="map-label">Show on map</span>
-                            <i class="fa-solid fa-chevron-down map-toggle-icon"></i>
-                        </div>
-                        <img src="/assets/images/map.png" class="img-fluid rounded-3" alt="Map">
+                </form>
+                <div class="sidebar-map-box mt-4 complete-sidebar">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="map-label">Show on map</span>
+                        <i class="fa-solid fa-chevron-down map-toggle-icon"></i>
                     </div>
+                    <img src="/assets/images/map.png" class="img-fluid rounded-3" alt="Map">
                 </div>
+            </div>
 
 
-                <div class="col-lg-9 col-md-8">
+            <div class="col-lg-9 col-md-8">
 
-                    <div style="border-bottom: 1px solid #DDE1DE;     padding-bottom: 10px;"
-                        class="fleet-toolbar d-flex flex-wrap justify-content-between align-items-center mb-4">
-                        <div class="toolbar-left d-flex align-items-center">
-                            <div class="view-icons me-3">
-                                <!-- Grid View -->
-                                <svg id="gridViewBtn" width="22" height="24" viewBox="0 0 22 24" fill="none" class="me-2 gridbtn"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M20 9.5V4.25C20 3.8375 19.6625 3.5 19.25 3.5H14C13.5875 3.5 13.25 3.8375 13.25 4.25V9.5C13.25 9.9125 13.5875 10.25 14 10.25H19.25C19.6625 10.25 20 9.9125 20 9.5ZM19.25 2C20.495 2 21.5 3.005 21.5 4.25V9.5C21.5 10.745 20.495 11.75 19.25 11.75H14C12.755 11.75 11.75 10.745 11.75 9.5V4.25C11.75 3.005 12.755 2 14 2H19.25Z"
-                                         />
-                                    <path
-                                        d="M20 20.75V15.5C20 15.0875 19.6625 14.75 19.25 14.75H14C13.5875 14.75 13.25 15.0875 13.25 15.5V20.75C13.25 21.1625 13.5875 21.5 14 21.5H19.25C19.6625 21.5 20 21.1625 20 20.75ZM19.25 13.25C20.495 13.25 21.5 14.255 21.5 15.5V20.75C21.5 21.995 20.495 23 19.25 23H14C12.755 23 11.75 21.995 11.75 20.75V15.5C11.75 14.255 12.755 13.25 14 13.25H19.25Z"
-                                         />
-                                    <path
-                                        d="M8 10.25C8.4125 10.25 8.75 9.9125 8.75 9.5V4.25C8.75 3.8375 8.4125 3.5 8 3.5H2.75C2.3375 3.5 2 3.8375 2 4.25V9.5C2 9.9125 2.3375 10.25 2.75 10.25H8ZM8 2C9.245 2 10.25 3.005 10.25 4.25V9.5C10.25 10.745 9.245 11.75 8 11.75H2.75C1.505 11.75 0.5 10.745 0.5 9.5V4.25C0.5 3.005 1.505 2 2.75 2H8Z"
-                                         />
-                                    <path
-                                        d="M8 21.5C8.4125 21.5 8.75 21.1625 8.75 20.75V15.5C8.75 15.0875 8.4125 14.75 8 14.75H2.75C2.3375 14.75 2 15.0875 2 15.5V20.75C2 21.1625 2.3375 21.5 2.75 21.5H8ZM8 13.25C9.245 13.25 10.25 14.255 10.25 15.5V20.75C10.25 21.995 9.245 23 8 23H2.75C1.505 23 0.5 21.995 0.5 20.75V15.5C0.5 14.255 1.505 13.25 2.75 13.25H8Z"
-                                         />
-                                </svg>
-                                <!-- List View -->
-                                <svg id="listViewBtn" width="21" height="21" viewBox="0 0 21 21" fill="none" class="gridbtn"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M4.788 0H1.09497C0.491194 0 0 0.486501 0 1.08456V4.74269C0 5.34075 0.491194 5.82729 1.09497 5.82729H4.788C5.39177 5.82729 5.88297 5.34075 5.88297 4.74269V1.08456C5.88297 0.486501 5.39177 0 4.788 0ZM4.80951 4.74273C4.80951 4.75328 4.79865 4.76404 4.788 4.76404H1.09497C1.08432 4.76404 1.07345 4.75328 1.07345 4.74273V1.08456C1.07345 1.07401 1.08432 1.06329 1.09497 1.06329H4.788C4.79865 1.06329 4.80951 1.07401 4.80951 1.08456V4.74273ZM7.53412 1.32686C7.53412 1.03321 7.77444 0.795211 8.07084 0.795211H20.4632C20.7596 0.795211 21 1.03321 21 1.32686C21 1.62046 20.7596 1.8585 20.4632 1.8585H8.07084C7.77444 1.8585 7.53412 1.62046 7.53412 1.32686ZM21 4.50043C21 4.79408 20.7597 5.03208 20.4633 5.03208H8.07084C7.77444 5.03208 7.53412 4.79408 7.53412 4.50043C7.53412 4.20683 7.77444 3.96879 8.07084 3.96879H20.4632C20.7597 3.96879 21 4.20683 21 4.50043ZM4.788 7.58633H1.09497C0.491194 7.58633 0 8.07283 0 8.67089V12.329C0 12.9271 0.491194 13.4136 1.09497 13.4136H4.788C5.39177 13.4136 5.88297 12.9271 5.88297 12.329V8.67089C5.88297 8.07288 5.39177 7.58633 4.788 7.58633ZM4.80951 12.3291C4.80951 12.3396 4.79865 12.3504 4.788 12.3504H1.09497C1.08432 12.3504 1.07345 12.3396 1.07345 12.3291V8.67094C1.07345 8.66039 1.08432 8.64967 1.09497 8.64967H4.788C4.79865 8.64967 4.80951 8.66039 4.80951 8.67094V12.3291ZM4.788 15.1727H1.09497C0.491194 15.1727 0 15.6592 0 16.2573V19.9154C0 20.5135 0.491194 21 1.09497 21H4.788C5.39177 21 5.88297 20.5135 5.88297 19.9154V16.2573C5.88297 15.6592 5.39177 15.1727 4.788 15.1727ZM4.80951 19.9154C4.80951 19.926 4.79865 19.9368 4.788 19.9368H1.09497C1.08432 19.9368 1.07345 19.926 1.07345 19.9154V16.2573C1.07345 16.2468 1.08432 16.236 1.09497 16.236H4.788C4.79865 16.236 4.80951 16.2468 4.80951 16.2573V19.9154ZM21 12.0868C21 12.3805 20.7597 12.6185 20.4633 12.6185H8.07084C7.77444 12.6185 7.53412 12.3805 7.53412 12.0868C7.53412 11.7932 7.77444 11.5552 8.07084 11.5552H20.4632C20.7597 11.5552 21 11.7932 21 12.0868ZM21 8.91328C21 9.20688 20.7597 9.44492 20.4633 9.44492H8.07084C7.77444 9.44492 7.53412 9.20688 7.53412 8.91328C7.53412 8.61963 7.77444 8.38163 8.07084 8.38163H20.4632C20.7597 8.38163 21 8.61963 21 8.91328ZM21 16.4996C21 16.7932 20.7597 17.0313 20.4633 17.0313H8.07084C7.77444 17.0313 7.53412 16.7932 7.53412 16.4996C7.53412 16.206 7.77444 15.968 8.07084 15.968H20.4632C20.7597 15.968 21 16.206 21 16.4996ZM21 19.6732C21 19.9668 20.7597 20.2048 20.4633 20.2048H8.07084C7.77444 20.2048 7.53412 19.9668 7.53412 19.6732C7.53412 19.3796 7.77444 19.1415 8.07084 19.1415H20.4632C20.7597 19.1415 21 19.3796 21 19.6732Z"
-                                        />
-                                </svg>
-                            </div>
-                            <span class="results-info">
-                                {{ $start }} - {{ $end }} of {{ $total_inventory }} {{ $assetWord }} found
-                            </span>
+                <div style="border-bottom: 1px solid #DDE1DE;     padding-bottom: 10px;"
+                    class="fleet-toolbar d-flex flex-wrap justify-content-between align-items-center mb-4">
+                    <div class="toolbar-left d-flex align-items-center">
+                        <div class="view-icons me-3">
+                            <!-- Grid View -->
+                            <svg id="gridViewBtn" width="22" height="24" viewBox="0 0 22 24" fill="none"
+                                class="me-2 gridbtn" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M20 9.5V4.25C20 3.8375 19.6625 3.5 19.25 3.5H14C13.5875 3.5 13.25 3.8375 13.25 4.25V9.5C13.25 9.9125 13.5875 10.25 14 10.25H19.25C19.6625 10.25 20 9.9125 20 9.5ZM19.25 2C20.495 2 21.5 3.005 21.5 4.25V9.5C21.5 10.745 20.495 11.75 19.25 11.75H14C12.755 11.75 11.75 10.745 11.75 9.5V4.25C11.75 3.005 12.755 2 14 2H19.25Z" />
+                                <path
+                                    d="M20 20.75V15.5C20 15.0875 19.6625 14.75 19.25 14.75H14C13.5875 14.75 13.25 15.0875 13.25 15.5V20.75C13.25 21.1625 13.5875 21.5 14 21.5H19.25C19.6625 21.5 20 21.1625 20 20.75ZM19.25 13.25C20.495 13.25 21.5 14.255 21.5 15.5V20.75C21.5 21.995 20.495 23 19.25 23H14C12.755 23 11.75 21.995 11.75 20.75V15.5C11.75 14.255 12.755 13.25 14 13.25H19.25Z" />
+                                <path
+                                    d="M8 10.25C8.4125 10.25 8.75 9.9125 8.75 9.5V4.25C8.75 3.8375 8.4125 3.5 8 3.5H2.75C2.3375 3.5 2 3.8375 2 4.25V9.5C2 9.9125 2.3375 10.25 2.75 10.25H8ZM8 2C9.245 2 10.25 3.005 10.25 4.25V9.5C10.25 10.745 9.245 11.75 8 11.75H2.75C1.505 11.75 0.5 10.745 0.5 9.5V4.25C0.5 3.005 1.505 2 2.75 2H8Z" />
+                                <path
+                                    d="M8 21.5C8.4125 21.5 8.75 21.1625 8.75 20.75V15.5C8.75 15.0875 8.4125 14.75 8 14.75H2.75C2.3375 14.75 2 15.0875 2 15.5V20.75C2 21.1625 2.3375 21.5 2.75 21.5H8ZM8 13.25C9.245 13.25 10.25 14.255 10.25 15.5V20.75C10.25 21.995 9.245 23 8 23H2.75C1.505 23 0.5 21.995 0.5 20.75V15.5C0.5 14.255 1.505 13.25 2.75 13.25H8Z" />
+                            </svg>
+                            <!-- List View -->
+                            <svg id="listViewBtn" width="21" height="21" viewBox="0 0 21 21" fill="none" class="gridbtn"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M4.788 0H1.09497C0.491194 0 0 0.486501 0 1.08456V4.74269C0 5.34075 0.491194 5.82729 1.09497 5.82729H4.788C5.39177 5.82729 5.88297 5.34075 5.88297 4.74269V1.08456C5.88297 0.486501 5.39177 0 4.788 0ZM4.80951 4.74273C4.80951 4.75328 4.79865 4.76404 4.788 4.76404H1.09497C1.08432 4.76404 1.07345 4.75328 1.07345 4.74273V1.08456C1.07345 1.07401 1.08432 1.06329 1.09497 1.06329H4.788C4.79865 1.06329 4.80951 1.07401 4.80951 1.08456V4.74273ZM7.53412 1.32686C7.53412 1.03321 7.77444 0.795211 8.07084 0.795211H20.4632C20.7596 0.795211 21 1.03321 21 1.32686C21 1.62046 20.7596 1.8585 20.4632 1.8585H8.07084C7.77444 1.8585 7.53412 1.62046 7.53412 1.32686ZM21 4.50043C21 4.79408 20.7597 5.03208 20.4633 5.03208H8.07084C7.77444 5.03208 7.53412 4.79408 7.53412 4.50043C7.53412 4.20683 7.77444 3.96879 8.07084 3.96879H20.4632C20.7597 3.96879 21 4.20683 21 4.50043ZM4.788 7.58633H1.09497C0.491194 7.58633 0 8.07283 0 8.67089V12.329C0 12.9271 0.491194 13.4136 1.09497 13.4136H4.788C5.39177 13.4136 5.88297 12.9271 5.88297 12.329V8.67089C5.88297 8.07288 5.39177 7.58633 4.788 7.58633ZM4.80951 12.3291C4.80951 12.3396 4.79865 12.3504 4.788 12.3504H1.09497C1.08432 12.3504 1.07345 12.3396 1.07345 12.3291V8.67094C1.07345 8.66039 1.08432 8.64967 1.09497 8.64967H4.788C4.79865 8.64967 4.80951 8.66039 4.80951 8.67094V12.3291ZM4.788 15.1727H1.09497C0.491194 15.1727 0 15.6592 0 16.2573V19.9154C0 20.5135 0.491194 21 1.09497 21H4.788C5.39177 21 5.88297 20.5135 5.88297 19.9154V16.2573C5.88297 15.6592 5.39177 15.1727 4.788 15.1727ZM4.80951 19.9154C4.80951 19.926 4.79865 19.9368 4.788 19.9368H1.09497C1.08432 19.9368 1.07345 19.926 1.07345 19.9154V16.2573C1.07345 16.2468 1.08432 16.236 1.09497 16.236H4.788C4.79865 16.236 4.80951 16.2468 4.80951 16.2573V19.9154ZM21 12.0868C21 12.3805 20.7597 12.6185 20.4633 12.6185H8.07084C7.77444 12.6185 7.53412 12.3805 7.53412 12.0868C7.53412 11.7932 7.77444 11.5552 8.07084 11.5552H20.4632C20.7597 11.5552 21 11.7932 21 12.0868ZM21 8.91328C21 9.20688 20.7597 9.44492 20.4633 9.44492H8.07084C7.77444 9.44492 7.53412 9.20688 7.53412 8.91328C7.53412 8.61963 7.77444 8.38163 8.07084 8.38163H20.4632C20.7597 8.38163 21 8.61963 21 8.91328ZM21 16.4996C21 16.7932 20.7597 17.0313 20.4633 17.0313H8.07084C7.77444 17.0313 7.53412 16.7932 7.53412 16.4996C7.53412 16.206 7.77444 15.968 8.07084 15.968H20.4632C20.7597 15.968 21 16.206 21 16.4996ZM21 19.6732C21 19.9668 20.7597 20.2048 20.4633 20.2048H8.07084C7.77444 20.2048 7.53412 19.9668 7.53412 19.6732C7.53412 19.3796 7.77444 19.1415 8.07084 19.1415H20.4632C20.7597 19.1415 21 19.3796 21 19.6732Z" />
+                            </svg>
                         </div>
-                        <form id="vehicleFilterForm" class="toolbar-right d-flex gap-2">
-                            <button type="button" class="btn-clear-filters" id="clearFilters">Clear Filters</button>
+                        <span class="results-info">
+                            {{ $start }} - {{ $end }} of {{ $total_inventory }} {{ $assetWord }} found
+                        </span>
+                    </div>
+                    <form id="vehicleFilterForm" class="toolbar-right d-flex gap-2">
+                        <button type="button" class="btn-clear-filters">Clear Filters</button>
 
-                            <!-- Example: Show X results per page (optional) -->
-                            <!--
+                        <!-- Example: Show X results per page (optional) -->
+                        <!--
                             <select class="form-select form-select-sm tool-select" name="per_page">
                                 <option value="10">Show 10</option>
                                 <option value="20">Show 20</option>
                             </select>
                             -->
 
-                            <!-- Sort dropdown -->
-                            <select class="form-select form-select-sm tool-select" id="sortSelect" name="sort">
-                                <option value="name">Sort by: Name</option>
-                                <option value="price_asc">Price: Low to High</option>
-                                <option value="price_desc">Price: High to Low</option>
-                            </select>
-                        </form>
-                    </div>
+                        <!-- Sort dropdown -->
+                        <select class="form-select form-select-sm tool-select" id="sortSelect" name="sort">
+                            <option value="name">Sort by: Name</option>
+                            <option value="price_asc">Price: Low to High</option>
+                            <option value="price_desc">Price: High to Low</option>
+                        </select>
+                    </form>
+                </div>
 
-                    <div class="row g-4" id="vehicleContainer">
-                        {{-- vehicle div start Car listing page --}}
-                        @if ($search_inventory_result != null)
-                            @foreach ($search_inventory_result as $recent_vehicle)
-                                <div class="col-lg-4 col-sm-6 vehicle-card">
-                                    <div class="modern-car-card shadow-sm">
-                                        <div class="car-card-top">
-                                            {{-- @php
-                                            if ($recent_vehicle->inventory_logo != null) {
-                                                $logo = explode('|', $recent_vehicle->inventory_logo);
-                                            } else {
-                                                $logo[0] = 'defaultimage.jpg';
-                                            }
-                                            @endphp --}}
-                                            @php
-                                                $detailUrl = route('inventory_product_details', $recent_vehicle->id);
-                                            @endphp
-
-                                            <a href="{{ $detailUrl }}">
-                                                <img style="width:100%"
-                                                    src="{{ $recent_vehicle->primary_image 
+                <div class="row g-4" id="vehicleContainer">
+                    @if ($search_inventory_result != null)
+                    @foreach ($search_inventory_result as $recent_vehicle)
+                    <div class="col-lg-4 col-sm-6 vehicle-card">
+                        <div class="modern-car-card shadow-sm">
+                            <div class="car-card-top">
+                                @php $detailUrl = route('inventory_product_details', $recent_vehicle->id); @endphp
+                                <a href="{{ $detailUrl }}">
+                                    <img style="width:100%" src="{{ $recent_vehicle->primary_image 
                                                         ? (Str::startsWith($recent_vehicle->primary_image,'http') 
                                                             ? $recent_vehicle->primary_image 
                                                             : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$recent_vehicle->primary_image)
                                                         : asset('assets/images/defaultimage.jpg') }}"
-                                                    alt="Vehicle Image"
-                                                    class="img-box img-fluid"
-                                                    onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
-                                            </a>
-                                            <div class="badge-mileage d-flex align-items-center">
-
-                                                <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
-                                                    style="width:20px; height:12px;">
-
-                                                {{ $recent_vehicle->mileage ? $recent_vehicle->mileage . ' km' : '0 km' }}
-
-                                            </div>
-                                        </div>
-                                        <div class="car-card-bottom">
-                                            <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
-                                                {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}</h5>
-                                            <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 12 Km away</p>
-
-                                            <div class="car-circle-icons-group">
-                                                <img src="/assets/images/no-accidents.png" alt="">
-                                                <img src="/assets/images/low-mileage.png" alt="">
-                                                <img src="/assets/images/service-plan.png" alt="">
-                                                <img src="/assets/images/powertrain-warranty.png" alt="">
-                                                <span class="extra-icons-count">12+</span>
-                                            </div>
-
-                                            <div class="car-price-block text-end">
-                                                <h4 class="price-value">${{ $recent_vehicle->price_retail_date ?? '0'}}</h4>
-                                                <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
-                                            </div>
-                                        </div>
-                                    </div>
+                                        alt="Vehicle Image" class="img-box img-fluid"
+                                        onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
+                                </a>
+                                <div class="badge-mileage d-flex align-items-center">
+                                    <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
+                                        style="width:20px; height:12px;">
+                                    {{ $recent_vehicle->mileage ? $recent_vehicle->mileage . ' km' : '0 km' }}
                                 </div>
-                            @endforeach
-                            {{-- vehicle div end for welcome page --}}
-                        @else
-                            <h2 class="no-result-found text-center">No results found</h2>
-                        @endif
-                    </div>
-                    <div class="my-4">
-                        @include('partials.pagination')
-                    </div>
+                            </div>
+                            <div class="car-card-bottom">
+                                <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
+                                    {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}</h5>
+                                <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 12 Km away</p>
 
+                                <div class="car-circle-icons-group">
+                                    <img src="/assets/images/no-accidents.png" alt="">
+                                    <img src="/assets/images/low-mileage.png" alt="">
+                                    <img src="/assets/images/service-plan.png" alt="">
+                                    <img src="/assets/images/powertrain-warranty.png" alt="">
+                                    <span class="extra-icons-count">12+</span>
+                                </div>
 
+                                <div class="car-price-block text-end">
+                                    <h4 class="price-value">${{ $recent_vehicle->price_retail_date ?? '0'}}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                    @else
+                    <h2 class="no-result-found text-center">No results found</h2>
+                    @endif
                 </div>
+                <div class="my-4">
+                    @include('partials.pagination')
+                </div>
+
+
             </div>
         </div>
-    </section>
-   <script>
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const typeSelect = document.getElementById('filter-type');
-            const makeSelect = document.getElementById('filter-make');
-            const selectedMake = "{{ request('selected_make') }}"; // previously selected Make
-
-            function populateMakes(makes) {
-                makeSelect.innerHTML = '<option value="">Select Make</option>';
-                makes.forEach(make => {
-                    const option = document.createElement('option');
-                    option.value = make.name;
-                    option.textContent = make.name;
-                    if (make.name === selectedMake) {
-                        option.selected = true;
-                    }
-                    makeSelect.appendChild(option);
-                });
-            }
-
-            function fetchMakesByType(type) {
-                return fetch(`{{ env('diskloz_base_url') }}/api/search_inventory?selected_asset=${encodeURIComponent(type)}&per_page=1`)
-                    .then(res => res.json())
-                    .then(data => {
-                        if (!data.filters) return [];
-                        switch(type) {
-                            case 'AUTO': return data.filters.MfgAuto || [];
-                            case 'RV / TRAILER': return data.filters.MfgRvTrailer || [];
-                            case 'MOTORCYCLE': 
-                            case 'POWERSPORTS': return data.filters.MfgMotorcycleAtv || [];
-                            case 'HEAVY TRUCK/EQUIPMENT': return data.filters.MfgHeavyTruckEquipment || [];
-                            case 'HEAVY DUTY TRAILERS': return data.filters.MfgHeavyDutyTrailer || [];
-                            case 'FARM EQUIPMENT': return data.filters.MfgFarmEquipment || [];
-                            default: return [];
-                        }
+    </div>
+</section>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(document).ready(function() {
+    let isSubmitting = false;
+    let submitTimer = null;
+    
+    // Function to submit form
+    function submitForm() {
+        if (isSubmitting) {
+            return;
+        }
+        
+        isSubmitting = true;
+        const form = $('#sidebarFilterForm');
+        form.submit();
+        
+        setTimeout(function() {
+            isSubmitting = false;
+        }, 1000);
+    }
+    
+    // Debounced function to prevent multiple rapid triggers
+    function debouncedSubmit() {
+        clearTimeout(submitTimer);
+        submitTimer = setTimeout(function() {
+            submitForm();
+        }, 300);
+    }
+    
+    // Auto-submit on any select change with debounce
+    $('#sidebarFilterForm select').on('change', function() {
+        debouncedSubmit();
+    });
+    
+    // Auto-submit on any input change with debounce
+    $('#sidebarFilterForm input').on('change', function() {
+        debouncedSubmit();
+    });
+    
+    // Debounced text inputs
+    let textTimer;
+    $('#sidebarFilterForm input[type="text"]').on('keyup', function() {
+        clearTimeout(textTimer);
+        textTimer = setTimeout(submitForm, 500);
+    });
+    
+    // Function to load body styles based on asset type
+    function loadBodyStyles(assetType) {
+        const bodyStyleSelect = $('#body-style-select');
+        bodyStyleSelect.html('<option value="">Loading Body Styles...</option>');
+        
+        if (!assetType) {
+            bodyStyleSelect.html('<option value="">Select Body Style</option>');
+            return;
+        }
+        
+        $.ajax({
+            url: "{{ env('diskloz_base_url') }}/api/search_inventory",
+            type: "GET",
+            data: { selected_asset: assetType, per_page: 1 },
+            success: function(data) {
+                let bodyStyles = [];
+                
+                // Get body styles based on asset type
+                switch(assetType) {
+                    case 'AUTO':
+                        bodyStyles = data.filters?.BodyStyle || data.filters?.BodyStyle || [];
+                        break;
+                    case 'RV / TRAILER':
+                        bodyStyles = data.filters?.BodyStyleRvTrailer || data.filters?.BodyStyle || [];
+                        break;
+                    case 'MOTORCYCLE':
+                    case 'POWERSPORTS':
+                        bodyStyles = data.filters?.BodyStyleMotorcycleAtv || data.filters?.BodyStyle || [];
+                        break;
+                    case 'HEAVY TRUCK/EQUIPMENT':
+                        bodyStyles = data.filters?.BodyStyleHeavyTruckEquipment || data.filters?.BodyStyle || [];
+                        break;
+                    case 'HEAVY DUTY TRAILERS':
+                        bodyStyles = data.filters?.BodyStyleHeavyDutyTrailer || data.filters?.BodyStyle || [];
+                        break;
+                    case 'FARM EQUIPMENT':
+                        bodyStyles = data.filters?.BodyStyleFarmEquipment || data.filters?.BodyStyle || [];
+                        break;
+                    default:
+                        bodyStyles = data.filters?.BodyStyle || [];
+                }
+                
+                // Populate dropdown
+                let options = '<option value="">Select Body Style</option>';
+                const currentSelectedBodyStyle = "{{ request('selected_body_style') }}";
+                
+                if (bodyStyles && bodyStyles.length > 0) {
+                    $.each(bodyStyles, function(i, style) {
+                        const selected = (currentSelectedBodyStyle == style.id) ? 'selected' : '';
+                        options += `<option value="${style.id}" ${selected}>${style.name}</option>`;
                     });
+                } else {
+                    options = '<option value="">No Body Styles Available</option>';
+                }
+                
+                bodyStyleSelect.html(options);
+            },
+            error: function(err) {
+                console.error('Error fetching body styles:', err);
+                bodyStyleSelect.html('<option value="">Error Loading Body Styles</option>');
             }
+        });
+    }
+    
+    // Function to load makes based on asset type
+    function loadMakes(assetType) {
+        const makeDropdown = $('#filter-make');
+        makeDropdown.html('<option value="">Loading...</option>');
+        
+        if(!assetType) {
+            makeDropdown.html('<option value="">Select Make</option>');
+            debouncedSubmit();
+            return;
+        }
+        
+        $.ajax({
+            url: "{{ env('diskloz_base_url') }}/api/search_inventory",
+            type: "GET",
+            data: { selected_asset: assetType, per_page: 1 },
+            success: function(data){
+                let makes = [];
+                switch(assetType){
+                    case 'AUTO': 
+                        makes = data.filters?.MfgAuto || []; 
+                        break;
+                    case 'RV / TRAILER': 
+                        makes = data.filters?.MfgRvTrailer || []; 
+                        break;
+                    case 'MOTORCYCLE':
+                    case 'POWERSPORTS': 
+                        makes = data.filters?.MfgMotorcycleAtv || []; 
+                        break;
+                    case 'HEAVY TRUCK/EQUIPMENT': 
+                        makes = data.filters?.MfgHeavyTruckEquipment || []; 
+                        break;
+                    case 'HEAVY DUTY TRAILERS': 
+                        makes = data.filters?.MfgHeavyDutyTrailer || []; 
+                        break;
+                    case 'FARM EQUIPMENT': 
+                        makes = data.filters?.MfgFarmEquipment || []; 
+                        break;
+                    default:
+                        makes = [];
+                }
+                
+                let options = '<option value="">Select Make</option>';
+                const currentSelectedMake = "{{ request('selected_make') }}";
+                $.each(makes, function(i, make){
+                    const selected = (currentSelectedMake === make.name) ? 'selected' : '';
+                    options += `<option value="${make.name}" ${selected}>${make.name}</option>`;
+                });
+                makeDropdown.html(options);
+                
+                debouncedSubmit();
+            },
+            error: function(err){ 
+                console.error('Error fetching makes:', err);
+                makeDropdown.html('<option value="">Select Make</option>');
+                debouncedSubmit();
+            }
+        });
+    }
+    
+    // Dynamic dropdowns based on Asset Type
+    $('#sidebar-type').on('change', function() {
+        const type = $(this).val();
+        
+        // Load makes for selected asset type
+        loadMakes(type);
+        
+        // Load body styles for selected asset type
+        loadBodyStyles(type);
+        
+        debouncedSubmit();
+    });
+    
+    // Clear Filters functionality
+    $('#clearFilters').on('click', function(e){
+        e.preventDefault();
+        
+        // Reset all form fields
+        $('#sidebarFilterForm')[0].reset();
+        
+        // Reset dynamically populated dropdowns
+        $('#filter-make').html('<option value="">Select Make</option>');
+        $('#body-style-select').html('<option value="">Select Body Style</option>');
+        $('#year-select').val('');
+        $('#seller-select').val('');
+        
+        // Submit the form to clear all filters
+        submitForm();
+    });
+    
+    // Initial load: If asset type is already selected on page load
+    // const initialAssetType = $('#sidebar-type').val();
+    // if(initialAssetType) {
+    //     loadBodyStyles(initialAssetType);
+    // }
+});
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
 
-            typeSelect.addEventListener('change', function() {
+        const form = document.querySelector('form.search-wrapper');
+        const typeSelect = document.getElementById('filter-type');
+        const makeSelect = document.getElementById('filter-make');
+        const conditionInput = document.getElementById('selected_condition_input_2');
+        const selectedMake = "{{ request('selected_make') }}";
+
+        // -------- POPULATE MAKES --------
+        function populateMakes(makes) {
+            if (!makeSelect) return;
+
+            makeSelect.innerHTML = '<option value="">Select Make</option>';
+
+            makes.forEach(make => {
+                const option = document.createElement('option');
+                option.value = make.name;
+                option.textContent = make.name;
+
+                if (make.name === selectedMake) {
+                    option.selected = true;
+                }
+
+                makeSelect.appendChild(option);
+            });
+        }
+
+        // -------- FETCH MAKES --------
+        function fetchMakesByType(type) {
+            return fetch(`{{ env('diskloz_base_url') }}/api/search_inventory?selected_asset=${encodeURIComponent(type)}&per_page=1`)
+                .then(res => res.json())
+                .then(data => {
+
+                    if (!data || !data.filters) return [];
+
+                    switch (type) {
+                        case 'AUTO': return data.filters.MfgAuto || [];
+                        case 'RV / TRAILER': return data.filters.MfgRvTrailer || [];
+                        case 'MOTORCYCLE':
+                        case 'POWERSPORTS': return data.filters.MfgMotorcycleAtv || [];
+                        case 'HEAVY TRUCK/EQUIPMENT': return data.filters.MfgHeavyTruckEquipment || [];
+                        case 'HEAVY DUTY TRAILERS': return data.filters.MfgHeavyDutyTrailer || [];
+                        case 'FARM EQUIPMENT': return data.filters.MfgFarmEquipment || [];
+                        default: return [];
+                    }
+                })
+                .catch(() => []);
+        }
+
+        // -------- TYPE CHANGE --------
+        if (typeSelect) {
+            typeSelect.addEventListener('change', function () {
                 const type = this.value;
+
                 if (!type) {
-                    makeSelect.innerHTML = '<option value="">Select Make</option>';
+                    if (makeSelect) {
+                        makeSelect.innerHTML = '<option value="">Select Make</option>';
+                    }
                     return;
                 }
-                fetchMakesByType(type)
-                    .then(populateMakes)
-                    .catch(err => console.error('Error fetching makes:', err));
+
+                fetchMakesByType(type).then(populateMakes);
             });
 
-            // If page loaded with a selected Type, fetch its makes via AJAX
             if (typeSelect.value) {
                 fetchMakesByType(typeSelect.value).then(populateMakes);
             }
+        }
+
+        // -------- TABS --------
+        const tabs = document.querySelectorAll('.tabs .tab');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+
+                if (conditionInput) {
+                    conditionInput.value = this.dataset.condition || '';
+                }
+
+                if (form && typeof form.submit === 'function') {
+                    form.submit(); // ✅ FIXED
+                }
+            });
         });
-    </script>
+
+    });
+</script>
 @endsection
