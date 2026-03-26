@@ -30,4 +30,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'diskloz' => [
+        'base_url' => env('DISKLOZ_BASE_URL', env('diskloz_base_url', 'https://diskloz.ca')),
+    ],
+
 ];

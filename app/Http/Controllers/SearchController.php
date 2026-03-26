@@ -12,7 +12,7 @@ class SearchController extends Controller
 {
     private function disklozBaseUrl(): string
     {
-        return rtrim(config('services.diskloz.base_url', 'http://127.0.0.1:98'), '/');
+        return rtrim(config('services.diskloz.base_url', 'https://diskloz.ca'), '/');
     }
 
     private function dealerLocationMap(): array
@@ -174,7 +174,6 @@ class SearchController extends Controller
             $vehicle->dealer_country = $location['country'] ?? null;
             return $vehicle;
         })->values();
-
         $data = [
             'search_inventory_result' => $inventoryData,
             'current_page' => $inventory->current_page ?? 1,
