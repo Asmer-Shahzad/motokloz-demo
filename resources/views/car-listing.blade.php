@@ -152,7 +152,7 @@ $end = $start + count($search_inventory_result) - 1;
                             <label class="sidebar-label">Condition</label>
                             <select name="selected_condition" class="form-select sidebar-input">
                                 <option value="">Select Condition</option>
-                                <option value="ALL" {{ request('selected_condition')=='ALL' ? 'selected' : '' }}>All</option>
+                                <option value="" {{ request('selected_condition')=='' ? 'selected' : '' }}>All</option>
                                 <option value="NEW" {{ request('selected_condition')=='NEW' ? 'selected' : '' }}>New</option>
                                 <option value="USED" {{ request('selected_condition')=='USED' ? 'selected' : '' }}>Used</option>
                             </select>
