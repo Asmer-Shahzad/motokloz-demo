@@ -3,6 +3,12 @@
 @section('content')
 
 
+@php
+    function formatPrice($price) {
+        return number_format($price, 2, '.', ',');
+    }
+@endphp
+
     <section class="banner-section">
         <div class="container-fluid">
             <div class="banner-bg">
@@ -79,13 +85,13 @@
                                             <div class="range-container">
                                                 <div class="slider-track" id="track"></div>
                                                 <input class="filter-all" type="range" min="0" max="1000000" step="10000"
-                                                    value="100000" id="slider-1" name="selected_lowest_price">
+                                                    value="{{ request('selected_lowest_price', 0) }}" id="slider-1" name="selected_lowest_price">
                                                 <input class="filter-all" type="range" min="0" max="1000000" step="10000"
-                                                    value="500000" id="slider-2" name="selected_highest_price">
+                                                    value="{{ request('selected_highest_price', 1000000) }}" id="slider-2" name="selected_highest_price">
                                             </div>
 
                                             <div class="values">
-                                                $ <span id="min-value"></span> - <span id="max-value"></span>
+                                                $ <span id="min-value"></span> - $ <span id="max-value"></span>
                                             </div>
                                         </div>
 
@@ -264,7 +270,9 @@
                                 </div>
 
                                 <div class="car-price-block text-end">
-                                    <h4 class="price-value">${{ $recent_vehicle->price_retail_date ? $recent_vehicle->price_retail_date . '0' : '0'}}</h4>
+                                    <h4 class="price-value">
+                                        ${{ formatPrice($recent_vehicle->price_retail_date ?? 0) }}
+                                    </h4>
                                     <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                 </div>
                             </div>

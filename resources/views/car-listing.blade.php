@@ -4,6 +4,12 @@ $start = ($current_page - 1) * $perPage + 1;
 $end = $start + count($search_inventory_result) - 1;
 @endphp
 
+@php
+    function formatPrice($price) {
+        return number_format($price, 2, '.', ',');
+    }
+@endphp
+
 @extends('layouts.app')
 
 
@@ -69,17 +75,13 @@ $end = $start + count($search_inventory_result) - 1;
                                         <label>Make</label>
                                         <div class="select">
                                             <i class="fa-solid fa-car-side me-2"></i>
-                                            <select name="selected_make" id="filter-make" class="filter-options">
+                                            <select id="filter-make" name="selected_make" class="filter-options">
                                                 <option value="">Select Make</option>
-                                                @if(request('selected_asset') &&
-                                                isset($makeTypes[request('selected_asset')]))
-                                                @foreach($makeTypes[request('selected_asset')] as $make)
-                                                <option value="{{ $make['name'] }}" {{
-                                                    request('selected_make')==$make['name'] ? 'selected' : '' }}>
-                                                    {{ $make['name'] }}
-                                                </option>
+                                                @foreach($makeTypes as $type => $makes)
+                                                    @foreach($makes as $make)
+                                                        <option value="{{ $make['name'] }}" data-type="{{ $type }}">{{ $make['name'] }}</option>
+                                                    @endforeach
                                                 @endforeach
-                                                @endif
                                             </select>
                                         </div>
                                     </div>
@@ -97,18 +99,15 @@ $end = $start + count($search_inventory_result) - 1;
 
                                     <div class="divider"></div>
 
-                                    <!-- Price -->
+                                    <!-- Price Range -->
                                     <div class="price-box filter">
                                         <label>Price Range</label>
                                         <div class="range-container">
                                             <div class="slider-track" id="track"></div>
-
                                             <input class="filter-all" type="range" min="0" max="1000000" step="10000"
-                                                value="{{ request('selected_lowest_price', 100000) }}" id="slider-1"
-                                                name="selected_lowest_price">
+                                                value="{{ request('selected_lowest_price', 0) }}" id="slider-1" name="selected_lowest_price">
                                             <input class="filter-all" type="range" min="0" max="1000000" step="10000"
-                                                value="{{ request('selected_highest_price', 500000) }}" id="slider-2"
-                                                name="selected_highest_price">
+                                                value="{{ request('selected_highest_price', 1000000) }}" id="slider-2" name="selected_highest_price">
                                         </div>
 
                                         <div class="values">
@@ -352,6 +351,7 @@ $end = $start + count($search_inventory_result) - 1;
                             <option value="price_desc">Price: High to Low</option>
                         </select>
                     </form>
+                   
                 </div>
 
                 <div class="row g-4" id="vehicleContainer">
@@ -389,8 +389,12 @@ $end = $start + count($search_inventory_result) - 1;
                                     <span class="extra-icons-count">12+</span>
                                 </div>
 
+                                
                                 <div class="car-price-block text-end">
-                                    <h4 class="price-value">${{ $recent_vehicle->price_retail_date ?? '0'}}</h4>
+                                    <h4 class="price-value">
+                                        ${{ formatPrice($recent_vehicle->price_retail_date ?? 0) }}
+                                    </h4>
+                                    <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                 </div>
                             </div>
                         </div>
@@ -411,6 +415,49 @@ $end = $start + count($search_inventory_result) - 1;
 </section>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Clear Filters Button
+        const clearFiltersBtn = document.querySelector('.btn-clear-filters');
+        
+        if (clearFiltersBtn) {
+            clearFiltersBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Get current URL
+                const currentUrl = new URL(window.location.href);
+                
+                // Get all current search parameters
+                const allParams = new URLSearchParams(currentUrl.search);
+                
+                // Store the selected_asset value if it exists
+                let selectedAsset = null;
+                if (allParams.has('selected_asset')) {
+                    selectedAsset = allParams.get('selected_asset');
+                }
+                
+                // Remove ALL parameters
+                allParams.forEach((value, key) => {
+                    currentUrl.searchParams.delete(key);
+                });
+                
+                // Re-add selected_asset if it existed
+                if (selectedAsset) {
+                    currentUrl.searchParams.set('selected_asset', selectedAsset);
+                }
+                
+                // Alternative: Clear all parameters at once and then add selected_asset
+                // currentUrl.search = '';
+                // if (selectedAsset) {
+                //     currentUrl.searchParams.set('selected_asset', selectedAsset);
+                // }
+                
+                // Redirect to the URL with only selected_asset (if any)
+                window.location.href = currentUrl.toString();
+            });
+        }
+    });
+</script>
+<script>
 $(document).ready(function() {
     let isSubmitting = false;
     let submitTimer = null;
@@ -423,11 +470,39 @@ $(document).ready(function() {
         
         isSubmitting = true;
         const form = $('#sidebarFilterForm');
+        
+        // Remove empty fields before submitting
+        removeEmptyFields(form);
+        
         form.submit();
         
         setTimeout(function() {
             isSubmitting = false;
         }, 1000);
+    }
+    
+    // Function to remove empty fields from form
+    function removeEmptyFields(form) {
+        // Find all input, select, and textarea fields
+        form.find('input, select, textarea').each(function() {
+            const $field = $(this);
+            const fieldValue = $field.val();
+            
+            // Check if field is empty or has default empty value
+            if (!fieldValue || fieldValue === '' || 
+                (fieldValue === 'Select Make') || 
+                (fieldValue === 'Select Body Style') || 
+                (fieldValue === 'Loading...') || 
+                (fieldValue === 'No Body Styles Available') ||
+                (fieldValue === 'Error Loading Body Styles')) {
+                
+                // Disable empty fields so they don't get submitted
+                $field.prop('disabled', true);
+            } else {
+                // Ensure field is enabled if it has value
+                $field.prop('disabled', false);
+            }
+        });
     }
     
     // Debounced function to prevent multiple rapid triggers
@@ -437,6 +512,17 @@ $(document).ready(function() {
             submitForm();
         }, 300);
     }
+    
+    // Re-enable all fields before form submit (to ensure they can be submitted if they have values)
+    $('#sidebarFilterForm').on('submit', function() {
+        // Re-enable all fields before form submission
+        $(this).find('input, select, textarea').each(function() {
+            $(this).prop('disabled', false);
+        });
+        
+        // Then remove empty fields
+        removeEmptyFields($(this));
+    });
     
     // Auto-submit on any select change with debounce
     $('#sidebarFilterForm select').on('change', function() {

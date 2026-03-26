@@ -1,5 +1,11 @@
 @extends('layouts.app')
 
+@php
+    function formatPrice($price) {
+        return number_format($price, 2, '.', ',');
+    }
+@endphp
+
 @section('content')
 
     <!-- DEALER PROFILE BANNER -->
@@ -586,7 +592,9 @@
                                 </div>
 
                                 <div class="car-price-block text-end">
-                                    <h4 class="price-value">${{ $recent_vehicle->price_retail_date ? $recent_vehicle->price_retail_date : '0'}}</h4>
+                                    <h4 class="price-value">
+                                        ${{ formatPrice($recent_vehicle->price_retail_date ?? 0) }}
+                                    </h4>
                                     <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                 </div>
                             </div>
