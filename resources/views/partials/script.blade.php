@@ -289,26 +289,30 @@ toggleBtn.addEventListener("click", () => {
 <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script> --}}
 
 <script>
-    var swiper = new Swiper(".mySwiper", {
-        slidesPerView: 7,
-        spaceBetween: 20,
-        autoplay: false,
-        loop: false,
-        // autoplay: {
-        //     delay: 2500,
-        // },
-        breakpoints: {
-            0: {
-                slidesPerView: 2
-            },
-            768: {
-                slidesPerView: 4
-            },
-            1024: {
-                slidesPerView: 6
-            }
+var swiper = new Swiper(".mySwiper", {
+    slidesPerView: 7,
+    spaceBetween: 20,
+    loop: true,
+
+    speed: 7000, // 🔥 smooth slow transition
+
+    autoplay:false,
+
+    freeMode: true, // 🔥 smooth continuous flow
+    freeModeMomentum: false,
+
+    breakpoints: {
+        0: {
+            slidesPerView: 2
+        },
+        768: {
+            slidesPerView: 4
+        },
+        1024: {
+            slidesPerView: 6
         }
-    });
+    }
+});
 </script>
 <script>
     var swiper = new Swiper(".carSwiper", {
@@ -909,5 +913,5 @@ toggleBtn.addEventListener("click", () => {
         }
     });
 </script>
-<script>window.gtranslateSettings = { "default_language": "en", "native_language_names": true, "detect_browser_language": true, "wrapper_selector": ".gtranslate_wrapper", "flag_style": "3d" }</script>
+<script>window.gtranslateSettings = { "default_language": "en", "native_language_names": true, "detect_browser_language": true, "wrapper_selector": ".gtranslate_wrapper", "flag_style": "3d", "alt_flags": { "en": "canada" } }</script>
 <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
