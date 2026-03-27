@@ -247,6 +247,10 @@ $end = $start + count($search_inventory_result) - 1;
                         <label class="sidebar-label">Body Style</label>
                         <select name="selected_body_style" id="body-style-select" class="form-select sidebar-input">
                             <option value="">Select Body Style</option>
+                            @php
+                            $selected_body_style = request('selected_body_style');
+                            @endphp
+
                             @if(!empty($body_styles) && count($body_styles) > 0)
                                 @foreach($body_styles as $style)
                                     <option value="{{ $style->name }}" 
