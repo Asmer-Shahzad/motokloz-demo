@@ -59,8 +59,10 @@
                                 <div class="swiper-slide">
                                     <img 
                                         src="{{ $img }}"
-                                        class="img-fluid"
+                                        class="img-fluid mto-lightbox-trigger"
                                         alt="Vehicle Image"
+                                        data-full="{{ $img }}"
+                                        style="cursor:zoom-in;"
                                         onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
                                     >
                                 </div>
