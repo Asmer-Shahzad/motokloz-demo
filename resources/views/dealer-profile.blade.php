@@ -1,4 +1,4 @@
-@extends('layouts.app')
+    @extends('layouts.app')
 
 @php
     function formatPrice($price) {
@@ -8,11 +8,27 @@
 
 @section('content')
 
-    <!-- DEALER PROFILE BANNER -->
+    <!-- DEALER PROFILE BANNER — Google Maps Embed -->
     <section class="dealer-network-section p-3">
-
         <div class="dealer-profile-banner">
-            <img src="/assets/images/map2(1)(1).png" alt="Map" class="w-100 object-fit-cover" style="height: 550px;">
+            @php
+                $mapAddress = urlencode(
+                    trim(($dealer->physical_address ?? '') . ', ' .
+                    ($dealer->city ?? '') . ', ' .
+                    ($dealer->province ?? '') . ' ' .
+                    ($dealer->postal_code ?? '') . ', ' .
+                    ($dealer->country ?? 'Canada'))
+                );
+            @endphp
+            <iframe
+                width="100%"
+                height="465"
+                style="border:0; border-radius:20px; display:block;"
+                loading="lazy"
+                allowfullscreen
+                referrerpolicy="no-referrer-when-downgrade"
+                src="https://maps.google.com/maps?q={{ $mapAddress }}&output=embed&z=15">
+            </iframe>
         </div>
     </section>
 
@@ -521,8 +537,21 @@
 
                 <div class="content-box shadow-sm">
                     <h5 class="fw-bold mb-3">Dealer Location</h5>
-                    <img src="/assets/images/map.png" class="img-fluid rounded mb-3" alt="Location Map">
-                    <p class="small  mb-0"><i class="fas fa-map-marker-alt"></i>  {{ $dealer->physical_address }}</p>
+
+                    <iframe
+                        width="100%"
+                        height="260"
+                        style="border:0; border-radius:12px; display:block;"
+                        loading="lazy"
+                        allowfullscreen
+                        referrerpolicy="no-referrer-when-downgrade"
+                        src="https://maps.google.com/maps?q={{ $mapAddress }}&output=embed&z=15">
+                    </iframe>
+
+                    <p class="small mt-2 mb-0">
+                        <i class="fas fa-map-marker-alt text-warning me-1"></i>
+                        {{ $dealer->physical_address }}
+                    </p>
                 </div>
 
                 <a href="/car-listing">
@@ -656,4 +685,5 @@
             height:170px;
         }
     </style>
+
 @endsection

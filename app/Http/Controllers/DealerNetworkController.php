@@ -8,17 +8,18 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class DealerNetworkController extends Controller
 {
-    /**
-     * Fetch dealers from external API and return with inventory count + pagination
-     */
+    private function baseUrl(): string
+    {
+        return config('services.diskloz.base_url', env('DISKLOZ_BASE_URL', env('diskloz_base_url', '')));
+    }
+
     public function fetch_dealers(Request $request)
     {
         try {
             $page = $request->input('page', 1);
             $perPage = 15;
 
-            // External API call
-            $response = Http::get(env("diskloz_base_url") . '/api/all_dealers_with_inventory_count');
+            $response = Http::get($this->baseUrl() . '/api/all_dealers_with_inventory_count');
 
             if (!$response->successful()) {
                 $dealers = [];

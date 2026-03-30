@@ -13,9 +13,14 @@ use Illuminate\Pagination\LengthAwarePaginator; // ✅ ADD THIS
 
 class DealerProfileController extends Controller
 {
+    private function baseUrl(): string
+    {
+        return config('services.diskloz.base_url', env('DISKLOZ_BASE_URL', env('diskloz_base_url', '')));
+    }
+
     public function dealer_inventory_details($id)
     {
-        $response = Http::get(env("diskloz_base_url") . '/api/dealer_by_id/' . $id);
+        $response = Http::get($this->baseUrl() . '/api/dealer_by_id/' . $id);
 
         if (!$response->successful()) {
             abort(404, 'Dealer not found');
@@ -47,7 +52,7 @@ class DealerProfileController extends Controller
 
     public function dealer_inventory($id)
     {
-        $response = Http::get(env("diskloz_base_url") . '/api/dealer_by_id/' . $id);
+        $response = Http::get($this->baseUrl() . '/api/dealer_by_id/' . $id);
 
         if (!$response->successful()) {
             abort(404, 'Dealer not found');
