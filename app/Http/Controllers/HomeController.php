@@ -13,7 +13,7 @@ class HomeController extends Controller
 {
     private function disklozBaseUrl(): string
     {
-        return rtrim(config('services.diskloz.base_url', 'http://127.0.0.1:98'), '/');
+        return rtrim(config('services.diskloz.base_url', 'http://127.0.0.1:8000'), '/');
     }
 
     private function dealerLocationMap(): array

@@ -247,6 +247,10 @@ $end = $start + count($search_inventory_result) - 1;
                         <label class="sidebar-label">Body Style</label>
                         <select name="selected_body_style" id="body-style-select" class="form-select sidebar-input">
                             <option value="">Select Body Style</option>
+                            @php
+                            $selected_body_style = request('selected_body_style');
+                            @endphp
+
                             @if(!empty($body_styles) && count($body_styles) > 0)
                                 @foreach($body_styles as $style)
                                     <option value="{{ $style->name }}" 
@@ -292,13 +296,13 @@ $end = $start + count($search_inventory_result) - 1;
                         </div>
                     </aside>
                 </form>
-                <div class="sidebar-map-box mt-4 complete-sidebar">
+                <!-- <div class="sidebar-map-box mt-4 complete-sidebar">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="map-label">Show on map</span>
                         <i class="fa-solid fa-chevron-down map-toggle-icon"></i>
                     </div>
                     <img src="/assets/images/map.png" class="img-fluid rounded-3" alt="Map">
-                </div>
+                </div> -->
             </div>
             <div class="col-lg-9 col-md-8">
                 <div style="border-bottom: 1px solid #DDE1DE;     padding-bottom: 10px;"
@@ -370,7 +374,10 @@ $end = $start + count($search_inventory_result) - 1;
                                                     <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
                                                         style="width:20px; height:12px;">
 
-                                                    {{ $recent_vehicle->mileage ? $recent_vehicle->mileage . ' km' : '0 km' }}
+                                                    {{ $recent_vehicle->mileage 
+                                                        ? trim(str_ireplace('km', '', $recent_vehicle->mileage)) . ' km' 
+                                                        : '0 km' 
+                                                    }}
 
                                                 </div>
                                 </div>
@@ -481,50 +488,39 @@ $end = $start + count($search_inventory_result) - 1;
 $(document).ready(function() {
     let isSubmitting = false;
     let submitTimer = null;
-    
+
     // Function to submit form
     function submitForm() {
         if (isSubmitting) {
             return;
         }
-        
         isSubmitting = true;
         const form = $('#sidebarFilterForm');
-        
-        // Remove empty fields before submitting
         removeEmptyFields(form);
-        
         form.submit();
-        
         setTimeout(function() {
             isSubmitting = false;
         }, 1000);
     }
-    
-    // Function to remove empty fields from form
+
+    // Remove empty fields before submitting
     function removeEmptyFields(form) {
-        // Find all input, select, and textarea fields
         form.find('input, select, textarea').each(function() {
             const $field = $(this);
             const fieldValue = $field.val();
-            
-            // Check if field is empty or has default empty value
             if (!fieldValue || fieldValue === '' || 
-                (fieldValue === 'Select Make') || 
-                (fieldValue === 'Select Body Style') || 
-                (fieldValue === 'Loading...') || 
-                (fieldValue === 'No Body Styles Available') ||
-                (fieldValue === 'Error Loading Body Styles')) {
-                
-                // Disable empty fields so they don't get submitted
+                fieldValue === 'Select Make' || 
+                fieldValue === 'Select Body Style' || 
+                fieldValue === 'Loading...' || 
+                fieldValue === 'No Body Styles Available' ||
+                fieldValue === 'Error Loading Body Styles') {
                 $field.prop('disabled', true);
             } else {
-                // Ensure field is enabled if it has value
                 $field.prop('disabled', false);
             }
         });
     }
-    
+
     // Debounced function to prevent multiple rapid triggers
     function debouncedSubmit() {
         clearTimeout(submitTimer);
@@ -532,53 +528,66 @@ $(document).ready(function() {
             submitForm();
         }, 300);
     }
-    
-    // Re-enable all fields before form submit (to ensure they can be submitted if they have values)
+
+    // Re‑enable fields before form submit
     $('#sidebarFilterForm').on('submit', function() {
-        // Re-enable all fields before form submission
         $(this).find('input, select, textarea').each(function() {
             $(this).prop('disabled', false);
         });
-        
-        // Then remove empty fields
         removeEmptyFields($(this));
     });
-    
-    // Auto-submit on any select change with debounce
+
+    // 1. Auto‑submit on select change
     $('#sidebarFilterForm select').on('change', function() {
         debouncedSubmit();
     });
-    
-    // Auto-submit on any input change with debounce
-    $('#sidebarFilterForm input').on('change', function() {
+
+    // 2. Auto‑submit on non‑text input changes (checkboxes, radios, etc.)
+    $('#sidebarFilterForm input:not([type="text"])').on('change', function() {
         debouncedSubmit();
     });
-    
-    // Debounced text inputs
-    let textTimer;
-    $('#sidebarFilterForm input[type="text"]').on('keyup', function() {
-        clearTimeout(textTimer);
-        textTimer = setTimeout(submitForm, 500);
+
+    // 3. Submit text inputs when Enter is pressed
+    $('#sidebarFilterForm input[type="text"]').on('keypress', function(e) {
+        if (e.which === 13) { // Enter key
+            e.preventDefault();
+            submitForm();
+        }
     });
-    
-    // Function to load body styles based on asset type
+
+    // 4. Submit text inputs when they lose focus (blur) - user clicks outside or tabs away
+    $('#sidebarFilterForm input[type="text"]').on('blur', function() {
+        // Only submit if the value actually changed
+        const $field = $(this);
+        const currentValue = $field.val();
+        const previousValue = $field.data('previous-value');
+        
+        if (currentValue !== previousValue) {
+            debouncedSubmit();
+        }
+        // Store current value for next comparison
+        $field.data('previous-value', currentValue);
+    });
+
+    // Store initial values for text inputs
+    $('#sidebarFilterForm input[type="text"]').each(function() {
+        $(this).data('previous-value', $(this).val());
+    });
+
+    // Load body styles based on asset type
     function loadBodyStyles(assetType) {
         const bodyStyleSelect = $('#body-style-select');
         bodyStyleSelect.html('<option value="">Loading Body Styles...</option>');
-        
         if (!assetType) {
             bodyStyleSelect.html('<option value="">Select Body Style</option>');
             return;
         }
-        
         $.ajax({
             url: "{{ env('diskloz_base_url') }}/api/search_inventory",
             type: "GET",
             data: { selected_asset: assetType, per_page: 1 },
             success: function(data) {
                 let bodyStyles = [];
-                
-                // Get body styles based on asset type
                 switch(assetType) {
                     case 'AUTO':
                         bodyStyles = data.filters?.BodyStyle || data.filters?.BodyStyle || [];
@@ -602,11 +611,8 @@ $(document).ready(function() {
                     default:
                         bodyStyles = data.filters?.BodyStyle || [];
                 }
-                
-                // Populate dropdown
                 let options = '<option value="">Select Body Style</option>';
                 const currentSelectedBodyStyle = "{{ request('selected_body_style') }}";
-                
                 if (bodyStyles && bodyStyles.length > 0) {
                     $.each(bodyStyles, function(i, style) {
                         const selected = (currentSelectedBodyStyle == style.id) ? 'selected' : '';
@@ -615,7 +621,6 @@ $(document).ready(function() {
                 } else {
                     options = '<option value="">No Body Styles Available</option>';
                 }
-                
                 bodyStyleSelect.html(options);
             },
             error: function(err) {
@@ -624,18 +629,16 @@ $(document).ready(function() {
             }
         });
     }
-    
-    // Function to load makes based on asset type
+
+    // Load makes based on asset type
     function loadMakes(assetType) {
         const makeDropdown = $('#filter-make');
         makeDropdown.html('<option value="">Loading...</option>');
-        
         if(!assetType) {
             makeDropdown.html('<option value="">Select Make</option>');
             debouncedSubmit();
             return;
         }
-        
         $.ajax({
             url: "{{ env('diskloz_base_url') }}/api/search_inventory",
             type: "GET",
@@ -665,7 +668,6 @@ $(document).ready(function() {
                     default:
                         makes = [];
                 }
-                
                 let options = '<option value="">Select Make</option>';
                 const currentSelectedMake = "{{ request('selected_make') }}";
                 $.each(makes, function(i, make){
@@ -673,7 +675,6 @@ $(document).ready(function() {
                     options += `<option value="${make.name}" ${selected}>${make.name}</option>`;
                 });
                 makeDropdown.html(options);
-                
                 debouncedSubmit();
             },
             error: function(err){ 
@@ -683,42 +684,31 @@ $(document).ready(function() {
             }
         });
     }
-    
+
     // Dynamic dropdowns based on Asset Type
     $('#sidebar-type').on('change', function() {
         const type = $(this).val();
-        
-        // Load makes for selected asset type
         loadMakes(type);
-        
-        // Load body styles for selected asset type
         loadBodyStyles(type);
-        
         debouncedSubmit();
     });
-    
+
     // Clear Filters functionality
     $('#clearFilters').on('click', function(e){
         e.preventDefault();
-        
-        // Reset all form fields
         $('#sidebarFilterForm')[0].reset();
-        
-        // Reset dynamically populated dropdowns
         $('#filter-make').html('<option value="">Select Make</option>');
         $('#body-style-select').html('<option value="">Select Body Style</option>');
         $('#year-select').val('');
         $('#seller-select').val('');
         
-        // Submit the form to clear all filters
+        // Reset stored values for text inputs
+        $('#sidebarFilterForm input[type="text"]').each(function() {
+            $(this).data('previous-value', '');
+        });
+        
         submitForm();
     });
-    
-    // Initial load: If asset type is already selected on page load
-    // const initialAssetType = $('#sidebar-type').val();
-    // if(initialAssetType) {
-    //     loadBodyStyles(initialAssetType);
-    // }
 });
 </script>
 <script>
