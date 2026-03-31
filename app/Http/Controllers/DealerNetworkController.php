@@ -11,6 +11,11 @@ use Illuminate\Support\Str;
 
 class DealerNetworkController extends Controller
 {
+    private function baseUrl(): string
+    {
+        return config('services.diskloz.base_url', env('DISKLOZ_BASE_URL', env('diskloz_base_url', '')));
+    }
+
     public function fetch_dealers(Request $request)
     {
         try {
