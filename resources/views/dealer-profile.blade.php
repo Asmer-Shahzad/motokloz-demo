@@ -65,7 +65,7 @@
 
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-4" hidden>
                             <p>Elevate your Las Vegas experience to new heights with a journey aboard The High Roller at
                                 The LINQ. As the tallest
                                 observation wheel in the world, standing at an impressive 550 feet tall, The High Roller
@@ -84,7 +84,7 @@
                                 history and famous landmarks along the way.</p>
                         </div>
 
-                        <div class="row g-3">
+                        <div class="row g-3" hidden>
                             <div class="col-6">
                                 <img src="/assets/images/Carento (10).png" class="gallery-img" alt="Car">
                             </div>
@@ -103,7 +103,7 @@
                     </div>
                 </div>
 
-                <div class="content-box shadow-sm">
+                <div class="content-box shadow-sm" hidden>
 
                     <!-- Dropdown Header -->
                     <h5 class="fw-bold mb-4 d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
@@ -322,7 +322,7 @@
                 <!-- Rate Reviews Section -->
 
 
-                <div class="content-box shadow-sm">
+                <div class="content-box shadow-sm" hidden>
 
                     <h5 class="fw-bold mb-4 d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
                         data-bs-target="#addReviewContent" style="cursor:pointer;">
@@ -467,64 +467,108 @@
                 <div class="content-box shadow-sm p-4">
                 <h5 class="fw-bold mb-4">Get in touch</h5>
 
-                <form action="#" method="POST">
+                <form id="leadForm" action="#" method="POST">
+                    <!-- CSRF Token -->
+                    @csrf
+                    
+                    <!-- Hidden fields -->
+                    <input type="hidden" name="dealer_id" id="dealer_id" value="{{ $dealer->id ?? '' }}">
+                    <input type="hidden" name="product_id" id="product_id" value="{{ $searched_vehicle->id ?? '' }}">
+                    <input type="hidden" name="reason" id="reason" value="Contact Form">
+                    <input type="hidden" name="type" value="WEBLEAD">
+                    <input type="hidden" name="source" value="Motokloz">
+                    <input type="hidden" name="lead_status" value="NEW">
+                    <input type="hidden" name="lead_source" value="Website Contact Form">
+                    <input type="hidden" name="lead_type" value="General Inquiry">
 
-                    <!-- Name Field with Image -->
+                    <!-- Show error messages if IDs are missing -->
+                    @if(!($dealer->id ?? false) || !($searched_vehicle->id ?? false))
+                        <div class="alert alert-danger mb-3">
+                            <strong>Error:</strong> Vehicle or dealer information is missing. 
+                            Please contact support.
+                        </div>
+                    @endif
+
+                    <!-- Name Field -->
                     <div class="mb-3 position-relative">
-                        <img src="/assets/images/userlogin.png" class="input-icon" alt="">
+                        <img src="/assets/images/userlogin.png" class="input-icon" alt="" width="20">
                         <input type="text" 
+                            id="name"
+                            name="name"
                             class="form-control ps-5" 
-                            placeholder="Your name">
+                            placeholder="Your name"
+                            required>
                     </div>
 
                     <!-- Email Field -->
                     <div class="mb-3 position-relative">
-                        <img src="/assets/images/email.png" class="input-icon" alt="">
+                        <img src="/assets/images/email.png" class="input-icon" alt="" width="20">
                         <input type="email" 
+                            id="email"
+                            name="email"
                             class="form-control ps-5" 
-                            placeholder="Your email">
+                            placeholder="Your email"
+                            required>
+                    </div>
+
+                    <!-- Phone Field -->
+                    <div class="mb-3 position-relative">
+                        <img src="/assets/images/telephone.png" class="input-icon" alt="" width="20">
+                        <input type="tel" 
+                            id="phone"
+                            name="phone"
+                            class="form-control ps-5" 
+                            placeholder="Your phone"
+                            required>
                     </div>
 
                     <!-- Message Field -->
                     <div class="mb-3">
-                        <textarea class="form-control" 
-                                rows="10" 
-                                placeholder="Message"></textarea>
+                        <textarea id="message"
+                                name="message" 
+                                class="form-control" 
+                                rows="5" 
+                                placeholder="Message"
+                                required></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-orange w-100 mb-4 text-white">
+                    <button type="submit" id="submitBtn" class="btn btn-orange w-100 mb-4 text-white"
+                            @if(!($dealer->id ?? false) || !($searched_vehicle->id ?? false)) disabled @endif>
                         Send message <i class="fas fa-arrow-right ms-2"></i>
                     </button>
-
                 </form>
 
                 <!-- Contact Info -->
                 <div class="small">
                     <p class="mb-2">
-                        <img src="/assets/images/Background (8).png" width="20"  alt="phone" class="contact-icon light-dark me-2"> 
-                        <strong>Mobile:</strong> {{ $dealer->phone_no }}
+                        <img src="/assets/images/Background (8).png" width="20" alt="phone" class="contact-icon light-dark me-2"> 
+                        <strong>Mobile:</strong> {{ $dealer->phone_no ?? 'N/A' }}
                     </p>
                     <p class="mb-2">
                         <img src="/assets/images/Background (10).png" width="20" alt="email" class="contact-icon light-dark me-2"> 
-                        <strong>Email:</strong> {{ $dealer->email }}
+                        <strong>Email:</strong> {{ $dealer->email ?? 'N/A' }}
                     </p>
                     <p class="mb-2">
                         <img src="/assets/images/Background (11).png" width="20" alt="whatsapp" class="contact-icon light-dark me-2"> 
-                        <strong>WhatsApp:</strong> {{ $dealer->phone_no }}
+                        <strong>WhatsApp:</strong> {{ $dealer->phone_no ?? 'N/A' }}
                     </p>
                     <p class="mb-2">
                         <img src="/assets/images/Background (12).png" width="20" alt="fax" class="contact-icon light-dark me-2">
-                        <strong>Fax:</strong> {{ $dealer->phone_no }}
+                        <strong>Fax:</strong> {{ $dealer->phone_no ?? 'N/A' }}
                     </p>
                 </div>
-            </div>
 
                 <div class="content-box shadow-sm">
                     <h5 class="fw-bold mb-3">Dealer Location</h5>
-                    <img src="/assets/images/map.png" class="img-fluid rounded mb-3" alt="Location Map">
+                    <!-- <img src="/assets/images/map.png" class="img-fluid rounded mb-3" alt="Location Map"> -->
                     <p class="small  mb-0"><i class="fas fa-map-marker-alt"></i>  {{ $dealer->physical_address }}</p>
                 </div>
-
+                <a href="{{ route('dealer_inventory', $dealer->id) }}">
+                    <button class="mto-btn-orange w-100 mb-3">
+                        Dealer Inventory 
+                        <i class="fa-solid fa-arrow-right ms-2"></i>
+                    </button>
+                </a>
                 <a href="/car-listing">
                     <button class="mto-btn-black w-100 mb-3">View all inventory  <i class="fa-solid fa-arrow-right ms-2"></i></button>
                 </a>
@@ -575,13 +619,40 @@
                                         onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
                                     >
                                 </a>
-                                <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
-                                        style="width:20px; height:12px;"> {{ $recent_vehicle->mileage ? $recent_vehicle->mileage . ' km' : '0 km' }}</div>
+                                <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2" style="width:20px; height:12px;"> 
+                                    {{ $recent_vehicle->mileage 
+                                        ? trim(str_ireplace('km', '', $recent_vehicle->mileage)) . ' km' 
+                                        : '0 km' 
+                                    }}
+                                </div>
                             </div>
                             <div class="car-card-bottom">
                                 <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
                                 {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}</h5>
-                                <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 12 Km away</p>
+
+                                @php
+                                    $dealerPostalCode = data_get($recent_vehicle, 'dealer.postal_code')
+                                        ?? $recent_vehicle->dealer_postal_code
+                                        ?? $recent_vehicle->postal_code
+                                        ?? '';
+                                    $dealerCity = data_get($recent_vehicle, 'dealer.city')
+                                        ?? $recent_vehicle->dealer_city
+                                        ?? '';
+                                    $dealerProvince = data_get($recent_vehicle, 'dealer.province')
+                                        ?? $recent_vehicle->dealer_province
+                                        ?? '';
+                                    $dealerCountry = data_get($recent_vehicle, 'dealer.country')
+                                        ?? $recent_vehicle->dealer_country
+                                        ?? '';
+                                @endphp
+                                <p class="car-distance-away"
+                                    data-dealer-postal="{{ $dealerPostalCode }}"
+                                    data-dealer-city="{{ $dealerCity }}"
+                                    data-dealer-province="{{ $dealerProvince }}"
+                                    data-dealer-country="{{ $dealerCountry }}">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    <span class="distance-value">Loading...</span>
+                                </p>
 
                                 <div class="car-circle-icons-group">
                                     <img src="/assets/images/no-accidents.png" alt="">
@@ -601,8 +672,134 @@
                         </div>
                     </div>
                 @endforeach
+            </div>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#leadForm').on('submit', function(e){
+                e.preventDefault();
+                
+                // Get dealer and product IDs with better validation
+                var dealerId = $('#dealer_id').val();
+                var productId = $('#product_id').val();
+                
+                console.log('Dealer ID:', dealerId);
+                console.log('Product ID:', productId);
+                
+                // Check if IDs are empty, null, or 'null' string
+                if (!dealerId || dealerId === '' || dealerId === 'null' || dealerId === 'NULL') {
+                    alert('Error: Dealer information is missing. Please refresh the page or contact support.');
+                    return;
+                }
+                
+                if (!productId || productId === '' || productId === 'null' || productId === 'NULL') {
+                    alert('Error: Vehicle information is missing. Please refresh the page or contact support.');
+                    return;
+                }
+                
+                // Convert to integers and validate
+                dealerId = parseInt(dealerId);
+                productId = parseInt(productId);
+                
+                if (isNaN(dealerId) || dealerId <= 0) {
+                    alert('Error: Invalid dealer information. Please refresh the page.');
+                    return;
+                }
+                
+                if (isNaN(productId) || productId <= 0) {
+                    alert('Error: Invalid vehicle information. Please refresh the page.');
+                    return;
+                }
+                
+                // Prepare form data
+                var formData = {
+                    name: $('#name').val(),
+                    email: $('#email').val(),
+                    phone: $('#phone').val(),
+                    message: $('#message').val(),
+                    reason: $('#reason').val(),
+                    type: $('input[name="type"]').val(),
+                    source: $('input[name="source"]').val(),
+                    lead_status: $('input[name="lead_status"]').val(),
+                    dealer_id: dealerId,
+                    product_id: productId,
+                    lead_source: $('input[name="lead_source"]').val(),
+                    lead_type: $('input[name="lead_type"]').val()
+                };
+                
+                // Validate required fields
+                if (!formData.name || !formData.email || !formData.phone || !formData.message) {
+                    alert('Please fill in all required fields (Name, Email, Phone, Message)');
+                    return;
+                }
+                
+                // Validate email format
+                var emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+                if (!emailRegex.test(formData.email)) {
+                    alert('Please enter a valid email address');
+                    return;
+                }
+                
+                // Validate phone (basic validation)
+                if (formData.phone.length < 10) {
+                    alert('Please enter a valid phone number (minimum 10 digits)');
+                    return;
+                }
+                
+                // Get submit button and change text
+                var $submitBtn = $(this).find('button[type="submit"]');
+                var originalText = $submitBtn.html();
+                $submitBtn.prop('disabled', true).html('Sending... <i class="fas fa-spinner fa-spin ms-2"></i>');
+                
+                // Show spinner
+                $('#loadingSpinner').show();
+                
+                console.log('Sending lead data:', formData);
+                
+                // Send AJAX request
+                $.ajax({
+                    url: "{{ env('diskloz_base_url') }}/api/leads",
+                    method: 'POST',
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    success: function(response){
+                        console.log('Success:', response);
+                        alert(response.message || 'Message sent successfully!');
+                        
+                        // Reset form
+                        $('#leadForm')[0].reset();
+                    },
+                    error: function(xhr){
+                        console.log('Error Response:', xhr.responseJSON);
+                        console.log('Status Code:', xhr.status);
+                        
+                        if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                            let errorMessages = '';
+                            $.each(xhr.responseJSON.errors, function(field, messages) {
+                                errorMessages += field + ': ' + messages.join(', ') + '\n';
+                            });
+                            alert('Validation Error:\n' + errorMessages);
+                        } else if (xhr.status === 404) {
+                            alert('API endpoint not found. Please check the URL.');
+                        } else if (xhr.status === 500) {
+                            alert('Server error. Please try again later.');
+                        } else {
+                            alert(xhr.responseJSON?.message || 'Something went wrong. Please try again.');
+                        }
+                    },
+                    complete: function() {
+                        // Re-enable submit button and restore text
+                        $submitBtn.prop('disabled', false).html(originalText);
+                        $('#loadingSpinner').hide();
+                    }
+                });
+            });
+        });
+    </script>
     <style>
         .dealer-top-title {
             font-weight: 600;

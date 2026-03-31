@@ -20,71 +20,151 @@
         <div class="container">
             <!-- SEARCH BAR -->
             <div class="dealer-search-wrap">
-                <form>
+                <form method="GET" action="{{ route('fetch_dealers') }}">
                     <div class="dealer-search-inner">
                         <div class="deal-sec">
                             <div class="search-field">
-                                <input type="text" placeholder="Enter Dealer Name" aria-label="Dealer Name">
+                                <input type="text" 
+                                    name="dealer_name" 
+                                    placeholder="Enter Dealer Name" 
+                                    aria-label="Dealer Name"
+                                    value="{{ request('dealer_name') }}">
                             </div>
                             <div class="divider"></div>
                             <div class="search-field">
-                                <input type="text" placeholder="Enter Postal Code" aria-label="Postal Code">
+                                <input type="text" 
+                                    name="postal_code" 
+                                    placeholder="Enter Postal Code" 
+                                    aria-label="Postal Code"
+                                    value="{{ request('postal_code') }}">
                             </div>
 
                             <button class="btn-search" type="submit">
                                 <img src="/assets/images/Vector (4).png" alt="Search icon">
                                 Find a Dealer
                             </button>
-
                         </div>
 
-                        <button class="btn-dealer btn-dealer-22" type="button">
+                        <button class="btn-dealer btn-dealer-22" type="button" data-bs-toggle="modal" data-bs-target="#testDriveModal">
                             Become a Dealer
                             <img src="/assets/images/Vector (3).png" alt="Dealer icon">
                         </button>
                     </div>
                 </form>
             </div>
-            <!-- DEALER CARDS (FIXED BOOTSTRAP GRID) -->
-            <div class="row g-3">
-                @foreach($dealers as $dealer)
-                    <div class="col-12 col-sm-6 col-md-4">
-                        <a href="{{ route('dealer_inventory_details', $dealer['id']) }}" class="text-decoration-none">
-                            <div class="dealer-card">
-                                <div class="d-flex align-items-start gap-3">
-                                    @php
-                                        $dealerLogo = isset($dealer['logo']) && $dealer['logo']
-                                            ? (Str::startsWith($dealer['logo'], 'http')
-                                                ? $dealer['logo']
-                                                : env('diskloz_base_url') . '/admin_assets/images/dealer_images/' . $dealer['logo'])
-                                            : asset('assets/images/defaultdealerlogo.png');
-                                    @endphp
-                                    <img src="{{ $dealerLogo }}"
-                                        class="me-4 dealerprofilelogo"
-                                        alt="Logo"
-                                        width="80"
-                                        onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultdealerlogo.png') }}';">
+            
+            <!-- Show search results info -->
+            @if(request('dealer_name') || request('postal_code'))
+                <div class="search-results-info mb-3">
+                    <p class="text-muted">
+                        Showing results for: 
+                        @if(request('dealer_name'))
+                            <strong>Dealer: "{{ request('dealer_name') }}"</strong>
+                        @endif
+                        @if(request('postal_code'))
+                            @if(request('dealer_name')) and @endif
+                            <strong>Postal Code: "{{ request('postal_code') }}"</strong>
+                        @endif
+                        <a href="{{ route('fetch_dealers') }}" class="btn btn-link btn-sm">Clear Filters</a>
+                    </p>
+                </div>
+            @endif
+            
+            <!-- Show error if any -->
+            @if(isset($error))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ $error }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+            
+            <!-- DEALER CARDS -->
+            @if(count($dealers) > 0)
+                <div class="row g-3">
+                    @foreach($dealers as $dealer)
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <a href="{{ route('dealer_inventory_details', $dealer['id']) }}" class="text-decoration-none">
+                                <div class="dealer-card">
+                                    <div class="d-flex align-items-start gap-3">
+                                        @php
+                                            $dealerLogo = isset($dealer['logo']) && $dealer['logo']
+                                                ? (Str::startsWith($dealer['logo'], 'http')
+                                                    ? $dealer['logo']
+                                                    : env('diskloz_base_url') . '/admin_assets/images/dealer_images/' . $dealer['logo'])
+                                                : asset('assets/images/defaultdealerlogo.png');
+                                        @endphp
+                                        <img src="{{ $dealerLogo }}"
+                                            class="me-4 dealerprofilelogo"
+                                            alt="Logo"
+                                            width="80"
+                                            onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultdealerlogo.png') }}';">
 
-                                    <div>
-                                        <h6 class="dealer-card-head">{{ ucwords(strtolower($dealer['legal_name'] ?? 'Name not available')) }}</h6>
-                                        <p class="dealer-address mb-2">
-                                            {{ $dealer['physical_address'] ?? 'Address not available' }}
-                                        </p>
-                                        <span class="vehicle-badge">{{ $dealer['inventory_count'] }} Vehicles</span>
+                                        <div>
+                                            <h6 class="dealer-card-head">{{ ucwords(strtolower($dealer['legal_name'] ?? 'Name not available')) }}</h6>
+                                            <p class="dealer-address mb-2">
+                                                {{ $dealer['physical_address'] ?? 'Address not available' }}
+                                            </p>
+                                            <span class="vehicle-badge">{{ $dealer['inventory_count'] }} Vehicles</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </a>
-                    </div>
-                @endforeach
-            </div>
-            <div class="my-4">
-                @include('partials.pagination')
-            </div>
-
-            <!-- end row -->
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+                
+                <!-- Pagination -->
+                <div class="my-4">
+                    @include('partials.pagination')
+                </div>
+            @else
+                <div class="alert alert-info text-center">
+                    <h5>No dealers found</h5>
+                    <p>Try adjusting your search criteria or clear the filters to see all dealers.</p>
+                </div>
+            @endif
         </div> <!-- end container -->
     </section>
+
+                            
+    <!-- Become a Dealer Modal -->
+    <div class="modal fade" id="testDriveModal" tabindex="-1" aria-labelledby="testDriveModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="testDriveModalLabel">Become a Dealer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="dealerApplicationForm" action="{{ route('dealer.application.submit') }}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="dealership_name" class="form-label">Dealership Name</label>
+                            <input type="text" class="form-control" id="dealership_name" name="dealership_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contact_name" class="form-label">Contact Name</label>
+                            <input type="text" class="form-control" id="contact_name" name="contact_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contact_email" class="form-label">Contact Email</label>
+                            <input type="email" class="form-control" id="contact_email" name="contact_email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contact_phone" class="form-label">Contact Phone</label>
+                            <input type="tel" class="form-control" id="contact_phone" name="contact_phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Notes</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Any additional notes..."></textarea>
+                        </div>
+                        <button type="submit" class="mto-btn-orange w-100 mb-3">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- MISSION SECTION -->
     <!-- <section class="mission-section py-5">
@@ -135,6 +215,55 @@
         </div>
     </section> -->
 
+                            
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('dealerApplicationForm');
+    
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = 'Submitting...';
+            submitBtn.disabled = true;
+            
+            const formData = new FormData(this);
+            
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    form.reset();
+                    // Close modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('testDriveModal'));
+                    if (modal) modal.hide();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                alert('Network error. Please try again.');
+                console.error('Error:', error);
+            })
+            .finally(() => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+    }
+});
+</script>
 
     <style>
         .dealer-search-wrap {

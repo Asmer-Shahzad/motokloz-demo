@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\MultipartStream;
+use Illuminate\Support\Facades\Log;
 
 class InventoryController extends Controller
 {
@@ -255,7 +256,132 @@ class InventoryController extends Controller
         return response()->json(['searched_vehicle'=> $data['searched_vehicle']]);
     }
 
+    // Local frontend controller
+    // public function update_like_status(Request $request){
+    //     $data = [
+    //         'client_id' => $request->client_id,
+    //         'inventory_id' => $request->vehicle_id ?? $request->inventory_id,
+    //         'status' => $request->status
+    //     ];
 
+    //     if ($request->status == 'liked') {
+    //         // POST → add like
+    //         $response = Http::post(env("diskloz_base_url") . '/api/update_like_status', $data);
+    //     } else {
+    //         // DELETE → remove like
+    //         $response = Http::withBody(json_encode(['id' => $request->vehicle_id ?? $request->inventory_id]), 'application/json')
+    //                         ->delete(env("diskloz_base_url") . '/api/remove_like_status');
+    //     }
+
+    //     return $response->json();
+    // }
+
+    public function add_like(Request $request)
+    {
+        try {
+            // Log incoming request
+            Log::info('Add like request received:', $request->all());
+            
+            // Get data (support both JSON and form data)
+            $clientId = $request->input('client_id');
+            $vehicleId = $request->input('vehicle_id');
+            
+            // If not found in input, try JSON
+            if (!$clientId) {
+                $clientId = $request->json('client_id');
+            }
+            if (!$vehicleId) {
+                $vehicleId = $request->json('vehicle_id');
+            }
+            
+            // Validate data
+            if (!$clientId || !$vehicleId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Missing required fields: client_id and vehicle_id are required',
+                    'received' => $request->all()
+                ], 400);
+            }
+            
+            // Prepare data for external API
+            $data = [
+                'client_id' => $clientId,
+                'inventory_id' => $vehicleId
+            ];
+            
+            // Get base URL from env
+            $baseUrl = env('DISKLOZ_BASE_URL');
+            if (!$baseUrl) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'DISKLOZ_BASE_URL not configured in .env file'
+                ], 500);
+            }
+            
+            // Call external API
+            $response = Http::timeout(30)
+                ->withHeaders([
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json'
+                ])
+                ->post($baseUrl . '/api/update_like_status', $data);
+            
+            if ($response->successful()) {
+                return response()->json($response->json());
+            } else {
+                Log::error('External API error:', [
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
+                
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to add like',
+                    'details' => $response->body()
+                ], $response->status());
+            }
+            
+        } catch (\Exception $e) {
+            Log::error('Add like exception:', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error: ' . $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 500);
+        }
+    }
+
+    public function remove_like(Request $request)
+    {
+        try {
+            $data = [
+                'client_id' => $request->client_id,
+                'inventory_id' => $request->vehicle_id
+            ];
+
+            // Use DELETE for removing
+            $response = Http::delete(env("DISKLOZ_BASE_URL") . '/api/remove_like_status', $data);
+
+            if ($response->successful()) {
+                return response()->json($response->json());
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to remove like'
+                ], $response->status());
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 
 
     public function favorites(Request $request)

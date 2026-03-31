@@ -32,12 +32,16 @@ Route::middleware('guest')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::get('/dealer/{id}', [DealerProfileController::class, 'dealer_inventory'])->name('dealer_inventory');
+Route::post('/add_like', [InventoryController::class, 'add_like']);
+Route::post('/remove_like', [InventoryController::class, 'remove_like']);
+Route::get('/pdf/disklozer/{id}', [InventoryController::class, 'inventoryDisklozer1']);
 Route::get('/', [HomeController::class, 'home'])->name('home');
 // Route::get('/car-listing', [InventoryController::class, 'inventory'])->name('car.listing');
 Route::get('/car-listing', [SearchController::class, 'search_inventory'])->name('search_inventory');
 Route::get('/car-details/{id}', [InventoryController::class, 'inventory_product_details'])->name('inventory_product_details');
 Route::get('/dealer-profile/{id}', [DealerProfileController::class, 'dealer_inventory_details'])->name('dealer_inventory_details');
 Route::get('/dealer-network', [DealerNetworkController::class, 'fetch_dealers'])->name('fetch_dealers');
+Route::post('/dealer-application/submit', [DealerNetworkController::class, 'dealer_application_submit'])->name('dealer.application.submit');
 Route::get('/coming-soon', [HomeController::class, 'comingsoon'])->name('comingsoon');
 Route::get('/buy/step-1', [HomeController::class, 'buyFlowStep1'])->name('buy.step1');
 Route::get('/buy/step-2', [HomeController::class, 'buyFlowStep2'])->name('buy.step2');

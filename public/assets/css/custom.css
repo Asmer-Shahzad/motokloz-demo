@@ -34,6 +34,7 @@ div#navbarSupportedContent {
     --bg-button: #f58d02;
     --border-button: #f58d02;
     --car-details-feutures: #fff;
+    --modal-body-inputs: #3b3b3b;
 }
 
 ul.dropdown-menu.nav-drop.dropdown-menu-end.show {
@@ -50,6 +51,7 @@ body.dark-mode {
     --bg-button: #101010;
     --border-button: #101010;
     --car-details-feutures: #a6a6a67a;
+    --modal-body-inputs: #d4d4d4;
 }
 
 body {
@@ -2696,11 +2698,57 @@ ul.list-unstyled.service-list li {
     padding: 12px;
 }
 
+.modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    color: var(--select-color);
+    pointer-events: auto;
+    background-color: var(--bg-color);
+    background-clip: padding-box;
+    border: var(--bs-modal-border-width) solid var(--bs-modal-border-color);
+    border-radius: var(--bs-modal-border-radius);
+    outline: 0;
+}
+
+.modal-content label {
+    color: var(--select-color);
+}
+
+.modal-body .form-control {
+    background-color: var(--modal-body-inputs);
+    border: var(--border-color);
+    color: var(--select-color);
+    padding: 12px;
+}
+
+.modal-body .form-control:focus {
+    background-color: var(--modal-body-inputs);
+    border: var(--border-color);
+    padding: 12px;
+}
+
+.modal-body .form-control::placeholder {
+    color: var(--select-color);
+}
+
+.modal-header {
+    background-color: #ff9800;
+    color: white;
+}
+
+.modal-header button {
+    color: white;
+}
+
 .form-control:focus {
     background-color: #fff;
     border-color: #ff9800;
     box-shadow: none;
 }
+
+
 
 .btn-orange {
     background-color: #ff9800;

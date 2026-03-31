@@ -60,83 +60,125 @@
 
 
                         <div class="search-wrapper search-dealer-container">
-                            <!-- Tabs -->
-                            <div class="tabs">
-                                <a class="tab active">All</a>
-                                <a class="tab">New</a>
-                                <a class="tab">Used</a>
+                            <form action="{{ route('dealer_inventory', ['id' => $dealer->id ?? request()->route('id')]) }}" method="GET" class="search-wrapper">
 
-                                <div class="help">
-                                    <i class="fa-solid fa-user"></i>
-                                    <span>Need help?</span>
-                                </div>
-                            </div>
+                                <!-- Tabs -->
+                                <div class="tabs">
+                                    <a class="tab {{ request('selected_condition') == '' ? 'active' : '' }}"
+                                        data-condition="">All</a>
+                                    <a class="tab {{ request('selected_condition') == 'NEW' ? 'active' : '' }}"
+                                        data-condition="NEW">New</a>
+                                    <a class="tab {{ request('selected_condition') == 'USED' ? 'active' : '' }}"
+                                        data-condition="USED">Used</a>
 
-                            <!-- Filter Bar -->
-                            <div class="filter-bar">
-
-                                <div class="filter">
-                                    <label>Type</label>
-                                    <div class="select">
-                                        <i class="fa-solid fa-car"></i>
-                                        <select class="filter-options">
-                                            <option>Auto</option>
-                                        </select>
+                                    <div class="help">
+                                        <i class="fa-solid fa-user"></i>
+                                        <span>Need help?</span>
                                     </div>
                                 </div>
 
-                                <div class="divider"></div>
+                                <!-- Hidden input for condition -->
+                                <input type="hidden" name="selected_condition" id="selected_condition_input_2"
+                                    value="{{ request('selected_condition') }}">
 
-                                <div class="filter">
-                                    <label>Make</label>
-                                    <div class="select">
-                                        <i class="fa-solid fa-car-side me-2"></i>
-                                        <span class="filter-all">Modern Compact</span>
+                                <!-- Filter Bar -->
+                                <div class="filter-bar">
+
+                                    <!-- Type -->
+                                    <div class="filter">
+                                        <label>Type</label>
+                                        <div class="select">
+                                            <i class="fa-solid fa-car"></i>
+                                            <select name="selected_asset" id="filter-type" class="filter-options">
+                                                <option value="">Select Type</option>
+                                                @foreach($assets as $asset)
+                                                <option value="{{ $asset }}" {{ request('selected_asset')==$asset
+                                                    ? 'selected' : '' }}>
+                                                    {{ $asset }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
+
+                                    <div class="divider"></div>
+
+                                    <!-- Make -->
+                                    <div class="filter">
+                                        <label>Make</label>
+                                        <div class="select">
+                                            <i class="fa-solid fa-car-side me-2"></i>
+
+                                            <select id="filter-make" name="selected_make" class="filter-options">
+                                                <option value="">Select Make</option>
+
+                                                @php
+                                                    $allMakes = [];
+
+                                                    if(request('selected_asset') && isset($makeTypes[request('selected_asset')])) {
+                                                        // Specific asset ke makes
+                                                        $allMakes = $makeTypes[request('selected_asset')];
+                                                    } else {
+                                                        // Sab assets ke makes merge
+                                                        foreach($makeTypes as $assetMakes) {
+                                                            $allMakes = array_merge($allMakes, $assetMakes);
+                                                        }
+
+                                                        // Duplicate remove + optional sort
+                                                        $allMakes = collect($allMakes)
+                                                                    ->unique('name')
+                                                                    ->sortBy('name')
+                                                                    ->values()
+                                                                    ->toArray();
+                                                    }
+                                                @endphp
+
+                                                @foreach($allMakes as $make)
+                                                    <option value="{{ $make['name'] }}" {{ request('selected_make') == $make['name'] ? 'selected' : '' }}>
+                                                        {{ $make['name'] }}
+                                                    </option>
+                                                @endforeach
+
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="divider"></div>
+
+                                    <!-- Model -->
+                                    <div class="filter">
+                                        <label>Model</label>
+                                        <div class="select">
+                                            <input type="text" name="selected_model" class="form-control model-input"
+                                                placeholder="Enter Model" value="{{ request('selected_model') }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="divider"></div>
+
+                                    <!-- Price Range -->
+                                    <div class="price-box filter">
+                                        <label>Price Range</label>
+                                        <div class="range-container">
+                                            <div class="slider-track" id="track"></div>
+                                            <input class="filter-all" type="range" min="0" max="1000000" step="10000"
+                                                value="{{ request('selected_lowest_price', 0) }}" id="slider-1" name="selected_lowest_price">
+                                            <input class="filter-all" type="range" min="0" max="1000000" step="10000"
+                                                value="{{ request('selected_highest_price', 1000000) }}" id="slider-2" name="selected_highest_price">
+                                        </div>
+
+                                        <div class="values">
+                                            $ <span id="min-value"></span> - $ <span id="max-value"></span>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="search-btn">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                        Find a Vehicle
+                                    </button>
+
                                 </div>
-
-                                <div class="divider"></div>
-
-                                <div class="filter">
-                                    <label>Model</label>
-                                    <div class="select">
-                                        <i class="fa-solid fa-calendar me-2"></i>
-                                        <span class="filter-all">2022</span>
-                                    </div>
-                                </div>
-
-                                <div class="divider"></div>
-                                {{--
-                                <div class="filter price">
-                                    <label>Price Range</label>
-                                    <input type="range" min="10000" max="12000" value="11000" id="priceRange">
-                                    <div class="price-value">$ <span id="priceVal">10,000 - 12,000</span></div>
-                                </div> --}}
-
-                                <div class="price-box filter">
-                                    <label>Price Range</label>
-
-                                    <div class="range-container ">
-                                        <div class="slider-track" id="track"></div>
-                                        <input class="filter-all " type="range" min="0" max="1000000" step="10000"
-                                            value="100000" id="slider-1">
-                                        <input class="filter-all " type="range" min="0" max="1000000" step="10000"
-                                            value="500000" id="slider-2">
-                                    </div>
-
-                                    <div class="values">
-                                        $ <span id="min-value"></span>
-                                        &nbsp; - &nbsp;
-                                        <span id="max-value"></span>
-                                    </div>
-                                </div>
-                                <button class="search-btn">
-                                    <i class="fa-solid fa-magnifying-glass"></i>
-                                    Find a Vehicle
-                                </button>
-
-                            </div>
-
+                            </form>
                         </div>
 
 
@@ -149,96 +191,175 @@
 
             <div class="row g-4 ">
                 <div class="col-lg-3 col-md-4">
-                    <aside class="complete-sidebar">
-                        <h5 class="sidebar-main-heading">Filter Search</h5>
+                    <form id="sidebarFilterForm" method="GET" action="{{ route('dealer_inventory', ['id' => $dealer->id ?? request()->route('id')]) }}">
+                        <aside class="complete-sidebar">
+                            <h5 class="sidebar-main-heading">Filter Search</h5>
 
-                        <div class="filter-group">
-                            <label class="sidebar-label">Condition</label>
-                            <select class="form-select sidebar-input">
-                                <option>Select Condition</option>
-                            </select>
-                        </div>
+                            <!-- Condition -->
+                            <div class="filter-group">
+                                <label class="sidebar-label">Condition</label>
+                                <select name="selected_condition" class="form-select sidebar-input">
+                                    <option value="">Select Condition</option>
+                                    <option value="" {{ request('selected_condition')=='' ? 'selected' : '' }}>All</option>
+                                    <option value="NEW" {{ request('selected_condition')=='NEW' ? 'selected' : '' }}>New</option>
+                                    <option value="USED" {{ request('selected_condition')=='USED' ? 'selected' : '' }}>Used</option>
+                                </select>
+                            </div>
 
-                        <div class="filter-group">
-                            <label class="sidebar-label">Asset Type</label>
-                            <select class="form-select sidebar-input">
-                                <option>Select Asset Type</option>
-                            </select>
-                        </div>
+                            <!-- Asset -->
+                            <div class="filter-group">
+                                <label class="sidebar-label">Asset Type</label>
+                                <select name="selected_asset" id="sidebar-type" class="form-select sidebar-input">
+                                    <option value="">Select Asset Type</option>
+                                    @foreach($assets as $asset)
+                                    <option value="{{ $asset }}" {{ request('selected_asset')==$asset ? 'selected' : '' }}>
+                                        {{ $asset }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
 
-                        <div class="filter-group">
-                            <label class="sidebar-label">Power Type</label>
-                            <select class="form-select sidebar-input">
-                                <option>Select Power Type</option>
-                            </select>
-                        </div>
+                            <!-- Power Type -->
+                            <div class="filter-group">
+                                <label class="sidebar-label">Power Type</label>
+                                <select name="selected_power_type" class="form-select sidebar-input">
+                                    <option value="">Select Power Type</option>
+                                    <option value="GAS" {{ request('selected_power_type')=='GAS' ? 'selected' : '' }}>GAS</option>
+                                    <option value="DIESEL" {{ request('selected_power_type')=='DIESEL' ? 'selected' : '' }}>DIESEL</option>
+                                    <option value="PROPANE" {{ request('selected_power_type')=='PROPANE' ? 'selected' : '' }}>PROPANE</option>
+                                    <option value="ELECTRIC" {{ request('selected_power_type')=='ELECTRIC' ? 'selected' : '' }}>ELECTRIC</option>
+                                    <option value="OTHER" {{ request('selected_power_type')=='OTHER' ? 'selected' : '' }}>OTHER</option>
+                                    <option value="HYBRID" {{ request('selected_power_type')=='HYBRID' ? 'selected' : '' }}>HYBRID</option>
+                                </select>
+                            </div>
 
-                        <div class="filter-group">
-                            <label class="sidebar-label">Lowest Price</label>
-                            <input type="text" class="form-control sidebar-input" placeholder="Enter Price">
-                        </div>
+                            <!-- Price -->
+                            <div class="filter-group">
+                                <label class="sidebar-label">Lowest Price</label>
+                                <input type="text" name="selected_lowest_price" class="form-control sidebar-input"
+                                    placeholder="Enter Price" value="{{ request('selected_lowest_price') }}">
+                            </div>
 
-                        <div class="filter-group">
-                            <label class="sidebar-label">Max Price</label>
-                            <input type="text" class="form-control sidebar-input" placeholder="Enter Price">
-                        </div>
+                            <div class="filter-group">
+                                <label class="sidebar-label">Max Price</label>
+                                <input type="text" name="selected_highest_price" class="form-control sidebar-input"
+                                    placeholder="Enter Price" value="{{ request('selected_highest_price') }}">
+                            </div>
 
+                            <!-- Year -->
+                            <div class="filter-group">
+                                <label class="sidebar-label">Year</label>
+                                <select name="selected_year" id="year-select" class="form-select sidebar-input">
+                                    <option value="">Select Year</option>
+                                    @php
+                                        $currentYear = date('Y');
+                                        $selectedYear = request('selected_year');
+                                    @endphp
+                                    @for($year = $currentYear; $year >= 1950; $year--)
+                                        <option value="{{ $year }}" {{ $selectedYear == $year ? 'selected' : '' }}>
+                                            {{ $year }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
 
+                           <div class="filter-group">
+                                <label class="sidebar-label">Make</label>
 
-                        <div class="filter-group">
-                            <label class="sidebar-label">Year</label>
-                            <select class="form-select sidebar-input">
-                                <option>Select Year</option>
-                            </select>
-                        </div>
+                                <select name="selected_make" id="filter-make" class="form-select sidebar-input w-100">
+                                    <option value="">Select Make</option>
 
-                        <div class="filter-group">
-                            <label class="sidebar-label">Make</label>
-                            <select class="form-select sidebar-input">
-                                <option>Select Make</option>
-                            </select>
-                        </div>
+                                    @php
+                                        $allMakes = [];
 
-                        <div class="filter-group">
-                            <label class="sidebar-label">Model</label>
-                            <input type="text" class="form-control sidebar-input" placeholder="Enter Model">
-                        </div>
+                                        if(request('selected_asset') && isset($makeTypes[request('selected_asset')])) {
+                                            $allMakes = $makeTypes[request('selected_asset')];
+                                        } else {
+                                            foreach($makeTypes as $assetMakes) {
+                                                $allMakes = array_merge($allMakes, $assetMakes);
+                                            }
 
-                        <div class="filter-group">
-                            <label class="sidebar-label">Max Mileage</label>
-                            <input type="text" class="form-control sidebar-input" placeholder="Enter Max Mileage">
-                        </div>
+                                            // Optional: duplicate remove karne ke liye
+                                            $allMakes = collect($allMakes)->unique('name')->values()->toArray();
+                                        }
+                                    @endphp
 
-                        <div class="filter-group">
-                            <label class="sidebar-label">Body Style</label>
-                            <select class="form-select sidebar-input">
-                                <option>Select Body Style</option>
-                            </select>
-                        </div>
+                                    @foreach($allMakes as $make)
+                                        <option value="{{ $make['name'] }}" {{ request('selected_make')==$make['name'] ? 'selected' : '' }}>
+                                            {{ $make['name'] }}
+                                        </option>
+                                    @endforeach
 
-                        <div class="filter-group">
-                            <label class="sidebar-label">Fuel Type</label>
-                            <select class="form-select sidebar-input">
-                                <option>Select Fuel Type</option>
-                            </select>
-                        </div>
+                                </select>
+                            </div>
 
-                        <div class="filter-group">
-                            <label class="sidebar-label">Add for sale by</label>
-                            <select class="form-select sidebar-input">
-                                <option>Select Any</option>
-                            </select>
-                        </div>
+                            <!-- Model -->
+                            <div class="filter-group">
+                                <label class="sidebar-label">Model</label>
+                                <input type="text" name="selected_model" class="form-control sidebar-input"
+                                    placeholder="Enter Model" value="{{ request('selected_model') }}">
+                            </div>
 
+                            <!-- Mileage -->
+                            <div class="filter-group">
+                                <label class="sidebar-label">Max Mileage</label>
+                                <input type="text" name="selected_mileage" class="form-control sidebar-input"
+                                    placeholder="Enter Max Mileage" value="{{ request('selected_mileage') }}">
+                            </div>
 
-                    </aside>
-                    <div class="sidebar-map-box mt-4 complete-sidebar">
+                            <!-- Body Style -->
+                            <div class="filter-group">
+                                <label class="sidebar-label">Body Style</label>
+                                <select name="selected_body_style" id="body-style-select" class="form-select sidebar-input">
+                                    <option value="">Select Body Style</option>
+                                    @if(!empty($body_styles) && count($body_styles) > 0)
+                                        @foreach($body_styles as $style)
+                                            <option value="{{ $style['name'] ?? $style->name ?? '' }}" 
+                                                {{ (isset($selected_body_style) && $selected_body_style == ($style['name'] ?? $style->name ?? '')) ? 'selected' : '' }}>
+                                                {{ $style['name'] ?? $style->name ?? '' }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+
+                            <!-- Fuel -->
+                            <div class="filter-group">
+                                <label class="sidebar-label">Fuel Type</label>
+                                <select name="selected_fuel_type" class="form-select sidebar-input">
+                                    <option value="">Select Fuel Type</option>
+                                    <option value="PREMIUM REQUIRED" {{ request('selected_fuel_type')=='PREMIUM REQUIRED' ? 'selected' : '' }}>
+                                        PREMIUM REQUIRED
+                                    </option>
+                                    <option value="PREMIUM RECOMMENDED" {{ request('selected_fuel_type')=='PREMIUM RECOMMENDED' ? 'selected' : '' }}>
+                                        PREMIUM RECOMMENDED
+                                    </option>
+                                    <option value="REGULAR" {{ request('selected_fuel_type')=='REGULAR' ? 'selected' : '' }}>
+                                        REGULAR
+                                    </option>
+                                    <option value="ELECTRIC" {{ request('selected_fuel_type')=='ELECTRIC' ? 'selected' : '' }}>
+                                        ELECTRIC
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- Seller -->
+                            <div class="filter-group">
+                                <label class="sidebar-label">Add for sale by</label>
+                                <select name="selected_seller" id="seller-select" class="form-select sidebar-input">
+                                    <option value="">Select Any</option>
+                                    <!-- Add seller options as needed -->
+                                </select>
+                            </div>
+                        </aside>
+                    </form>
+                    <!-- <div class="sidebar-map-box mt-4 complete-sidebar">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <span class="map-label">Show on map</span>
                             <i class="fa-solid fa-chevron-down map-toggle-icon"></i>
                         </div>
                         <img src="/assets/images/map.png" class="img-fluid rounded-3" alt="Map">
-                    </div>
+                    </div> -->
                 </div>
 
 
@@ -276,17 +397,28 @@
 
 
                             </div>
-                            <span class="results-info">1 - 10 of 19 tours found</span>
+                            <span class="results-info">
+                                {{ $start }} - {{ $end }} of {{ $total_inventory }} {{ $assetWord }} found
+                            </span>
                         </div>
-                        <div class="toolbar-right d-flex gap-2">
-                            <button class="btn-clear-filters">Clear Filters</button>
-                            <select class="form-select form-select-sm tool-select">
-                                <option>Show 10</option>
+                        <form id="vehicleFilterForm" class="toolbar-right d-flex gap-2">
+                            <button type="button" class="btn-clear-filters">Clear Filters</button>
+
+                            <!-- Example: Show X results per page (optional) -->
+                            <!--
+                                <select class="form-select form-select-sm tool-select" name="per_page">
+                                    <option value="10">Show 10</option>
+                                    <option value="20">Show 20</option>
+                                </select>
+                                -->
+
+                            <!-- Sort dropdown -->
+                            <select class="form-select form-select-sm tool-select" id="sortSelect" name="sort">
+                                <option value="name">Sort by: Name</option>
+                                <option value="price_asc">Price: Low to High</option>
+                                <option value="price_desc">Price: High to Low</option>
                             </select>
-                            <select class="form-select form-select-sm tool-select">
-                                <option>Sort by: Name</option>
-                            </select>
-                        </div>
+                        </form>
                     </div>
 
                     <div class="row g-4" id="vehicleContainer">
@@ -322,7 +454,10 @@
                                             <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
                                                 style="width:20px; height:12px;">
 
-                                            {{ $recent_vehicle->mileage ? $recent_vehicle->mileage . ' km' : '0 km' }}
+                                            {{ $recent_vehicle->mileage 
+                                                ? trim(str_ireplace('km', '', $recent_vehicle->mileage)) . ' km' 
+                                                : '0 km' 
+                                            }}
 
                                         </div>
 
@@ -330,7 +465,30 @@
                                     <div class="car-card-bottom">
                                         <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
                                             {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}</h5>
-                                        <p class="car-distance-away"><i class="fa-solid fa-location-dot"></i> 12 Km away</p>
+
+                                        @php
+                                            $dealerPostalCode = data_get($recent_vehicle, 'dealer.postal_code')
+                                                ?? $recent_vehicle->dealer_postal_code
+                                                ?? $recent_vehicle->postal_code
+                                                ?? '';
+                                            $dealerCity = data_get($recent_vehicle, 'dealer.city')
+                                                ?? $recent_vehicle->dealer_city
+                                                ?? '';
+                                            $dealerProvince = data_get($recent_vehicle, 'dealer.province')
+                                                ?? $recent_vehicle->dealer_province
+                                                ?? '';
+                                            $dealerCountry = data_get($recent_vehicle, 'dealer.country')
+                                                ?? $recent_vehicle->dealer_country
+                                                ?? '';
+                                        @endphp
+                                        <p class="car-distance-away"
+                                            data-dealer-postal="{{ $dealerPostalCode }}"
+                                            data-dealer-city="{{ $dealerCity }}"
+                                            data-dealer-province="{{ $dealerProvince }}"
+                                            data-dealer-country="{{ $dealerCountry }}">
+                                            <i class="fa-solid fa-location-dot"></i>
+                                            <span class="distance-value">Loading...</span>
+                                        </p>
 
                                         <div class="car-circle-icons-group">
                                             <img src="/assets/images/no-accidents.png" alt="">
@@ -364,4 +522,318 @@
             </div>
         </div>
     </section>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Clear Filters Button
+        const clearFiltersBtn = document.querySelector('.btn-clear-filters');
+        
+        if (clearFiltersBtn) {
+            clearFiltersBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Get current URL
+                const currentUrl = new URL(window.location.href);
+                
+                // Get all current search parameters
+                const allParams = new URLSearchParams(currentUrl.search);
+                
+                // Store the selected_asset value if it exists
+                let selectedAsset = null;
+                if (allParams.has('selected_asset')) {
+                    selectedAsset = allParams.get('selected_asset');
+                }
+                
+                // Remove ALL parameters
+                allParams.forEach((value, key) => {
+                    currentUrl.searchParams.delete(key);
+                });
+                
+                // Re-add selected_asset if it existed
+                if (selectedAsset) {
+                    currentUrl.searchParams.set('selected_asset', selectedAsset);
+                }
+                
+                // Alternative: Clear all parameters at once and then add selected_asset
+                // currentUrl.search = '';
+                // if (selectedAsset) {
+                //     currentUrl.searchParams.set('selected_asset', selectedAsset);
+                // }
+                
+                // Redirect to the URL with only selected_asset (if any)
+                window.location.href = currentUrl.toString();
+            });
+        }
+    });
+</script>
+<script>
+$(document).ready(function() {
+    let isSubmitting = false;
+    let submitTimer = null;
+
+    function submitForm() {
+        if (isSubmitting) return;
+        isSubmitting = true;
+
+        const form = $('#sidebarFilterForm');
+        removeEmptyFields(form);
+        form.submit();
+
+        setTimeout(() => { isSubmitting = false; }, 1000);
+    }
+
+    function removeEmptyFields(form) {
+        form.find('input, select, textarea').each(function() {
+            const $field = $(this);
+            const value = $field.val();
+            if (!value || value === '' || 
+                value.startsWith('Select') || 
+                value.startsWith('Loading') || 
+                value.startsWith('No') || 
+                value.startsWith('Error')) {
+                $field.prop('disabled', true);
+            } else {
+                $field.prop('disabled', false);
+            }
+        });
+    }
+
+    function debouncedSubmit() {
+        clearTimeout(submitTimer);
+        submitTimer = setTimeout(submitForm, 300);
+    }
+
+    $('#sidebarFilterForm').on('submit', function() {
+        $(this).find('input, select, textarea').prop('disabled', false);
+        removeEmptyFields($(this));
+    });
+
+    $('#sidebarFilterForm select, #sidebarFilterForm input:not([type="text"])').on('change', debouncedSubmit);
+
+    $('#sidebarFilterForm input[type="text"]').on('keypress', function(e) {
+        if (e.which === 13) { e.preventDefault(); submitForm(); }
+    }).on('blur', function() {
+        const $f = $(this);
+        const prev = $f.data('previous-value');
+        if ($f.val() !== prev) debouncedSubmit();
+        $f.data('previous-value', $f.val());
+    }).each(function() {
+        $(this).data('previous-value', $(this).val());
+    });
+
+    // Load makes from dealer_inventory API
+    function loadMakes(assetType) {
+        const makeDropdown = $('#filter-make');
+        makeDropdown.html('<option value="">Loading...</option>');
+        if (!assetType) { makeDropdown.html('<option value="">Select Make</option>'); return; }
+
+        $.ajax({
+            url: `{{ route('dealer_inventory', ['id' => request()->route('id')]) }}`,
+            type: "GET",
+            data: { selected_asset: assetType, per_page: 1 },
+            success: function(data) {
+                let makes = data.makeTypes?.[assetType] || [];
+                let options = '<option value="">Select Make</option>';
+                const selectedMake = "{{ request('selected_make') }}";
+
+                $.each(makes, function(i, make) {
+                    const sel = (selectedMake === make.name) ? 'selected' : '';
+                    options += `<option value="${make.name}" ${sel}>${make.name}</option>`;
+                });
+
+                makeDropdown.html(options);
+                debouncedSubmit();
+            },
+            error: function() {
+                makeDropdown.html('<option value="">Select Make</option>');
+                debouncedSubmit();
+            }
+        });
+    }
+
+    // Load body styles from dealer_inventory API
+    function loadBodyStyles(assetType) {
+        const bodyDropdown = $('#body-style-select');
+        bodyDropdown.html('<option value="">Loading Body Styles...</option>');
+        if (!assetType) { bodyDropdown.html('<option value="">Select Body Style</option>'); return; }
+
+        $.ajax({
+            url: `{{ route('dealer_inventory', ['id' => request()->route('id')]) }}`,
+            type: "GET",
+            data: { selected_asset: assetType, per_page: 1 },
+            success: function(data) {
+                let bodyStyles = data.body_styles || [];
+                let options = '<option value="">Select Body Style</option>';
+                const selectedStyle = "{{ request('selected_body_style') }}";
+
+                $.each(bodyStyles, function(i, style) {
+                    const sel = (selectedStyle == style.id) ? 'selected' : '';
+                    options += `<option value="${style.id}" ${sel}>${style.name}</option>`;
+                });
+
+                if (bodyStyles.length === 0) options = '<option value="">No Body Styles Available</option>';
+
+                bodyDropdown.html(options);
+            },
+            error: function() {
+                bodyDropdown.html('<option value="">Error Loading Body Styles</option>');
+            }
+        });
+    }
+
+    // Trigger when asset type changes
+    $('#sidebar-type').on('change', function() {
+        const asset = $(this).val();
+        loadMakes(asset);
+        loadBodyStyles(asset);
+        debouncedSubmit();
+    });
+
+    // Clear filters
+    $('#clearFilters').on('click', function(e) {
+        e.preventDefault();
+        const form = $('#sidebarFilterForm')[0];
+        form.reset();
+        $('#filter-make').html('<option value="">Select Make</option>');
+        $('#body-style-select').html('<option value="">Select Body Style</option>');
+        $('#year-select, #seller-select').val('');
+        $('#sidebarFilterForm input[type="text"]').data('previous-value', '');
+        submitForm();
+    });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const form = document.querySelector('form.search-wrapper');
+    const typeSelect = document.getElementById('filter-type');
+    const makeSelect = document.getElementById('filter-make');
+    const conditionInput = document.getElementById('selected_condition_input_2');
+
+    const selectedMake = "{{ request('selected_make') }}";
+    const selectedAsset = "{{ request('selected_asset') }}";
+    const dealerId = "{{ request()->route('id') }}";
+
+    // -------- CLEAN EMPTY FIELDS (URL FIX) --------
+    function cleanEmptyFields() {
+        const inputs = form.querySelectorAll('input, select');
+
+        inputs.forEach(input => {
+            if (!input.value || input.value.trim() === '') {
+                input.disabled = true; // ❌ remove from URL
+            } else {
+                input.disabled = false;
+            }
+        });
+    }
+
+    // -------- POPULATE MAKES --------
+    function populateMakes(makes) {
+        if (!makeSelect) return;
+
+        makeSelect.innerHTML = '<option value="">Select Make</option>';
+
+        let found = false;
+
+        makes.forEach(make => {
+            const option = document.createElement('option');
+            option.value = make.name;
+            option.textContent = make.name;
+
+            if (make.name === selectedMake) {
+                option.selected = true;
+                found = true;
+            }
+
+            makeSelect.appendChild(option);
+        });
+
+        // fallback (important)
+        if (selectedMake && !found) {
+            const option = document.createElement('option');
+            option.value = selectedMake;
+            option.textContent = selectedMake;
+            option.selected = true;
+            makeSelect.appendChild(option);
+        }
+    }
+
+    // -------- FETCH MAKES --------
+    function fetchMakesByType(type) {
+        return fetch(`{{ env('diskloz_base_url') }}/api/dealer_by_id/${dealerId}?selected_asset=${encodeURIComponent(type)}&per_page=1`)
+            .then(res => res.json())
+            .then(data => {
+
+                if (!data || !data.filters) return [];
+
+                const f = data.filters;
+
+                switch (type) {
+                    case 'AUTO': return f.MfgAuto || [];
+                    case 'RV / TRAILER': return f.MfgRvTrailer || [];
+                    case 'MOTORCYCLE':
+                    case 'POWERSPORTS': return f.MfgMotorcycleAtv || [];
+                    case 'HEAVY TRUCK/EQUIPMENT': return f.MfgHeavyTruckEquipment || [];
+                    case 'HEAVY DUTY TRAILERS': return f.MfgHeavyDutyTrailer || [];
+                    case 'FARM EQUIPMENT': return f.MfgFarmEquipment || [];
+                    default: return [];
+                }
+            })
+            .catch(() => []);
+    }
+
+    // -------- TYPE CHANGE --------
+    if (typeSelect) {
+        typeSelect.addEventListener('change', function () {
+            const type = this.value;
+
+            if (!type) {
+                makeSelect.innerHTML = '<option value="">Select Make</option>';
+                return;
+            }
+
+            fetchMakesByType(type).then(populateMakes);
+        });
+
+        // ✅ PAGE LOAD → only selected asset
+        if (selectedAsset) {
+            fetchMakesByType(selectedAsset).then(populateMakes);
+        }
+    }
+
+    // -------- FORM SUBMIT CLEAN --------
+    if (form) {
+        form.addEventListener('submit', function () {
+            cleanEmptyFields();
+        });
+    }
+
+    // -------- TABS --------
+    const tabs = document.querySelectorAll('.tabs .tab');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            tabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+
+            if (conditionInput) {
+                conditionInput.value = this.dataset.condition || '';
+            }
+
+            cleanEmptyFields(); // ✅ important
+            form.submit();
+        });
+    });
+
+    // -------- RE-ENABLE FIELDS AFTER LOAD --------
+    window.addEventListener('pageshow', () => {
+        document.querySelectorAll('form.search-wrapper input, form.search-wrapper select')
+            .forEach(el => el.disabled = false);
+    });
+
+});
+</script>
 @endsection

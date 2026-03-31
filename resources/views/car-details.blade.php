@@ -1,4 +1,7 @@
 @extends('layouts.app')
+<script>
+    const BASE_URL = "{{ env('diskloz_base_url') }}";
+</script>
 
 @section('content')
 
@@ -162,9 +165,22 @@
                 </style>
                 <div class="col-lg-4">
                     <div class="mto-utility-btns d-flex gap-2 justify-content-lg-end mt-3 mt-lg-0">
-                        <button class="mto-pill-btn"><img src="/assets/images/Printer.png" class="me-1" alt=""> Print Details</button>
+                        <input type="hidden" id="inv_id" value="{{ $searched_vehicle->id ?? '' }}">
+
+                        <!-- Your button with ID -->
+                        <button id="fetchButton" onclick="fetchAndPrint()" class="mto-pill-btn">
+                            <img src="/assets/images/Printer.png" class="me-1" alt=""> Print Details
+                        </button>
+                        
                         <button class="mto-pill-btn"><img src="/assets/images/SVG.png" class="me-1" alt=""> Share</button>
-                        <button class="mto-pill-btn"><img src="/assets/images/Wishlish.png" class="me-1" alt=""> Wishlist</button>
+                        <button class="mto-pill-btn" 
+                            id="wishlist-btn-{{ $searched_vehicle->id }}" 
+                            onclick="toggleLike({{ $searched_vehicle->id }}, this, {{ auth()->id() ?? 'null' }})">
+
+                            <i class="fa fa-spinner fa-spin me-1" id="wishlist-spinner-{{ $searched_vehicle->id }}"></i>
+                            <i class="far fa-heart me-1 d-none" id="wishlist-icon-{{ $searched_vehicle->id }}"></i>
+                            Wishlist
+                        </button>
                     </div>
                 </div>
             </div>
@@ -319,12 +335,15 @@
 
                 <div class="col-lg-4">
                     <div class="mto-sticky-side">
+                        <!-- Buttons -->
                         <div class="mto-card-unit mb-4 p-4 shadow-sm">
                             <h6 class="fw-bold mb-3">Get Started</h6>
-                            <button class="mto-btn-orange w-100 mb-3">Schedule Test Drive <i
-                                    class="fa-solid fa-arrow-right ms-2"></i></button>
-                            <button class="mto-btn-black w-100">Make An Offer Price <i
-                                    class="fa-solid fa-arrow-right ms-2"></i></button>
+                            <button type="button" class="mto-btn-orange w-100 mb-3" data-bs-toggle="modal" data-bs-target="#testDriveModal">
+                                Schedule Test Drive <i class="fa-solid fa-arrow-right ms-2"></i>
+                            </button>
+                            <button type="button" class="mto-btn-black w-100" data-bs-toggle="modal" data-bs-target="#offerModal">
+                                Make An Offer Price <i class="fa-solid fa-arrow-right ms-2"></i>
+                            </button>
                         </div>
 
                         <div class="mto-card-unit p-4 shadow-sm">
@@ -398,7 +417,537 @@
                 </div>
             </div>
         </div>
+
+        <!-- Test Drive Modal -->
+        <div class="modal fade" id="testDriveModal" tabindex="-1" aria-labelledby="testDriveModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="testDriveModalLabel">Schedule Test Drive</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="name1" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email1" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone1" class="form-label">Phone</label>
+                            <input type="number" class="form-control" id="phone1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="date1" class="form-label">Preferred Date</label>
+                            <input type="date" class="form-control" id="date1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message1" class="form-label">Message</label>
+                            <textarea class="form-control" id="message1" rows="3" placeholder="Any additional notes..."></textarea>
+                        </div>
+                        <button type="submit" class="mto-btn-orange w-100 mb-3">Submit</button>
+                    </form>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Offer Modal -->
+        <div class="modal fade" id="offerModal" tabindex="-1" aria-labelledby="offerModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="offerModalLabel">Make An Offer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="name2" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name2" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email2" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email2" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone2" class="form-label">Phone</label>
+                            <input type="numbe2" class="form-control" id="phone2" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="offerPrice" class="form-label">Offer Price</label>
+                            <input type="number" class="form-control" id="offerPrice" required>
+                        </div>
+                        <button type="submit" class="mto-btn-orange w-100 mb-3">Submit</button>
+                    </form>
+                </div>
+                </div>
+            </div>
+        </div>
     </section>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+    $('#testDriveModal form').on('submit', function(e){
+        e.preventDefault();
+        
+        // Get dealer and product IDs safely
+        var dealerId = {{ $searched_vehicle->dealer->id ?? 'null' }};
+        var productId = {{ $searched_vehicle->id ?? 'null' }};
+        
+        // Validate IDs
+        if (!dealerId || dealerId === 'null' || !productId || productId === 'null') {
+            alert('Error: Dealer or vehicle information is missing. Please refresh the page.');
+            return;
+        }
+        
+        var formData = {
+            name: $('#name1').val(),
+            email: $('#email1').val(),
+            phone: $('#phone1').val(),
+            book_date: $('#date1').val(),
+            message: $('#message1').val(),
+            reason: 'Schedule Test Drive',
+            type: 'WEBLEAD',
+            source: 'Motokloz',
+            lead_status: 'NEW',
+            dealer_id: dealerId,
+            product_id: productId, // Changed from product_id to inventory_id
+            // Add any other required fields
+            lead_source: 'Website',
+            lead_type: 'Test Drive'
+        };
+        
+        // Validate required fields
+        if (!formData.name || !formData.email || !formData.phone) {
+            alert('Please fill in all required fields (Name, Email, Phone)');
+            return;
+        }
+        
+        // Validate email format
+        var emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            alert('Please enter a valid email address');
+            return;
+        }
+        
+        // Disable submit button to prevent double submission
+        var $submitBtn = $(this).find('button[type="submit"]');
+        $submitBtn.prop('disabled', true).text('Submitting...');
+        
+        $.ajax({
+            url: "{{ env('diskloz_base_url') }}/api/leads",
+            method: 'POST',
+            data: JSON.stringify(formData), // Send as JSON
+            contentType: 'application/json', // Important: Set content type to JSON
+            dataType: 'json',
+            crossDomain: true,
+            success: function(response){
+                console.log('Success:', response);
+                alert(response.message || 'Test drive scheduled successfully!');
+                $('#testDriveModal').modal('hide');
+                $('#testDriveModal form')[0].reset();
+            },
+            error: function(xhr){
+                console.log('Error Response:', xhr.responseJSON);
+                
+                if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                    let errorMessages = '';
+                    $.each(xhr.responseJSON.errors, function(field, messages) {
+                        errorMessages += field + ': ' + messages.join(', ') + '\n';
+                    });
+                    alert('Validation Error:\n' + errorMessages);
+                } else if (xhr.status === 500) {
+                    alert('Server error. Please try again later.');
+                } else {
+                    alert(xhr.responseJSON?.message || 'Something went wrong. Please try again.');
+                }
+            },
+            complete: function() {
+                // Re-enable submit button
+                $submitBtn.prop('disabled', false).text('Submit');
+            }
+        });
+    });
+    
+    $('#offerModal form').on('submit', function(e){
+        e.preventDefault();
+        
+        var dealerId = {{ $searched_vehicle->dealer->id ?? 'null' }};
+        var productId = {{ $searched_vehicle->id ?? 'null' }};
+        
+        if (!dealerId || dealerId === 'null' || !productId || productId === 'null') {
+            alert('Error: Dealer or vehicle information is missing. Please refresh the page.');
+            return;
+        }
+        
+        var formData = {
+            name: $('#name2').val(),
+            email: $('#email2').val(),
+            phone: $('#phone2').val(),
+            message: $('#message2').val(), // Fixed: was using message1
+            reason: 'Make An Offer Price',
+            type: 'WEBLEAD',
+            source: 'Motokloz',
+            lead_status: 'NEW',
+            offer_price: $('#offerPrice').val(),
+            dealer_id: dealerId,
+            product_id: productId, // Changed from product_id to inventory_id
+            lead_source: 'Website',
+            lead_type: 'Offer'
+        };
+        
+        // Validate required fields
+        if (!formData.name || !formData.email || !formData.phone) {
+            alert('Please fill in all required fields (Name, Email, Phone)');
+            return;
+        }
+        
+        // Validate offer price
+        if (!formData.offer_price || formData.offer_price <= 0) {
+            alert('Please enter a valid offer price');
+            return;
+        }
+        
+        var $submitBtn = $(this).find('button[type="submit"]');
+        $submitBtn.prop('disabled', true).text('Submitting...');
+        
+        $.ajax({
+            url: "{{ env('diskloz_base_url') }}/api/leads",
+            method: 'POST',
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            dataType: 'json',
+            crossDomain: true,
+            success: function(response){
+                console.log('Success:', response);
+                alert(response.message || 'Offer submitted successfully!');
+                $('#offerModal').modal('hide');
+                $('#offerModal form')[0].reset();
+            },
+            error: function(xhr){
+                console.log('Error Response:', xhr.responseJSON);
+                
+                if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                    let errorMessages = '';
+                    $.each(xhr.responseJSON.errors, function(field, messages) {
+                        errorMessages += field + ': ' + messages.join(', ') + '\n';
+                    });
+                    alert('Validation Error:\n' + errorMessages);
+                } else if (xhr.status === 500) {
+                    alert('Server error. Please try again later.');
+                } else {
+                    alert(xhr.responseJSON?.message || 'Something went wrong. Please try again.');
+                }
+            },
+            complete: function() {
+                $submitBtn.prop('disabled', false).text('Submit');
+            }
+        });
+    });
+});
+
+       $(document).ready(function(){
+
+            let clientId = {{ auth()->id() ?? 'null' }};
+
+            // =============================
+            // LOAD FAVORITES (PAGE LOAD)
+            // =============================
+            function loadFavorites() {
+
+                if (!clientId) {
+                    hideAllSpinners();
+                    return;
+                }
+
+                fetch(`${BASE_URL}/api/favorites?client_id=${clientId}`)
+                    .then(res => res.json())
+                    .then(data => {
+
+                        let likedIds = new Set((data || []).map(item => item.inventory_id));
+
+                        $('button[id^="wishlist-btn-"]').each(function () {
+                            let inventoryId = parseInt(this.id.replace('wishlist-btn-', ''));
+
+                            let spinner = $('#wishlist-spinner-' + inventoryId);
+                            let icon = $('#wishlist-icon-' + inventoryId);
+
+                            spinner.addClass('d-none');
+                            icon.removeClass('d-none');
+
+                            if (likedIds.has(inventoryId)) {
+                                icon.removeClass('far').addClass('fas');
+                                $(this).addClass('active');
+                            } else {
+                                icon.removeClass('fas').addClass('far');
+                                $(this).removeClass('active');
+                            }
+                        });
+
+                    })
+                    .catch(() => {
+                        hideAllSpinners();
+                    });
+            }
+
+            function hideAllSpinners() {
+                $('[id^="wishlist-spinner-"]').addClass('d-none');
+                $('[id^="wishlist-icon-"]').removeClass('d-none');
+            }
+
+            loadFavorites();
+
+        });
+
+
+       // Add CSRF token to all AJAX requests
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        function toggleLike(vehicleId, element, authId) {
+            if (!authId) {
+                alert('Login required');
+                return;
+            }
+
+            let $btn = $(element);
+            let $icon = $('#wishlist-icon-' + vehicleId);
+            let isLiked = $btn.hasClass('active');
+
+            $btn.prop('disabled', true);
+
+            let url = isLiked ? '/remove_like' : '/add_like';
+            
+            // Use FormData instead of JSON (simpler)
+            let formData = new FormData();
+            formData.append('client_id', authId);
+            formData.append('vehicle_id', vehicleId);
+            
+            console.log('Sending request:', {
+                url: url,
+                client_id: authId,
+                vehicle_id: vehicleId,
+                isLiked: isLiked
+            });
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                processData: false,  // Don't process the data
+                contentType: false,  // Let jQuery set the content type
+                dataType: 'json',
+                success: function(response) {
+                    console.log('Success response:', response);
+                    if (response.success) {
+                        if (isLiked) {
+                            $btn.removeClass('active');
+                            $icon.removeClass('fas').addClass('far');
+                        } else {
+                            $btn.addClass('active');
+                            $icon.removeClass('far').addClass('fas');
+                        }
+                    } else {
+                        alert(response.message || 'Operation failed');
+                        // Revert the UI if operation failed
+                        if (isLiked) {
+                            $btn.addClass('active');
+                            $icon.removeClass('far').addClass('fas');
+                        } else {
+                            $btn.removeClass('active');
+                            $icon.removeClass('fas').addClass('far');
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error details:', {
+                        status: xhr.status,
+                        statusText: xhr.statusText,
+                        responseText: xhr.responseText,
+                        error: error
+                    });
+                    
+                    let errorMessage = 'An error occurred. ';
+                    if (xhr.status === 400) {
+                        try {
+                            let response = JSON.parse(xhr.responseText);
+                            errorMessage += response.message || 'Bad request. Please check your input.';
+                        } catch(e) {
+                            errorMessage += 'Invalid request data.';
+                        }
+                    } else if (xhr.status === 419) {
+                        errorMessage = 'Session expired. Please refresh the page.';
+                        location.reload();
+                    } else if (xhr.status === 500) {
+                        errorMessage = 'Server error. Please check the console for details.';
+                        // Try to get more details from response
+                        try {
+                            let response = JSON.parse(xhr.responseText);
+                            if (response.message) {
+                                errorMessage += '\nDetails: ' + response.message;
+                            }
+                        } catch(e) {}
+                    } else {
+                        errorMessage += 'Please try again.';
+                    }
+                    alert(errorMessage);
+                    
+                    // Revert UI on error
+                    if (isLiked) {
+                        $btn.addClass('active');
+                        $icon.removeClass('far').addClass('fas');
+                    } else {
+                        $btn.removeClass('active');
+                        $icon.removeClass('fas').addClass('far');
+                    }
+                },
+                complete: function() {
+                    $btn.prop('disabled', false);
+                }
+            });
+        }
+
+        function fetchAndPrint() {
+            var button = document.getElementById('fetchButton');
+            var loader = document.getElementById('pdfLoader');
+            var invIdInput = document.getElementById('inv_id');
+            
+            // Get inventory ID
+            var id = invIdInput ? invIdInput.value : null;
+            
+            // If no hidden input, try to get from data attribute
+            if (!id || id === 'null' || id === '') {
+                id = button.getAttribute('data-inv-id');
+            }
+            
+            // Validate ID
+            if (!id || id === 'null' || id === '') {
+                console.error('No inventory ID found');
+                alert('Error: Inventory ID not found. Please refresh the page.');
+                return;
+            }
+            
+            // Validate ID is numeric
+            id = parseInt(id);
+            if (isNaN(id) || id <= 0) {
+                console.error('Invalid inventory ID:', id);
+                alert('Error: Invalid inventory ID');
+                return;
+            }
+            
+            // Disable button and add loading class
+            button.disabled = true;
+            button.classList.add('disabled', 'loading');
+            
+            // Show loader spinner
+            if (loader) {
+                loader.style.display = 'block';
+            }
+            
+            console.log('Generating PDF for inventory ID:', id);
+            
+            $.ajax({
+                url: '/pdf/disklozer/' + id,
+                method: 'GET',
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: function(blob) {
+                    // Check if response is PDF
+                    if (blob.type === 'application/pdf') {
+                        var url = URL.createObjectURL(blob);
+                        // Open PDF in new tab
+                        var pdfWindow = window.open(url, '_blank');
+                        
+                        // If popup blocked, show message
+                        if (!pdfWindow || pdfWindow.closed || typeof pdfWindow.closed === 'undefined') {
+                            alert('Please allow popups for this site to view the PDF.');
+                        }
+                        
+                        // Clean up URL object after delay
+                        setTimeout(function() {
+                            URL.revokeObjectURL(url);
+                        }, 1000);
+                    } else {
+                        // Handle error response
+                        var reader = new FileReader();
+                        reader.onload = function() {
+                            try {
+                                var errorResponse = JSON.parse(reader.result);
+                                console.error('Error:', errorResponse);
+                                alert(errorResponse.message || 'Error generating PDF');
+                            } catch(e) {
+                                console.error('Error response:', reader.result);
+                                alert('Error generating PDF. Please try again.');
+                            }
+                        };
+                        reader.readAsText(blob);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching PDF:", {
+                        status: xhr.status,
+                        statusText: xhr.statusText,
+                        error: error
+                    });
+                    
+                    let errorMessage = 'Failed to generate PDF. ';
+                    
+                    if (xhr.status === 404) {
+                        errorMessage += 'Inventory not found.';
+                    } else if (xhr.status === 500) {
+                        errorMessage += 'Server error. Please try again later.';
+                    } else if (xhr.status === 419) {
+                        errorMessage += 'Session expired. Please refresh the page.';
+                        setTimeout(function() {
+                            location.reload();
+                        }, 2000);
+                    } else {
+                        errorMessage += 'Please check your connection and try again.';
+                    }
+                    
+                    alert(errorMessage);
+                },
+                complete: function() {
+                    // Re-enable button and remove loading classes
+                    button.disabled = false;
+                    button.classList.remove('disabled', 'loading');
+                    
+                    // Hide loader spinner
+                    if (loader) {
+                        loader.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        function printDetails() {
+            var $printable = $('#printable');
+            
+            if (!$printable.length) {
+                console.error('Element with id="printable" not found');
+                alert('Error: Could not find content to print');
+                return;
+            }
+            
+            var printContents = $printable.html();
+            var originalContents = $('body').html();
+            
+            $('body').html(printContents);
+            window.print();
+            $('body').html(originalContents);
+            
+            // Optional: Reload to restore event handlers
+            location.reload();
+        }
+    </script>
 
     <style>
         .listed-card-right {
@@ -419,6 +968,48 @@
             height: 16px;
         }
 
-        
+        /* Spinner animation */
+        .spinner-border {
+            display: inline-block;
+            width: 2rem;
+            height: 2rem;
+            vertical-align: text-bottom;
+            border: 0.25em solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spinner-border 0.75s linear infinite;
+        }
+
+        @keyframes spinner-border {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Disabled button style */
+        .mto-pill-btn.disabled,
+        .mto-pill-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* Optional: Add a spinner on button itself */
+        .mto-pill-btn.loading {
+            position: relative;
+            padding-left: 35px;
+        }
+
+        .mto-pill-btn.loading:before {
+            content: "";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            border: 2px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spinner-border 0.75s linear infinite;
+        }
     </style>
 @endsection
