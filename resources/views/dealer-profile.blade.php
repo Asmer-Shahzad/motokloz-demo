@@ -37,7 +37,7 @@
 
             <div class="col-lg-8">
 
-                <div class="content-box shadow-sm">
+                <div class="content-box shadow-sm" data-aos="fade-up" data-aos-duration="600">
 
                     <!-- Dropdown Header -->
                     <h4 class="fw-bold d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
@@ -119,7 +119,7 @@
                     </div>
                 </div>
 
-                <div class="content-box shadow-sm">
+                <div class="content-box shadow-sm" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
 
                     <!-- Dropdown Header -->
                     <h5 class="fw-bold mb-4 d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
@@ -480,7 +480,7 @@
                 }
             </style>
             <div class="col-lg-4">
-                <div class="content-box shadow-sm p-4">
+                <div class="content-box shadow-sm p-4" data-aos="fade-left" data-aos-duration="700">
                 <h5 class="fw-bold mb-4">Get in touch</h5>
 
                 <form data-ajax="true" id="leadForm" action="#" method="POST">
@@ -587,8 +587,11 @@
                         src="https://maps.google.com/maps?q={{ $mapAddress }}&output=embed&z=15">
                     </iframe>
 
-                    <p class="small mt-2 mb-0">
-                        <i class="fas fa-map-marker-alt text-warning me-1"></i>
+                    <p style="margin-top:10px; margin-bottom:0; font-size:14px; font-weight:600; color:var(--select-color, #222); display:flex; align-items:center; gap:6px;">
+                        <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 0C4.686 0 2 2.686 2 6c0 4.5 6 14 6 14s6-9.5 6-14c0-3.314-2.686-6-6-6z" fill="#ff9d00"/>
+                            <circle cx="8" cy="6" r="2.5" fill="#fff"/>
+                        </svg>
                         {{ $dealer->physical_address }}
                     </p>
                 </div>
@@ -611,13 +614,13 @@
 
         <div class="row g-4">
             <div class="container mt-5">
-                <div class="dealer-top-section">
-                    <h4 class="dealer-top-title">Listed by this dealer</h4>
-                    <p class="dealer-top-subtitle">Top Cars are listed</p>
+                    <div class="dealer-top-section" data-aos="fade-up" data-aos-duration="600">
+                        <h4 class="dealer-top-title">Listed by this dealer</h4>
+                        <p class="dealer-top-subtitle">Top Cars are listed</p>
+                    </div>
                 </div>
-            </div>
                 @foreach ($inventory as $recent_vehicle)
-                    <div class="col-lg-3 col-sm-6">
+                    <div class="col-lg-3 col-sm-6" data-aos="fade-up" data-aos-delay="{{ ($loop->index % 4) * 100 }}" data-aos-duration="600">
                         <div class="modern-car-card shadow-sm">
                             <div class="car-card-top">
                                 {{-- @php

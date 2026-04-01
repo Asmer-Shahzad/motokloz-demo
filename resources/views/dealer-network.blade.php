@@ -9,7 +9,7 @@
             <div class="banner-overlay"></div>
             <div class="container">
                 <div class="banner-content text-white">
-                    <h2 class="fw-bold mb-0">Dealer Network</h2>
+                    <h2 class="fw-bold mb-0" data-aos="fade-down" data-aos-duration="800">Dealer Network</h2>
                 </div>
             </div>
         </div>
@@ -82,7 +82,7 @@
             @if(count($dealers) > 0)
                 <div class="row g-3">
                     @foreach($dealers as $dealer)
-                        <div class="col-12 col-sm-6 col-md-4">
+                        <div class="col-12 col-sm-6 col-md-4" data-aos="fade-up" data-aos-delay="{{ ($loop->index % 3) * 100 }}" data-aos-duration="600">
                             <a href="{{ route('dealer_inventory_details', $dealer['id']) }}" class="text-decoration-none">
                                 <div class="dealer-card">
                                     <div class="d-flex align-items-start gap-3">

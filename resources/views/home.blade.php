@@ -3,11 +3,12 @@
 @section('content')
 
 
-@php
-    function formatPrice($price) {
-        return number_format($price, 2, '.', ',');
-    }
-@endphp
+    @php
+        function formatPrice($price)
+        {
+            return number_format($price, 2, '.', ',');
+        }
+    @endphp
 
     <section class="banner-section">
         <div class="container-fluid">
@@ -16,7 +17,8 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="search-wrapper">
-                                <form id="vehicleFilterForm" action="{{ route('search_inventory') }}" method="GET" class="search-wrapper">
+                                <form id="vehicleFilterForm" action="{{ route('search_inventory') }}" method="GET"
+                                    class="search-wrapper">
                                     <!-- Tabs -->
                                     <div class="tabs">
                                         <a class="tab active" data-condition="">All</a>
@@ -60,7 +62,9 @@
                                                     <option value="">Select Make</option>
                                                     @foreach($makeTypes as $type => $makes)
                                                         @foreach($makes as $make)
-                                                            <option value="{{ $make['name'] }}" data-type="{{ $type }}">{{ $make['name'] }}</option>
+                                                            <option value="{{ $make['name'] }}" data-type="{{ $type }}">
+                                                                {{ $make['name'] }}
+                                                            </option>
                                                         @endforeach
                                                     @endforeach
                                                 </select>
@@ -73,7 +77,8 @@
                                         <div class="filter">
                                             <label>Model</label>
                                             <div class="select">
-                                                <input class="form-control" type="text" name="selected_model" id="Model" placeholder="Enter Model">
+                                                <input class="form-control" type="text" name="selected_model" id="Model"
+                                                    placeholder="Enter Model">
                                             </div>
                                         </div>
 
@@ -85,9 +90,11 @@
                                             <div class="range-container">
                                                 <div class="slider-track" id="track"></div>
                                                 <input class="filter-all" type="range" min="0" max="1000000" step="10000"
-                                                    value="{{ request('selected_lowest_price', 0) }}" id="slider-1" name="selected_lowest_price">
+                                                    value="{{ request('selected_lowest_price', 0) }}" id="slider-1"
+                                                    name="selected_lowest_price">
                                                 <input class="filter-all" type="range" min="0" max="1000000" step="10000"
-                                                    value="{{ request('selected_highest_price', 1000000) }}" id="slider-2" name="selected_highest_price">
+                                                    value="{{ request('selected_highest_price', 1000000) }}" id="slider-2"
+                                                    name="selected_highest_price">
                                             </div>
 
                                             <div class="values">
@@ -103,10 +110,9 @@
                                     </div>
                                 </form>
 
-                                </div>
-
                             </div>
 
+                        </div>
 
 
                             <div class="browse-slider">
@@ -189,14 +195,11 @@
                                             </a>
                                         </div>
 
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </section>
 
@@ -207,7 +210,7 @@
     <section class="section-two">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-6" data-aos="fade-right">
                     <div class="vehicle-box secure-box">
                         <div class="secure-content">
                             <h4>Secure My Vehicle Valuation</h4>
@@ -217,7 +220,7 @@
                         <i class="fa-solid fa-arrow-right"></i>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-6" data-aos="fade-left">
                     <div class="pre-approval-box secure-box">
                         <div class="secure-content">
                             <h4>Secure My Pre-Approval</h4>
@@ -237,7 +240,7 @@
         <div class="container">
             <div class="row align-items-center pb-5">
                 <div class="col-lg-6">
-                    <h2>Popular Vehicles</h2>
+                    <h2 data-aos="zoom-out-right">Popular Vehicles</h2>
                     <!-- <p>Favorite vehicles based on customer reviews</p> -->
                 </div>
                 {{-- <div class="col-lg-6 popular-button">
@@ -251,73 +254,70 @@
             </div>
             <div class="row g-4">
                 @foreach ($assetData as $recent_vehicle)
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="modern-car-card shadow-sm">
-                            <div class="car-card-top">
-                                @php
-                                    $detailUrl = route('inventory_product_details', $recent_vehicle->id);
-                                @endphp
+                        <div class="col-lg-3 col-sm-6" data-aos="fade-up" data-aos-delay="{{ ($loop->index % 4) * 100 }}" data-aos-duration="600">
+                            <div class="modern-car-card shadow-sm">
+                                <div class="car-card-top">
+                                    @php
+                                        $detailUrl = route('inventory_product_details', $recent_vehicle->id);
+                                    @endphp
 
-                                <a href="{{ $detailUrl }}">
-                                    <img style="width:100%"
-                                        src="{{ $recent_vehicle->primary_image 
-                                            ? (Str::startsWith($recent_vehicle->primary_image,'http') 
-                                                ? $recent_vehicle->primary_image 
-                                                : $disklozBaseUrl.'/admin_assets/images/inventory_images/'.$recent_vehicle->primary_image)
-                                            : asset('assets/images/defaultimage.jpg') }}"
-                                        alt="Vehicle Image"
-                                        class="img-box img-fluid"
-                                        onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
-                                </a>
-                                <div class="badge-mileage d-flex align-items-center">
-                                    <img src="/assets/images/mile1.png" alt="Mileage" class="me-2" style="width:20px; height:12px;">
-                                    {{ $recent_vehicle->mileage ? $recent_vehicle->mileage . ' km' : '0 km' }}
+                                    <a href="{{ $detailUrl }}">
+                                        <img style="width:100%" src="{{ $recent_vehicle->primary_image
+                    ? (Str::startsWith($recent_vehicle->primary_image, 'http')
+                        ? $recent_vehicle->primary_image
+                        : $disklozBaseUrl . '/admin_assets/images/inventory_images/' . $recent_vehicle->primary_image)
+                    : asset('assets/images/defaultimage.jpg') }}" alt="Vehicle Image" class="img-box img-fluid"
+                                            onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
+                                    </a>
+                                    <div class="badge-mileage d-flex align-items-center">
+                                        <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
+                                            style="width:20px; height:12px;">
+                                        {{ $recent_vehicle->mileage ? $recent_vehicle->mileage . ' km' : '0 km' }}
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="car-card-bottom">
-                                <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
-                                    {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}</h5>
-                                @php
-                                    $dealerPostalCode = data_get($recent_vehicle, 'dealer.postal_code')
-                                        ?? $recent_vehicle->dealer_postal_code
-                                        ?? $recent_vehicle->postal_code
-                                        ?? '';
-                                    $dealerCity = data_get($recent_vehicle, 'dealer.city')
-                                        ?? $recent_vehicle->dealer_city
-                                        ?? '';
-                                    $dealerProvince = data_get($recent_vehicle, 'dealer.province')
-                                        ?? $recent_vehicle->dealer_province
-                                        ?? '';
-                                    $dealerCountry = data_get($recent_vehicle, 'dealer.country')
-                                        ?? $recent_vehicle->dealer_country
-                                        ?? '';
-                                @endphp
-                                <p class="car-distance-away"
-                                   data-dealer-postal="{{ $dealerPostalCode }}"
-                                   data-dealer-city="{{ $dealerCity }}"
-                                   data-dealer-province="{{ $dealerProvince }}"
-                                   data-dealer-country="{{ $dealerCountry }}">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                    <span class="distance-value">Loading...</span>
-                                </p>
+                                <div class="car-card-bottom">
+                                    <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
+                                        {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}
+                                    </h5>
+                                    @php
+                                        $dealerPostalCode = data_get($recent_vehicle, 'dealer.postal_code')
+                                            ?? $recent_vehicle->dealer_postal_code
+                                            ?? $recent_vehicle->postal_code
+                                            ?? '';
+                                        $dealerCity = data_get($recent_vehicle, 'dealer.city')
+                                            ?? $recent_vehicle->dealer_city
+                                            ?? '';
+                                        $dealerProvince = data_get($recent_vehicle, 'dealer.province')
+                                            ?? $recent_vehicle->dealer_province
+                                            ?? '';
+                                        $dealerCountry = data_get($recent_vehicle, 'dealer.country')
+                                            ?? $recent_vehicle->dealer_country
+                                            ?? '';
+                                    @endphp
+                                    <p class="car-distance-away" data-dealer-postal="{{ $dealerPostalCode }}"
+                                        data-dealer-city="{{ $dealerCity }}" data-dealer-province="{{ $dealerProvince }}"
+                                        data-dealer-country="{{ $dealerCountry }}">
+                                        <i class="fa-solid fa-location-dot"></i>
+                                        <span class="distance-value">Loading...</span>
+                                    </p>
 
-                                <div class="car-circle-icons-group">
-                                    <img src="/assets/images/no-accidents.png" alt="">
-                                    <img src="/assets/images/low-mileage.png" alt="">
-                                    <img src="/assets/images/service-plan.png" alt="">
-                                    <img src="/assets/images/powertrain-warranty.png" alt="">
-                                    <span class="extra-icons-count">12+</span>
-                                </div>
+                                    <div class="car-circle-icons-group">
+                                        <img src="/assets/images/no-accidents.png" alt="">
+                                        <img src="/assets/images/low-mileage.png" alt="">
+                                        <img src="/assets/images/service-plan.png" alt="">
+                                        <img src="/assets/images/powertrain-warranty.png" alt="">
+                                        <span class="extra-icons-count">12+</span>
+                                    </div>
 
-                                <div class="car-price-block text-end">
-                                    <h4 class="price-value">
-                                        ${{ formatPrice($recent_vehicle->price_retail_date ?? 0) }}
-                                    </h4>
-                                    <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
+                                    <div class="car-price-block text-end">
+                                        <h4 class="price-value">
+                                            ${{ formatPrice($recent_vehicle->price_retail_date ?? 0) }}
+                                        </h4>
+                                        <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                 @endforeach
 
 
@@ -329,7 +329,7 @@
     <section class="about-motokloz">
         <div class="container">
             <div class="row">
-                <div class="col-lg-5">
+                <div class="col-lg-5" data-aos="fade-right">
                     <div class="about-bg">
                         <h2>About <span>Motokloz</span></h2>
                         <p>Motokloz is Canada’s newest buy-and-sell marketplace dedicated exclusively to motorized assets.
@@ -361,152 +361,152 @@
 
 
     <!-- <section class="testimonials-section">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12 testimonials-content">
-                    <h4><img src="/assets/images/persons.png" class="img-fluid">Testimonials</h4>
-                    <h2>What they say about us?</h2>
-                    <p>Egestas massa lobortis tellus libero sit suspendisse id elementum. <br>Est sit massa libero neque
-                        fermentum non.</p>
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-lg-12 testimonials-content">
+                                            <h4><img src="/assets/images/persons.png" class="img-fluid">Testimonials</h4>
+                                            <h2>What they say about us?</h2>
+                                            <p>Egestas massa lobortis tellus libero sit suspendisse id elementum. <br>Est sit massa libero neque
+                                                fermentum non.</p>
 
-                </div>
-            </div>
-            <div class="swiper review-swiper">
-                <div class="swiper-wrapper">
+                                        </div>
+                                    </div>
+                                    <div class="swiper review-swiper">
+                                        <div class="swiper-wrapper">
 
-                    <div class="swiper-slide">
-                        <div class="review-card">
-                            <img src="/assets/images/star.png" class="img-fluid">
+                                            <div class="swiper-slide">
+                                                <div class="review-card">
+                                                    <img src="/assets/images/star.png" class="img-fluid">
 
-                            <div class="review-user">
-                                <h4>Sarah M.</h4>
-                                <span class="review-verified">✔</span>
-                            </div>
+                                                    <div class="review-user">
+                                                        <h4>Sarah M.</h4>
+                                                        <span class="review-verified">✔</span>
+                                                    </div>
 
-                            <p>
-                                “Lorem ipsum dolor sit amet consectetur. At morbi pellentesque in ultricies. Accumsan
-                                neque convallis scelerisque mauris. Nam et lorem aliquam cum sagittis.”
-                            </p>
-                        </div>
-                    </div>
+                                                    <p>
+                                                        “Lorem ipsum dolor sit amet consectetur. At morbi pellentesque in ultricies. Accumsan
+                                                        neque convallis scelerisque mauris. Nam et lorem aliquam cum sagittis.”
+                                                    </p>
+                                                </div>
+                                            </div>
 
-                    <div class="swiper-slide">
-                        <div class="review-card">
-                            <img src="/assets/images/star.png" class="img-fluid">
+                                            <div class="swiper-slide">
+                                                <div class="review-card">
+                                                    <img src="/assets/images/star.png" class="img-fluid">
 
-                            <div class="review-user">
-                                <h4>Sarah M.</h4>
-                                <span class="review-verified">✔</span>
-                            </div>
+                                                    <div class="review-user">
+                                                        <h4>Sarah M.</h4>
+                                                        <span class="review-verified">✔</span>
+                                                    </div>
 
-                            <p>
-                                “Lorem ipsum dolor sit amet consectetur. At morbi pellentesque in ultricies. Accumsan
-                                neque convallis scelerisque mauris. Nam et lorem aliquam cum sagittis.”
-                            </p>
-                        </div>
-                    </div>
+                                                    <p>
+                                                        “Lorem ipsum dolor sit amet consectetur. At morbi pellentesque in ultricies. Accumsan
+                                                        neque convallis scelerisque mauris. Nam et lorem aliquam cum sagittis.”
+                                                    </p>
+                                                </div>
+                                            </div>
 
-                    <div class="swiper-slide">
-                        <div class="review-card">
-                            <img src="/assets/images/star.png" class="img-fluid">
+                                            <div class="swiper-slide">
+                                                <div class="review-card">
+                                                    <img src="/assets/images/star.png" class="img-fluid">
 
-                            <div class="review-user">
-                                <h4>Alex K.</h4>
-                                <span class="review-verified">✔</span>
-                            </div>
+                                                    <div class="review-user">
+                                                        <h4>Alex K.</h4>
+                                                        <span class="review-verified">✔</span>
+                                                    </div>
 
-                            <p>
-                                “Lorem ipsum dolor sit amet consectetur. At morbi pellentesque in ultricies. Accumsan
-                                neque convallis scelerisque mauris. Nam et lorem aliquam cum sagittis.”
-                            </p>
-                        </div>
-                    </div>
+                                                    <p>
+                                                        “Lorem ipsum dolor sit amet consectetur. At morbi pellentesque in ultricies. Accumsan
+                                                        neque convallis scelerisque mauris. Nam et lorem aliquam cum sagittis.”
+                                                    </p>
+                                                </div>
+                                            </div>
 
-                    <div class="swiper-slide">
-                        <div class="review-card">
-                            <img src="/assets/images/star.png" class="img-fluid">
+                                            <div class="swiper-slide">
+                                                <div class="review-card">
+                                                    <img src="/assets/images/star.png" class="img-fluid">
 
-                            <div class="review-user">
-                                <h4>James L.</h4>
-                                <span class="review-verified">✔</span>
-                            </div>
+                                                    <div class="review-user">
+                                                        <h4>James L.</h4>
+                                                        <span class="review-verified">✔</span>
+                                                    </div>
 
-                            <p>
-                                “Lorem ipsum dolor sit amet consectetur. At morbi pellentesque in ultricies. Accumsan
-                                neque convallis scelerisque mauris. Nam et lorem aliquam cum sagittis.”
-                            </p>
-                        </div>
-                    </div>
+                                                    <p>
+                                                        “Lorem ipsum dolor sit amet consectetur. At morbi pellentesque in ultricies. Accumsan
+                                                        neque convallis scelerisque mauris. Nam et lorem aliquam cum sagittis.”
+                                                    </p>
+                                                </div>
+                                            </div>
 
-                    <div class="swiper-slide">
-                        <div class="review-card">
-                            <img src="/assets/images/star.png" class="img-fluid">
+                                            <div class="swiper-slide">
+                                                <div class="review-card">
+                                                    <img src="/assets/images/star.png" class="img-fluid">
 
-                            <div class="review-user">
-                                <h4>James L.</h4>
-                                <span class="review-verified">✔</span>
-                            </div>
+                                                    <div class="review-user">
+                                                        <h4>James L.</h4>
+                                                        <span class="review-verified">✔</span>
+                                                    </div>
 
-                            <p>
-                                “Lorem ipsum dolor sit amet consectetur. At morbi pellentesque in ultricies. Accumsan
-                                neque convallis scelerisque mauris. Nam et lorem aliquam cum sagittis.”
-                            </p>
-                        </div>
-                    </div>
-
-
-                    <div class="swiper-slide">
-                        <div class="review-card">
-                            <img src="/assets/images/star.png" class="img-fluid">
-
-                            <div class="review-user">
-                                <h4>James L.</h4>
-                                <span class="review-verified">✔</span>
-                            </div>
-
-                            <p>
-                                “Lorem ipsum dolor sit amet consectetur. At morbi pellentesque in ultricies. Accumsan
-                                neque convallis scelerisque mauris. Nam et lorem aliquam cum sagittis.”
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="review-card">
-                            <img src="/assets/images/star.png" class="img-fluid">
-
-                            <div class="review-user">
-                                <h4>James L.</h4>
-                                <span class="review-verified">✔</span>
-                            </div>
-
-                            <p>
-                                “Lorem ipsum dolor sit amet consectetur. At morbi pellentesque in ultricies. Accumsan
-                                neque convallis scelerisque mauris. Nam et lorem aliquam cum sagittis.”
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                                                    <p>
+                                                        “Lorem ipsum dolor sit amet consectetur. At morbi pellentesque in ultricies. Accumsan
+                                                        neque convallis scelerisque mauris. Nam et lorem aliquam cum sagittis.”
+                                                    </p>
+                                                </div>
+                                            </div>
 
 
+                                            <div class="swiper-slide">
+                                                <div class="review-card">
+                                                    <img src="/assets/images/star.png" class="img-fluid">
 
-    </section> -->
+                                                    <div class="review-user">
+                                                        <h4>James L.</h4>
+                                                        <span class="review-verified">✔</span>
+                                                    </div>
+
+                                                    <p>
+                                                        “Lorem ipsum dolor sit amet consectetur. At morbi pellentesque in ultricies. Accumsan
+                                                        neque convallis scelerisque mauris. Nam et lorem aliquam cum sagittis.”
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="swiper-slide">
+                                                <div class="review-card">
+                                                    <img src="/assets/images/star.png" class="img-fluid">
+
+                                                    <div class="review-user">
+                                                        <h4>James L.</h4>
+                                                        <span class="review-verified">✔</span>
+                                                    </div>
+
+                                                    <p>
+                                                        “Lorem ipsum dolor sit amet consectetur. At morbi pellentesque in ultricies. Accumsan
+                                                        neque convallis scelerisque mauris. Nam et lorem aliquam cum sagittis.”
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </section> -->
 
     <!-- <section class="car-review">
-        <div class="container">
-            <div class="col-lg-12">
-                <h4>CAR REVIEW</h4>
-                <h2>Hyundai Tucson Plug-In <br>Hybrid 2025 review</h2>
-                <p>The Tucson Plug-in Hybrid is easy to drive and<br> provides a sufficient all-electric range.</p>
-                <a href="#" class="btn-custom-home">
-                    View Details
-                    <img src="/assets/images/bttnarrow.png" alt="arrow" class="btn-arrow-home">
-                </a>
-            </div>
-        </div>
-    </section> -->
+                                <div class="container">
+                                    <div class="col-lg-12">
+                                        <h4>CAR REVIEW</h4>
+                                        <h2>Hyundai Tucson Plug-In <br>Hybrid 2025 review</h2>
+                                        <p>The Tucson Plug-in Hybrid is easy to drive and<br> provides a sufficient all-electric range.</p>
+                                        <a href="#" class="btn-custom-home">
+                                            View Details
+                                            <img src="/assets/images/bttnarrow.png" alt="arrow" class="btn-arrow-home">
+                                        </a>
+                                    </div>
+                                </div>
+                            </section> -->
 
     <style>
         .btn-custom-home {
@@ -529,55 +529,83 @@
     </style>
 
 
-<script>
-const typeSelect = document.getElementById('filter-type');
-const makeSelect = document.getElementById('filter-make');
+    <script>
+        const typeSelect = document.getElementById('filter-type');
+        const makeSelect = document.getElementById('filter-make');
 
-function populateMakes(makes) {
+        function populateMakes(makes) {
 
-    makeSelect.innerHTML = '<option value="">Select Make</option>';
+            makeSelect.innerHTML = '<option value="">Select Make</option>';
 
-    makes.forEach(make => {
-        const option = document.createElement('option');
+            makes.forEach(make => {
+                const option = document.createElement('option');
 
-        option.value = make.name;  
-        option.textContent = make.name;
+                option.value = make.name;
+                option.textContent = make.name;
 
-        makeSelect.appendChild(option);
-    });
-}
+                makeSelect.appendChild(option);
+            });
+        }
 
-function fetchMakesByType(type) {
-    return fetch(`{{ $disklozBaseUrl }}/api/search_inventory?selected_asset=${encodeURIComponent(type)}&per_page=1`)
-        .then(res => res.json())
-        .then(data => {
-            switch(type) {
-                case 'AUTO': return data.filters.MfgAuto || [];
-                case 'MARINE': return data.filters.MfgMarine || [];
-                case 'RV / TRAILER': return data.filters.MfgRvTrailer || [];
-                case 'SNOWSPORTS': return data.filters.MfgSnowsport || [];
-                case 'MOTORCYCLE / ATV / POWERSPORTS': return data.filters.MfgMotorcycleAtv || [];
-                case 'WATERSPORT': return data.filters.MfgWatersport || [];
-                case 'FARM EQUIPMENT': return data.filters.MfgFarmEquipment || [];
-                case 'HEAVY TRUCK/EQUIPMENT': return data.filters.MfgHeavyTruckEquipment || [];
-                case 'HEAVY DUTY TRAILERS': return data.filters.MfgHeavyDutyTrailer || [];
-                default: return [];
+        function fetchMakesByType(type) {
+            return fetch(`{{ $disklozBaseUrl }}/api/search_inventory?selected_asset=${encodeURIComponent(type)}&per_page=1`)
+                .then(res => res.json())
+                .then(data => {
+                    switch (type) {
+                        case 'AUTO': return data.filters.MfgAuto || [];
+                        case 'MARINE': return data.filters.MfgMarine || [];
+                        case 'RV / TRAILER': return data.filters.MfgRvTrailer || [];
+                        case 'SNOWSPORTS': return data.filters.MfgSnowsport || [];
+                        case 'MOTORCYCLE': return data.filters.MfgMotorcycleAtv || [];
+                        case 'POWERSPORTS': return data.filters.MfgMotorcycleAtv || [];
+                        case 'WATERSPORT': return data.filters.MfgWatersport || [];
+                        case 'FARM EQUIPMENT': return data.filters.MfgFarmEquipment || [];
+                        case 'HEAVY TRUCK/EQUIPMENT': return data.filters.MfgHeavyTruckEquipment || [];
+                        case 'HEAVY DUTY TRAILERS': return data.filters.MfgHeavyDutyTrailer || [];
+                        default: return [];
+                    }
+                });
+        }
+
+        // On type change
+        typeSelect.addEventListener('change', function () {
+            const type = this.value;
+            if (!type) {
+                // If no type selected, show all makes
+                fetchAllMakes();
+                return;
             }
+            fetchMakesByType(type)
+                .then(populateMakes)
+                .catch(err => console.error('Error fetching makes:', err));
         });
-}
 
-// On type change
-typeSelect.addEventListener('change', function () {
-    const type = this.value;
-    if (!type) {
-        // If no type selected, show all makes
+        // Function to fetch all makes from all types
+        function fetchAllMakes() {
+            const types = [
+                'AUTO', 'MARINE', 'RV / TRAILER', 'SNOWSPORTS', 'MOTORCYCLE', 'POWERSPORTS',
+                'WATERSPORT', 'FARM EQUIPMENT', 'HEAVY TRUCK/EQUIPMENT', 'HEAVY DUTY TRAILERS'
+            ];
+
+            Promise.all(types.map(fetchMakesByType))
+                .then(results => {
+                    // Flatten the array of arrays into a single list
+                    const allMakes = results.flat();
+                    populateMakes(allMakes);
+                })
+                .catch(err => console.error('Error fetching all makes:', err));
+        }
+
+        // Initial load: populate all makes
         fetchAllMakes();
-        return;
-    }
-    fetchMakesByType(type)
-        .then(populateMakes)
-        .catch(err => console.error('Error fetching makes:', err));
-});
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const slider1 = document.getElementById('slider-1');
+            const slider2 = document.getElementById('slider-2');
+            const minValueSpan = document.getElementById('min-value');
+            const maxValueSpan = document.getElementById('max-value');
+            const form = document.getElementById('vehicleFilterForm');
 
 // Function to fetch all makes from all types
 function fetchAllMakes() {
@@ -586,45 +614,21 @@ function fetchAllMakes() {
         'WATERSPORT', 'FARM EQUIPMENT', 'HEAVY TRUCK/EQUIPMENT', 'HEAVY DUTY TRAILERS'
     ];
 
-    Promise.all(types.map(fetchMakesByType))
-        .then(results => {
-            // Flatten the array of arrays into a single list
-            const allMakes = results.flat();
-            populateMakes(allMakes);
-        })
-        .catch(err => console.error('Error fetching all makes:', err));
-}
+            slider1.addEventListener('input', () => { minValueSpan.textContent = slider1.value; });
+            slider2.addEventListener('input', () => { maxValueSpan.textContent = slider2.value; });
 
-// Initial load: populate all makes
-fetchAllMakes();
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const slider1 = document.getElementById('slider-1');
-    const slider2 = document.getElementById('slider-2');
-    const minValueSpan = document.getElementById('min-value');
-    const maxValueSpan = document.getElementById('max-value');
-    const form = document.getElementById('vehicleFilterForm');
+            // Tabs redirect
+            document.querySelectorAll('.tabs .tab').forEach(tab => {
+                tab.addEventListener('click', function () {
+                    document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
 
-    // Initialize slider display
-    minValueSpan.textContent = slider1.value;
-    maxValueSpan.textContent = slider2.value;
-
-    slider1.addEventListener('input', () => { minValueSpan.textContent = slider1.value; });
-    slider2.addEventListener('input', () => { maxValueSpan.textContent = slider2.value; });
-
-    // Tabs redirect
-    document.querySelectorAll('.tabs .tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-            document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-
-            document.getElementById('selected_condition_input').value = this.dataset.condition || '';
-            form.submit(); // redirect with filters
+                    document.getElementById('selected_condition_input').value = this.dataset.condition || '';
+                    form.submit(); // redirect with filters
+                });
+            });
         });
-    });
-});
-</script>
+    </script>
 
 
 @endsection

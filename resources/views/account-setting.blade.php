@@ -19,12 +19,12 @@
 
             @include('partials.user-account-sidebar')
             <div class="col-lg-9">
-                <div class="account-content">
+                <div class="account-content" data-aos="fade-up" data-aos-duration="600">
 
                     <h5 class="account-content-head">Notifications</h5>
 
                     <!-- Row -->
-                    <div class="notify-row">
+                    <div class="notify-row" data-aos="fade-up" data-aos-delay="100" data-aos-duration="500">
                         <div class="notify-text">
                             <h6 class="notify-head">Booking Confirmations</h6>
                             <p class="notify-para">Instant notifications for flight, hotel, or activity bookings</p>
@@ -46,7 +46,7 @@
                         </div>
                     </div>
 
-                    <div class="notify-row">
+                    <div class="notify-row" data-aos="fade-up" data-aos-delay="200" data-aos-duration="500">
                         <div class="notify-text">
                             <h6 class="notify-head">Policy</h6>
                             <p class="notify-para">Stay informed about changes to our guidelines, rules and initiatives</p>
@@ -68,7 +68,7 @@
                         </div>
                     </div>
 
-                    <div class="notify-row border-0">
+                    <div class="notify-row border-0" data-aos="fade-up" data-aos-delay="300" data-aos-duration="500">
                         <div class="notify-text">
                             <h6 class="notify-head">Promotions</h6>
                             <p class="notify-para">Updates on upcoming offers and promotions</p>

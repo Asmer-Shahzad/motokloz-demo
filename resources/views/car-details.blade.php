@@ -163,153 +163,6 @@
                                 >
                             </div>
                         @endforeach
-                        @foreach ($images as $index => $eachLogo)
-                            @php
-                                if($eachLogo == 'default' || str_contains($eachLogo,'car_thumb.png')){
-                                    $img = $defaultImage;
-                                }else{
-                                    $img = Str::startsWith($eachLogo,'http')
-                                        ? $eachLogo
-                                        : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$eachLogo;
-                                }
-                            @endphp
-                            <div class="modal-gallery-item" data-index="{{ $index }}">
-                                <img 
-                                    src="{{ $img }}"
-                                    class="modal-gallery-img mto-lightbox-trigger"
-                                    alt="Vehicle Image {{ $index + 1 }}"
-                                    loading="lazy"
-                                    onclick="openImageViewer({{ $index }})"
-                                    onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
-                                >
-                            </div>
-                        @endforeach
-                        @foreach ($images as $index => $eachLogo)
-                            @php
-                                if($eachLogo == 'default' || str_contains($eachLogo,'car_thumb.png')){
-                                    $img = $defaultImage;
-                                }else{
-                                    $img = Str::startsWith($eachLogo,'http')
-                                        ? $eachLogo
-                                        : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$eachLogo;
-                                }
-                            @endphp
-                            <div class="modal-gallery-item" data-index="{{ $index }}">
-                                <img 
-                                    src="{{ $img }}"
-                                    class="modal-gallery-img mto-lightbox-trigger"
-                                    alt="Vehicle Image {{ $index + 1 }}"
-                                    loading="lazy"
-                                    onclick="openImageViewer({{ $index }})"
-                                    onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
-                                >
-                            </div>
-                        @endforeach
-                        @foreach ($images as $index => $eachLogo)
-                            @php
-                                if($eachLogo == 'default' || str_contains($eachLogo,'car_thumb.png')){
-                                    $img = $defaultImage;
-                                }else{
-                                    $img = Str::startsWith($eachLogo,'http')
-                                        ? $eachLogo
-                                        : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$eachLogo;
-                                }
-                            @endphp
-                            <div class="modal-gallery-item" data-index="{{ $index }}">
-                                <img 
-                                    src="{{ $img }}"
-                                    class="modal-gallery-img mto-lightbox-trigger"
-                                    alt="Vehicle Image {{ $index + 1 }}"
-                                    loading="lazy"
-                                    onclick="openImageViewer({{ $index }})"
-                                    onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
-                                >
-                            </div>
-                        @endforeach
-                        @foreach ($images as $index => $eachLogo)
-                            @php
-                                if($eachLogo == 'default' || str_contains($eachLogo,'car_thumb.png')){
-                                    $img = $defaultImage;
-                                }else{
-                                    $img = Str::startsWith($eachLogo,'http')
-                                        ? $eachLogo
-                                        : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$eachLogo;
-                                }
-                            @endphp
-                            <div class="modal-gallery-item" data-index="{{ $index }}">
-                                <img 
-                                    src="{{ $img }}"
-                                    class="modal-gallery-img mto-lightbox-trigger"
-                                    alt="Vehicle Image {{ $index + 1 }}"
-                                    loading="lazy"
-                                    onclick="openImageViewer({{ $index }})"
-                                    onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
-                                >
-                            </div>
-                        @endforeach
-                        @foreach ($images as $index => $eachLogo)
-                            @php
-                                if($eachLogo == 'default' || str_contains($eachLogo,'car_thumb.png')){
-                                    $img = $defaultImage;
-                                }else{
-                                    $img = Str::startsWith($eachLogo,'http')
-                                        ? $eachLogo
-                                        : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$eachLogo;
-                                }
-                            @endphp
-                            <div class="modal-gallery-item" data-index="{{ $index }}">
-                                <img 
-                                    src="{{ $img }}"
-                                    class="modal-gallery-img mto-lightbox-trigger"
-                                    alt="Vehicle Image {{ $index + 1 }}"
-                                    loading="lazy"
-                                    onclick="openImageViewer({{ $index }})"
-                                    onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
-                                >
-                            </div>
-                        @endforeach
-                        @foreach ($images as $index => $eachLogo)
-                            @php
-                                if($eachLogo == 'default' || str_contains($eachLogo,'car_thumb.png')){
-                                    $img = $defaultImage;
-                                }else{
-                                    $img = Str::startsWith($eachLogo,'http')
-                                        ? $eachLogo
-                                        : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$eachLogo;
-                                }
-                            @endphp
-                            <div class="modal-gallery-item" data-index="{{ $index }}">
-                                <img 
-                                    src="{{ $img }}"
-                                    class="modal-gallery-img mto-lightbox-trigger"
-                                    alt="Vehicle Image {{ $index + 1 }}"
-                                    loading="lazy"
-                                    onclick="openImageViewer({{ $index }})"
-                                    onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
-                                >
-                            </div>
-                        @endforeach
-                        @foreach ($images as $index => $eachLogo)
-                            @php
-                                if($eachLogo == 'default' || str_contains($eachLogo,'car_thumb.png')){
-                                    $img = $defaultImage;
-                                }else{
-                                    $img = Str::startsWith($eachLogo,'http')
-                                        ? $eachLogo
-                                        : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$eachLogo;
-                                }
-                            @endphp
-                            <div class="modal-gallery-item" data-index="{{ $index }}">
-                                <img 
-                                    src="{{ $img }}"
-                                    class="modal-gallery-img mto-lightbox-trigger"
-                                    alt="Vehicle Image {{ $index + 1 }}"
-                                    loading="lazy"
-                                    onclick="openImageViewer({{ $index }})"
-                                    onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
-                                >
-                            </div>
-                        @endforeach
                     </div>
                 </div>
             </div>
@@ -319,7 +172,7 @@
     <section class="mto-main-wrapper py-5">
         <div class="container">
 
-            <div class="row mb-4 align-items-end">
+            <div class="row mb-4 align-items-end" data-aos="fade-up" data-aos-duration="600">
                 <div class="col-lg-8">
                     <h2 class="mto-top-headline fw-bold">{{ isset($searched_vehicle->inventory_condition) ? $searched_vehicle->inventory_condition : '' }}
                         {{ isset($searched_vehicle->year) ?  $searched_vehicle->year : '' }}
@@ -376,7 +229,7 @@
             <div class="row">
                 <div class="col-lg-8">
 
-                    <div class="mto-specs-container mb-5">
+                    <div class="mto-specs-container mb-5" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
                         <div class="row g-2">
                             <div class="col-md-3 col-6">
                                 <div class="mto-info-tile"><img src="/assets/images/icon01.png" alt=""> {{ isset($searched_vehicle->mileage) ? $searched_vehicle->mileage : '' }} km</div>
@@ -408,7 +261,7 @@
 
                     <div class="mto-details-stack">
 
-                        <div class="mto-stack-item mb-4">
+                        <div class="mto-stack-item mb-4" data-aos="fade-up" data-aos-duration="600" data-aos-delay="0">
                             <div class="mto-stack-trigger active d-flex justify-content-between align-items-center">
                                 <h5 class="mb-0 fw-bold">Vehicle Description</h5>
                                 <i class="fa-solid fa-chevron-up mto-arrow"></i>
@@ -521,7 +374,7 @@
                     }
                 </style>
 
-                <div class="col-lg-4">
+                <div class="col-lg-4" data-aos="fade-left" data-aos-duration="700" data-aos-delay="100">
                     <div class="mto-sticky-side">
                         <!-- Buttons -->
                         <div class="mto-card-unit mb-4 p-4 shadow-sm">

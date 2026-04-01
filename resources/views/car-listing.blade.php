@@ -15,7 +15,7 @@ $end = $start + count($search_inventory_result) - 1;
 
 @section('content')
 
-<section class="banner-car-listing">
+<section class="banner-car-listing" data-aos="fade-down" data-aos-duration="700">
     <div class="container-fluid">
         <div class="car-listing-bg">
             <div class="container">
@@ -140,7 +140,7 @@ $end = $start + count($search_inventory_result) - 1;
             </div>
         </div>
         <div class="row g-4">
-            <div class="col-lg-3 col-md-4">
+            <div class="col-lg-3 col-md-4" data-aos="fade-right" data-aos-duration="700">
                 <form id="sidebarFilterForm" method="GET" action="{{ route('search_inventory') }}">
                     <aside class="complete-sidebar">
                         <h5 class="sidebar-main-heading">Filter Search</h5>
@@ -343,7 +343,10 @@ $end = $start + count($search_inventory_result) - 1;
                     <div class="row g-4" id="vehicleContainer">
                         @if ($search_inventory_result != null)
                         @foreach ($search_inventory_result as $recent_vehicle)
-                        <div class="col-lg-4 col-sm-6 vehicle-card">
+                        <div class="col-lg-4 col-sm-6 vehicle-card"
+                            data-aos="fade-up"
+                            data-aos-delay="{{ ($loop->index % 3) * 100 }}"
+                            data-aos-duration="600">
                             <div class="modern-car-card shadow-sm">
                                 <div class="car-card-top">
                                             @php $detailUrl = route('inventory_product_details', $recent_vehicle->id); @endphp
