@@ -441,7 +441,7 @@
 
                             </div>
 
-                            <button type="submit" class="btn btn-orange mt-4 px-5">
+                            <button type="submit" class="btn btn-orange mt-4 px-5" disabled>
                                 Submit review
                             </button>
 
@@ -885,6 +885,30 @@
 
         textarea.form-control{
             height:170px;
+        }
+
+        /* Style for disabled button */
+        .btn-orange:disabled,
+        .btn-orange.disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            pointer-events: none;
+            background-color: #f98e00;
+            border-color: #f98e00;
+        }
+
+        /* If you want to maintain full opacity but just disable click */
+        .btn-orange:disabled {
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* Or if you want a different look for disabled state */
+        .btn-orange:disabled {
+            background-color: #f98e00;
+            border-color: #f98e00;
+            cursor: not-allowed;
+            pointer-events: none;
         }
     </style>
 
