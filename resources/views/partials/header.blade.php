@@ -45,10 +45,12 @@
                                         <a class="nav-link" href="/car-listing?selected_asset=MOTORCYCLE">Motorcycle</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=POWERSPORTS">Powersports</a>
+                                        <a class="nav-link"
+                                            href="/car-listing?selected_asset=POWERSPORTS">Powersports</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT">Heavy
+                                        <a class="nav-link"
+                                            href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT">Heavy
                                             Truck</a>
                                     </li>
                                     <li class="nav-item">
@@ -297,25 +299,25 @@
                                     id="userDropdown">
                                     <img src="/assets/images/user.png" class="img-fluid light-dark">
                                 </a>
+
                                 <ul class="dropdown-menu nav-drop dropdown-menu-end" aria-labelledby="userDropdown">
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('login') ? 'active-link' : '' }}"
                                             href="{{ route('login') }}">
-                                            Login
+                                            <i class="fa fa-sign-in-alt me-2"></i> Login
                                         </a>
                                     </li>
 
                                     <li>
-                                        <a class="dropdown-item {{ request()->routeIs('login') ? 'active-link' : '' }}"
-                                            href="#">
-                                            Support
+                                        <a class="dropdown-item" href="/coming-soon">
+                                            <i class="fa fa-headset me-2"></i> Support
                                         </a>
                                     </li>
 
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('signup') ? 'active-link' : '' }}"
                                             href="{{ route('signup') }}">
-                                            Register
+                                            <i class="fa fa-user-plus me-2"></i> Register
                                         </a>
                                     </li>
                                 </ul>

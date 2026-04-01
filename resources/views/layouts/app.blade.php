@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/user-auth.css') }}">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <!-- Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Lato:wght@100..900&family=Vend+Sans:wght@300..700&display=swap"
@@ -145,7 +146,7 @@
             </div>
         </div>
     </div>
-
+    <div id="snackbar"></div>
     <style>
         #page-loader {
             position: fixed;
@@ -423,7 +424,7 @@
                 if (e.persisted) {
                     loader.classList.remove('active');
                     document.body.classList.remove('loader-active');
-                    ncelAnimationFrame(rafId); \
+                    cancelAnimationFrame(rafId);
                     current = 0; target = 0;
                     if (numEl) numEl.textContent = '0';
                 }
@@ -475,8 +476,7 @@
                 <button class="mto-lb-arrow mto-lb-prev" id="mto-lb-prev">&#8249;</button>
                 <div class="mto-lb-img-wrap" id="mto-lb-img-wrap">
                     <img id="mto-lb-img" src="" alt="Preview" draggable="false">
-                    7
-                </div>748
+                </div>
                 <button class="mto-lb-arrow mto-lb-next" id="mto-lb-next">&#8250;</button>
             </div>
 
@@ -489,6 +489,89 @@
     </div>
 
     <style>
+        /* ===================== Snackbar Base ===================== */
+        #snackbar {
+            visibility: hidden;
+            min-width: 320px;
+            max-width: 90%;
+            background-color: #333;
+            color: #fff;
+            text-align: left;
+            border-radius: 12px;
+            padding: 16px 20px;
+            position: fixed;
+            z-index: 9999;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%) translateY(20px);
+            font-size: 15px;
+            font-weight: 500;
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s ease;
+            pointer-events: none;
+            /* Prevent clicks while hidden */
+        }
+
+        /* ===================== Show State ===================== */
+        #snackbar.show {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+            /* Allow interactions */
+        }
+
+        /* ===================== Variants ===================== */
+        #snackbar.success {
+            background-color: #ff9d00;
+            /* Green */
+        }
+
+        #snackbar.error {
+            background-color: #ff9d00;
+            /* Red */
+        }
+
+        #snackbar.warning {
+            background-color: #ffc107;
+            /* Yellow */
+            color: #212529;
+        }
+
+        /* ===================== Icon ===================== */
+        #snackbar::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Icons for different types */
+        #snackbar.success::before {
+            background-color: rgba(255, 255, 255, 0.5);
+            mask: url('data:image/svg+xml;utf8,<svg fill="white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M13.485 1.929l-7.778 7.778-3.182-3.182-1.06 1.06 4.242 4.242 8.838-8.838-1.06-1.06z"/></svg>') no-repeat center / contain;
+            -webkit-mask: url(...) no-repeat center / contain;
+        }
+
+        #snackbar.error::before {
+            background-color: rgba(255, 255, 255, 0.5);
+            mask: url('data:image/svg+xml;utf8,<svg fill="white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.646 4.646l6.708 6.708m0-6.708l-6.708 6.708"/></svg>') no-repeat center / contain;
+            -webkit-mask: url(...) no-repeat center / contain;
+        }
+
+        #snackbar.warning::before {
+            background-color: rgba(0, 0, 0, 0.5);
+            mask: url('data:image/svg+xml;utf8,<svg fill="black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M8 1l7 14H1L8 1zm0 10v-4m0 6v-2"/></svg>') no-repeat center / contain;
+            -webkit-mask: url(...) no-repeat center / contain;
+        }
+
         /* Lightbox overlay */
         #mto-lightbox {
             position: fixed;
@@ -520,7 +603,7 @@
         }
 
         /* Top bar */
-        .mto-lb-477topbar {
+        .mto-lb-topbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -805,6 +888,49 @@
                 if (e.key === '0') resetTransform();
             });
         })();
+
+        function showSnackbar(message, type = 'success', duration = 5000) {
+            const snackbar = document.getElementById('snackbar');
+            snackbar.textContent = message;
+
+            // Reset classes
+            snackbar.className = '';
+            snackbar.classList.add(type, 'show');
+
+            // Hide after duration
+            setTimeout(() => {
+                snackbar.classList.remove('show');
+            }, duration);
+        }
+    </script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+
+        // You can also pass an optional settings object
+        // below listed default settings
+        AOS.init({
+            // Global settings:
+            disable: false, // accepts following values: 'phone', 'tablet', 'mobile', boolean, expression or function
+            startEvent: 'DOMContentLoaded', // name of the event dispatched on the document, that AOS should initialize on
+            initClassName: 'aos-init', // class applied after initialization
+            animatedClassName: 'aos-animate', // class applied on animation
+            useClassNames: false, // if true, will add content of `data-aos` as classes on scroll
+            disableMutationObserver: false, // disables automatic mutations' detections (advanced)
+            debounceDelay: 50, // the delay on debounce used while resizing window (advanced)
+            throttleDelay: 99, // the delay on throttle used while scrolling the page (advanced)
+
+
+            // Settings that can be overridden on per-element basis, by `data-aos-*` attributes:
+            offset: 300, // offset (in px) from the original trigger point
+            delay: 0, // values from 0 to 3000, with step 50ms
+            duration: 1000, // values from 0 to 3000, with step 50ms
+            easing: 'ease', // default easing for AOS animations
+            once: true, // whether animation should happen only once - while scrolling down
+            mirror: false, // whether elements should animate out while scrolling past them
+            anchorPlacement: 'top-bottom', // defines which position of the element regarding to window should trigger the animation
+
+        });
     </script>
 
     @yield('content')

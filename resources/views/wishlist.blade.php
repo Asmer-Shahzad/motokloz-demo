@@ -59,7 +59,7 @@
                     <div class="wishlist-items">
 
                         <!-- Item 1 -->
-                        <div class=" wishlist-card mb-4">
+                        <div class=" wishlist-card mb-4" data-aos="fade-up" data-aos-duration="600">
                             <div class="row g-0">
                                 <div class="col-md-5">
                                     <img src="/assets/images/wish-1 (1).png" class="img-fluid rounded-start wishlist-img"
@@ -144,7 +144,7 @@
                         </div>
 
                         <!-- Item 2 -->
-                        <div class=" wishlist-card mb-4">
+                        <div class=" wishlist-card mb-4" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
                             <div class="row g-0">
                                 <div class="col-md-5">
                                     <img src="/assets/images/Link.png" class="img-fluid rounded-start wishlist-img"
@@ -225,7 +225,7 @@
                         </div>
 
                         <!-- Item 3 -->
-                        <div class=" wishlist-card mb-4">
+                        <div class=" wishlist-card mb-4" data-aos="fade-up" data-aos-delay="200" data-aos-duration="600">
                             <div class="row g-0">
                                 <div class="col-md-5">
                                     <img src="/assets/images/Link (2).png" class="img-fluid rounded-start wishlist-img"

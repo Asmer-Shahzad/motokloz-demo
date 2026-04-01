@@ -915,3 +915,15 @@ var swiper = new Swiper(".mySwiper", {
 </script>
 <script>window.gtranslateSettings = { "default_language": "en", "native_language_names": true, "detect_browser_language": true, "wrapper_selector": ".gtranslate_wrapper", "flag_style": "3d", "alt_flags": { "en": "canada" } }</script>
 <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
+
+<script>
+    // AOS Animation Init
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            once: true,
+            duration: 600,
+            easing: 'ease-out-cubic',
+            offset: 60,
+        });
+    }
+</script>

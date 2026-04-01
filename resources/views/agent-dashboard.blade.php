@@ -19,7 +19,7 @@
                 <div class="dashboard-content">
 
                     <!-- ===== My Vehicles ===== -->
-                    <div class="vehicles-card dashboard-card  mb-4">
+                    <div class="vehicles-card dashboard-card  mb-4" data-aos="fade-up" data-aos-duration="600">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="mb-0 vehicle-sec">My Vehicles</h5>
                             <div class="d-flex gap-2">
@@ -143,7 +143,7 @@
                     <div class="row g-3">
 
                         <!-- Member Offers -->
-                        <div class="col-md-5">
+                        <div class="col-md-5" data-aos="fade-up" data-aos-delay="0" data-aos-duration="600">
                             <div class="vehicles-card dashboard-card h-100">
                                 <div class="card-header d-flex justify-content-between">
                                     <h6 class="mb-0 head-vehicles">Member Offers</h6>
@@ -228,7 +228,7 @@
 
 
                         <!-- Purchases -->
-                        <div class=" col-md-7">
+                        <div class=" col-md-7" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
                             <div class="vehicles-card dashboard-card h-100">
                                 <div class="card-header d-flex justify-content-between">
                                     <h6 class="mb-0 head-vehicles">Purchases</h6>
