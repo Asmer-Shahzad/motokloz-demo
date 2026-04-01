@@ -353,13 +353,30 @@
                             </div>
                         </aside>
                     </form>
-                    <!-- <div class="sidebar-map-box mt-4 complete-sidebar">
+                <div class="sidebar-map-box mt-4 complete-sidebar">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <span class="map-label">Show on map</span>
                             <i class="fa-solid fa-chevron-down map-toggle-icon"></i>
                         </div>
-                        <img src="/assets/images/map.png" class="img-fluid rounded-3" alt="Map">
-                    </div> -->
+                        @php
+                            $dealerMapAddress = urlencode(
+                                trim(($dealer->physical_address ?? '') . ', ' .
+                                ($dealer->city ?? '') . ', ' .
+                                ($dealer->province ?? '') . ' ' .
+                                ($dealer->postal_code ?? '') . ', ' .
+                                ($dealer->country ?? 'Canada'))
+                            );
+                        @endphp
+                        <iframe
+                            width="100%"
+                            height="220"
+                            style="border:0; border-radius:12px; display:block;"
+                            loading="lazy"
+                            allowfullscreen
+                            referrerpolicy="no-referrer-when-downgrade"
+                            src="https://maps.google.com/maps?q={{ $dealerMapAddress }}&output=embed&z=15">
+                        </iframe>
+                    </div> 
                 </div>
 
 
