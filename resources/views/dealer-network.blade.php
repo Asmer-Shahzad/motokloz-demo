@@ -136,7 +136,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="dealerApplicationForm" action="{{ route('dealer.application.submit') }}" method="POST">
+                    <form data-ajax="true" id="dealerApplicationForm" action="{{ route('dealer.application.submit') }}" method="POST">
                         @csrf
                         <div class="mb-3">
                             <label for="dealership_name" class="form-label">Dealership Name</label>
@@ -218,52 +218,68 @@
                             
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('dealerApplicationForm');
-    
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = 'Submitting...';
-            submitBtn.disabled = true;
-            
-            const formData = new FormData(this);
-            
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert(data.message);
-                    form.reset();
-                    // Close modal
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('testDriveModal'));
-                    if (modal) modal.hide();
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => {
-                alert('Network error. Please try again.');
-                console.error('Error:', error);
-            })
-            .finally(() => {
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
+        $(document).ready(function(){
+
+            $('#dealerApplicationForm').on('submit', function(e){
+                e.preventDefault();
+
+                // ===== UI STATE (same as test drive) =====
+                var $btn = $(this).find('button[type="submit"]');
+                var originalText = $btn.html();
+
+                $btn.prop('disabled', true)
+                    .html('<i class="fas fa-spinner fa-spin ms-2"></i>');
+
+                $('#loadingSpinner').show();
+
+                var form = this;
+                var formData = new FormData(form);
+
+                $.ajax({
+                    url: form.action,
+                    method: 'POST',
+                    data: formData,
+                    processData: false,   // IMPORTANT for FormData
+                    contentType: false,   // IMPORTANT for FormData
+
+                    success: function(res){
+                        showSnackbar(res.message || 'Submitted successfully!', 'success');
+
+                        form.reset();
+
+                        // modal close (agar hai)
+                        const modalEl = document.getElementById('testDriveModal');
+                        if (modalEl) {
+                            const modal = bootstrap.Modal.getInstance(modalEl);
+                            if (modal) modal.hide();
+                        }
+                    },
+
+                    error: function(xhr){
+                        if (xhr.status === 422 && xhr.responseJSON?.errors) {
+                            let msgs = [];
+                            $.each(xhr.responseJSON.errors, function(field, messages) {
+                                msgs.push(messages.join(', '));
+                            });
+                            showSnackbar(msgs.join(' | '), 'error');
+
+                        } else if (xhr.status === 500) {
+                            showSnackbar('Server error. Please try again later.', 'error');
+
+                        } else {
+                            showSnackbar(xhr.responseJSON?.message || 'Something went wrong.', 'error');
+                        }
+                    },
+
+                    complete: function(){
+                        $btn.prop('disabled', false).html(originalText);
+                        $('#loadingSpinner').hide();
+                    }
+                });
             });
+
         });
-    }
-});
-</script>
+        </script>
 
     <style>
         .dealer-search-wrap {

@@ -243,24 +243,12 @@ $end = $start + count($search_inventory_result) - 1;
                         </div>
 
                         <!-- Body Style -->
-                    <div class="filter-group">
-                        <label class="sidebar-label">Body Style</label>
-                        <select name="selected_body_style" id="body-style-select" class="form-select sidebar-input">
-                            <option value="">Select Body Style</option>
-                            @php
-                            $selected_body_style = request('selected_body_style');
-                            @endphp
-
-                            @if(!empty($body_styles) && count($body_styles) > 0)
-                                @foreach($body_styles as $style)
-                                    <option value="{{ $style->name }}" 
-                                        {{ (isset($selected_body_style) && $selected_body_style == $style->name) ? 'selected' : '' }}>
-                                        {{ $style->name }}
-                                    </option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
+                        <div class="filter-group">
+                            <label class="sidebar-label">Body Style</label>
+                            <select name="selected_body_style" id="body-style-select" class="form-select sidebar-input">
+                                <option value="">Select Body Style</option>
+                            </select>
+                        </div>
 
                         <!-- Fuel -->
                         <div class="filter-group">
@@ -442,6 +430,11 @@ $end = $start + count($search_inventory_result) - 1;
 </section>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
+    const bodyStyleTypes = @json($bodyStyleTypes);
+    const selectedAsset = "{{ request('selected_asset') }}";
+    const selectedBodyStyle = "{{ request('selected_body_style') }}";
+</script>
+<script>
     document.addEventListener('DOMContentLoaded', function() {
         // Clear Filters Button
         const clearFiltersBtn = document.querySelector('.btn-clear-filters');
@@ -574,61 +567,44 @@ $(document).ready(function() {
         $(this).data('previous-value', $(this).val());
     });
 
-    // Load body styles based on asset type
     function loadBodyStyles(assetType) {
         const bodyStyleSelect = $('#body-style-select');
-        bodyStyleSelect.html('<option value="">Loading Body Styles...</option>');
+
         if (!assetType) {
             bodyStyleSelect.html('<option value="">Select Body Style</option>');
             return;
         }
-        $.ajax({
-            url: "{{ env('diskloz_base_url') }}/api/search_inventory",
-            type: "GET",
-            data: { selected_asset: assetType, per_page: 1 },
-            success: function(data) {
-                let bodyStyles = [];
-                switch(assetType) {
-                    case 'AUTO':
-                        bodyStyles = data.filters?.BodyStyle || data.filters?.BodyStyle || [];
-                        break;
-                    case 'RV / TRAILER':
-                        bodyStyles = data.filters?.BodyStyleRvTrailer || data.filters?.BodyStyle || [];
-                        break;
-                    case 'MOTORCYCLE':
-                    case 'POWERSPORTS':
-                        bodyStyles = data.filters?.BodyStyleMotorcycleAtv || data.filters?.BodyStyle || [];
-                        break;
-                    case 'HEAVY TRUCK/EQUIPMENT':
-                        bodyStyles = data.filters?.BodyStyleHeavyTruckEquipment || data.filters?.BodyStyle || [];
-                        break;
-                    case 'HEAVY DUTY TRAILERS':
-                        bodyStyles = data.filters?.BodyStyleHeavyDutyTrailer || data.filters?.BodyStyle || [];
-                        break;
-                    case 'FARM EQUIPMENT':
-                        bodyStyles = data.filters?.BodyStyleFarmEquipment || data.filters?.BodyStyle || [];
-                        break;
-                    default:
-                        bodyStyles = data.filters?.BodyStyle || [];
-                }
-                let options = '<option value="">Select Body Style</option>';
-                const currentSelectedBodyStyle = "{{ request('selected_body_style') }}";
-                if (bodyStyles && bodyStyles.length > 0) {
-                    $.each(bodyStyles, function(i, style) {
-                        const selected = (currentSelectedBodyStyle == style.id) ? 'selected' : '';
-                        options += `<option value="${style.id}" ${selected}>${style.name}</option>`;
-                    });
-                } else {
-                    options = '<option value="">No Body Styles Available</option>';
-                }
-                bodyStyleSelect.html(options);
-            },
-            error: function(err) {
-                console.error('Error fetching body styles:', err);
-                bodyStyleSelect.html('<option value="">Error Loading Body Styles</option>');
-            }
-        });
+
+        let bodyStyles = bodyStyleTypes[assetType] || [];
+
+        let options = '<option value="">Select Body Style</option>';
+
+        if (bodyStyles.length > 0) {
+            bodyStyles.forEach(style => {
+                const selected = (selectedBodyStyle == style.id) ? 'selected' : '';
+                options += `<option value="${style.id}" ${selected}>${style.name}</option>`;
+            });
+        } else {
+            options = '<option value="">No Body Styles Available</option>';
+        }
+
+        bodyStyleSelect.html(options);
     }
+
+    $(document).ready(function () {
+
+        // page load pe run karo (important)
+        if (selectedAsset) {
+            loadBodyStyles(selectedAsset);
+        }
+
+        // asset change pe
+        $('#sidebar-type').on('change', function () {
+            let assetType = $(this).val();
+            loadBodyStyles(assetType);
+        });
+
+    });
 
     // Load makes based on asset type
     function loadMakes(assetType) {
@@ -649,11 +625,13 @@ $(document).ready(function() {
                     case 'AUTO': 
                         makes = data.filters?.MfgAuto || []; 
                         break;
+                    case 'MARINE': 
+                        makes = data.filters?.MfgMarine || []; 
+                        break;
                     case 'RV / TRAILER': 
                         makes = data.filters?.MfgRvTrailer || []; 
                         break;
-                    case 'MOTORCYCLE':
-                    case 'POWERSPORTS': 
+                    case 'MOTORCYCLE / ATV / POWERSPORTS':
                         makes = data.filters?.MfgMotorcycleAtv || []; 
                         break;
                     case 'HEAVY TRUCK/EQUIPMENT': 
@@ -749,9 +727,11 @@ $(document).ready(function() {
 
                     switch (type) {
                         case 'AUTO': return data.filters.MfgAuto || [];
+                        case 'MARINE': return data.filters.MfgMarine || [];
+                        case 'SNOWSPORTS': return data.filters.MfgSnowsport || [];
+                        case 'WATERSPORT': return data.filters.MfgWatersport || [];
                         case 'RV / TRAILER': return data.filters.MfgRvTrailer || [];
-                        case 'MOTORCYCLE':
-                        case 'POWERSPORTS': return data.filters.MfgMotorcycleAtv || [];
+                        case 'MOTORCYCLE / ATV / POWERSPORTS': return data.filters.MfgMotorcycleAtv || [];
                         case 'HEAVY TRUCK/EQUIPMENT': return data.filters.MfgHeavyTruckEquipment || [];
                         case 'HEAVY DUTY TRAILERS': return data.filters.MfgHeavyDutyTrailer || [];
                         case 'FARM EQUIPMENT': return data.filters.MfgFarmEquipment || [];

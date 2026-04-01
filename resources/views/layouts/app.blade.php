@@ -119,7 +119,7 @@
         </div>
     </div>
 </div>
-
+<div id="snackbar"></div>
 <style>
     #page-loader {
         position: fixed;
@@ -139,11 +139,16 @@
     #page-loader.active ~ * [class*="gt_"],
     body.loader-active .gtranslate_wrapper,
     body.loader-active [class*="gt_"],
+    body.loader-active [id*="galleryModal"],
     body.loader-active [id*="gt_"] {
         z-index: 1 !important;
         visibility: hidden !important;
     }
     #page-loader.active { opacity: 1; visibility: visible; }
+
+    .gtranslate_wrapper.gt_container--c8la1f {
+        z-index: 999;
+    }
 
     /* Ambient orbs */
     .mto-orb {
@@ -395,6 +400,68 @@
     </div>
 
     <style>
+        /* ===================== Snackbar Base ===================== */
+        #snackbar {
+            visibility: hidden;
+            min-width: 320px;
+            max-width: 90%;
+            background-color: #333;
+            color: #fff;
+            text-align: left;
+            border-radius: 12px;
+            padding: 16px 20px;
+            position: fixed;
+            z-index: 9999;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%) translateY(20px);
+            font-size: 15px;
+            font-weight: 500;
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: all 0.4s ease;
+            pointer-events: none; /* Prevent clicks while hidden */
+        }
+
+        /* ===================== Show State ===================== */
+        #snackbar.show {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto; /* Allow interactions */
+        }
+
+        /* ===================== Variants ===================== */
+        #snackbar.success {
+            background-color: #ff9d00; /* Green */
+        }
+        #snackbar.error {
+            background-color: #ff9d00; /* Red */
+        }
+        #snackbar.warning {
+            background-color: #ffc107; /* Yellow */
+            color: #212529;
+        }
+
+        /* ===================== Icon ===================== */
+        #snackbar::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.3);
+        }
+
+        /* Icons for different types */
+        #snackbar.success::before { background-color: rgba(255, 255, 255, 0.5); mask: url('data:image/svg+xml;utf8,<svg fill="white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M13.485 1.929l-7.778 7.778-3.182-3.182-1.06 1.06 4.242 4.242 8.838-8.838-1.06-1.06z"/></svg>') no-repeat center / contain; -webkit-mask: url(...) no-repeat center / contain; }
+        #snackbar.error::before   { background-color: rgba(255, 255, 255, 0.5); mask: url('data:image/svg+xml;utf8,<svg fill="white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.646 4.646l6.708 6.708m0-6.708l-6.708 6.708"/></svg>') no-repeat center / contain; -webkit-mask: url(...) no-repeat center / contain; }
+        #snackbar.warning::before { background-color: rgba(0, 0, 0, 0.5); mask: url('data:image/svg+xml;utf8,<svg fill="black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M8 1l7 14H1L8 1zm0 10v-4m0 6v-2"/></svg>') no-repeat center / contain; -webkit-mask: url(...) no-repeat center / contain; }
+
         /* Lightbox overlay */
         #mto-lightbox {
             position: fixed; inset: 0;
@@ -461,7 +528,7 @@
             transform-origin: center center;
             transition: transform 0.2s ease;
             user-select: none; pointer-events: none;
-            border-radius: 4px;
+            border-radius: 12px;
         }
 
         /* Arrows */
@@ -624,7 +691,21 @@
             if (e.key === '-')           setScale(scale - 0.25);
             if (e.key === '0')           resetTransform();
         });
-    })();
+    })();   
+
+   function showSnackbar(message, type = 'success', duration = 5000) {
+        const snackbar = document.getElementById('snackbar');
+        snackbar.textContent = message;
+
+        // Reset classes
+        snackbar.className = '';
+        snackbar.classList.add(type, 'show');
+
+        // Hide after duration
+        setTimeout(() => {
+            snackbar.classList.remove('show');
+        }, duration);
+    }
     </script>
 
     @yield('content')

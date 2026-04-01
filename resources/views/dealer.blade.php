@@ -769,14 +769,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const f = data.filters;
 
-                switch (type) {
-                    case 'AUTO': return f.MfgAuto || [];
-                    case 'RV / TRAILER': return f.MfgRvTrailer || [];
-                    case 'MOTORCYCLE':
-                    case 'POWERSPORTS': return f.MfgMotorcycleAtv || [];
-                    case 'HEAVY TRUCK/EQUIPMENT': return f.MfgHeavyTruckEquipment || [];
-                    case 'HEAVY DUTY TRAILERS': return f.MfgHeavyDutyTrailer || [];
-                    case 'FARM EQUIPMENT': return f.MfgFarmEquipment || [];
+                switch(type) {
+                    case 'AUTO': return data.filters.MfgAuto || [];
+                    case 'MARINE': return data.filters.MfgMarine || [];
+                    case 'RV / TRAILER': return data.filters.MfgRvTrailer || [];
+                    case 'SNOWSPORTS': return data.filters.MfgSnowsport || [];
+                    case 'MOTORCYCLE / ATV / POWERSPORTS': return data.filters.MfgMotorcycleAtv || [];
+                    case 'WATERSPORT': return data.filters.MfgWatersport || [];
+                    case 'FARM EQUIPMENT': return data.filters.MfgFarmEquipment || [];
+                    case 'HEAVY TRUCK/EQUIPMENT': return data.filters.MfgHeavyTruckEquipment || [];
+                    case 'HEAVY DUTY TRAILERS': return data.filters.MfgHeavyDutyTrailer || [];
                     default: return [];
                 }
             })

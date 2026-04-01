@@ -483,7 +483,7 @@
                 <div class="content-box shadow-sm p-4">
                 <h5 class="fw-bold mb-4">Get in touch</h5>
 
-                <form id="leadForm" action="#" method="POST">
+                <form data-ajax="true" id="leadForm" action="#" method="POST">
                     <!-- CSRF Token -->
                     @csrf
                     
@@ -498,7 +498,7 @@
                     <input type="hidden" name="lead_type" value="General Inquiry">
 
                     <!-- Show error messages if IDs are missing -->
-                    @if(!($dealer->id ?? false) || !($searched_vehicle->id ?? false))
+                    @if(!($dealer->id ?? false))
                         <div class="alert alert-danger mb-3">
                             <strong>Error:</strong> Vehicle or dealer information is missing. 
                             Please contact support.
@@ -549,7 +549,7 @@
                     </div>
 
                     <button type="submit" id="submitBtn" class="btn btn-orange w-100 mb-4 text-white"
-                            @if(!($dealer->id ?? false) || !($searched_vehicle->id ?? false)) disabled @endif>
+                            @if(!($dealer->id ?? false)) @endif>
                         Send message <i class="fas fa-arrow-right ms-2"></i>
                     </button>
                 </form>
@@ -594,7 +594,7 @@
                 </div>
                 <a href="{{ route('dealer_inventory', $dealer->id) }}">
                     <button class="mto-btn-orange w-100 mb-3">
-                        Dealer Inventory 
+                        View This Dealer's Inventory
                         <i class="fa-solid fa-arrow-right ms-2"></i>
                     </button>
                 </a>
@@ -708,42 +708,50 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
+
+            function handleErrors(xhr){
+                console.log('Error Response:', xhr.responseJSON);
+                console.log('Status Code:', xhr.status);
+
+                if (xhr.status === 422 && xhr.responseJSON?.errors) {
+                    let msgs = [];
+                    $.each(xhr.responseJSON.errors, function(field, messages) {
+                        msgs.push(messages.join(', '));
+                    });
+                    showSnackbar(msgs.join(' | '), 'error');
+
+                } else if (xhr.status === 404) {
+                    showSnackbar('API endpoint not found.', 'error');
+
+                } else if (xhr.status === 500) {
+                    showSnackbar('Server error. Please try again later.', 'error');
+
+                } else {
+                    showSnackbar(xhr.responseJSON?.message || 'Something went wrong.', 'error');
+                }
+            }
+
             $('#leadForm').on('submit', function(e){
                 e.preventDefault();
-                
-                // Get dealer and product IDs with better validation
+
                 var dealerId = $('#dealer_id').val();
                 var productId = $('#product_id').val();
-                
-                console.log('Dealer ID:', dealerId);
-                console.log('Product ID:', productId);
-                
-                // Check if IDs are empty, null, or 'null' string
-                if (!dealerId || dealerId === '' || dealerId === 'null' || dealerId === 'NULL') {
-                    alert('Error: Dealer information is missing. Please refresh the page or contact support.');
+
+                // ===== VALIDATIONS =====
+                if (!dealerId || dealerId === '' || dealerId.toLowerCase() === 'null') {
+                    showSnackbar('Dealer info missing. Refresh page.', 'warning');
                     return;
                 }
-                
-                if (!productId || productId === '' || productId === 'null' || productId === 'NULL') {
-                    alert('Error: Vehicle information is missing. Please refresh the page or contact support.');
-                    return;
-                }
-                
-                // Convert to integers and validate
+
                 dealerId = parseInt(dealerId);
                 productId = parseInt(productId);
-                
+
                 if (isNaN(dealerId) || dealerId <= 0) {
-                    alert('Error: Invalid dealer information. Please refresh the page.');
+                    showSnackbar('Invalid dealer info.', 'error');
                     return;
                 }
-                
-                if (isNaN(productId) || productId <= 0) {
-                    alert('Error: Invalid vehicle information. Please refresh the page.');
-                    return;
-                }
-                
-                // Prepare form data
+
+
                 var formData = {
                     name: $('#name').val(),
                     email: $('#email').val(),
@@ -758,75 +766,69 @@
                     lead_source: $('input[name="lead_source"]').val(),
                     lead_type: $('input[name="lead_type"]').val()
                 };
-                
-                // Validate required fields
+
                 if (!formData.name || !formData.email || !formData.phone || !formData.message) {
-                    alert('Please fill in all required fields (Name, Email, Phone, Message)');
+                    showSnackbar('Fill all required fields', 'warning');
                     return;
                 }
-                
-                // Validate email format
+
                 var emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
                 if (!emailRegex.test(formData.email)) {
-                    alert('Please enter a valid email address');
+                    showSnackbar('Invalid email address', 'warning');
                     return;
                 }
-                
-                // Validate phone (basic validation)
+
                 if (formData.phone.length < 10) {
-                    alert('Please enter a valid phone number (minimum 10 digits)');
+                    showSnackbar('Enter valid phone number', 'warning');
                     return;
                 }
-                
-                // Get submit button and change text
-                var $submitBtn = $(this).find('button[type="submit"]');
-                var originalText = $submitBtn.html();
-                $submitBtn.prop('disabled', true).html('Sending... <i class="fas fa-spinner fa-spin ms-2"></i>');
-                
-                // Show spinner
+
+                // ===== UI STATE (SAME STYLE) =====
+                var $btn = $(this).find('button[type="submit"]');
+                var originalText = $btn.html();
+
+                $btn.prop('disabled', true)
+                    .html('<i class="fas fa-spinner fa-spin me-2"></i>');
+
                 $('#loadingSpinner').show();
-                
-                console.log('Sending lead data:', formData);
-                
-                // Send AJAX request
+
+                // ===== AJAX =====
                 $.ajax({
                     url: "{{ env('diskloz_base_url') }}/api/leads",
                     method: 'POST',
                     data: JSON.stringify(formData),
                     contentType: 'application/json',
                     dataType: 'json',
-                    success: function(response){
-                        console.log('Success:', response);
-                        alert(response.message || 'Message sent successfully!');
-                        
-                        // Reset form
+
+                    success: function(res){
+                        showSnackbar('Form Submitted successfully!', 'success');
+
                         $('#leadForm')[0].reset();
                     },
+
                     error: function(xhr){
-                        console.log('Error Response:', xhr.responseJSON);
-                        console.log('Status Code:', xhr.status);
-                        
-                        if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
-                            let errorMessages = '';
+                        if (xhr.status === 422 && xhr.responseJSON?.errors) {
+                            let msgs = [];
                             $.each(xhr.responseJSON.errors, function(field, messages) {
-                                errorMessages += field + ': ' + messages.join(', ') + '\n';
+                                msgs.push(messages.join(', '));
                             });
-                            alert('Validation Error:\n' + errorMessages);
-                        } else if (xhr.status === 404) {
-                            alert('API endpoint not found. Please check the URL.');
+                            showSnackbar(msgs.join(' | '), 'error');
+
                         } else if (xhr.status === 500) {
-                            alert('Server error. Please try again later.');
+                            showSnackbar('Server error. Please try again later.', 'error');
+
                         } else {
-                            alert(xhr.responseJSON?.message || 'Something went wrong. Please try again.');
+                            showSnackbar(xhr.responseJSON?.message || 'Something went wrong.', 'error');
                         }
                     },
-                    complete: function() {
-                        // Re-enable submit button and restore text
-                        $submitBtn.prop('disabled', false).html(originalText);
+
+                    complete: function(){
+                        $btn.prop('disabled', false).html(originalText);
                         $('#loadingSpinner').hide();
                     }
                 });
             });
+
         });
     </script>
     <style>

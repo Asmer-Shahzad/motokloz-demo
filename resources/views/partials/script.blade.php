@@ -296,7 +296,7 @@ var swiper = new Swiper(".mySwiper", {
 
     speed: 7000, // 🔥 smooth slow transition
 
-    autoplay:false,
+    autoplay:true,
 
     freeMode: true, // 🔥 smooth continuous flow
     freeModeMomentum: false,

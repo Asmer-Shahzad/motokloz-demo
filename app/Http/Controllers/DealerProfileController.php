@@ -143,12 +143,14 @@ class DealerProfileController extends Controller
     {
         $assets = [
             'AUTO',
-            'RV / TRAILER',
-            'MOTORCYCLE',
-            'POWERSPORTS',
-            'HEAVY TRUCK/EQUIPMENT',
+            'FARM EQUIPMENT',
             'HEAVY DUTY TRAILERS',
-            'FARM EQUIPMENT'
+            'HEAVY TRUCK/EQUIPMENT',
+            'MARINE',
+            'MOTORCYCLE / ATV / POWERSPORTS',
+            'RV / TRAILER',
+            'SNOWSPORTS',
+            'WATERSPORT'
         ];
 
         $apiData = [
@@ -185,9 +187,11 @@ class DealerProfileController extends Controller
                     $makes = [];
                     switch($asset) {
                         case 'AUTO': $makes = $inv->filters->MfgAuto ?? []; break;
+                        case 'MARINE': $makes = $inv->filters->MfgMarine ?? []; break;
+                        case 'SNOWSPORTS': $makes = $inv->filters->MfgSnowsport ?? []; break;
+                        case 'WATERSPORT': $makes = $inv->filters->MfgWatersport ?? []; break;
                         case 'RV / TRAILER': $makes = $inv->filters->MfgRvTrailer ?? []; break;
-                        case 'MOTORCYCLE':
-                        case 'POWERSPORTS': $makes = $inv->filters->MfgMotorcycleAtv ?? []; break;
+                        case 'MOTORCYCLE / ATV / POWERSPORTS': $makes = $inv->filters->MfgMotorcycleAtv ?? []; break;
                         case 'HEAVY TRUCK/EQUIPMENT': $makes = $inv->filters->MfgHeavyTruckEquipment ?? []; break;
                         case 'HEAVY DUTY TRAILERS': $makes = $inv->filters->MfgHeavyDutyTrailer ?? []; break;
                         case 'FARM EQUIPMENT': $makes = $inv->filters->MfgFarmEquipment ?? []; break;
@@ -236,9 +240,11 @@ class DealerProfileController extends Controller
                 $filtersArray = $result['filters'];
                 switch($selectedAsset) {
                     case 'AUTO': $bodyStylesData = $filtersArray['BodyStyle'] ?? []; break;
+                    case 'MARINE': $bodyStylesData = $filtersArray['BodyStyle'] ?? []; break;
+                    case 'WATERSPORT': $bodyStylesData = $filtersArray['BodyStyle'] ?? []; break;
+                    case 'SNOWSPORTS': $bodyStylesData = $filtersArray['BodyStyleSnowSport'] ?? []; break;
                     case 'RV / TRAILER': $bodyStylesData = $filtersArray['BodyStyleRvTrailer'] ?? []; break;
-                    case 'MOTORCYCLE':
-                    case 'POWERSPORTS': $bodyStylesData = $filtersArray['BodyStyleMotorcycleAtv'] ?? []; break;
+                    case 'MOTORCYCLE / ATV / POWERSPORTS': $bodyStylesData = $filtersArray['BodyStyleMotorcycleAtv'] ?? []; break;
                     case 'HEAVY TRUCK/EQUIPMENT': $bodyStylesData = $filtersArray['BodyStyleHeavyTruckEquipment'] ?? []; break;
                     case 'HEAVY DUTY TRAILERS': $bodyStylesData = $filtersArray['BodyStyleHeavyDutyTrailer'] ?? []; break;
                     case 'FARM EQUIPMENT': $bodyStylesData = $filtersArray['BodyStyleFarmEquipment'] ?? []; break;

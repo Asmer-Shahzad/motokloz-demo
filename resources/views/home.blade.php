@@ -123,6 +123,32 @@
                                             </a>
                                         </div>
 
+                                        
+                                        <div class="swiper-slide">
+                                            <a href="/car-listing?selected_asset=SNOWSPORTS" class="card">
+                                                <img src="/assets/images/Snow.png" class="img-fluid">
+                                                <span>{{ $assetCounts['SNOWSPORTS'] ?? 0 }} vehicles</span>    
+                                                <h4>Snowsports</h4>
+                                            </a>
+                                        </div>
+                                        
+                                        
+                                        <div class="swiper-slide">
+                                            <a href="/car-listing?selected_asset=WATERSPORT" class="card">
+                                                <img src="/assets/images/Water.png" class="img-fluid">
+                                                <span>{{ $assetCounts['WATERSPORT'] ?? 0 }} vehicles</span>    
+                                                <h4>Watersports</h4>
+                                            </a>
+                                        </div>
+                                        
+                                        <div class="swiper-slide">
+                                            <a href="/car-listing?selected_asset=MARINE" class="card">
+                                                <img src="/assets/images/Marine.png" class="img-fluid">
+                                                <span>{{ $assetCounts['MARINE'] ?? 0 }} vehicles</span>    
+                                                <h4>Marine</h4>
+                                            </a>
+                                        </div>
+
                                         <div class="swiper-slide">
                                             <a href="/car-listing?selected_asset=RV / TRAILER" class="card">
                                                 <img src="/assets/images/RV.png" class="img-fluid">
@@ -132,18 +158,10 @@
                                         </div>
 
                                         <div class="swiper-slide">
-                                            <a href="/car-listing?selected_asset=MOTORCYCLE" class="card">
+                                            <a href="/car-listing?selected_asset=MOTORCYCLE / ATV / POWERSPORTS" class="card">
                                                 <img src="/assets/images/Motorcycle.png" class="img-fluid">
-                                                <span>{{ $assetCounts['MOTORCYCLE'] ?? 0 }} vehicles</span>
+                                                <span>{{ $assetCounts['MOTORCYCLE / ATV / POWERSPORTS'] ?? 0 }} vehicles</span>
                                                 <h4>Motorcycle</h4>
-                                            </a>
-                                        </div>
-
-                                        <div class="swiper-slide">
-                                            <a href="/car-listing?selected_asset=POWERSPORTS" class="card">
-                                                <img src="/assets/images/Powersports.png" class="img-fluid">
-                                                <span>{{ $assetCounts['POWERSPORTS'] ?? 0 }} vehicles</span>
-                                                <h4>Powersports</h4>
                                             </a>
                                         </div>
 
@@ -538,8 +556,7 @@ function fetchMakesByType(type) {
                 case 'MARINE': return data.filters.MfgMarine || [];
                 case 'RV / TRAILER': return data.filters.MfgRvTrailer || [];
                 case 'SNOWSPORTS': return data.filters.MfgSnowsport || [];
-                case 'MOTORCYCLE': return data.filters.MfgMotorcycleAtv || [];
-                case 'POWERSPORTS': return data.filters.MfgMotorcycleAtv || [];
+                case 'MOTORCYCLE / ATV / POWERSPORTS': return data.filters.MfgMotorcycleAtv || [];
                 case 'WATERSPORT': return data.filters.MfgWatersport || [];
                 case 'FARM EQUIPMENT': return data.filters.MfgFarmEquipment || [];
                 case 'HEAVY TRUCK/EQUIPMENT': return data.filters.MfgHeavyTruckEquipment || [];
@@ -565,7 +582,7 @@ typeSelect.addEventListener('change', function () {
 // Function to fetch all makes from all types
 function fetchAllMakes() {
     const types = [
-        'AUTO', 'MARINE', 'RV / TRAILER', 'SNOWSPORTS', 'MOTORCYCLE','POWERSPORTS',
+        'AUTO', 'MARINE', 'RV / TRAILER', 'SNOWSPORTS', 'MOTORCYCLE / ATV / POWERSPORTS',
         'WATERSPORT', 'FARM EQUIPMENT', 'HEAVY TRUCK/EQUIPMENT', 'HEAVY DUTY TRAILERS'
     ];
 

@@ -86,12 +86,14 @@ class SearchController extends Controller
 {
     $assets = [
         'AUTO',
-        'RV / TRAILER',
-        'MOTORCYCLE',
-        'POWERSPORTS',
-        'HEAVY TRUCK/EQUIPMENT',
+        'FARM EQUIPMENT',
         'HEAVY DUTY TRAILERS',
-        'FARM EQUIPMENT'
+        'HEAVY TRUCK/EQUIPMENT',
+        'MARINE',
+        'MOTORCYCLE / ATV / POWERSPORTS',
+        'RV / TRAILER',
+        'SNOWSPORTS',
+        'WATERSPORT'
     ];
 
     $apiData = [
@@ -107,14 +109,17 @@ class SearchController extends Controller
         'selected_power' => $request->selected_power_type,
         'selected_fuel' => $request->selected_fuel_type,
         'keywords' => $request->keywords,
-        'client_id' => auth()->check() ? auth()->user()->id : '',
+        'client_id' => auth()->check() ? auth()->id() : '',
         'page' => $request->page ?? 1,
         'per_page' => 9,
     ];
 
     $makeTypes = [];
+    $bodyStyleTypes = [];
 
+    // ✅ LOOP only for filters (makes + body styles)
     foreach ($assets as $asset) {
+
         $res = Http::get(env("diskloz_base_url").'/api/search_inventory', [
             'selected_asset' => $asset,
             'per_page' => 1,
@@ -122,167 +127,125 @@ class SearchController extends Controller
 
         if ($res->successful()) {
             $inv = json_decode($res->body());
-            
-            $makes = [];
+
+            /** ---------------- MAKES ---------------- */
             switch($asset) {
                 case 'AUTO':
                     $makes = $inv->filters->MfgAuto ?? [];
+                    $bodyStyles = $inv->filters->BodyStyle ?? [];
                     break;
+
+                case 'SNOWSPORTS':
+                    $makes = $inv->filters->MfgSnowsport ?? [];
+                    $bodyStyles = $inv->filters->BodyStyleSnowSport ?? [];
+                    break;
+
+                case 'WATERSPORT':
+                    $makes = $inv->filters->MfgWatersport ?? [];
+                    $bodyStyles = $inv->filters->BodyStyle ?? [];
+                    break;
+
+                case 'MARINE':
+                    $makes = $inv->filters->MfgMarine ?? [];
+                    $bodyStyles = $inv->filters->BodyStyle ?? [];
+                    break;
+
                 case 'RV / TRAILER':
                     $makes = $inv->filters->MfgRvTrailer ?? [];
+                    $bodyStyles = $inv->filters->BodyStyleRvTrailer ?? [];
                     break;
-                case 'MOTORCYCLE':
-                case 'POWERSPORTS':
+
+                case 'MOTORCYCLE / ATV / POWERSPORTS':
                     $makes = $inv->filters->MfgMotorcycleAtv ?? [];
+                    $bodyStyles = $inv->filters->BodyStyleMotorcycleAtv ?? [];
                     break;
+
                 case 'HEAVY TRUCK/EQUIPMENT':
                     $makes = $inv->filters->MfgHeavyTruckEquipment ?? [];
+                    $bodyStyles = $inv->filters->BodyStyleHeavyTruckEquipment ?? [];
                     break;
+
                 case 'HEAVY DUTY TRAILERS':
                     $makes = $inv->filters->MfgHeavyDutyTrailer ?? [];
+                    $bodyStyles = $inv->filters->BodyStyleHeavyDutyTrailer ?? [];
                     break;
+
                 case 'FARM EQUIPMENT':
                     $makes = $inv->filters->MfgFarmEquipment ?? [];
+                    $bodyStyles = $inv->filters->BodyStyleFarmEquipment ?? [];
                     break;
+
                 default:
                     $makes = [];
+                    $bodyStyles = [];
             }
-            
-            if (!empty($makes)) {
-                $makeTypes[$asset] = collect($makes)
-                    ->map(fn($m) => ['id' => $m->id, 'name' => $m->name])
-                    ->sortBy('name')
-                    ->values();
-            } else {
-                $makeTypes[$asset] = collect();
-            }
+
+            // ✅ Format Makes
+            $makeTypes[$asset] = !empty($makes)
+                ? collect($makes)->map(fn($m) => [
+                    'id' => $m->id,
+                    'name' => $m->name
+                ])->sortBy('name')->values()
+                : collect();
+
+            // ✅ Format Body Styles (NEW)
+            $bodyStyleTypes[$asset] = !empty($bodyStyles)
+                ? collect($bodyStyles)->map(fn($b) => [
+                    'id' => $b->id,
+                    'name' => $b->name
+                ])->sortBy('name')->values()
+                : collect();
+
         } else {
             $makeTypes[$asset] = collect();
+            $bodyStyleTypes[$asset] = collect();
         }
-
-        $response = Http::get($this->disklozBaseUrl() . '/api/search_inventory', $apiData);
-        $result = json_decode($response->body());
-
-        $inventory = $result->inventory ?? null;
-        $dealerLocationMap = $this->dealerLocationMap();
-        $inventoryData = collect($inventory->data ?? [])->map(function ($vehicle) use ($dealerLocationMap) {
-            $dealerKey = (string) ($vehicle->user_id ?? $vehicle->dealer_id ?? '');
-            $location = $dealerLocationMap[$dealerKey] ?? [];
-            $vehicle->dealer_postal_code = $location['postal_code'] ?? null;
-            $vehicle->dealer_city = $location['city'] ?? null;
-            $vehicle->dealer_province = $location['province'] ?? null;
-            $vehicle->dealer_country = $location['country'] ?? null;
-            return $vehicle;
-        })->values();
-        $data = [
-            'search_inventory_result' => $inventoryData,
-            'current_page' => $inventory->current_page ?? 1,
-            'last_page' => $inventory->last_page ?? 1,
-            'total_inventory' => $inventory->total ?? 0,
-            'per_page' => $inventory->per_page ?? 9,
-        ];
-
-        // Filters
-        // $data['makeTypes'] = json_decode($this->curl_get('/api/make')->getContent())->data ?? [];
-        $data['assetType'] = json_decode($this->curl_get('/api/assetType')->getContent())->data ?? [];
-        $data['body_styles'] = json_decode($this->curl_get('/api/body_styles')->getContent())->data ?? [];
-        $data['conditions'] = json_decode($this->curl_get('/api/conditions')->getContent())->data ?? [];
-
-        $data['assetWord'] = $request->selected_asset
-            ? ucfirst(strtolower($request->selected_asset))
-            : 'Car';
-
-        $data['assets'] = $assets;
-        $data['makeTypes'] = $makeTypes;
-        $data['disklozBaseUrl'] = $this->disklozBaseUrl();
-
-        return view('car-listing', $data);
     }
 
-    $response = Http::get(env('diskloz_base_url') . '/api/search_inventory', $apiData);
+    /** ---------------- MAIN INVENTORY (ONLY ONCE) ---------------- */
+    $response = Http::get($this->disklozBaseUrl() . '/api/search_inventory', $apiData);
     $result = json_decode($response->body());
 
     $inventory = $result->inventory ?? null;
-    
-    // Get body styles based on selected asset type
-    $bodyStyles = [];
-    $selectedAsset = $request->selected_asset;
-    
-    if ($selectedAsset && isset($result->filters)) {
-        switch($selectedAsset) {
-            case 'AUTO':
-                $bodyStyles = $result->filters->BodyStyle ?? $result->filters->BodyStyle ?? [];
-                break;
-            case 'RV / TRAILER':
-                $bodyStyles = $result->filters->BodyStyleRvTrailer ?? $result->filters->BodyStyle ?? [];
-                break;
-            case 'MOTORCYCLE':
-            case 'POWERSPORTS':
-                $bodyStyles = $result->filters->BodyStyleMotorcycleAtv ?? $result->filters->BodyStyle ?? [];
-                break;
-            case 'HEAVY TRUCK/EQUIPMENT':
-                $bodyStyles = $result->filters->BodyStyleHeavyTruckEquipment ?? $result->filters->BodyStyle ?? [];
-                break;
-            case 'HEAVY DUTY TRAILERS':
-                $bodyStyles = $result->filters->BodyStyleHeavyDutyTrailer ?? $result->filters->BodyStyle ?? [];
-                break;
-            case 'FARM EQUIPMENT':
-                $bodyStyles = $result->filters->BodyStyleFarmEquipment ?? $result->filters->BodyStyle ?? [];
-                break;
-            default:
-                $bodyStyles = $result->filters->BodyStyle ?? $result->filters->BodyStyle ?? [];
-        }
-        
-        // Format body styles
-        if (!empty($bodyStyles)) {
-            $bodyStyles = collect($bodyStyles)
-                ->map(fn($style) => [
-                    'id' => $style->id,
-                    'name' => $style->name
-                ])
-                ->sortBy('name')
-                ->values()
-                ->toArray();
-        }
-    } else {
-        // If no asset selected, get all body styles
-        if (isset($result->filters->BodyStyle) && !empty($result->filters->BodyStyle)) {
-            $bodyStyles = collect($result->filters->BodyStyle)
-                ->map(fn($style) => [
-                    'id' => $style->id,
-                    'name' => $style->name
-                ])
-                ->sortBy('name')
-                ->values()
-                ->toArray();
-        }
-    }
 
+    $dealerLocationMap = $this->dealerLocationMap();
+
+    $inventoryData = collect($inventory->data ?? [])->map(function ($vehicle) use ($dealerLocationMap) {
+        $dealerKey = (string) ($vehicle->user_id ?? $vehicle->dealer_id ?? '');
+        $location = $dealerLocationMap[$dealerKey] ?? [];
+
+        $vehicle->dealer_postal_code = $location['postal_code'] ?? null;
+        $vehicle->dealer_city = $location['city'] ?? null;
+        $vehicle->dealer_province = $location['province'] ?? null;
+        $vehicle->dealer_country = $location['country'] ?? null;
+
+        return $vehicle;
+    })->values();
+
+    /** ---------------- FINAL DATA ---------------- */
     $data = [
-        'search_inventory_result' => $inventory->data ?? [],
+        'search_inventory_result' => $inventoryData,
         'current_page' => $inventory->current_page ?? 1,
         'last_page' => $inventory->last_page ?? 1,
         'total_inventory' => $inventory->total ?? 0,
         'per_page' => $inventory->per_page ?? 9,
-        'body_styles' => $bodyStyles,
+
+        'assets' => $assets,
+        'makeTypes' => $makeTypes,
+        'bodyStyleTypes' => $bodyStyleTypes, // ✅ NEW
+
+        'assetType' => json_decode($this->curl_get('/api/assetType')->getContent())->data ?? [],
+        'conditions' => json_decode($this->curl_get('/api/conditions')->getContent())->data ?? [],
+
+        'assetWord' => $request->selected_asset
+            ? ucfirst(strtolower($request->selected_asset))
+            : 'Car',
+
+        'selected_body_style' => $request->selected_body_style,
+        'disklozBaseUrl' => $this->disklozBaseUrl(),
     ];
 
-    $data['assetType'] = json_decode($this->curl_get('/api/assetType')->getContent())->data ?? [];
-    $data['conditions'] = json_decode($this->curl_get('/api/conditions')->getContent())->data ?? [];
-
-    $data['assetWord'] = $request->selected_asset
-        ? ucfirst(strtolower($request->selected_asset))
-        : 'Car';
-
-    $data['assets'] = $assets;
-    $data['makeTypes'] = $makeTypes;
-
-    // Pass the selected values back to the view
-    $data['selected_power_type'] = $request->selected_power_type;
-    $data['selected_fuel_type'] = $request->selected_fuel_type;
-    $data['selected_seller'] = $request->selected_seller;
-    $data['selected_year'] = $request->selected_year;
-    $data['selected_body_style'] = $request->selected_body_style;
+    // dd([$data]);
 
     return view('car-listing', $data);
 }

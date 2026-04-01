@@ -75,14 +75,15 @@
                         </div>
 
                         <div class="gallery-action-overlay">
-                            <button class="btn-lexus-orange">
-                                <i class="fa-solid fa-table-cells-large"></i> See All Photos
+                            <button class="btn-lexus-orange" data-bs-toggle="modal" data-bs-target="#galleryModal">
+                                <i class="fa-solid fa-table-cells-large"></i> See All Photos ({{ count(array_filter($images)) }})
                             </button>
 
-                            <button class="btn-lexus-white">
+                            <button class="btn-lexus-white" data-bs-toggle="modal" data-bs-target="#videoModal">
                                 <i class="fa-solid fa-circle-play"></i> Video Clips
                             </button>
                         </div>
+
 
                         <div class="swiper-button-next arrow-round"></div>
                         <div class="swiper-button-prev arrow-round"></div>
@@ -128,7 +129,192 @@
             </div>
         </div>
     </section>
-
+    <!-- Gallery Modal with Grid Layout -->
+    <div class="modal fade" id="galleryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content bg-dark">
+                <div class="modal-header border-0 position-sticky top-0 bg-dark z-3">
+                    <h5 class="modal-title text-white">
+                        <i class="fa-solid fa-image me-2"></i> Photo Gallery 
+                        <span class="badge bg-orange ms-2">{{ count(array_filter($images)) }} Photos</span>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-3">
+                    <div class="modal-gallery-grid">
+                        @foreach ($images as $index => $eachLogo)
+                            @php
+                                if($eachLogo == 'default' || str_contains($eachLogo,'car_thumb.png')){
+                                    $img = $defaultImage;
+                                }else{
+                                    $img = Str::startsWith($eachLogo,'http')
+                                        ? $eachLogo
+                                        : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$eachLogo;
+                                }
+                            @endphp
+                            <div class="modal-gallery-item" data-index="{{ $index }}">
+                                <img 
+                                    src="{{ $img }}"
+                                    class="modal-gallery-img mto-lightbox-trigger"
+                                    alt="Vehicle Image {{ $index + 1 }}"
+                                    loading="lazy"
+                                    onclick="openImageViewer({{ $index }})"
+                                    onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
+                                >
+                            </div>
+                        @endforeach
+                        @foreach ($images as $index => $eachLogo)
+                            @php
+                                if($eachLogo == 'default' || str_contains($eachLogo,'car_thumb.png')){
+                                    $img = $defaultImage;
+                                }else{
+                                    $img = Str::startsWith($eachLogo,'http')
+                                        ? $eachLogo
+                                        : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$eachLogo;
+                                }
+                            @endphp
+                            <div class="modal-gallery-item" data-index="{{ $index }}">
+                                <img 
+                                    src="{{ $img }}"
+                                    class="modal-gallery-img mto-lightbox-trigger"
+                                    alt="Vehicle Image {{ $index + 1 }}"
+                                    loading="lazy"
+                                    onclick="openImageViewer({{ $index }})"
+                                    onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
+                                >
+                            </div>
+                        @endforeach
+                        @foreach ($images as $index => $eachLogo)
+                            @php
+                                if($eachLogo == 'default' || str_contains($eachLogo,'car_thumb.png')){
+                                    $img = $defaultImage;
+                                }else{
+                                    $img = Str::startsWith($eachLogo,'http')
+                                        ? $eachLogo
+                                        : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$eachLogo;
+                                }
+                            @endphp
+                            <div class="modal-gallery-item" data-index="{{ $index }}">
+                                <img 
+                                    src="{{ $img }}"
+                                    class="modal-gallery-img mto-lightbox-trigger"
+                                    alt="Vehicle Image {{ $index + 1 }}"
+                                    loading="lazy"
+                                    onclick="openImageViewer({{ $index }})"
+                                    onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
+                                >
+                            </div>
+                        @endforeach
+                        @foreach ($images as $index => $eachLogo)
+                            @php
+                                if($eachLogo == 'default' || str_contains($eachLogo,'car_thumb.png')){
+                                    $img = $defaultImage;
+                                }else{
+                                    $img = Str::startsWith($eachLogo,'http')
+                                        ? $eachLogo
+                                        : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$eachLogo;
+                                }
+                            @endphp
+                            <div class="modal-gallery-item" data-index="{{ $index }}">
+                                <img 
+                                    src="{{ $img }}"
+                                    class="modal-gallery-img mto-lightbox-trigger"
+                                    alt="Vehicle Image {{ $index + 1 }}"
+                                    loading="lazy"
+                                    onclick="openImageViewer({{ $index }})"
+                                    onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
+                                >
+                            </div>
+                        @endforeach
+                        @foreach ($images as $index => $eachLogo)
+                            @php
+                                if($eachLogo == 'default' || str_contains($eachLogo,'car_thumb.png')){
+                                    $img = $defaultImage;
+                                }else{
+                                    $img = Str::startsWith($eachLogo,'http')
+                                        ? $eachLogo
+                                        : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$eachLogo;
+                                }
+                            @endphp
+                            <div class="modal-gallery-item" data-index="{{ $index }}">
+                                <img 
+                                    src="{{ $img }}"
+                                    class="modal-gallery-img mto-lightbox-trigger"
+                                    alt="Vehicle Image {{ $index + 1 }}"
+                                    loading="lazy"
+                                    onclick="openImageViewer({{ $index }})"
+                                    onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
+                                >
+                            </div>
+                        @endforeach
+                        @foreach ($images as $index => $eachLogo)
+                            @php
+                                if($eachLogo == 'default' || str_contains($eachLogo,'car_thumb.png')){
+                                    $img = $defaultImage;
+                                }else{
+                                    $img = Str::startsWith($eachLogo,'http')
+                                        ? $eachLogo
+                                        : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$eachLogo;
+                                }
+                            @endphp
+                            <div class="modal-gallery-item" data-index="{{ $index }}">
+                                <img 
+                                    src="{{ $img }}"
+                                    class="modal-gallery-img mto-lightbox-trigger"
+                                    alt="Vehicle Image {{ $index + 1 }}"
+                                    loading="lazy"
+                                    onclick="openImageViewer({{ $index }})"
+                                    onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
+                                >
+                            </div>
+                        @endforeach
+                        @foreach ($images as $index => $eachLogo)
+                            @php
+                                if($eachLogo == 'default' || str_contains($eachLogo,'car_thumb.png')){
+                                    $img = $defaultImage;
+                                }else{
+                                    $img = Str::startsWith($eachLogo,'http')
+                                        ? $eachLogo
+                                        : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$eachLogo;
+                                }
+                            @endphp
+                            <div class="modal-gallery-item" data-index="{{ $index }}">
+                                <img 
+                                    src="{{ $img }}"
+                                    class="modal-gallery-img mto-lightbox-trigger"
+                                    alt="Vehicle Image {{ $index + 1 }}"
+                                    loading="lazy"
+                                    onclick="openImageViewer({{ $index }})"
+                                    onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
+                                >
+                            </div>
+                        @endforeach
+                        @foreach ($images as $index => $eachLogo)
+                            @php
+                                if($eachLogo == 'default' || str_contains($eachLogo,'car_thumb.png')){
+                                    $img = $defaultImage;
+                                }else{
+                                    $img = Str::startsWith($eachLogo,'http')
+                                        ? $eachLogo
+                                        : env('diskloz_base_url').'/admin_assets/images/inventory_images/'.$eachLogo;
+                                }
+                            @endphp
+                            <div class="modal-gallery-item" data-index="{{ $index }}">
+                                <img 
+                                    src="{{ $img }}"
+                                    class="modal-gallery-img mto-lightbox-trigger"
+                                    alt="Vehicle Image {{ $index + 1 }}"
+                                    loading="lazy"
+                                    onclick="openImageViewer({{ $index }})"
+                                    onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
+                                >
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <section class="mto-main-wrapper py-5">
         <div class="container">
@@ -429,7 +615,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form data-ajax="true">
                         <div class="mb-3">
                             <label for="name1" class="form-label">Name</label>
                             <input type="text" class="form-control" id="name1" required>
@@ -466,7 +652,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form data-ajax="true">
                         <div class="mb-3">
                             <label for="name2" class="form-label">Name</label>
                             <input type="text" class="form-control" id="name2" required>
@@ -477,7 +663,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="phone2" class="form-label">Phone</label>
-                            <input type="numbe2" class="form-control" id="phone2" required>
+                            <input type="number" class="form-control" id="phone2" required>
                         </div>
                         <div class="mb-3">
                             <label for="offerPrice" class="form-label">Offer Price</label>
@@ -489,168 +675,201 @@
                 </div>
             </div>
         </div>
+        
+        <div class="modal fade" id="videoModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" style="height: 60vh;">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">Vehicle Videos</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!-- Make modal body scrollable -->
+                    <div class="modal-body" style="overflow-y: auto; max-height: calc(60vh - 70px);">
+                        @if(!empty($videos) && count($videos) > 0)
+                            <div class="row">
+                                @foreach($videos as $video)
+                                    <div class="col-md-6 mb-3">
+                                        <video 
+                                            width="100%" 
+                                            height="200" 
+                                            controls 
+                                            controlslist="nodownload"
+                                            style="object-fit: cover;"
+                                        >
+                                            <source src="{{ $video->video_url ?? '' }}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <p>No videos available</p>
+                        @endif
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </section>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
         $(document).ready(function(){
-    $('#testDriveModal form').on('submit', function(e){
-        e.preventDefault();
-        
-        // Get dealer and product IDs safely
-        var dealerId = {{ $searched_vehicle->dealer->id ?? 'null' }};
-        var productId = {{ $searched_vehicle->id ?? 'null' }};
-        
-        // Validate IDs
-        if (!dealerId || dealerId === 'null' || !productId || productId === 'null') {
-            alert('Error: Dealer or vehicle information is missing. Please refresh the page.');
-            return;
-        }
-        
-        var formData = {
-            name: $('#name1').val(),
-            email: $('#email1').val(),
-            phone: $('#phone1').val(),
-            book_date: $('#date1').val(),
-            message: $('#message1').val(),
-            reason: 'Schedule Test Drive',
-            type: 'WEBLEAD',
-            source: 'Motokloz',
-            lead_status: 'NEW',
-            dealer_id: dealerId,
-            product_id: productId, // Changed from product_id to inventory_id
-            // Add any other required fields
-            lead_source: 'Website',
-            lead_type: 'Test Drive'
-        };
-        
-        // Validate required fields
-        if (!formData.name || !formData.email || !formData.phone) {
-            alert('Please fill in all required fields (Name, Email, Phone)');
-            return;
-        }
-        
-        // Validate email format
-        var emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
-        if (!emailRegex.test(formData.email)) {
-            alert('Please enter a valid email address');
-            return;
-        }
-        
-        // Disable submit button to prevent double submission
-        var $submitBtn = $(this).find('button[type="submit"]');
-        $submitBtn.prop('disabled', true).text('Submitting...');
-        
-        $.ajax({
-            url: "{{ env('diskloz_base_url') }}/api/leads",
-            method: 'POST',
-            data: JSON.stringify(formData), // Send as JSON
-            contentType: 'application/json', // Important: Set content type to JSON
-            dataType: 'json',
-            crossDomain: true,
-            success: function(response){
-                console.log('Success:', response);
-                alert(response.message || 'Test drive scheduled successfully!');
-                $('#testDriveModal').modal('hide');
-                $('#testDriveModal form')[0].reset();
-            },
-            error: function(xhr){
-                console.log('Error Response:', xhr.responseJSON);
-                
-                if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
-                    let errorMessages = '';
+
+            function handleErrors(xhr){
+                if (xhr.status === 422 && xhr.responseJSON?.errors) {
+                    let msgs = [];
                     $.each(xhr.responseJSON.errors, function(field, messages) {
-                        errorMessages += field + ': ' + messages.join(', ') + '\n';
+                        msgs.push(messages.join(', '));
                     });
-                    alert('Validation Error:\n' + errorMessages);
+                    showSnackbar(msgs.join(' | '), 'error');
                 } else if (xhr.status === 500) {
-                    alert('Server error. Please try again later.');
+                    showSnackbar('Server error. Please try again later.', 'error');
                 } else {
-                    alert(xhr.responseJSON?.message || 'Something went wrong. Please try again.');
+                    showSnackbar(xhr.responseJSON?.message || 'Something went wrong.', 'error');
                 }
-            },
-            complete: function() {
-                // Re-enable submit button
-                $submitBtn.prop('disabled', false).text('Submit');
             }
-        });
-    });
-    
-    $('#offerModal form').on('submit', function(e){
-        e.preventDefault();
-        
-        var dealerId = {{ $searched_vehicle->dealer->id ?? 'null' }};
-        var productId = {{ $searched_vehicle->id ?? 'null' }};
-        
-        if (!dealerId || dealerId === 'null' || !productId || productId === 'null') {
-            alert('Error: Dealer or vehicle information is missing. Please refresh the page.');
-            return;
-        }
-        
-        var formData = {
-            name: $('#name2').val(),
-            email: $('#email2').val(),
-            phone: $('#phone2').val(),
-            message: $('#message2').val(), // Fixed: was using message1
-            reason: 'Make An Offer Price',
-            type: 'WEBLEAD',
-            source: 'Motokloz',
-            lead_status: 'NEW',
-            offer_price: $('#offerPrice').val(),
-            dealer_id: dealerId,
-            product_id: productId, // Changed from product_id to inventory_id
-            lead_source: 'Website',
-            lead_type: 'Offer'
-        };
-        
-        // Validate required fields
-        if (!formData.name || !formData.email || !formData.phone) {
-            alert('Please fill in all required fields (Name, Email, Phone)');
-            return;
-        }
-        
-        // Validate offer price
-        if (!formData.offer_price || formData.offer_price <= 0) {
-            alert('Please enter a valid offer price');
-            return;
-        }
-        
-        var $submitBtn = $(this).find('button[type="submit"]');
-        $submitBtn.prop('disabled', true).text('Submitting...');
-        
-        $.ajax({
-            url: "{{ env('diskloz_base_url') }}/api/leads",
-            method: 'POST',
-            data: JSON.stringify(formData),
-            contentType: 'application/json',
-            dataType: 'json',
-            crossDomain: true,
-            success: function(response){
-                console.log('Success:', response);
-                alert(response.message || 'Offer submitted successfully!');
-                $('#offerModal').modal('hide');
-                $('#offerModal form')[0].reset();
-            },
-            error: function(xhr){
-                console.log('Error Response:', xhr.responseJSON);
-                
-                if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
-                    let errorMessages = '';
-                    $.each(xhr.responseJSON.errors, function(field, messages) {
-                        errorMessages += field + ': ' + messages.join(', ') + '\n';
-                    });
-                    alert('Validation Error:\n' + errorMessages);
-                } else if (xhr.status === 500) {
-                    alert('Server error. Please try again later.');
-                } else {
-                    alert(xhr.responseJSON?.message || 'Something went wrong. Please try again.');
+
+            // ================= TEST DRIVE =================
+            $('#testDriveModal form').on('submit', function(e){
+                e.preventDefault();
+
+                var dealerId = {{ $searched_vehicle->dealer->id ?? 'null' }};
+                var productId = {{ $searched_vehicle->id ?? 'null' }};
+
+                if (!dealerId || dealerId === 'null' || !productId || productId === 'null') {
+                    showSnackbar('Dealer or vehicle info missing. Refresh page.', 'error');
+                    return;
                 }
-            },
-            complete: function() {
-                $submitBtn.prop('disabled', false).text('Submit');
-            }
+
+                var formData = {
+                    name: $('#name1').val(),
+                    email: $('#email1').val(),
+                    phone: $('#phone1').val(),
+                    book_date: $('#date1').val(),
+                    message: $('#message1').val(),
+                    reason: 'Schedule Test Drive',
+                    type: 'WEBLEAD',
+                    source: 'Motokloz',
+                    lead_status: 'NEW',
+                    dealer_id: dealerId,
+                    product_id: productId,
+                    lead_source: 'Website',
+                    lead_type: 'Test Drive'
+                };
+
+                if (!formData.name || !formData.email || !formData.phone) {
+                    showSnackbar('Fill all required fields', 'warning');
+                    return;
+                }
+
+                var emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+                if (!emailRegex.test(formData.email)) {
+                    showSnackbar('Invalid email address', 'warning');
+                    return;
+                }
+
+               // ===== UI STATE =====
+                var $btn = $(this).find('button[type="submit"]');
+                var originalText = $btn.html();
+
+                $btn.prop('disabled', true)
+                    .html('<i class="fas fa-spinner fa-spin ms-2"></i>');
+
+                $('#loadingSpinner').show();
+
+                $.ajax({
+                    url: "{{ env('diskloz_base_url') }}/api/leads",
+                    method: 'POST',
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    crossDomain: true,
+
+                    success: function(res){
+                        showSnackbar('Test drive scheduled!', 'success');
+                        $('#testDriveModal').modal('hide');
+                        $('#testDriveModal form')[0].reset();
+                    },
+
+                    error: handleErrors,
+
+                    complete: function(){
+                        $btn.prop('disabled', false).text('Submit');
+                    }
+                });
+            });
+
+            // ================= OFFER =================
+            $('#offerModal form').on('submit', function(e){
+                e.preventDefault();
+
+                var dealerId = {{ $searched_vehicle->dealer->id ?? 'null' }};
+                var productId = {{ $searched_vehicle->id ?? 'null' }};
+
+                if (!dealerId || dealerId === 'null' || !productId || productId === 'null') {
+                    showSnackbar('Dealer or vehicle info missing. Refresh page.', 'error');
+                    return;
+                }
+
+                var formData = {
+                    name: $('#name2').val(),
+                    email: $('#email2').val(),
+                    phone: $('#phone2').val(),
+                    message: $('#message2').val(),
+                    offer_price: $('#offerPrice').val(),
+                    reason: 'Make An Offer Price',
+                    type: 'WEBLEAD',
+                    source: 'Motokloz',
+                    lead_status: 'NEW',
+                    dealer_id: dealerId,
+                    product_id: productId,
+                    lead_source: 'Website',
+                    lead_type: 'Offer'
+                };
+
+                if (!formData.name || !formData.email || !formData.phone) {
+                    showSnackbar('Fill all required fields', 'warning');
+                    return;
+                }
+
+                if (!formData.offer_price || formData.offer_price <= 0) {
+                    showSnackbar('Enter valid offer price', 'warning');
+                    return;
+                }
+
+                // ===== UI STATE =====
+                var $btn = $(this).find('button[type="submit"]');
+                var originalText = $btn.html();
+
+                $btn.prop('disabled', true)
+                    .html('<i class="fas fa-spinner fa-spin ms-2"></i>');
+
+                $('#loadingSpinner').show();
+
+                $.ajax({
+                    url: "{{ env('diskloz_base_url') }}/api/leads",
+                    method: 'POST',
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json',
+                    dataType: 'json',
+
+                    success: function(res){
+                        showSnackbar('Offer Price Submitted Successfully!', 'success');
+                        $('#offerModal').modal('hide');
+                        $('#offerModal form')[0].reset();
+                    },
+
+                    error: handleErrors,
+
+                    complete: function(){
+                        $btn.prop('disabled', false).text('Submit');
+                    }
+                });
+            });
+
         });
-    });
-});
 
        $(document).ready(function(){
 
@@ -714,8 +933,9 @@
         });
 
         function toggleLike(vehicleId, element, authId) {
-            if (!authId) {
-                alert('Login required');
+            // Redirect if user is not logged in
+            if (!authId || authId === 'null') {
+                window.location.href = "/login"; // adjust route if different
                 return;
             }
 
@@ -950,8 +1170,113 @@
             location.reload();
         }
     </script>
+    <script>
+        let galleryImages = [];
+        let currentImageIndex = 0;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get images from PHP - properly formatted
+            galleryImages = {!! json_encode(array_map(function($img) use ($defaultImage) {
+                if($img == 'default' || str_contains($img, 'car_thumb.png')){
+                    return $defaultImage;
+                } else {
+                    return Str::startsWith($img, 'http') 
+                        ? $img 
+                        : env('diskloz_base_url') . '/admin_assets/images/inventory_images/' . $img;
+                }
+            }, $images)) !!};
+            
+            // Open image viewer function
+            window.openImageViewer = function(index) {
+                currentImageIndex = index;
+                updateFullscreenImage();
+                const imageViewerModal = new bootstrap.Modal(document.getElementById('imageViewerModal'));
+                imageViewerModal.show();
+            }
+            
+            // Update fullscreen image
+            function updateFullscreenImage() {
+                const fullscreenImg = document.getElementById('fullscreenImage');
+                if (fullscreenImg && galleryImages[currentImageIndex]) {
+                    fullscreenImg.src = galleryImages[currentImageIndex];
+                }
+            }
+            
+            // Next image function
+            window.nextImage = function() {
+                if (currentImageIndex < galleryImages.length - 1) {
+                    currentImageIndex++;
+                } else {
+                    currentImageIndex = 0; // Loop to first image
+                }
+                updateFullscreenImage();
+            }
+            
+            // Previous image function
+            window.prevImage = function() {
+                if (currentImageIndex > 0) {
+                    currentImageIndex--;
+                } else {
+                    currentImageIndex = galleryImages.length - 1; // Loop to last image
+                }
+                updateFullscreenImage();
+            }
+            
+            // Keyboard navigation for image viewer
+            document.addEventListener('keydown', function(e) {
+                const imageViewerModal = document.getElementById('imageViewerModal');
+                if (imageViewerModal && imageViewerModal.classList.contains('show')) {
+                    if (e.key === 'ArrowLeft') {
+                        prevImage();
+                    } else if (e.key === 'ArrowRight') {
+                        nextImage();
+                    } else if (e.key === 'Escape') {
+                        const closeBtn = imageViewerModal.querySelector('.btn-close');
+                        if (closeBtn) closeBtn.click();
+                    }
+                }
+            });
+            
+            // Optional: Add zoom functionality to modal images
+            const fullscreenImg = document.getElementById('fullscreenImage');
+            if (fullscreenImg) {
+                let scale = 1;
+                fullscreenImg.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    scale = scale === 1 ? 2 : 1;
+                    this.style.transform = `scale(${scale})`;
+                    this.style.transition = 'transform 0.3s ease';
+                    this.style.cursor = scale === 2 ? 'zoom-out' : 'zoom-in';
+                });
+            }
+        });
+    </script>
 
     <style>
+        .mto-btn-loading {
+            position: relative;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .mto-btn-loading::after {
+            content: "";
+            width: 18px;
+            height: 18px;
+            border: 2px solid #fff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
+
         .listed-card-right {
 
             border-bottom: 1px solid #DDE1DE;
@@ -1013,5 +1338,97 @@
             border-radius: 50%;
             animation: spinner-border 0.75s linear infinite;
         }
+
+       /* Modal Gallery Grid */
+        .modal-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .modal-gallery-item {
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            border-radius: 12px;
+            aspect-ratio: 4 / 3;
+            background-color: #2a2a2a;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .modal-gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-gallery-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .modal-gallery-item:hover .modal-gallery-img {
+            transform: scale(1.05);
+        }
+
+        /* Modal Header Styling */
+        .modal-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 20px;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+
+        /* Image Viewer Controls */
+        .image-viewer-controls {
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+            backdrop-filter: blur(5px);
+        }
+
+        .image-viewer-controls .btn {
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .image-viewer-controls .btn:hover {
+            transform: translateY(-2px);
+            background-color: #ff6b00;
+            color: white;
+            border-color: #ff6b00;
+        }
+
+        /* Responsive Grid */
+        @media (max-width: 768px) {
+            .modal-gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 12px;
+                padding: 8px;
+            }
+            
+            .modal-title {
+                font-size: 1rem;
+            }
+            
+            .image-viewer-controls .btn {
+                padding: 6px 16px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 8px;
+            }
+        }
+
     </style>
 @endsection

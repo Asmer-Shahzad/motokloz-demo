@@ -39,17 +39,22 @@
                                         <a class="nav-link" href="/car-listing?selected_asset=AUTO">Auto</a>
                                     </li>
                                     <li class="nav-item">
+                                        <a class="nav-link" href="/car-listing?selected_asset=SNOWSPORTS">Snowsports</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/car-listing?selected_asset=WATERSPORT">Watersports</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/car-listing?selected_asset=MARINE">Marine</a>
+                                    </li>
+                                    <li class="nav-item">
                                         <a class="nav-link" href="/car-listing?selected_asset=RV / TRAILER">RV</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=MOTORCYCLE">Motorcycle</a>
+                                        <a class="nav-link" href="/car-listing?selected_asset=MOTORCYCLE / ATV / POWERSPORTS">Motorcycle</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=POWERSPORTS">Powersports</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT">Heavy
-                                            Truck</a>
+                                        <a class="nav-link" href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT">Heavy Truck</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link"

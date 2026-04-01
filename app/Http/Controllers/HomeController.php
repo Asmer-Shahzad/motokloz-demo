@@ -52,12 +52,14 @@ class HomeController extends Controller
     {
         $assets = [
             'AUTO',
-            'RV / TRAILER',
-            'MOTORCYCLE',
-            'POWERSPORTS',
-            'HEAVY TRUCK/EQUIPMENT',
+            'FARM EQUIPMENT',
             'HEAVY DUTY TRAILERS',
-            'FARM EQUIPMENT'
+            'HEAVY TRUCK/EQUIPMENT',
+            'MARINE',
+            'MOTORCYCLE / ATV / POWERSPORTS',
+            'RV / TRAILER',
+            'SNOWSPORTS',
+            'WATERSPORT'
         ];
 
         $assetCounts = [];

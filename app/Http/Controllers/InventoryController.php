@@ -58,14 +58,29 @@ class InventoryController extends Controller
         return view('selling', ['array' => $array] );
     }
     
-    public function inventory_product_details(Request $request,$id){
-        $response_search = Http::get($this->baseUrl().'/api/search_by_id',[
+   public function inventory_product_details(Request $request, $id)
+    {
+        $response_search = Http::get($this->baseUrl().'/api/search_by_id', [
             'id' => $id
         ]);
-        $data['searched_vehicle'] = json_decode($response_search);
-        $data['contact'] = isset($data['searched_vehicle']->dealer) ? $data['searched_vehicle']->dealer->phone_no : null;
-        $data['dealer'] = $vehicle['dealer'] ?? null;
-        return view('car-details',$data);
+
+        //  correct decoding
+        $searched_vehicle = json_decode($response_search->body());
+
+        $data['searched_vehicle'] = $searched_vehicle;
+
+        //  videos from API
+        $data['videos'] = $searched_vehicle->videos ?? [];
+
+        //  contact
+        $data['contact'] = isset($searched_vehicle->dealer)
+            ? $searched_vehicle->dealer->phone_no
+            : null;
+
+        //  dealer
+        $data['dealer'] = $searched_vehicle->dealer ?? null;
+
+        return view('car-details', $data);
     }
 
     public function save_inventory(Request $request){
