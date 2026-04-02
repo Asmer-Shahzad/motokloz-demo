@@ -38,7 +38,7 @@
                             alt="Dealer"
                             onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultdealerlogo.png') }}';">
                         <div>
-                            <h3 class="mb-0 fw-bold">{{ $dealer->first_name }} {{ $dealer->last_name }}</h3>
+                            <h3 class="mb-0 fw-bold">{{ $dealer->legal_name }}</h3>
                             <p class="mb-0">
                                 <i class="fas fa-map-marker-alt"></i>
                                 {{ $dealer->physical_address }}
@@ -448,7 +448,7 @@
                     <div class="row g-4" id="vehicleContainer">
                         {{-- vehicle div start Car listing page --}}
                         @foreach ($inventory as $recent_vehicle)
-                            <div class="col-lg-4 col-sm-6 vehicle-card" data-aos="fade-up" data-aos-delay="{{ ($loop->index % 3) * 100 }}" data-aos-duration="600">
+                            <div class="col-lg-4 col-sm-6 vehicle-card">
                                 <div class="modern-car-card shadow-sm">
                                     <div class="car-card-top">
                                         {{-- @php
@@ -676,27 +676,30 @@ $(document).ready(function() {
         });
     }
 
-    // Load body styles from dealer_inventory API
+
     function loadBodyStyles(assetType) {
         const bodyDropdown = $('#body-style-select');
+
         bodyDropdown.html('<option value="">Loading Body Styles...</option>');
-        if (!assetType) { bodyDropdown.html('<option value="">Select Body Style</option>'); return; }
 
         $.ajax({
             url: `{{ route('dealer_inventory', ['id' => request()->route('id')]) }}`,
             type: "GET",
-            data: { selected_asset: assetType, per_page: 1 },
+            data: { selected_asset: assetType || '' }, // 🔥 empty bhejo agar null ho
             success: function(data) {
                 let bodyStyles = data.body_styles || [];
                 let options = '<option value="">Select Body Style</option>';
+
                 const selectedStyle = "{{ request('selected_body_style') }}";
 
                 $.each(bodyStyles, function(i, style) {
-                    const sel = (selectedStyle == style.id) ? 'selected' : '';
-                    options += `<option value="${style.id}" ${sel}>${style.name}</option>`;
+                    const sel = (selectedStyle == style.name) ? 'selected' : '';
+                    options += `<option value="${style.name}" ${sel}>${style.name}</option>`;
                 });
 
-                if (bodyStyles.length === 0) options = '<option value="">No Body Styles Available</option>';
+                if (bodyStyles.length === 0) {
+                    options = '<option value="">No Body Styles Available</option>';
+                }
 
                 bodyDropdown.html(options);
             },
@@ -705,6 +708,11 @@ $(document).ready(function() {
             }
         });
     }
+
+    
+    $('#sidebar-type').on('change', function () {
+        loadBodyStyles($(this).val());
+    });
 
     // Trigger when asset type changes
     $('#sidebar-type').on('change', function() {

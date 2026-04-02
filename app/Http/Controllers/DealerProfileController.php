@@ -233,35 +233,69 @@ class DealerProfileController extends Controller
                 return $vehicle;
             })->values();
 
-            // Body styles
             $bodyStyles = [];
+            $filtersArray = $result['filters'] ?? [];
             $selectedAsset = $request->selected_asset;
-            if ($selectedAsset && isset($result['filters'])) {
-                $filtersArray = $result['filters'];
-                switch($selectedAsset) {
-                    case 'AUTO': $bodyStylesData = $filtersArray['BodyStyle'] ?? []; break;
-                    case 'MARINE': $bodyStylesData = $filtersArray['BodyStyle'] ?? []; break;
-                    case 'WATERSPORT': $bodyStylesData = $filtersArray['BodyStyle'] ?? []; break;
-                    case 'SNOWSPORTS': $bodyStylesData = $filtersArray['BodyStyleSnowSport'] ?? []; break;
-                    case 'RV / TRAILER': $bodyStylesData = $filtersArray['BodyStyleRvTrailer'] ?? []; break;
-                    case 'MOTORCYCLE / ATV / POWERSPORTS': $bodyStylesData = $filtersArray['BodyStyleMotorcycleAtv'] ?? []; break;
-                    case 'HEAVY TRUCK/EQUIPMENT': $bodyStylesData = $filtersArray['BodyStyleHeavyTruckEquipment'] ?? []; break;
-                    case 'HEAVY DUTY TRAILERS': $bodyStylesData = $filtersArray['BodyStyleHeavyDutyTrailer'] ?? []; break;
-                    case 'FARM EQUIPMENT': $bodyStylesData = $filtersArray['BodyStyleFarmEquipment'] ?? []; break;
-                    default: $bodyStylesData = $filtersArray['BodyStyle'] ?? [];
-                }
 
-                if (!empty($bodyStylesData)) {
-                    $bodyStyles = collect($bodyStylesData)
-                        ->map(fn($style) => [
-                            'id' => is_array($style) ? ($style['id'] ?? null) : ($style->id ?? null),
-                            'name' => is_array($style) ? ($style['name'] ?? '') : ($style->name ?? '')
-                        ])
-                        ->filter(fn($style) => !empty($style['name']))
-                        ->sortBy('name')
+            if (isset($filtersArray)) {
+
+                // 🔹 Asset select hai → specific filter
+                if (!empty($selectedAsset)) {
+                    switch($selectedAsset) {
+                        case 'AUTO':
+                        case 'MARINE':
+                        case 'WATERSPORT':
+                            $bodyStylesData = $filtersArray['BodyStyle'] ?? [];
+                            break;
+
+                        case 'SNOWSPORTS':
+                            $bodyStylesData = $filtersArray['BodyStyleSnowSport'] ?? [];
+                            break;
+
+                        case 'RV / TRAILER':
+                            $bodyStylesData = $filtersArray['BodyStyleRvTrailer'] ?? [];
+                            break;
+
+                        case 'MOTORCYCLE / ATV / POWERSPORTS':
+                            $bodyStylesData = $filtersArray['BodyStyleMotorcycleAtv'] ?? [];
+                            break;
+
+                        case 'HEAVY TRUCK/EQUIPMENT':
+                            $bodyStylesData = $filtersArray['BodyStyleHeavyTruckEquipment'] ?? [];
+                            break;
+
+                        case 'HEAVY DUTY TRAILERS':
+                            $bodyStylesData = $filtersArray['BodyStyleHeavyDutyTrailer'] ?? [];
+                            break;
+
+                        case 'FARM EQUIPMENT':
+                            $bodyStylesData = $filtersArray['BodyStyleFarmEquipment'] ?? [];
+                            break;
+
+                        default:
+                            $bodyStylesData = $filtersArray['BodyStyle'] ?? [];
+                    }
+                } 
+                // 🔹 Default → sab merge karo
+                else {
+                    $bodyStylesData = collect($filtersArray)
+                        ->filter(fn($value, $key) => str_contains($key, 'BodyStyle'))
+                        ->flatten(1)
                         ->values()
                         ->toArray();
                 }
+
+                // 🔹 Common mapping
+                $bodyStyles = collect($bodyStylesData)
+                    ->map(fn($style) => [
+                        'id' => is_array($style) ? ($style['id'] ?? null) : ($style->id ?? null),
+                        'name' => is_array($style) ? ($style['name'] ?? '') : ($style->name ?? '')
+                    ])
+                    ->filter(fn($style) => !empty($style['name']))
+                    ->unique('name') // 🔥 duplicates remove
+                    ->sortBy('name')
+                    ->values()
+                    ->toArray();
             }
 
             // Pagination

@@ -340,13 +340,10 @@ $end = $start + count($search_inventory_result) - 1;
                     </form>
                    
                 </div>
-                    <div class="row g-4" id="vehicleContainer">
+                <div class="row g-4" id="vehicleContainer">
                         @if ($search_inventory_result != null)
                         @foreach ($search_inventory_result as $recent_vehicle)
-                        <div class="col-lg-4 col-sm-6 vehicle-card"
-                            data-aos="fade-up"
-                            data-aos-delay="{{ ($loop->index % 3) * 100 }}"
-                            data-aos-duration="600">
+                        <div class="col-lg-4 col-sm-6 vehicle-card">
                             <div class="modern-car-card shadow-sm">
                                 <div class="car-card-top">
                                             @php $detailUrl = route('inventory_product_details', $recent_vehicle->id); @endphp
@@ -415,14 +412,14 @@ $end = $start + count($search_inventory_result) - 1;
                             </div>
                         </div>
                         @endforeach
-                           <div class="my-4">
+                        <div class="my-4">
                     @include('partials.pagination')
                 </div>
-                        @else
-                        <h2 class="no-result-found text-center">No results found</h2>
-                        @endif
-                      
-                    </div>
+                @else
+                <h2 class="no-result-found text-center">No results found</h2>
+                @endif
+                
+            </div>
                 </div>
             </div>
         </div>
@@ -479,6 +476,10 @@ $end = $start + count($search_inventory_result) - 1;
             });
         }
     });
+</script>
+<script>
+    const bodyStyleTypes = @json($bodyStyleTypes);
+    const selectedBodyStyle = "{{ request('selected_body_style') }}";
 </script>
 <script>
 $(document).ready(function() {
@@ -573,19 +574,29 @@ $(document).ready(function() {
     function loadBodyStyles(assetType) {
         const bodyStyleSelect = $('#body-style-select');
 
-        if (!assetType) {
-            bodyStyleSelect.html('<option value="">Select Body Style</option>');
-            return;
-        }
-
-        let bodyStyles = bodyStyleTypes[assetType] || [];
-
         let options = '<option value="">Select Body Style</option>';
+        let bodyStyles = [];
+
+        // ✅ Case 1: No asset selected → merge ALL
+        if (!assetType) {
+            Object.values(bodyStyleTypes).forEach(arr => {
+                bodyStyles = bodyStyles.concat(arr);
+            });
+
+            // 🔥 remove duplicates
+            bodyStyles = bodyStyles.filter(
+                (v, i, a) => a.findIndex(t => t.name === v.name) === i
+            );
+        } 
+        // ✅ Case 2: Specific asset
+        else {
+            bodyStyles = bodyStyleTypes[assetType] || [];
+        }
 
         if (bodyStyles.length > 0) {
             bodyStyles.forEach(style => {
-                const selected = (selectedBodyStyle == style.id) ? 'selected' : '';
-                options += `<option value="${style.id}" ${selected}>${style.name}</option>`;
+                const selected = (selectedBodyStyle == style.name) ? 'selected' : '';
+                options += `<option value="${style.name}" ${selected}>${style.name}</option>`;
             });
         } else {
             options = '<option value="">No Body Styles Available</option>';
@@ -596,15 +607,12 @@ $(document).ready(function() {
 
     $(document).ready(function () {
 
-        // page load pe run karo (important)
-        if (selectedAsset) {
-            loadBodyStyles(selectedAsset);
-        }
+        // 🔹 page load
+        loadBodyStyles($('#sidebar-type').val());
 
-        // asset change pe
+        // 🔹 asset change
         $('#sidebar-type').on('change', function () {
-            let assetType = $(this).val();
-            loadBodyStyles(assetType);
+            loadBodyStyles($(this).val());
         });
 
     });

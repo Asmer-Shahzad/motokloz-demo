@@ -179,13 +179,13 @@
                         {{ isset($searched_vehicle->mfg_auto) ? $searched_vehicle->mfg_auto : '' }}
                         {{isset( $searched_vehicle->model) ? $searched_vehicle->model : '' }} {{ isset($searched_vehicle->trim) ? $searched_vehicle->trim : '' }}</h2>
                     <div class="mto-meta-row d-flex flex-wrap gap-3 mt-3">
-                        <span class="mto-meta-item"><i class="fa-solid fa-location-dot me-1"></i> Las Vegas, USA</span>
-                        <a href="#" class="mto-map-link fw-bold">Show on map</a>
-                        <span class="mto-meta-item flatt">
+                        <span class="mto-meta-item"><i class="fa-solid fa-location-dot me-1"></i> {{$searched_vehicle->dealer->city}}, {{$searched_vehicle->dealer->province}}</span>
+                        <a href="{{ route('dealer_inventory_details', $searched_vehicle->dealer->id) }}" class="mto-map-link fw-bold">Show on map</a>
+                        <!-- <span class="mto-meta-item flatt">
                             <img src="/assets/images/code.png" class="light-dark" alt="">
                             <span class="">Fleet Code:</span>
                             <span class="value">LVA-4125</span>
-                        </span>
+                        </span> -->
                     </div>
                 </div>
                 <style>
@@ -235,26 +235,25 @@
                                 <div class="mto-info-tile"><img src="/assets/images/icon01.png" alt=""> {{ isset($searched_vehicle->mileage) ? $searched_vehicle->mileage : '' }} km</div>
                             </div>
                             <div class="col-md-3 col-6">
-                                <div class="mto-info-tile"><img src="/assets/images/icon02.png" alt=""> Diesel</div>
+                                <div class="mto-info-tile"><img src="/assets/images/icon02.png" alt=""> {{ isset($searched_vehicle->power_type) ? $searched_vehicle->power_type : '' }}</div>
                             </div>
                             <div class="col-md-3 col-6">
-                                <div class="mto-info-tile"><img src="/assets/images/icon03.png" alt=""> Automatic</div>
+                                <div class="mto-info-tile"><img src="/assets/images/icon03.png" alt=""> {{ isset($searched_vehicle->transmission) ? $searched_vehicle->transmission : '' }}</div>
                             </div>
                             <div class="col-md-3 col-6">
-                                <div class="mto-info-tile"><img src="/assets/images/icon04.png" alt=""> 7 seats</div>
+                                <div class="mto-info-tile"><img src="/assets/images/drivetrains.png" alt=""> {{ isset($searched_vehicle->drivetrain) ? $searched_vehicle->drivetrain : '' }}</div>
                             </div>
                             <div class="col-md-3 col-6">
-                                <div class="mto-info-tile"><img src="/assets/images/icon05.png" alt=""> 3 Large bags
-                                </div>
+                                <div class="mto-info-tile"><img src="/assets/images/interiorcolor.png" width="20" alt=""> {{ isset($searched_vehicle->int_color) ? $searched_vehicle->int_color : '' }}</div>
                             </div>
                             <div class="col-md-3 col-6">
-                                <div class="mto-info-tile"><img src="/assets/images/icon06.png" alt=""> SUVs</div>
+                                <div class="mto-info-tile"><img src="/assets/images/exteriorcolor.png" width="20" alt=""> {{ isset($searched_vehicle->ext_color) ? $searched_vehicle->ext_color : '' }}</div>
                             </div>
                             <div class="col-md-3 col-6">
-                                <div class="mto-info-tile"><img src="/assets/images/icon07.png" alt=""> 4 Doors</div>
+                                <div class="mto-info-tile"><img src="/assets/images/icon06.png" alt=""> {{ isset($searched_vehicle->body_style) ? $searched_vehicle->body_style : '' }}</div>
                             </div>
                             <div class="col-md-3 col-6">
-                                <div class="mto-info-tile"><img src="/assets/images/icon08.png" alt=""> 2.5L</div>
+                                <div class="mto-info-tile"><img src="/assets/images/icon08.png" alt=""> {{ isset($searched_vehicle->engine) ? $searched_vehicle->engine : '' }}</div>
                             </div>
                         </div>
                     </div>
@@ -328,7 +327,7 @@
 
                         </div>
 
-                        <div class="mto-stack-item mb-4">
+                        <div class="mto-stack-item mb-4" hidden>
                             <div class="mto-stack-trigger d-flex justify-content-between align-items-center">
                                 <h5 class="mb-0 fw-bold">Question Answers</h5>
                                 <i class="fa-solid fa-chevron-down mto-arrow"></i>
@@ -549,7 +548,7 @@
                                             height="200" 
                                             controls 
                                             controlslist="nodownload"
-                                            style="object-fit: cover;"
+                                            style="object-fit: cover;border-radius: 12px;"
                                         >
                                             <source src="{{ $video->video_url ?? '' }}" type="video/mp4">
                                             Your browser does not support the video tag.

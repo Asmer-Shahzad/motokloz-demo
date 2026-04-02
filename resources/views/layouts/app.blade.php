@@ -885,6 +885,49 @@
             }, duration);
         }
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        function animateCards(container, cardSelector) {
+
+            let cards = document.querySelectorAll(container + " " + cardSelector);
+
+            if (!cards.length) return;
+
+            gsap.fromTo(cards,
+                {
+                    y: 100,
+                    opacity: 0,
+                    scale: 0.95
+                },
+                {
+                    y: 0,
+                    opacity: 1,
+                    scale: 1,
+                    duration: 0.9,
+                    ease: "power3.out",
+                    stagger: 0.15,
+                    scrollTrigger: {
+                        trigger: container,
+                        start: "top 80%",   // 👈 jab section viewport me aaye
+                        end: "bottom 60%",
+                        toggleActions: "play none none none",
+                        once: true          // 👈 sirf 1 dafa chale
+                    }
+                }
+            );
+        }
+
+        // ✅ dono sections
+        animateCards("#vehicleContainer", ".vehicle-card");
+        animateCards("#inventoryContainer", ".dealer-vehicle-card");
+
+    });
+    </script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init();
