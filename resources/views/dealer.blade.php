@@ -425,43 +425,32 @@
                                 {{ $start }} - {{ $end }} of {{ $total_inventory }} {{ $assetWord }} found
                             </span>
                         </div>
-                        <form id="vehicleFilterForm" class="toolbar-right d-flex gap-2">
+                        <div class="toolbar-right d-flex gap-2 mb-4">
                             <button type="button" class="btn-clear-filters">Clear Filters</button>
-
-                            <!-- Example: Show X results per page (optional) -->
-                            <!--
-                                <select class="form-select form-select-sm tool-select" name="per_page">
-                                    <option value="10">Show 10</option>
-                                    <option value="20">Show 20</option>
-                                </select>
-                                -->
-
-                            <!-- Sort dropdown -->
-                            <select class="form-select form-select-sm tool-select" id="sortSelect" name="sort">
-                                <option value="name">Sort by: Name</option>
+                            <select class="form-select form-select-sm tool-select" id="sortSelect">
+                                <option value="name_asc">Sort by: Name (A-Z)</option>
+                                <option value="name_desc">Sort by: Name (Z-A)</option>
                                 <option value="price_asc">Price: Low to High</option>
                                 <option value="price_desc">Price: High to Low</option>
+                                <option value="year_desc">Year: Newest First</option>
+                                <option value="year_asc">Year: Oldest First</option>
                             </select>
-                        </form>
+                        </div>
                     </div>
 
                     <div class="row g-4" id="vehicleContainer">
                         {{-- vehicle div start Car listing page --}}
-                        @foreach ($inventory as $recent_vehicle)
-                            <div class="col-lg-4 col-sm-6 vehicle-card">
+                        @forelse ($inventory as $recent_vehicle)
+                            <div class="col-lg-4 col-sm-6 vehicle-card" 
+                                data-id="{{ $recent_vehicle->id }}"
+                                data-name="{{ strtolower($recent_vehicle->mfg_auto ?? '') }} {{ strtolower($recent_vehicle->model ?? '') }}"
+                                data-price="{{ $recent_vehicle->price_retail_date ?? 0 }}"
+                                data-year="{{ $recent_vehicle->year ?? 0 }}">
                                 <div class="modern-car-card shadow-sm">
                                     <div class="car-card-top">
-                                        {{-- @php
-                                        if ($recent_vehicle->inventory_logo != null) {
-                                            $logo = explode('|', $recent_vehicle->inventory_logo);
-                                        } else {
-                                            $logo[0] = 'defaultimage.jpg';
-                                        }
-                                        @endphp --}}
                                         @php
                                             $detailUrl = route('inventory_product_details', $recent_vehicle->id);
                                         @endphp
-
                                         <a href="{{ $detailUrl }}">
                                             <img style="width:100%"
                                                 src="{{ $recent_vehicle->primary_image 
@@ -474,17 +463,13 @@
                                                 onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
                                         </a>
                                         <div class="badge-mileage d-flex align-items-center">
-
                                             <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
                                                 style="width:20px; height:12px;">
-
                                             {{ $recent_vehicle->mileage 
                                                 ? trim(str_ireplace('km', '', $recent_vehicle->mileage)) . ' km' 
                                                 : '0 km' 
                                             }}
-
                                         </div>
-
                                     </div>
                                     <div class="car-card-bottom">
                                         <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
@@ -526,27 +511,145 @@
                                             <h4 class="price-value">
                                                 ${{ formatPrice($recent_vehicle->price_retail_date ?? 0) }}
                                             </h4>
-                                            <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        @empty
+                            <div class="col-12">
+                                <div class="text-center py-5">
+                                    <i class="fas fa-car fa-3x text-muted mb-3"></i>
+                                    <h5>No vehicles found</h5>
+                                    <p class="text-muted">Try adjusting your filters or check back later.</p>
+                                </div>
+                            </div>
+                        @endforelse
                         {{-- vehicle div end for welcome page --}}
                     </div>
-                    <div class="my-4 pt-5">
-                        @include('partials.pagination', [
-                            'current_page' => $inventory->currentPage(),
-                            'last_page' => $inventory->lastPage()
-                        ])
-                    </div>
 
-
+                    @if($inventory->count() > 0)
+                        <div class="my-4 pt-5">
+                            @include('partials.pagination', [
+                                'current_page' => $inventory->currentPage(),
+                                'last_page' => $inventory->lastPage()
+                            ])
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
     </section>
-
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sortSelect = document.getElementById('sortSelect');
+    const clearFiltersBtn = document.querySelector('.btn-clear-filters');
+    const vehicleContainer = document.getElementById('vehicleContainer');
+    
+    // Sort functionality
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
+            const sortValue = this.value;
+            const vehicleCards = Array.from(document.querySelectorAll('.vehicle-card'));
+            
+            if (vehicleCards.length === 0) return;
+            
+            vehicleCards.sort((a, b) => {
+                if (sortValue === 'name_asc') {
+                    const nameA = a.dataset.name || '';
+                    const nameB = b.dataset.name || '';
+                    return nameA.localeCompare(nameB);
+                } 
+                else if (sortValue === 'name_desc') {
+                    const nameA = a.dataset.name || '';
+                    const nameB = b.dataset.name || '';
+                    return nameB.localeCompare(nameA);
+                }
+                else if (sortValue === 'price_asc') {
+                    const priceA = parseFloat(a.dataset.price) || 0;
+                    const priceB = parseFloat(b.dataset.price) || 0;
+                    return priceA - priceB;
+                } 
+                else if (sortValue === 'price_desc') {
+                    const priceA = parseFloat(a.dataset.price) || 0;
+                    const priceB = parseFloat(b.dataset.price) || 0;
+                    return priceB - priceA;
+                }
+                else if (sortValue === 'year_desc') {
+                    const yearA = parseInt(a.dataset.year) || 0;
+                    const yearB = parseInt(b.dataset.year) || 0;
+                    return yearB - yearA;
+                }
+                else if (sortValue === 'year_asc') {
+                    const yearA = parseInt(a.dataset.year) || 0;
+                    const yearB = parseInt(b.dataset.year) || 0;
+                    return yearA - yearB;
+                }
+                return 0;
+            });
+            
+            // Reorder cards with animation
+            vehicleCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                setTimeout(() => {
+                    vehicleContainer.appendChild(card);
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                    }, 50);
+                }, index * 50);
+            });
+            
+            // Show snackbar
+            const sortText = sortSelect.options[sortSelect.selectedIndex]?.text;
+            showSnackbar(`Sorted by: ${sortText}`, 'info', 2000);
+        });
+    }
+    
+    // Clear filters functionality
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', function() {
+            // Reset sort dropdown
+            if (sortSelect) {
+                sortSelect.value = 'name_asc';
+            }
+            
+            // Reset to original order (by ID - newest first)
+            const vehicleCards = Array.from(document.querySelectorAll('.vehicle-card'));
+            
+            vehicleCards.sort((a, b) => {
+                const idA = parseInt(a.dataset.id) || 0;
+                const idB = parseInt(b.dataset.id) || 0;
+                return idB - idA;
+            });
+            
+            vehicleCards.forEach(card => {
+                vehicleContainer.appendChild(card);
+                card.style.opacity = '1';
+            });
+            
+            showSnackbar('Filters cleared! Showing default order', 'info', 2000);
+        });
+    }
+    
+    // Show snackbar function
+    function showSnackbar(message, type = 'success', duration = 5000) {
+        let snackbar = document.getElementById('snackbar');
+        if (!snackbar) {
+            snackbar = document.createElement('div');
+            snackbar.id = 'snackbar';
+            document.body.appendChild(snackbar);
+        }
+        
+        snackbar.textContent = message;
+        snackbar.className = '';
+        snackbar.classList.add(type, 'show');
+        
+        setTimeout(() => {
+            snackbar.classList.remove('show');
+        }, duration);
+    }
+    
+});
+</script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {

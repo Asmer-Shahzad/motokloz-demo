@@ -115,96 +115,145 @@
                         </div>
 
 
-                            <div class="browse-slider">
-                                <h2>Browse By Type</h2>
-                                <p>Find The Perfect Ride For Any Occasion</p>
-                                <div class="swiper mySwiper">
-                                    <div class="swiper-wrapper">
+                <div class="browse-slider">
+                    <h2>Browse By Type</h2>
+                    <p>Find The Perfect Ride For Any Occasion</p>
 
-                                        <div class="swiper-slide">
-                                            <a href="/car-listing?selected_asset=AUTO" class="card">
-                                                <img src="/assets/images/Auto.png" class="img-fluid">
-                                                <span>{{ $assetCounts['AUTO'] ?? 0 }} vehicles</span>    
-                                                <h4>Auto</h4>
-                                            </a>
-                                        </div>
+                    <div class="slider-wrapper">
 
-                                        
-                                        <div class="swiper-slide">
-                                            <a href="/car-listing?selected_asset=SNOWSPORTS" class="card">
-                                                <img src="/assets/images/Snow.png" class="img-fluid">
-                                                <span>{{ $assetCounts['SNOWSPORTS'] ?? 0 }} vehicles</span>    
-                                                <h4>Snowsports</h4>
-                                            </a>
-                                        </div>
-                                        
-                                        
-                                        <div class="swiper-slide">
-                                            <a href="/car-listing?selected_asset=WATERSPORT" class="card">
-                                                <img src="/assets/images/Water.png" class="img-fluid">
-                                                <span>{{ $assetCounts['WATERSPORT'] ?? 0 }} vehicles</span>    
-                                                <h4>Watersports</h4>
-                                            </a>
-                                        </div>
-                                        
-                                        <div class="swiper-slide">
-                                            <a href="/car-listing?selected_asset=MARINE" class="card">
-                                                <img src="/assets/images/Marine.png" class="img-fluid">
-                                                <span>{{ $assetCounts['MARINE'] ?? 0 }} vehicles</span>    
-                                                <h4>Marine</h4>
-                                            </a>
-                                        </div>
+                        <div class="swiper mySwiper">
+                            <div class="swiper-wrapper">
 
-                                        <div class="swiper-slide">
-                                            <a href="/car-listing?selected_asset=RV / TRAILER" class="card">
-                                                <img src="/assets/images/RV.png" class="img-fluid">
-                                                <span>{{ $assetCounts['RV / TRAILER'] ?? 0 }} vehicles</span>
-                                                <h4>RV</h4>
-                                            </a>
-                                        </div>
+                                <div class="swiper-slide">
+                                    <a href="/car-listing?selected_asset=AUTO" class="card">
+                                        <img src="/assets/images/Auto.png" class="img-fluid">
+                                        <span>{{ $assetCounts['AUTO'] ?? 0 }} vehicles</span>    
+                                        <h4>Auto</h4>
+                                    </a>
+                                </div>
 
-                                        <div class="swiper-slide">
-                                            <a href="/car-listing?selected_asset=MOTORCYCLE / ATV / POWERSPORTS" class="card">
-                                                <img src="/assets/images/Motorcycle.png" class="img-fluid">
-                                                <span>{{ $assetCounts['MOTORCYCLE / ATV / POWERSPORTS'] ?? 0 }} vehicles</span>
-                                                <h4>Motorcycle</h4>
-                                            </a>
-                                        </div>
+                                <div class="swiper-slide">
+                                    <a href="/car-listing?selected_asset=SNOWSPORTS" class="card">
+                                        <img src="/assets/images/Snow.png" class="img-fluid">
+                                        <span>{{ $assetCounts['SNOWSPORTS'] ?? 0 }} vehicles</span>    
+                                        <h4>Snowsports</h4>
+                                    </a>
+                                </div>
 
-                                        <div class="swiper-slide">
-                                            <a href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT" class="card">
-                                                <img src="/assets/images/Heavy Truck.png" class="img-fluid">
-                                                <span>{{ $assetCounts['HEAVY TRUCK/EQUIPMENT'] ?? 0 }} vehicles</span>
-                                                <h4>Heavy Truck</h4>
-                                            </a>
-                                        </div>
+                                <div class="swiper-slide">
+                                    <a href="/car-listing?selected_asset=WATERSPORT" class="card">
+                                        <img src="/assets/images/Water.png" class="img-fluid">
+                                        <span>{{ $assetCounts['WATERSPORT'] ?? 0 }} vehicles</span>    
+                                        <h4>Watersports</h4>
+                                    </a>
+                                </div>
 
-                                        <div class="swiper-slide">
-                                            <a href="/car-listing?selected_asset=HEAVY DUTY TRAILERS" class="card">
-                                                <img src="/assets/images/Trailers.png" class="img-fluid">
-                                                <span>{{ $assetCounts['HEAVY DUTY TRAILERS'] ?? 0 }} vehicles</span>
-                                                <h4>Trailers</h4>
-                                            </a>
-                                        </div>
+                                <div class="swiper-slide">
+                                    <a href="/car-listing?selected_asset=MARINE" class="card">
+                                        <img src="/assets/images/Marine.png" class="img-fluid">
+                                        <span>{{ $assetCounts['MARINE'] ?? 0 }} vehicles</span>    
+                                        <h4>Marine</h4>
+                                    </a>
+                                </div>
 
-                                        <div class="swiper-slide">
-                                            <a href="/car-listing?selected_asset=FARM EQUIPMENT" class="card">
-                                                <img src="/assets/images/Farm Equipment.png" class="img-fluid">
-                                                <span>{{ $assetCounts['FARM EQUIPMENT'] ?? 0 }} vehicles</span>
-                                                <h4>Farm Equipment</h4>
-                                            </a>
-                                        </div>
+                                <div class="swiper-slide">
+                                    <a href="/car-listing?selected_asset=RV / TRAILER" class="card">
+                                        <img src="/assets/images/RV.png" class="img-fluid">
+                                        <span>{{ $assetCounts['RV / TRAILER'] ?? 0 }} vehicles</span>
+                                        <h4>RV</h4>
+                                    </a>
+                                </div>
 
-                        
+                                <div class="swiper-slide">
+                                    <a href="/car-listing?selected_asset=MOTORCYCLE / ATV / POWERSPORTS" class="card">
+                                        <img src="/assets/images/Motorcycle.png" class="img-fluid">
+                                        <span>{{ $assetCounts['MOTORCYCLE / ATV / POWERSPORTS'] ?? 0 }} vehicles</span>
+                                        <h4>Motorcycle</h4>
+                                    </a>
+                                </div>
+
+                                <div class="swiper-slide">
+                                    <a href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT" class="card">
+                                        <img src="/assets/images/Heavy Truck.png" class="img-fluid">
+                                        <span>{{ $assetCounts['HEAVY TRUCK/EQUIPMENT'] ?? 0 }} vehicles</span>
+                                        <h4>Heavy Truck</h4>
+                                    </a>
+                                </div>
+
+                                <div class="swiper-slide">
+                                    <a href="/car-listing?selected_asset=HEAVY DUTY TRAILERS" class="card">
+                                        <img src="/assets/images/Trailers.png" class="img-fluid">
+                                        <span>{{ $assetCounts['HEAVY DUTY TRAILERS'] ?? 0 }} vehicles</span>
+                                        <h4>Trailers</h4>
+                                    </a>
+                                </div>
+
+                                <div class="swiper-slide">
+                                    <a href="/car-listing?selected_asset=FARM EQUIPMENT" class="card">
+                                        <img src="/assets/images/Farm Equipment.png" class="img-fluid">
+                                        <span>{{ $assetCounts['FARM EQUIPMENT'] ?? 0 }} vehicles</span>
+                                        <h4>Farm Equipment</h4>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- CUSTOM BUTTONS -->
+                        <div class="custom-nav prev-btn">
+                            <i class="bi bi-arrow-left"></i>
+                        </div>
+
+                        <div class="custom-nav next-btn">
+                            <i class="bi bi-arrow-right"></i>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
-        </div>
     </section>
 
 
+<style>
+    .slider-wrapper {
+        position: relative;
+        /* padding: 0 50px; */
+    }
 
+    .swiper-wrapper {
+        transition-timing-function: linear !important;
+    }
+    
+    .custom-nav {
+        position: absolute;
+        top: 40%;
+        transform: translateY(-40%);
+        z-index: 10;
+
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+
+        background: #ff9900;
+        color: #fff;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    /* LEFT */
+    .prev-btn {
+        left: -50px;
+    }
+
+    /* RIGHT */
+    .next-btn {
+        right: -50px;
+    }
+</style>
 
 
     <section class="section-two">
@@ -509,6 +558,7 @@
                             </section> -->
 
     <style>
+        
         .btn-custom-home {
             display: inline-flex;
             align-items: center;
@@ -525,6 +575,53 @@
             width: 20px;
             /* size adjust kar sakte ho */
             height: auto;
+        }
+
+        /* Base styling */
+        .custom-swiper-btn {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+            top: 10%;
+            /* transform: translateY(-50%); */
+        }
+
+        /* Hover effect */
+        .custom-swiper-btn:hover {
+            background-color: #ff6b00; /* bright orange */
+        }
+
+        /* Icon size */
+        .swiper-button-next::after,
+        .swiper-button-prev::after {
+            font-size: 20px;
+        }
+
+        /* Position tweaks */
+        .swiper-button-prev {
+            left: 240px;
+            top: 80%;
+            color:#fff;
+            background-color: #ff9800;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+        }
+        .swiper-button-next {
+            right: 240px;
+            top: 80%;
+            z-index: 10;
+            color:#fff;
+            background-color: #ff9800;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
         }
     </style>
 

@@ -54,265 +54,128 @@
                     </div>
 
                 </div>
+                
                 <div class="wishlist-body">
                     <!-- Wishlist Items -->
                     <div class="wishlist-items">
-
-                        <!-- Item 1 -->
-                        <div class=" wishlist-card mb-4" data-aos="fade-up" data-aos-duration="600">
+                        @foreach($favorites as $favorite)
+                        <!-- Dynamic Item -->
+                        <div class="wishlist-card mb-3" data-aos="fade-up" data-aos-duration="600">
                             <div class="row g-0">
                                 <div class="col-md-5">
-                                    <img src="/assets/images/wish-1 (1).png" class="img-fluid rounded-start wishlist-img"
-                                        alt="Mini Cooper S Hardtop 2 Door">
+                                    @php $detailUrl = route('inventory_product_details', $favorite->inventory->id); @endphp
+                                    <a href="{{ $detailUrl }}">
+                                        <img style="width:100%" src="{{ $favorite->inventory->primary_image 
+                                            ? (Str::startsWith($favorite->inventory->primary_image,'http') 
+                                                ? $favorite->inventory->primary_image 
+                                                : $disklozBaseUrl.'/admin_assets/images/inventory_images/'.$favorite->inventory->primary_image)
+                                            : asset('assets/images/defaultimage.jpg') }}"
+                                            alt="Vehicle Image"
+                                            class="img-fluid rounded-start wishlist-img"
+                                            onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
+                                    </a>
                                 </div>
                                 <div class="col-md-7 cards-wish-all">
-                                    <div class="card-body">
-
+                                    <div class="card-body p-3">
                                         <div class="d-flex justify-content-between align-items-start mb-2 badge-main">
-
-                                            <span class="discount-badge">-25%</span>
+                                            @if(isset($favorite->inventory->discount) && $favorite->inventory->discount > 0)
+                                            <span class="discount-badge">-{{ $favorite->inventory->discount ?? '500' }}%</span>
+                                            @else
+                                            <span class="discount-badge">-{{ $favorite->inventory->discount ?? '0' }}%</span>
+                                            @endif
                                         </div>
-                                        <div class="rating-all d-flex align-items-center gap-2">
+                                        
+                                        <div class="rating-all d-flex align-items-center gap-2 mb-2">
                                             <img src="/assets/images/Vector (12).png" alt="rating" width="16">
                                             <p class="rating-all-p mb-0">
-                                                <strong>4.96</strong> (672 reviews)
+                                                <strong>{{ $favorite->inventory->rating ?? '4.96' }}</strong> 
+                                                ({{ $favorite->inventory->reviews ?? '672' }} reviews)
                                             </p>
                                         </div>
 
+                                        <h5 class="card-title fw-bold mb-2">{{ $favorite->inventory->year }} {{ $favorite->inventory->mfg_auto }}
+                                        {{ $favorite->inventory->model }} {{ $favorite->inventory->trim }}</h5>
 
-                                        <h5 class="card-title fw-bold">Mini Cooper S Hardtop 2 Door</h5>
+                                        @php
+                                            // Location data ko sahi jagah se access karo
+                                            $dealerPostalCode = $favorite->inventory->dealer_postal_code 
+                                                ?? $favorite->dealer_postal_code 
+                                                ?? $favorite->inventory->postal_code 
+                                                ?? '';
+                                            
+                                            $dealerCity = $favorite->inventory->dealer_city 
+                                                ?? $favorite->dealer_city 
+                                                ?? $favorite->inventory->city 
+                                                ?? '';
+                                            
+                                            $dealerProvince = $favorite->inventory->dealer_province 
+                                                ?? $favorite->dealer_province 
+                                                ?? $favorite->inventory->province 
+                                                ?? '';
+                                            
+                                            $dealerCountry = $favorite->inventory->dealer_country 
+                                                ?? $favorite->dealer_country 
+                                                ?? $favorite->inventory->country 
+                                                ?? '';
+                                        @endphp
 
-                                        <p class="card-text location mb-3">
-                                            <img src="/assets/images/Vector (11).png" class="icon light-dark">
-                                            Manchester,
-                                            England
+                                        <p class="car-distance-away"
+                                            data-dealer-postal="{{ $dealerPostalCode }}"
+                                            data-dealer-city="{{ $dealerCity }}"
+                                            data-dealer-province="{{ $dealerProvince }}"
+                                            data-dealer-country="{{ $dealerCountry }}">
+                                            <i class="fa-solid fa-location-dot"></i>
+                                            <span class="distance-value">Loading...</span>
                                         </p>
 
-                                        <div class="features d-flex flex-wrap gap-3 mb-3">
-
-
+                                        <div class="features d-flex flex-wrap gap-2 mb-3">
                                             <span class="feature">
                                                 <img src="/assets/images/icon01.png" class="icon light-dark">
-                                                Unlimited mileage
+                                                {{ $favorite->inventory->mileage ?? '0' }}
                                             </span>
 
                                             <span class="feature">
                                                 <img src="/assets/images/icon03.png" class="icon light-dark">
-                                                Automatic
+                                                {{ $favorite->inventory->transmission ?? '' }}
                                             </span>
 
                                             <span class="feature">
-                                                <img src="/assets/images/icon05.png" class="icon light-dark">
-                                                3
-                                                Large
-                                                bags
+                                                <img src="/assets/images/drivetrains.png" alt="" class="icon light-dark"> 
+                                                {{ isset($favorite->inventory->drivetrain) ? $favorite->inventory->drivetrain : '' }}
                                             </span>
 
                                             <span class="feature">
                                                 <img src="/assets/images/icon02.png" class="icon light-dark">
-                                                Diesel
+                                                {{ isset($favorite->inventory->power_type) ? $favorite->inventory->power_type : '' }}
                                             </span>
 
                                             <span class="feature">
-                                                <img src="/assets/images/icon04.png" class="icon light-dark">
-                                                7
-                                                seats
-
+                                                <img src="/assets/images/icon06.png" width="20" alt="" class="icon light-dark"> 
+                                                {{ isset($favorite->inventory->body_style) ? $favorite->inventory->body_style : '' }}
                                             </span>
 
                                             <span class="feature suv-badge">
-                                                <img src="/assets/images/icon06.png" class="icon light-dark">
-                                                SUVs
+                                                <img src="/assets/images/icon08.png" alt="" class="icon light-dark"> 
+                                                {{ isset($favorite->inventory->engine) ? $favorite->inventory->engine : '' }}
                                             </span>
-
-
                                         </div>
 
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="price-wrap">
                                                 <span class="text-span">From</span>
-                                                <span class="price-span">$202.87</span>
+                                                <span class="price-span">${{ number_format($favorite->inventory->price_retail_date ?? '', 2) }}</span>
                                                 <span class="text-span">/ USD</span>
                                             </div>
-                                            <button class=" book-btn">Book Now</button>
+                                            <button class="book-btn" onclick="window.location.href='{{ route('inventory_product_details', $favorite->inventory_id) }}'">Book Now</button>
                                         </div>
-
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-
-                        <!-- Item 2 -->
-                        <div class=" wishlist-card mb-4" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
-                            <div class="row g-0">
-                                <div class="col-md-5">
-                                    <img src="/assets/images/Link.png" class="img-fluid rounded-start wishlist-img"
-                                        alt="Volvo XC90 T6 Inscription">
-                                </div>
-                                <div class="col-md-7 cards-wish-all">
-                                    <div class="card-body">
-
-                                        <div class="d-flex justify-content-between align-items-start mb-2 badge-main">
-                                            <span class="discount-badge">-25%</span>
-                                        </div>
-
-                                        <div class="rating-all d-flex align-items-center gap-2">
-                                            <img src="/assets/images/Vector (12).png" alt="rating" width="16">
-                                            <p class="rating-all-p mb-0">
-                                                <strong>4.96</strong> (672 reviews)
-                                            </p>
-                                        </div>
-
-                                        <h5 class="card-title fw-bold">Volvo XC90 T6 Inscription</h5>
-
-                                        <p class="card-text location mb-3">
-                                            <img src="/assets/images/Vector (11).png" class="icon light-dark">
-                                            Manchester,
-                                            England
-                                        </p>
-                                        <div class="features d-flex flex-wrap gap-3 mb-3">
-
-
-                                            <span class="feature">
-                                                <img src="/assets/images/icon01.png" class="icon light-dark">
-                                                Unlimited mileage
-                                            </span>
-
-                                            <span class="feature">
-                                                <img src="/assets/images/icon03.png" class="icon light-dark">
-                                                Automatic
-                                            </span>
-
-                                            <span class="feature">
-                                                <img src="/assets/images/icon05.png" class="icon light-dark">
-                                                Diesel
-                                            </span>
-
-                                            <span class="feature">
-                                                <img src="/assets/images/icon02.png" class="icon light-dark">
-                                                7
-                                                seats
-                                            </span>
-
-                                            <span class="feature">
-                                                <img src="/assets/images/icon04.png" class="icon light-dark">
-                                                3
-                                                Large bags
-                                            </span>
-
-                                            <span class="feature suv-badge">
-                                                <img src="/assets/images/icon06.png" class="icon light-dark">
-                                                SUVs
-                                            </span>
-
-
-                                        </div>
-
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="price-wrap">
-                                                <span class="text-span">From</span>
-                                                <span class="price-span">$778.35</span>
-                                                <span class="text-span">/ USD</span>
-                                            </div>
-                                            <button class=" book-btn">Book Now</button>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <!-- Item 3 -->
-                        <div class=" wishlist-card mb-4" data-aos="fade-up" data-aos-delay="200" data-aos-duration="600">
-                            <div class="row g-0">
-                                <div class="col-md-5">
-                                    <img src="/assets/images/Link (2).png" class="img-fluid rounded-start wishlist-img"
-                                        alt="Cadillac Escalade ESV Premium Luxury">
-                                </div>
-                                <div class="col-md-7 cards-wish-all">
-                                    <div class="card-body">
-
-                                        <div class="d-flex justify-content-between align-items-start mb-2 badge-main">
-                                            <span class="discount-badge">-25%</span>
-                                        </div>
-
-                                        <div class="rating-all d-flex align-items-center gap-2">
-                                            <img src="/assets/images/Vector (12).png" alt="rating" width="16">
-                                            <p class="rating-all-p mb-0">
-                                                <strong>4.96</strong> (672 reviews)
-                                            </p>
-                                        </div>
-
-                                        <h5 class="card-title fw-bold">Cadillac Escalade ESV Premium Luxury</h5>
-
-                                        <p class="card-text location mb-3">
-                                            <img src="/assets/images/Vector (11).png" class="icon light-dark">
-                                            Manchester,
-                                            England
-                                        </p>
-
-                                        <div class="features d-flex flex-wrap gap-3 mb-3">
-
-
-                                            <span class="feature">
-                                                <img src="/assets/images/icon01.png" class="icon light-dark">
-                                                Unlimited mileage
-                                            </span>
-
-                                            <span class="feature">
-                                                <img src="/assets/images/icon03.png" class="icon light-dark">
-                                                Automatic
-                                            </span>
-
-                                            <span class="feature">
-                                                <img src="/assets/images/icon05.png" class="icon light-dark">
-                                                Diesel
-                                            </span>
-
-                                            <span class="feature">
-                                                <img src="/assets/images/icon02.png" class="icon light-dark">
-                                                7
-                                                seats
-                                            </span>
-
-                                            <span class="feature">
-                                                <img src="/assets/images/icon04.png" class="icon light-dark">
-                                                3
-                                                Large bags
-                                            </span>
-
-                                            <span class="feature suv-badge">
-                                                <img src="/assets/images/icon06.png" class="icon light-dark">
-                                                SUVs
-                                            </span>
-
-
-                                        </div>
-
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="price-wrap">
-                                                <span class="text-span">From</span>
-                                                <span class="price-span">$779.58</span>
-                                                <span class="text-span">/ USD</span>
-                                            </div>
-
-                                            <button class=" book-btn">Book Now</button>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
+                        @endforeach
                     </div>
                     <div class="pagination-section mt-56">
-
-
                         @include('partials.pagination')
-
                     </div>
                 </div>
 

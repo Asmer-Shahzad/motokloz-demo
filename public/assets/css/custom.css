@@ -2726,7 +2726,7 @@ ul.list-unstyled.service-list li {
 
 .modal-body .form-control:focus {
     background-color: var(--modal-body-inputs);
-    border: var(--border-color);
+    border-color: #ff9800 !important;
     padding: 12px;
 }
 
@@ -2745,7 +2745,7 @@ ul.list-unstyled.service-list li {
 
 .form-control:focus {
     background-color: #fff;
-    border-color: #ff9800;
+    border-color: #ff9800 !important;
     box-shadow: none;
 }
 
