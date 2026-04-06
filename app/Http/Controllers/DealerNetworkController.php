@@ -8,6 +8,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+
 
 class DealerNetworkController extends Controller
 {
@@ -18,6 +20,10 @@ class DealerNetworkController extends Controller
 
     public function fetch_dealers(Request $request)
     {
+        
+        $user = Auth::user();
+        $userInfo = $user->information ?? new UserInformation();
+
         try {
             $page = $request->input('page', 1);
             $perPage = 15;
@@ -75,6 +81,8 @@ class DealerNetworkController extends Controller
             );
 
             return view('dealer-network', [
+                'user' => $user,
+                'userInfo' => $userInfo,
                 'dealers' => $paginatedDealers,
                 'current_page' => $paginatedDealers->currentPage(),
                 'last_page' => $paginatedDealers->lastPage(),

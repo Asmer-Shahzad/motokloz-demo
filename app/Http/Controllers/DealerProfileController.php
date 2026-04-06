@@ -11,6 +11,7 @@ use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\MultipartStream;
 use Illuminate\Pagination\LengthAwarePaginator; // ✅ ADD THIS
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 
 class DealerProfileController extends Controller
@@ -85,62 +86,71 @@ class DealerProfileController extends Controller
     }
 
     public function dealer_inventory_details($id)
-{
-    $response = Http::get(env("diskloz_base_url") . '/api/dealer_by_id/' . $id);
+    {
+        $user = Auth::user();
+        $userInfo = $user->information ?? new UserInformation();
 
-    if (!$response->successful()) {
-        abort(404, 'Dealer not found');
+        $response = Http::get(env("diskloz_base_url") . '/api/dealer_by_id/' . $id);
+
+        if (!$response->successful()) {
+            abort(404, 'Dealer not found');
+        }
+
+        $data = $response->json();
+
+        if (!($data['status'] ?? false)) {
+            abort(404, 'Dealer not found');
+        }
+
+        $dealer = (object) $data['data'];
+
+        // ✅ Location map
+        $dealerLocationMap = $this->dealerLocationMap();
+
+        // total inventory count
+        $total_inventory = count($dealer->inventory ?? []);
+
+        // ✅ IMPORTANT: enrich inventory with location
+        $inventory = collect($dealer->inventory ?? [])
+            ->map(function ($item) use ($dealerLocationMap) {
+
+                $item = (object) $item;
+
+                $dealerKey = (string) ($item->user_id ?? $item->dealer_id ?? '');
+                $location = $dealerLocationMap[$dealerKey] ?? [];
+
+                // inject location fields
+                $item->dealer_postal_code = $location['postal_code'] ?? null;
+                $item->dealer_city = $location['city'] ?? null;
+                $item->dealer_province = $location['province'] ?? null;
+                $item->dealer_country = $location['country'] ?? null;
+
+                return $item;
+            })
+            ->take(4)
+            ->values();
+
+        // ✅ Get the first vehicle from inventory to use as searched_vehicle
+        $searched_vehicle = $inventory->first();
+
+        return view('dealer-profile', [
+            'user' => $user,
+            'userInfo' => $userInfo,
+            'dealer'           => $dealer,
+            'contact'          => $dealer->phone_no ?? null,
+            'inventory'        => $inventory,
+            'total_inventory'  => $total_inventory,
+            'searched_vehicle' => $searched_vehicle,  // Add this line
+            'disklozBaseUrl'   => $this->disklozBaseUrl(),
+        ]);
     }
-
-    $data = $response->json();
-
-    if (!($data['status'] ?? false)) {
-        abort(404, 'Dealer not found');
-    }
-
-    $dealer = (object) $data['data'];
-
-    // ✅ Location map
-    $dealerLocationMap = $this->dealerLocationMap();
-
-    // total inventory count
-    $total_inventory = count($dealer->inventory ?? []);
-
-    // ✅ IMPORTANT: enrich inventory with location
-    $inventory = collect($dealer->inventory ?? [])
-        ->map(function ($item) use ($dealerLocationMap) {
-
-            $item = (object) $item;
-
-            $dealerKey = (string) ($item->user_id ?? $item->dealer_id ?? '');
-            $location = $dealerLocationMap[$dealerKey] ?? [];
-
-            // inject location fields
-            $item->dealer_postal_code = $location['postal_code'] ?? null;
-            $item->dealer_city = $location['city'] ?? null;
-            $item->dealer_province = $location['province'] ?? null;
-            $item->dealer_country = $location['country'] ?? null;
-
-            return $item;
-        })
-        ->take(4)
-        ->values();
-
-    // ✅ Get the first vehicle from inventory to use as searched_vehicle
-    $searched_vehicle = $inventory->first();
-
-    return view('dealer-profile', [
-        'dealer'           => $dealer,
-        'contact'          => $dealer->phone_no ?? null,
-        'inventory'        => $inventory,
-        'total_inventory'  => $total_inventory,
-        'searched_vehicle' => $searched_vehicle,  // Add this line
-        'disklozBaseUrl'   => $this->disklozBaseUrl(),
-    ]);
-}
 
     public function dealer_inventory(Request $request, $id)
     {
+        $user = Auth::user();
+        $userInfo = $user->information ?? new UserInformation();
+        
+
         $assets = [
             'AUTO',
             'FARM EQUIPMENT',
@@ -233,35 +243,69 @@ class DealerProfileController extends Controller
                 return $vehicle;
             })->values();
 
-            // Body styles
             $bodyStyles = [];
+            $filtersArray = $result['filters'] ?? [];
             $selectedAsset = $request->selected_asset;
-            if ($selectedAsset && isset($result['filters'])) {
-                $filtersArray = $result['filters'];
-                switch($selectedAsset) {
-                    case 'AUTO': $bodyStylesData = $filtersArray['BodyStyle'] ?? []; break;
-                    case 'MARINE': $bodyStylesData = $filtersArray['BodyStyle'] ?? []; break;
-                    case 'WATERSPORT': $bodyStylesData = $filtersArray['BodyStyle'] ?? []; break;
-                    case 'SNOWSPORTS': $bodyStylesData = $filtersArray['BodyStyleSnowSport'] ?? []; break;
-                    case 'RV / TRAILER': $bodyStylesData = $filtersArray['BodyStyleRvTrailer'] ?? []; break;
-                    case 'MOTORCYCLE / ATV / POWERSPORTS': $bodyStylesData = $filtersArray['BodyStyleMotorcycleAtv'] ?? []; break;
-                    case 'HEAVY TRUCK/EQUIPMENT': $bodyStylesData = $filtersArray['BodyStyleHeavyTruckEquipment'] ?? []; break;
-                    case 'HEAVY DUTY TRAILERS': $bodyStylesData = $filtersArray['BodyStyleHeavyDutyTrailer'] ?? []; break;
-                    case 'FARM EQUIPMENT': $bodyStylesData = $filtersArray['BodyStyleFarmEquipment'] ?? []; break;
-                    default: $bodyStylesData = $filtersArray['BodyStyle'] ?? [];
-                }
 
-                if (!empty($bodyStylesData)) {
-                    $bodyStyles = collect($bodyStylesData)
-                        ->map(fn($style) => [
-                            'id' => is_array($style) ? ($style['id'] ?? null) : ($style->id ?? null),
-                            'name' => is_array($style) ? ($style['name'] ?? '') : ($style->name ?? '')
-                        ])
-                        ->filter(fn($style) => !empty($style['name']))
-                        ->sortBy('name')
+            if (isset($filtersArray)) {
+
+                // 🔹 Asset select hai → specific filter
+                if (!empty($selectedAsset)) {
+                    switch($selectedAsset) {
+                        case 'AUTO':
+                        case 'MARINE':
+                        case 'WATERSPORT':
+                            $bodyStylesData = $filtersArray['BodyStyle'] ?? [];
+                            break;
+
+                        case 'SNOWSPORTS':
+                            $bodyStylesData = $filtersArray['BodyStyleSnowSport'] ?? [];
+                            break;
+
+                        case 'RV / TRAILER':
+                            $bodyStylesData = $filtersArray['BodyStyleRvTrailer'] ?? [];
+                            break;
+
+                        case 'MOTORCYCLE / ATV / POWERSPORTS':
+                            $bodyStylesData = $filtersArray['BodyStyleMotorcycleAtv'] ?? [];
+                            break;
+
+                        case 'HEAVY TRUCK/EQUIPMENT':
+                            $bodyStylesData = $filtersArray['BodyStyleHeavyTruckEquipment'] ?? [];
+                            break;
+
+                        case 'HEAVY DUTY TRAILERS':
+                            $bodyStylesData = $filtersArray['BodyStyleHeavyDutyTrailer'] ?? [];
+                            break;
+
+                        case 'FARM EQUIPMENT':
+                            $bodyStylesData = $filtersArray['BodyStyleFarmEquipment'] ?? [];
+                            break;
+
+                        default:
+                            $bodyStylesData = $filtersArray['BodyStyle'] ?? [];
+                    }
+                } 
+                // 🔹 Default → sab merge karo
+                else {
+                    $bodyStylesData = collect($filtersArray)
+                        ->filter(fn($value, $key) => str_contains($key, 'BodyStyle'))
+                        ->flatten(1)
                         ->values()
                         ->toArray();
                 }
+
+                // 🔹 Common mapping
+                $bodyStyles = collect($bodyStylesData)
+                    ->map(fn($style) => [
+                        'id' => is_array($style) ? ($style['id'] ?? null) : ($style->id ?? null),
+                        'name' => is_array($style) ? ($style['name'] ?? '') : ($style->name ?? '')
+                    ])
+                    ->filter(fn($style) => !empty($style['name']))
+                    ->unique('name') // 🔥 duplicates remove
+                    ->sortBy('name')
+                    ->values()
+                    ->toArray();
             }
 
             // Pagination
@@ -298,6 +342,8 @@ class DealerProfileController extends Controller
 
             // Pass data to view
             $data = [
+                'user' => $user,
+                'userInfo' => $userInfo,
                 'dealer' => $dealer,
                 'inventory' => $paginatedInventory,
                 'search_inventory_result' => $currentItems,

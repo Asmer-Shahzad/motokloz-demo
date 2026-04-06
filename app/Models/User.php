@@ -41,4 +41,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // User model mein add karo
+    public function information()
+    {
+        return $this->hasOne(UserInformation::class);
+    }
 }

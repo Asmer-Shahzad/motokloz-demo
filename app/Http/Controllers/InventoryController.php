@@ -10,6 +10,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\MultipartStream;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class InventoryController extends Controller
 {
@@ -20,6 +21,9 @@ class InventoryController extends Controller
 
     public function inventory(Request $request)
     {
+        $user = Auth::user();
+        $userInfo = $user->information ?? new UserInformation();
+        
         $page = $request->input('page', 1);
         $perPage = 9;
 
@@ -41,11 +45,19 @@ class InventoryController extends Controller
         $response = Http::get($url);
         $result = json_decode($response->body());
         
-        $data['buying_products'] = $result->data ?? [];
-        $data['current_page'] = $result->current_page ?? 1;
-        $data['last_page']    = $result->last_page ?? 1;
+        $buying_products = $result->data ?? [];
+        $current_page = $result->current_page ?? 1;
+        $last_page = $result->last_page ?? 1;
+        $pageTitle = 'Inventory';
 
-        return view('car-listing', $data);
+        return view('car-listing', [
+            'user' => $user,
+            'userInfo' => $userInfo,
+            'buying_products' => $buying_products,
+            'current_page' => $current_page,
+            'last_page' => $last_page,
+            'pageTitle' => $pageTitle,
+        ]);
     }
 
     public function selling(Request $request){
@@ -58,29 +70,38 @@ class InventoryController extends Controller
         return view('selling', ['array' => $array] );
     }
     
-   public function inventory_product_details(Request $request, $id)
+    public function inventory_product_details(Request $request, $id)
     {
+        $user = Auth::user();
+        $userInfo = $user->information ?? new UserInformation();
+        
         $response_search = Http::get($this->baseUrl().'/api/search_by_id', [
             'id' => $id
         ]);
 
-        //  correct decoding
+        // correct decoding
         $searched_vehicle = json_decode($response_search->body());
 
-        $data['searched_vehicle'] = $searched_vehicle;
+        // videos from API
+        $videos = $searched_vehicle->videos ?? [];
 
-        //  videos from API
-        $data['videos'] = $searched_vehicle->videos ?? [];
-
-        //  contact
-        $data['contact'] = isset($searched_vehicle->dealer)
+        // contact
+        $contact = isset($searched_vehicle->dealer)
             ? $searched_vehicle->dealer->phone_no
             : null;
 
-        //  dealer
-        $data['dealer'] = $searched_vehicle->dealer ?? null;
+        // dealer
+        $dealer = $searched_vehicle->dealer ?? null;
 
-        return view('car-details', $data);
+        return view('car-details', [
+            'user' => $user,
+            'userInfo' => $userInfo,
+            'searched_vehicle' => $searched_vehicle,
+            'videos' => $videos,
+            'contact' => $contact,
+            'dealer' => $dealer,
+            'pageTitle' => $searched_vehicle->title ?? 'Car Details'
+        ]);
     }
 
     public function save_inventory(Request $request){

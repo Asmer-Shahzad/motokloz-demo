@@ -19,37 +19,25 @@
                 <div class="dashboard-content">
 
                     <!-- ===== My Vehicles ===== -->
-                    <div class="vehicles-card dashboard-card  mb-4" data-aos="fade-up" data-aos-duration="600">
+                    <div class="vehicles-card dashboard-card mb-4" data-aos="fade-up" data-aos-duration="600">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="mb-0 vehicle-sec">My Vehicles</h5>
                             <div class="d-flex gap-2">
-                                <button class=" btn-add">Add a Vehicle</button>
+                                <a href="{{ route('add.listings') }}" class="btn-add">Add a Vehicle</a>
                                 <div class="dropdown">
-                                    <button class="btn filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
+                                    <button class="btn filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         <img src="/assets/images/filter.png" class="me-2 filter-icon" alt="">
                                         Filter
                                     </button>
-
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Newest</a></li>
-                                        <li><a class="dropdown-item" href="#">Oldest</a></li>
-                                        <li><a class="dropdown-item" href="#">Reservation</a></li>
-                                        <li><a class="dropdown-item" href="#">Payment</a></li>
+                                        <li><a class="dropdown-item filter-item" href="#" data-sort="newest">Newest</a></li>
+                                        <li><a class="dropdown-item filter-item" href="#" data-sort="oldest">Oldest</a></li>
+                                        <li><a class="dropdown-item filter-item" href="#" data-sort="price_low">Price: Low to High</a></li>
+                                        <li><a class="dropdown-item filter-item" href="#" data-sort="price_high">Price: High to Low</a></li>
                                     </ul>
                                 </div>
-
                             </div>
                         </div>
-                        <style>
-                            .agent-table {
-                                text-align: start;
-                            }
-
-                            .table-content {
-                                text-align: start;
-                            }
-                        </style>
 
                         <div class="table-responsive">
                             <table class="table vehicle-table align-middle mb-0">
@@ -59,85 +47,232 @@
                                         <th>Car & Type</th>
                                         <th>Price</th>
                                         <th>Date</th>
-                                        <th>Status</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody class="table-content">
-                                    <tr>
-                                        <td class="id"># CR-5236</td>
+                                <tbody class="table-content" id="vehiclesTableBody">
+                                    @forelse($listings as $listing)
+                                    <tr data-id="{{ $listing->id }}" data-price="{{ $listing->price }}" data-date="{{ $listing->created_at }}">
+                                        <td class="id">#{{ $listing->id }}</td>
                                         <td>
                                             <div class="d-flex align-items-center gap-2">
-                                                <img src="/assets/images/img.png" class=" car-img">
+                                                <img src="{{ $listing->primary_image ?? asset('/assets/images/default-car.png') }}" 
+                                                    class="car-img" 
+                                                    alt="{{ $listing->title }}"
+                                                    style="width: 60px; height: 50px; object-fit: cover; border-radius: 8px;">
                                                 <div>
-                                                    <div class="fw-semibold">Infiniti QX60</div>
-                                                    <small class="text-muted">Hatchback</small>
+                                                    <div class="fw-semibold">{{ $listing->title ?? 'N/A' }}</div>
+                                                    <small class="text-muted">{{ $listing->type ?? 'N/A' }}</small>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>$2,380</td>
-                                        <td>12 Jul 2025</td>
-                                        <td><span class="status-button pending">
-                                                <img src="/assets/images/button-arro.png" alt="">
-                                                Pending</span></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="id"># CR-1256</td>
+                                        <td>${{ number_format($listing->price ?? 0, 2) }}</td>
+                                        <td>{{ $listing->created_at ? $listing->created_at->format('d M Y') : 'N/A' }}</td>
                                         <td>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <img src="/assets/images/img (1).png" class="car-img">
-                                                <div>
-                                                    <div class="fw-semibold">Toyota 86 Coupe</div>
-                                                    <small class="text-muted">Sedan</small>
-                                                </div>
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('inventory_product_details', $listing->id) }}">
+                                                            <i class="fas fa-eye me-2"></i> View
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <hr class="dropdown-divider">
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item text-danger" href="#" onclick="deleteListing({{ $listing->id }})">
+                                                            <i class="fas fa-trash me-2"></i> Delete
+                                                        </a>
+                                                    </li>
+                                                </ul>
                                             </div>
                                         </td>
-                                        <td>$1,400</td>
-                                        <td>26 Jul 2025</td>
-                                        <td><span class="status-button completed">
-                                                <img src="/assets/images/button-arro.png" alt="">
-                                                Completed</span></td>
                                     </tr>
-
+                                    @empty
                                     <tr>
-                                        <td class="id"># CR-2356</td>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <img src="/assets/images/img (2).png" class="car-img">
-                                                <div>
-                                                    <div class="fw-semibold">Jeep Wrangler</div>
-                                                    <small class="text-muted">Coupe</small>
-                                                </div>
+                                        <td colspan="5" class="text-center py-5">
+                                            <div class="empty-state">
+                                                <i class="fas fa-car fa-3x text-muted mb-3"></i>
+                                                <h6>No vehicles found</h6>
+                                                <p class="text-muted">Click "Add a Vehicle" to create your first listing.</p>
+                                                <a href="{{ route('add.listing') }}" class="btn-add">Add a Vehicle</a>
                                             </div>
                                         </td>
-                                        <td>$1,810</td>
-                                        <td>10 Aug 2025</td>
-                                        <td><span class="status-button completed">
-                                                <img src="/assets/images/button-arro.png" alt="">Completed</span></td>
                                     </tr>
-
-                                    <tr>
-                                        <td class="id"># CR-5414</td>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <img src="/assets/images/img (3).png" class="car-img">
-                                                <div>
-                                                    <div class="fw-semibold">Jaguar XK</div>
-                                                    <small class="text-muted">Sedan</small>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>$1,450</td>
-                                        <td>22 Aug 2025</td>
-                                        <td><span class="status-button canceled">
-                                                <img src="/assets/images/button-arro.png" alt="">Canceled</span></td>
-                                    </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
 
-                        @include('partials.pagination')
+                        @if($listings->count() > 0)
+                            <div class="pagination-container mt-3">
+                                @include('partials.pagination')
+                            </div>
+                        @endif
                     </div>
+
+        <style>
+            .vehicle-table th, .vehicle-table td {
+                padding: 15px 10px;
+                vertical-align: middle;
+            }
+            
+            .car-img {
+                width: 60px;
+                height: 50px;
+                object-fit: cover;
+                border-radius: 8px;
+            }
+            
+            .btn-add {
+                background-color: #ff9800;
+                color: white;
+                border: none;
+                padding: 8px 20px;
+                border-radius: 8px;
+                text-decoration: none;
+                display: inline-block;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-add:hover {
+                background-color:#ff9800;
+                color: white;
+            }
+            
+            .filter-btn {
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                padding: 8px 15px;
+            }
+            
+            .empty-state {
+                text-align: center;
+                padding: 50px;
+            }
+            
+            .dropdown-item i {
+                width: 20px;
+            }
+        </style>
+
+        <script>
+            // Delete listing function with snackbar
+            function deleteListing(id) {
+                // Show loading state on the delete button
+                const deleteBtn = document.querySelector(`tr[data-id="${id}"] .delete-btn`);
+                if (deleteBtn) {
+                    deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    deleteBtn.disabled = true;
+                }
+                
+                fetch(`/listings/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove the row from table
+                        const row = document.querySelector(`tr[data-id="${id}"]`);
+                        if (row) {
+                            row.style.transition = 'all 0.3s ease';
+                            row.style.opacity = '0';
+                            setTimeout(() => {
+                                row.remove();
+                                showSnackbar('Vehicle deleted successfully!', 'success', 3000);
+                                
+                                // Check if table is empty, reload page after 2 seconds
+                                const tbody = document.getElementById('vehiclesTableBody');
+                                if (tbody && tbody.children.length === 0) {
+                                    setTimeout(() => location.reload(), 2000);
+                                }
+                            }, 300);
+                        } else {
+                            showSnackbar('Vehicle deleted successfully!', 'success', 3000);
+                            setTimeout(() => location.reload(), 1500);
+                        }
+                    } else {
+                        showSnackbar(data.message || 'Failed to delete vehicle', 'error', 4000);
+                        // Reset button
+                        if (deleteBtn) {
+                            deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                            deleteBtn.disabled = false;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showSnackbar('Error deleting vehicle', 'error', 4000);
+                    // Reset button
+                    if (deleteBtn) {
+                        deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                        deleteBtn.disabled = false;
+                    }
+                });
+            }
+            
+            // Show snackbar function
+            function showSnackbar(message, type = 'success', duration = 5000) {
+                const snackbar = document.getElementById('snackbar');
+                if (!snackbar) return;
+                
+                snackbar.textContent = message;
+                snackbar.className = '';
+                snackbar.classList.add(type, 'show');
+                
+                setTimeout(() => {
+                    snackbar.classList.remove('show');
+                }, duration);
+            }
+            
+            // Filter functionality with snackbar
+            document.querySelectorAll('.filter-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sortType = this.dataset.sort;
+                    const tbody = document.getElementById('vehiclesTableBody');
+                    const rows = Array.from(tbody.querySelectorAll('tr'));
+                    
+                    if (rows.length === 0) return;
+                    
+                    rows.sort((a, b) => {
+                        if (sortType === 'newest') {
+                            return new Date(b.dataset.date) - new Date(a.dataset.date);
+                        } else if (sortType === 'oldest') {
+                            return new Date(a.dataset.date) - new Date(b.dataset.date);
+                        } else if (sortType === 'price_low') {
+                            return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+                        } else if (sortType === 'price_high') {
+                            return parseFloat(b.dataset.price) - parseFloat(a.dataset.price);
+                        }
+                        return 0;
+                    });
+                    
+                    // Reorder rows
+                    rows.forEach(row => tbody.appendChild(row));
+                    
+                    // Show snackbar for filter applied
+                    showSnackbar(`Sorted by: ${this.textContent}`, 'info', 2000);
+                });
+            });
+            
+            // Add vehicle button click
+            document.querySelector('.btn-add')?.addEventListener('click', function(e) {
+                if (this.getAttribute('href')) {
+                    // If it's a link, let it navigate
+                    return;
+                }
+                e.preventDefault();
+                window.location.href = '{{ route("add.listings") }}';
+            });
+        </script>
 
                     <!-- ===== Bottom Cards ===== -->
                     <div class="row g-3">

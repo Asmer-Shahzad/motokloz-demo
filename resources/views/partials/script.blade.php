@@ -294,12 +294,19 @@ var swiper = new Swiper(".mySwiper", {
     spaceBetween: 20,
     loop: true,
 
-    speed: 7000, // 🔥 smooth slow transition
+    // ✅ CUSTOM BUTTONS (IMPORTANT CHANGE)
+    navigation: {
+        nextEl: '.next-btn',
+        prevEl: '.prev-btn',
+    },
 
-    autoplay:true,
 
-    freeMode: true, // 🔥 smooth continuous flow
+    autoplay:false, // Disable default autoplay to use freeMode for continuous sliding
+
+    freeMode: true,
     freeModeMomentum: false,
+
+    grabCursor: true,
 
     breakpoints: {
         0: {

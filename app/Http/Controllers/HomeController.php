@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Collection;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\MultipartStream;
-
+use Illuminate\Support\Facades\Auth;
+use App\Models\Inventory;
 class HomeController extends Controller
 {
     private function disklozBaseUrl(): string
@@ -50,6 +51,9 @@ class HomeController extends Controller
 
     public function home()
     {
+        $user = Auth::user();
+        $userInfo = $user->information ?? new UserInformation();
+        
         $assets = [
             'AUTO',
             'FARM EQUIPMENT',
@@ -120,11 +124,13 @@ class HomeController extends Controller
             ->values();
 
         return view('home', [
+            'user' => $user,
+            'userInfo' => $userInfo,
             'pageTitle' => 'Home',
             'assetCounts' => $assetCounts,
             'assetData' => $latestVehicles,
             'assets' => $assets,
-            'makeTypes' => $makeTypes, // send grouped makes to frontend
+            'makeTypes' => $makeTypes,
             'disklozBaseUrl' => $this->disklozBaseUrl(),
         ]);
     }
@@ -159,19 +165,9 @@ class HomeController extends Controller
         return view('buy-flow-step-6', ['pageTitle' => 'Step 6']);
     }
 
-    public function wishlist()
-    {
-        return view('wishlist', ['pageTitle' => 'Wishlist']);
-    }
-
     public function comingsoon()
     {
         return view('coming-soon', ['pageTitle' => 'Coming Soon']);
-    }
-
-    public function listings()
-    {
-        return view('listings', ['pageTitle' => 'Listings']);
     }
 
     public function dealerprofile()
@@ -185,8 +181,12 @@ class HomeController extends Controller
     }
 
     public function chat()
-    {
-        return view('chat', ['pageTitle' => 'Chat']);
+    {   
+        $user = Auth::user();
+        $userInfo = $user->information ?? new UserInformation();
+        
+        
+        return view('chat', ['pageTitle' => 'Chat', 'user' => $user, 'userInfo' => $userInfo]);
     }
 
     public function carlisting()
@@ -199,20 +199,64 @@ class HomeController extends Controller
         return view('car-details', ['pageTitle' => 'Car Details']);
     }
 
-    public function agentsettings()
-    {
-        return view('agent-setting', ['pageTitle' => 'My Profile']);
-    }
-
     public function agentdashboard()
     {
-        return view('agent-dashboard', ['pageTitle' => ' Dashboard']);
+        $user = Auth::user();
+        $userInfo = $user->information ?? new UserInformation();
+        $listings = Inventory::where('user_id', auth()->id())
+                    ->with('extraServices')
+                    ->latest()
+                    ->get();
+        $pageTitle = 'Dashboard';
+        
+        return view('agent-dashboard', compact('user', 'listings', 'userInfo', 'pageTitle'));
     }
 
-    public function addlistings()
+    // Add delete method in controller
+    public function deleteListing($id)
     {
-        return view('add-listing', ['pageTitle' => 'Add Listing']);
+        try {
+            $listing = Inventory::where('user_id', auth()->id())
+                        ->where('id', $id)
+                        ->first();
+            
+            if (!$listing) {
+                return response()->json(['success' => false, 'message' => 'Listing not found'], 404);
+            }
+            
+            // Delete images from server
+            if ($listing->images) {
+                $images = json_decode($listing->images, true);
+                foreach ($images as $image) {
+                    $imagePath = public_path(parse_url($image, PHP_URL_PATH));
+                    if (file_exists($imagePath)) {
+                        unlink($imagePath);
+                    }
+                }
+            }
+            
+            // Delete primary image
+            if ($listing->primary_image) {
+                $primaryImagePath = public_path(parse_url($listing->primary_image, PHP_URL_PATH));
+                if (file_exists($primaryImagePath)) {
+                    unlink($primaryImagePath);
+                }
+            }
+            
+            // Delete extra services
+            $listing->extraServices()->delete();
+            
+            // Delete listing
+            $listing->delete();
+            
+            return response()->json(['success' => true]);
+            
+        } catch (\Exception $e) {
+            \Log::error('Error deleting listing: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Error deleting listing'], 500);
+        }
     }
+
     public function dealer()
     {
         return view('dealer', ['pageTitle' => 'Dealer']);
@@ -220,6 +264,10 @@ class HomeController extends Controller
 
     public function accountsettings()
     {
-        return view('account-setting', ['pageTitle' => 'Account Settings']);
+        $user = Auth::user();
+        $userInfo = $user->information ?? new UserInformation();
+        $pageTitle = 'Account Settings';
+        
+        return view('account-setting', compact('user', 'userInfo', 'pageTitle'));
     }
 }

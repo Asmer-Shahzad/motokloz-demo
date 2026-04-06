@@ -7,6 +7,8 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\DealerProfileController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\DealerNetworkController;
+use App\Http\Controllers\ListingController;
+use App\Http\Controllers\ProfileController;
 
 
 /*
@@ -63,11 +65,20 @@ Route::get('/sell', function () {
 Route::middleware('auth')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/wishlist', [HomeController::class, 'wishlist'])->name('wishlist');
     Route::get('/chat', [HomeController::class, 'chat'])->name('chat');
     Route::get('/agent-settings', [HomeController::class, 'agentsettings'])->name('agent.settings');
     Route::get('/agent-dashboard', [HomeController::class, 'agentdashboard'])->name('agent.dashboard');
-    Route::get('/add-listings', [HomeController::class, 'addlistings'])->name('add.listings');
+    Route::get('/wishlist', [ListingController::class, 'wishlist'])->name('wishlist');
+    Route::get('/add-listing', [ListingController::class, 'addlistings'])->name('add.listings');
+    Route::post('/add-listing', [ListingController::class, 'create'])->name('store.create');
+    Route::get('/listings', [ListingController::class, 'listingsIndex'])->name('listings');
+    Route::get('/listing-car-details/{id}', [ListingController::class, 'user_inventory_product_details'])->name('user_inventory_product_details');
     Route::get('/account-setting', [HomeController::class, 'accountsettings'])->name('account.settings');
-    Route::get('/listings', [HomeController::class, 'listings'])->name('listings');
+    Route::get('/agent-settings', [ProfileController::class, 'index'])->name('profile.settings');
+    Route::put('/agent-settings', [ProfileController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/agent-settings/contact', [ProfileController::class, 'updateContact'])->name('profile.contact.update');
+    Route::put('/agent-settings/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+    Route::post('/agent-settings/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar.update');
+    Route::delete('/agent-settings/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.delete');
+    Route::delete('/listings/{id}', [HomeController::class, 'deleteListing'])->name('delete.listing');
 });

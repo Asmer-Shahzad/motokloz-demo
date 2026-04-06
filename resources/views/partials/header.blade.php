@@ -207,7 +207,9 @@
                     @endphp
 
                     @if(in_array(Route::currentRouteName(), $showImageRoutes))
-                        <img src="/assets/images/Frame 1707481624.png" alt="Logo">
+                        <a href="{{ route('chat') }}">
+                            <img src="/assets/images/Frame 1707481624.png" alt="Logo">
+                        </a>
                     @endif
                     <a href="{{ route('buy.step1') }}" style="text-decoration: none; color: inherit;">
                         <div class="logo-o">
@@ -235,14 +237,16 @@
                         @auth
                             {{-- ✅ User is logged in --}}
                             <div class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
-                                    id="userDropdown">
-                                    <img src="/assets/images/user.png" class="img-fluid light-dark">
+                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="userDropdown">
+                                    <img src="{{ $userInfo->avatar ?? asset('/assets/images/user.png') }}" 
+                                        class="img-fluid" 
+                                        alt="User Avatar"
+                                        style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
                                 </a>
                                 <ul class="dropdown-menu nav-drop dropdown-menu-end" aria-labelledby="userDropdown">
                                     <li>
-                                        <a class="dropdown-item {{ request()->routeIs('agent.settings') ? 'active-link' : '' }}"
-                                            href="{{ route('agent.settings') }}">
+                                        <a class="dropdown-item {{ request()->routeIs('profile.settings') ? 'active-link' : '' }}"
+                                            href="{{ route('profile.settings') }}">
                                             My Profile
                                         </a>
                                     </li>
@@ -272,7 +276,7 @@
 
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('wishlist') ? 'active-link' : '' }}"
-                                            href="{{ route('wishlist') }}">
+                                            href="{{ route('wishlist', ['u' => auth()->id()]) }}" class="{{ request()->routeIs('wishlist') ? 'active-side' : '' }}">
                                             My Wishlist
                                         </a>
                                     </li>
