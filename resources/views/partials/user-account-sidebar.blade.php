@@ -2,10 +2,10 @@
     <div class="sidebar">
         <div class="sidebar-top user-info">
             <div class="sidebar-left">
-                <img src="{{ $userInfo->avatar ?? asset('/assets/images/profile-pic.png') }}" 
+                <img src="{{ $userInfo->avatar ?? asset('/assets/images/user.png') }}" 
                     alt="User Image" 
                     class="user-image"
-                    onerror="this.src='{{ asset('/assets/images/profile-pic.png') }}'">
+                    onerror="this.src='{{ asset('/assets/images/user.png') }}'">
             </div>
             <div class="sidebar-center">
                 <h3 class="username">{{ $userInfo->full_name ?? $user->name ?? 'Guest User' }}</h3>

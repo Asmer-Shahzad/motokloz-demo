@@ -137,7 +137,7 @@
                     <h2 class="mto-top-headline fw-bold">
                         {{isset( $searched_vehicle->title) ? $searched_vehicle->title : '' }} {{ isset($searched_vehicle->model) ? $searched_vehicle->model : '' }}</h2>
                     <div class="mto-meta-row d-flex flex-wrap gap-3 mt-3">
-                        <span class="mto-meta-item"><i class="fa-solid fa-location-dot me-1"></i> {{$searched_vehicle->dealer->city ?? 'N/A'}}, {{$searched_vehicle->dealer->province ?? 'N/A'}}</span>
+                        <span class="mto-meta-item"><i class="fa-solid fa-location-dot me-1"></i> {{ $userInfo->country ?? $userInfo->country ?? 'N/A' }} , {{ $userInfo->city ?? $userInfo->city ?? 'N/A' }} </span>
                         <a href="{{ route('dealer_inventory_details', $searched_vehicle->dealer->id ?? 'N/A') }}" class="mto-map-link fw-bold">Show on map</a>
                         <!-- <span class="mto-meta-item flatt">
                             <img src="/assets/images/code.png" class="light-dark" alt="">
@@ -167,14 +167,14 @@
                         <input type="hidden" id="inv_id" value="{{ $searched_vehicle->id ?? '' }}">
 
                         <!-- Your button with ID -->
-                        <button id="fetchButton" onclick="fetchAndPrint()" class="mto-pill-btn">
+                        <button id="fetchButton" onclick="sfetchAndPrint()" class="mto-pill-btn">
                             <img src="/assets/images/Printer.png" class="me-1" alt=""> Print Details
                         </button>
                         
                         <button class="mto-pill-btn"><img src="/assets/images/SVG.png" class="me-1" alt=""> Share</button>
                         <button class="mto-pill-btn" 
                             id="wishlist-btn-{{ $searched_vehicle->id }}" 
-                            onclick="toggleLike({{ $searched_vehicle->id }}, this, {{ auth()->id() ?? 'null' }})">
+                            onclick="stoggleLike({{ $searched_vehicle->id }}, this, {{ auth()->id() ?? 'null' }})">
 
                             <i class="fa fa-spinner fa-spin me-1" id="wishlist-spinner-{{ $searched_vehicle->id }}"></i>
                             <i class="far fa-heart me-1 d-none" id="wishlist-icon-{{ $searched_vehicle->id }}"></i>
@@ -307,10 +307,10 @@
                         <!-- Buttons -->
                         <div class="mto-card-unit mb-4 p-4 shadow-sm">
                             <h6 class="fw-bold mb-3">Get Started</h6>
-                            <button type="button" class="mto-btn-orange w-100 mb-3" data-bs-toggle="modal" data-bs-target="#testDriveModal">
+                            <button type="button" class="mto-btn-orange w-100 mb-3" data-bs-toggle="modal" data-bs-target="#stestDriveModal">
                                 Schedule Test Drive <i class="fa-solid fa-arrow-right ms-2"></i>
                             </button>
-                            <button type="button" class="mto-btn-black w-100" data-bs-toggle="modal" data-bs-target="#offerModal">
+                            <button type="button" class="mto-btn-black w-100" data-bs-toggle="modal" data-bs-target="#sofferModal">
                                 Make An Offer Price <i class="fa-solid fa-arrow-right ms-2"></i>
                             </button>
                         </div>
@@ -323,9 +323,9 @@
                             </div>
 
                             @auth
-                                <a class="link-text-decoration" href="javascript:void(0)">
+                                <a class="link-text-decoration" href="">
                                     <div class="d-flex align-items-center mb-4">
-                                        <img src="{{ auth()->user()->profile_image ?? asset('assets/images/defaultavatar.png') }}"
+                                        <img src="{{ $userInfo->avatar ?? $userInfo->avatar ?? 'N/A' }}"
                                             class="img-fluid dealerlogo rounded-circle me-3"
                                             alt="User Avatar"
                                             onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultdealerlogo.png') }}';">
@@ -334,6 +334,9 @@
                                             <h6 class="mb-0 fw-bold">
                                                 {{ auth()->user()->name ?? auth()->user()->first_name . ' ' . auth()->user()->last_name ?? 'Guest User' }}
                                             </h6>
+                                            <p class="small text-muted mb-0">
+                                                {{ $userInfo->complete_address ?? $userInfo->complete_address ?? 'N/A' }}
+                                            </p>
                                         </div>
                                     </div>
                                 </a>
@@ -361,28 +364,28 @@
 
                                 <div class="mb-2">
                                     <img src="/assets/images/Background (8).png" alt="phone" class="contact-icon light-dark">
-                                    Mobile: {{ $searched_vehicle->dealer->phone_no ?? 'N/A' }}
+                                    Mobile: {{ $userInfo->contact_number ?? $userInfo->phone ?? 'N/A' }}
                                 </div>
 
                                 <div class="mb-2">
                                     <img src="/assets/images/Background (10).png" alt="email" class="contact-icon light-dark">
-                                    Email: {{ $searched_vehicle->dealer->email ?? 'N/A' }}
+                                    Email: {{ $user->email ?? 'N/A' }}
                                 </div>
 
                                 <div class="mb-2">
                                     <img src="/assets/images/Background (11).png" alt="whatsapp" class="contact-icon light-dark">
-                                    WhatsApp: {{ $searched_vehicle->dealer->phone_no ?? 'N/A' }}
+                                    WhatsApp: {{ $userInfo->contact_number ?? $userInfo->phone ?? 'N/A' }}
                                 </div>
 
                                 <div class="mb-2">
                                     <img src="/assets/images/Background (12).png" alt="fax" class="contact-icon light-dark">
-                                    Fax: {{ $searched_vehicle->dealer->phone_no ?? 'N/A' }}
+                                    Fax: {{ $userInfo->fax ?? $userInfo->contact_number ?? 'N/A' }}
                                 </div>
 
                             </div>
-                            <a href="">
+                            <a href="{{ route('listings') }}" class="{{ request()->routeIs('listings') ? 'active-side' : '' }}">
                                 <button class="mto-btn-orange w-100 mt-4 py-2">
-                                    Dealer's Inventory 
+                                    Inventory 
                                     <i class="fa-solid fa-arrow-right ms-2"></i>
                                 </button>
                             </a>
