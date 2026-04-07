@@ -244,58 +244,60 @@
                                         style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
                                 </a>
                                 <ul class="dropdown-menu nav-drop dropdown-menu-end" aria-labelledby="userDropdown">
+    
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('profile.settings') ? 'active-link' : '' }}"
-                                            href="{{ route('profile.settings') }}">
-                                            My Profile
+                                        href="{{ route('profile.settings') }}">
+                                            <i class="fa-solid fa-user me-2"></i> My Profile
                                         </a>
                                     </li>
 
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('agent.dashboard') ? 'active-link' : '' }}"
-                                            href="{{ route('agent.dashboard') }}">
-                                            Dashboard
+                                        href="{{ route('agent.dashboard') }}">
+                                            <i class="fa-solid fa-gauge-high me-2"></i> Dashboard
                                         </a>
                                     </li>
 
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('listings') ? 'active-link' : '' }}"
-                                            href="{{ route('listings') }}">
-                                            Listings
+                                        href="{{ route('listings') }}">
+                                            <i class="fa-solid fa-car me-2"></i> Listings
                                         </a>
                                     </li>
-
 
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('add.listings') ? 'active-link' : '' }}"
-                                            href="{{ route('add.listings') }}">
-                                            Add Listing
+                                        href="{{ route('add.listings') }}">
+                                            <i class="fa-solid fa-plus me-2"></i> Add Listing
                                         </a>
                                     </li>
 
-
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('wishlist') ? 'active-link' : '' }}"
-                                            href="{{ route('wishlist', ['u' => auth()->id()]) }}" class="{{ request()->routeIs('wishlist') ? 'active-side' : '' }}">
-                                            My Wishlist
+                                        href="{{ route('wishlist', ['u' => auth()->id()]) }}">
+                                            <i class="fa-solid fa-heart me-2"></i> My Wishlist
                                         </a>
                                     </li>
 
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('account.settings') ? 'active-link' : '' }}"
-                                            href="{{ route('account.settings') }}">
-                                            Account Settings
+                                        href="{{ route('account.settings') }}">
+                                            <i class="fa-solid fa-gear me-2"></i> Account Settings
                                         </a>
                                     </li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
+
+                                    <li><hr class="dropdown-divider"></li>
+
                                     <li>
                                         <form method="POST" action="{{ route('logout') }}">
                                             @csrf
-                                            <button type="submit" class="dropdown-item">Logout</button>
+                                            <button type="submit" class="dropdown-item">
+                                                <i class="fa-solid fa-right-from-bracket me-2"></i> Logout
+                                            </button>
                                         </form>
                                     </li>
+
                                 </ul>
                             </div>
                         @endauth

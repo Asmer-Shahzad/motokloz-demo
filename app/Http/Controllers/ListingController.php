@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Inventory;
 use App\Models\InventoryExtraService;
 use Illuminate\Support\Facades\Auth;
+use App\Models\UserInformation;
 
 
 class ListingController extends Controller
@@ -93,13 +94,26 @@ class ListingController extends Controller
     {
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
+
         $listings = Inventory::where('user_id', auth()->id())
                     ->with('extraServices')
                     ->latest()
-                    ->paginate(9);
+                    ->paginate(6);
+
+        // For your partial.pagination            
+        $last_page = $listings->lastPage();
+        $current_page = $listings->currentPage();
+
         $pageTitle = 'Listings';
 
-        return view('listings', compact('user', 'userInfo', 'listings', 'pageTitle'));
+        return view('listings', compact(
+            'user',
+            'userInfo',
+            'listings',
+            'pageTitle',
+            'last_page',       
+            'current_page'    
+        ));
     }
 
     public function user_inventory_product_details(Request $request, $id)
@@ -198,36 +212,63 @@ class ListingController extends Controller
     }
 
     public function wishlist(Request $request)
-    {
-        $user = Auth::user();
-        $userInfo = $user->information ?? new UserInformation();
-        
-        $response = Http::get(env("diskloz_base_url").'/api/favorites?client_id='.$request->u);
-        $data['favorites'] = json_decode($response->body());
+{
+    $user = Auth::user();
+    $userInfo = $user->information ?? new UserInformation();
+    
+    $response = Http::get(env("diskloz_base_url").'/api/favorites?client_id='.$request->u);
+    $data['favorites'] = json_decode($response->body());
 
-        // ✅ Location map
-        $dealerLocationMap = $this->dealerLocationMap();
+    // Location map
+    $dealerLocationMap = $this->dealerLocationMap();
 
-        // ✅ Enrich favorites with location data
-        $favorites = collect($data['favorites'] ?? [])->map(function ($favorite) use ($dealerLocationMap) {
-            if (isset($favorite->inventory)) {
-                $dealerKey = (string) ($favorite->inventory->user_id ?? $favorite->inventory->dealer_id ?? '');
-                $location = $dealerLocationMap[$dealerKey] ?? [];
-                
-                $favorite->inventory->dealer_postal_code = $location['postal_code'] ?? null;
-                $favorite->inventory->dealer_city = $location['city'] ?? null;
-                $favorite->inventory->dealer_province = $location['province'] ?? null;
-                $favorite->inventory->dealer_country = $location['country'] ?? null;
-            }
-            return $favorite;
-        });
-        
-        $total_favorites = $favorites->count();
-        $searched_vehicle = $favorites->isNotEmpty() ? $favorites->first()->inventory ?? null : null;
-        $pageTitle = 'My Wishlist';
-        $disklozBaseUrl = $this->disklozBaseUrl();
-        
-        return view('wishlist', compact('user', 'userInfo', 'favorites', 'total_favorites', 'searched_vehicle', 'pageTitle', 'disklozBaseUrl'));
-    }
+    // Enrich favorites with location data
+    $favoritesCollection = collect($data['favorites'] ?? [])->map(function ($favorite) use ($dealerLocationMap) {
+        if (isset($favorite->inventory)) {
+            $dealerKey = (string) ($favorite->inventory->user_id ?? $favorite->inventory->dealer_id ?? '');
+            $location = $dealerLocationMap[$dealerKey] ?? [];
+            
+            $favorite->inventory->dealer_postal_code = $location['postal_code'] ?? null;
+            $favorite->inventory->dealer_city = $location['city'] ?? null;
+            $favorite->inventory->dealer_province = $location['province'] ?? null;
+            $favorite->inventory->dealer_country = $location['country'] ?? null;
+        }
+        return $favorite;
+    });
+
+    $total_favorites = $favoritesCollection->count();
+
+    // Pagination variables
+    $perPage = 3;
+    $currentPage = $request->get('page', 1);
+
+    $favorites = new LengthAwarePaginator(
+        $favoritesCollection->forPage($currentPage, $perPage),
+        $total_favorites,
+        $perPage,
+        $currentPage,
+        ['path' => $request->url(), 'query' => $request->query()]
+    );
+
+    // For your partial.pagination
+    $last_page = $favorites->lastPage(); // total pages
+    $current_page = $favorites->currentPage(); // current page
+
+    $searched_vehicle = $favoritesCollection->isNotEmpty() ? $favoritesCollection->first()->inventory ?? null : null;
+    $pageTitle = 'My Wishlist';
+    $disklozBaseUrl = $this->disklozBaseUrl();
+    
+    return view('wishlist', compact(
+        'user', 
+        'userInfo', 
+        'favorites', 
+        'total_favorites', 
+        'searched_vehicle', 
+        'pageTitle', 
+        'disklozBaseUrl',
+        'last_page',
+        'current_page'
+    ));
+}
     
 }

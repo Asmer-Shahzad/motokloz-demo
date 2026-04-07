@@ -10,6 +10,7 @@ use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\MultipartStream;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Inventory;
+use App\Models\UserInformation;
 class HomeController extends Controller
 {
     private function disklozBaseUrl(): string

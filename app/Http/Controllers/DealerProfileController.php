@@ -12,6 +12,7 @@ use GuzzleHttp\Psr7\MultipartStream;
 use Illuminate\Pagination\LengthAwarePaginator; // ✅ ADD THIS
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use App\Models\UserInformation;
 
 
 class DealerProfileController extends Controller
