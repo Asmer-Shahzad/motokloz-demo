@@ -47,7 +47,7 @@
                                         <th>Car & Type</th>
                                         <th>Price</th>
                                         <th>Date</th>
-                                        <th>Actions</th>
+                                        <!-- <th>Actions</th> -->
                                     </tr>
                                 </thead>
                                 <tbody class="table-content" id="vehiclesTableBody">
@@ -68,7 +68,7 @@
                                         </td>
                                         <td>${{ number_format($listing->price ?? 0, 2) }}</td>
                                         <td>{{ $listing->created_at ? $listing->created_at->format('d M Y') : 'N/A' }}</td>
-                                        <td>
+                                        <!-- <td>
                                             <div class="dropdown">
                                                 <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown">
                                                     <i class="fas fa-ellipsis-v"></i>
@@ -89,7 +89,7 @@
                                                     </li>
                                                 </ul>
                                             </div>
-                                        </td>
+                                        </td> -->
                                     </tr>
                                     @empty
                                     <tr>
