@@ -27,8 +27,7 @@ class CreateUserInformationTable extends Migration
             $table->string('city')->nullable();
             $table->text('complete_address')->nullable();
             $table->string('find_on_map')->nullable();
-            $table->string('latitude')->nullable();
-            $table->string('longitude')->nullable();
+            // latitude, longitude removed — using Google Maps embed instead
             $table->string('postalCode')->nullable();
             $table->timestamps();
             

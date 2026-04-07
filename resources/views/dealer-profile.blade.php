@@ -71,7 +71,8 @@
                                 </h3>
 
                                 <p class="mb-3">
-                                    {{ $dealer->physical_address }}
+                                    <i class="fas fa-map-marker-alt text-warning me-1"></i>
+                                    {{ $dealer->city ?? '' }}{{ ($dealer->city && $dealer->province) ? ', ' : '' }}{{ $dealer->province ?? '' }}
                                 </p>
 
                                 <span class="badge bg-light text-dark border mt-2 p-2 rounded-5">
@@ -82,22 +83,11 @@
                         </div>
 
                         <div class="mb-4">
-                            <p>Elevate your Las Vegas experience to new heights with a journey aboard The High Roller at
-                                The LINQ. As the tallest
-                                observation wheel in the world, standing at an impressive 550 feet tall, The High Roller
-                                offers a bird's-eye perspective of
-                                the iconic Las Vegas Strip and its surrounding desert landscape. From the moment you
-                                step into one of the spacious
-                                cabins, you'll be transported on a mesmerizing adventure, where every turn offers a new
-                                and breathtaking vista of the
-                                vibrant city below.</p>
-                            <p>Whether you're a first-time visitor or a seasoned Las Vegas aficionado, The High Roller
-                                promises an unparalleled
-                                experience that will leave you in awe. With its climate-controlled cabins and immersive
-                                audio commentary, this
-                                attraction provides a unique opportunity to see Las Vegas from a whole new perspective,
-                                while learning about its rich
-                                history and famous landmarks along the way.</p>
+                            @if(!empty($dealer->internal_notes))
+                                <p>{{ $dealer->internal_notes }}</p>
+                            @else
+                                <p class="text-muted">No description available for this dealer.</p>
+                            @endif
                         </div>
 
                         <div class="row g-3">

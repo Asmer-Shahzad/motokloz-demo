@@ -127,12 +127,12 @@
                                 <input type="text" name="find_on_map" class="form-control" 
                                     value="{{ old('find_on_map', $userInfo->find_on_map ?? '') }}">
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-12">
                                 <label>Postal Code</label>
                                 <input type="text" name="postalCode" class="form-control" 
                                     value="{{ old('postalCode', $userInfo->postalCode ?? '') }}">
                             </div>
-                            <div class="col-md-4">
+                            <!-- <div class="col-md-4">
                                 <label>Latitude</label>
                                 <input type="text" name="latitude" class="form-control" 
                                     value="{{ old('latitude', $userInfo->latitude ?? '') }}">
@@ -141,7 +141,7 @@
                                 <label>Longitude</label>
                                 <input type="text" name="longitude" class="form-control" 
                                     value="{{ old('longitude', $userInfo->longitude ?? '') }}">
-                            </div>
+                            </div>-->
                         </div>
                         
                         <button type="submit" class="btn-orange mt-4 setting-btt">Save Changes</button>

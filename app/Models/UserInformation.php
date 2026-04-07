@@ -24,8 +24,6 @@ class UserInformation extends Model
         'city',
         'complete_address',
         'find_on_map',
-        'latitude',
-        'longitude',
         'postalCode'
     ];
 
