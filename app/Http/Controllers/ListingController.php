@@ -56,6 +56,27 @@ class ListingController extends Controller
 
         return $map;
     }
+
+    private function getUserLocation(): array
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return [];
+        }
+
+        $userInfo = $user->information ?? null;
+
+        if (!$userInfo) {
+            return [];
+        }
+
+        return [
+            'city' => $userInfo->city ?? null,
+            'postalCode' => $userInfo->postalCode ?? null,
+            'complete_address' => $userInfo->complete_address ?? null,
+        ];
+    }
     
     public function curl_get($url):JsonResponse
     {
@@ -90,31 +111,105 @@ class ListingController extends Controller
     }
 
 
-    public function listingsIndex()
-    {
-        $user = Auth::user();
-        $userInfo = $user->information ?? new UserInformation();
+    public function listingsIndex(Request $request)
+{
+    $user = Auth::user();
+    $userInfo = $user->information ?? new UserInformation();
+    
+    // Get logged-in user's location
+    $userLocation = $this->getUserLocation();
 
-        $listings = Inventory::where('user_id', auth()->id())
-                    ->with('extraServices')
-                    ->latest()
-                    ->paginate(6);
-
-        // For your partial.pagination            
-        $last_page = $listings->lastPage();
-        $current_page = $listings->currentPage();
-
-        $pageTitle = 'Listings';
-
-        return view('listings', compact(
-            'user',
-            'userInfo',
-            'listings',
-            'pageTitle',
-            'last_page',       
-            'current_page'    
-        ));
+    // Base query
+    $query = Inventory::where('user_id', auth()->id())->with('extraServices');
+    
+    // Apply search filter
+    $search = $request->get('search');
+    if (!empty($search)) {
+        $query->where(function ($q) use ($search) {
+            $q->where('title', 'LIKE', "%{$search}%")
+            ->orWhere('model', 'LIKE', "%{$search}%")
+            ->orWhere('type', 'LIKE', "%{$search}%")
+            ->orWhere('condition', 'LIKE', "%{$search}%")
+            ->orWhere('stock_number', 'LIKE', "%{$search}%")
+            ->orWhere('mileage', 'LIKE', "%{$search}%")
+            ->orWhere('transmission', 'LIKE', "%{$search}%")
+            ->orWhere('description', 'LIKE', "%{$search}%")
+            ->orWhere('features', 'LIKE', "%{$search}%");
+            
+            // Numeric fields ke liye exact match ya range search
+            if (is_numeric($search)) {
+                $q->orWhere('price', $search);
+            } else {
+                $q->orWhere('price', 'LIKE', "%{$search}%");
+            }
+        });
     }
+    
+    // Apply sorting based on request
+    $sort = $request->get('sort', 'newest');
+    
+    switch ($sort) {
+        case 'price_asc':
+            $query->orderBy('price', 'asc');
+            break;
+        case 'price_desc':
+            $query->orderBy('price', 'desc');
+            break;
+        case 'newest':
+            $query->latest();
+            break;
+        case 'oldest':
+            $query->oldest();
+            break;
+        default:
+            $query->latest();
+            break;
+    }
+    
+    $listings = $query->get();
+
+    // Enrich listings with user's location data
+    $listingsCollection = $listings->map(function ($listing) use ($userLocation) {
+        $listing->dealer_postal_code = $userLocation['postalCode'] ?? null;
+        $listing->dealer_city = $userLocation['city'] ?? null;
+        $listing->dealer_country = $userLocation['country'] ?? null;
+        $listing->dealer_complete_address = $userLocation['complete_address'] ?? null;
+        
+        return $listing;
+    });
+
+    $total_listings = $listingsCollection->count();
+
+    $perPage = 6;
+    $currentPage = $request->get('page', 1);
+
+    $listings = new LengthAwarePaginator(
+        $listingsCollection->forPage($currentPage, $perPage),
+        $total_listings,
+        $perPage,
+        $currentPage,
+        ['path' => $request->url(), 'query' => $request->query()]
+    );
+
+    $last_page = $listings->lastPage();
+    $current_page = $listings->currentPage();
+    $pageTitle = 'Listings';
+    
+    // Current sort and search for view
+    $currentSort = $request->get('sort', 'newest');
+    $searchTerm = $request->get('search', '');
+
+    return view('listings', compact(
+        'user',
+        'userInfo',
+        'listings',
+        'pageTitle',
+        'last_page',       
+        'current_page',
+        'currentSort',
+        'searchTerm'
+    ));
+}
 
     public function user_inventory_product_details(Request $request, $id)
     {
@@ -236,6 +331,66 @@ class ListingController extends Controller
         return $favorite;
     });
 
+    // ✅ FIX: Store original collection before any filtering
+    $originalCollection = clone $favoritesCollection;
+
+    // Apply search filter
+    $search = $request->get('search');
+    if (!empty($search)) {
+        $favoritesCollection = $favoritesCollection->filter(function ($favorite) use ($search) {
+            if (!isset($favorite->inventory)) {
+                return false;
+            }
+            
+            $inventory = $favorite->inventory;
+            $searchLower = strtolower($search);
+            
+            return str_contains(strtolower($inventory->mfg_auto ?? ''), $searchLower) ||
+                str_contains(strtolower($inventory->model ?? ''), $searchLower) ||
+                str_contains(strtolower($inventory->year ?? ''), $searchLower) ||
+                str_contains(strtolower($inventory->trim ?? ''), $searchLower) ||
+                str_contains(strtolower($inventory->mileage ?? ''), $searchLower) ||
+                str_contains(strtolower($inventory->body_style ?? ''), $searchLower) ||
+                str_contains(strtolower($inventory->transmission ?? ''), $searchLower) ||
+                str_contains(strtolower($inventory->engine ?? ''), $searchLower);
+        })->values();
+    }
+    
+    // Apply sorting
+    $sort = $request->get('sort', 'newest');
+    
+    switch ($sort) {
+        case 'price_asc':
+            $favoritesCollection = $favoritesCollection->sortBy(function ($favorite) {
+                return $favorite->inventory->price_retail_date ?? 0;
+            })->values();
+            break;
+            
+        case 'price_desc':
+            $favoritesCollection = $favoritesCollection->sortByDesc(function ($favorite) {
+                return $favorite->inventory->price_retail_date ?? 0;
+            })->values();
+            break;
+            
+        case 'newest':
+            $favoritesCollection = $favoritesCollection->sortByDesc(function ($favorite) {
+                return $favorite->inventory->id ?? 0;
+            })->values();
+            break;
+            
+        case 'popularity':
+            $favoritesCollection = $favoritesCollection->sortByDesc(function ($favorite) {
+                return $favorite->inventory->rating ?? 0;
+            })->values();
+            break;
+            
+        default:
+            $favoritesCollection = $favoritesCollection->sortByDesc(function ($favorite) {
+                return $favorite->inventory->id ?? 0;
+            })->values();
+            break;
+    }
+
     $total_favorites = $favoritesCollection->count();
 
     // Pagination variables
@@ -251,10 +406,19 @@ class ListingController extends Controller
     );
 
     // For your partial.pagination
-    $last_page = $favorites->lastPage(); // total pages
-    $current_page = $favorites->currentPage(); // current page
+    $last_page = $favorites->lastPage();
+    $current_page = $favorites->currentPage();
+    $currentSort = $request->get('sort', 'newest');
+    $searchTerm = $request->get('search', '');
 
-    $searched_vehicle = $favoritesCollection->isNotEmpty() ? $favoritesCollection->first()->inventory ?? null : null;
+    // ✅ FIX: Use ORIGINAL collection, not filtered one
+    $searched_vehicle = $originalCollection->isNotEmpty() 
+        ? $originalCollection->first()->inventory ?? null 
+        : null;
+    
+    // ✅ FIX: Get first vehicle's dealer and product IDs for the modal
+    $firstFavorite = $originalCollection->isNotEmpty() ? $originalCollection->first() : null;
+    
     $pageTitle = 'My Wishlist';
     $disklozBaseUrl = $this->disklozBaseUrl();
     
@@ -263,11 +427,14 @@ class ListingController extends Controller
         'userInfo', 
         'favorites', 
         'total_favorites', 
-        'searched_vehicle', 
+        'searched_vehicle',
+        'firstFavorite',  // ✅ Add this for modal
         'pageTitle', 
         'disklozBaseUrl',
         'last_page',
-        'current_page'
+        'current_page',
+        'currentSort',
+        'searchTerm'
     ));
 }
     

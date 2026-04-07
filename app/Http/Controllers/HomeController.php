@@ -204,13 +204,26 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
+
         $listings = Inventory::where('user_id', auth()->id())
                     ->with('extraServices')
                     ->latest()
-                    ->get();
+                    ->paginate(4); // 👈 4 per page
+
+        // ✅ Required for custom pagination
+        $last_page = $listings->lastPage();
+        $current_page = $listings->currentPage();
+
         $pageTitle = 'Dashboard';
         
-        return view('agent-dashboard', compact('user', 'listings', 'userInfo', 'pageTitle'));
+        return view('agent-dashboard', compact(
+            'user',
+            'listings',
+            'userInfo',
+            'pageTitle',
+            'last_page',
+            'current_page'
+        ));
     }
 
     // Add delete method in controller

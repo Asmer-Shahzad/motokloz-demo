@@ -54,8 +54,12 @@
                                             <h2>Listings</h2>
                                         </div>
                                         <div class="listing-center search-form mt-3">
-                                            <form action="#">
-                                                <input type="text" name="carsearch" id="carsearch" placeholder="Search">
+                                            <form action="{{ request()->url() }}" method="GET" id="searchForm">
+                                                <input type="text" 
+                                                    name="search" 
+                                                    id="carsearch" 
+                                                    placeholder="Search"
+                                                    value="{{ $searchTerm ?? '' }}">
                                                 <button type="submit">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                                         viewBox="0 0 14 14" fill="none">
@@ -64,64 +68,42 @@
                                                             fill="#393F4D" />
                                                     </svg>
                                                 </button>
+                                                
+                                                {{-- Preserve sort parameter --}}
+                                                @if(request()->has('sort'))
+                                                <input type="hidden" name="sort" value="{{ request()->get('sort') }}">
+                                                @endif
                                             </form>
-
                                         </div>
                                         <div class="listing-right">
-                                            <div class="filter">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                    viewBox="0 0 14 14" fill="none">
-                                                    <path
-                                                        d="M10.5 3.45334C10.5 2.83111 10.2744 2.29445 9.82333 1.84334C9.37222 1.39222 8.83556 1.16667 8.21333 1.16667H2.28667C1.66444 1.16667 1.12778 1.39222 0.676667 1.84334C0.225556 2.29445 0 2.81556 0 3.40667C0 3.99778 0.186667 4.51111 0.56 4.94667L3.5 8.4V10.5C3.5 10.6867 3.57778 10.8422 3.73333 10.9667L6.06667 12.6933C6.16 12.7867 6.26111 12.8333 6.37 12.8333C6.47889 12.8333 6.58 12.8178 6.67333 12.7867C6.89111 12.6622 7 12.4756 7 12.2267V8.4L9.94 4.94667C10.3133 4.51111 10.5 4.01334 10.5 3.45334ZM9.05333 4.2L5.97333 7.79334C5.88 7.88667 5.83333 8.01111 5.83333 8.16667V11.1067L4.66667 10.22V8.16667C4.66667 8.01111 4.62 7.88667 4.52667 7.79334L1.44667 4.2C1.26 3.98222 1.16667 3.72556 1.16667 3.43C1.16667 3.13445 1.27556 2.87778 1.49333 2.66C1.71111 2.44222 1.97556 2.33334 2.28667 2.33334H8.21333C8.52444 2.33334 8.78889 2.44222 9.00667 2.66C9.22444 2.87778 9.33333 3.13445 9.33333 3.43C9.33333 3.72556 9.24 3.98222 9.05333 4.2ZM14 11.6667C14 11.8222 13.9456 11.9622 13.8367 12.0867C13.7278 12.2111 13.58 12.2733 13.3933 12.2733H8.77333C8.58667 12.2733 8.43889 12.2111 8.33 12.0867C8.22111 11.9622 8.16667 11.8222 8.16667 11.6667C8.16667 11.5111 8.22111 11.3789 8.33 11.27C8.43889 11.1611 8.58667 11.1067 8.77333 11.1067H13.44C13.5956 11.1067 13.7278 11.1611 13.8367 11.27C13.9456 11.3789 14 11.5111 14 11.6667ZM14 9.33334C14 9.48889 13.9456 9.62889 13.8367 9.75334C13.7278 9.87778 13.58 9.94 13.3933 9.94H8.77333C8.58667 9.94 8.43889 9.87778 8.33 9.75334C8.22111 9.62889 8.16667 9.48889 8.16667 9.33334C8.16667 9.17778 8.22111 9.04556 8.33 8.93667C8.43889 8.82778 8.58667 8.77334 8.77333 8.77334H13.44C13.5956 8.77334 13.7278 8.82778 13.8367 8.93667C13.9456 9.04556 14 9.17778 14 9.33334ZM10.5 6.44H13.44C13.5956 6.44 13.7278 6.49445 13.8367 6.60334C13.9456 6.71222 14 6.84445 14 7C14 7.15556 13.9456 7.29556 13.8367 7.42C13.7278 7.54445 13.58 7.60667 13.3933 7.60667H10.5C10.3444 7.60667 10.2122 7.54445 10.1033 7.42C9.99444 7.29556 9.94 7.15556 9.94 7C9.94 6.84445 9.99444 6.71222 10.1033 6.60334C10.2122 6.49445 10.3444 6.44 10.5 6.44Z"
-                                                        fill="#737373" />
-                                                </svg>
+                                            <!-- Sort Dropdown -->
+                                            <div class="dropdown">
+                                                <button class="filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                                    aria-expanded="false">
+                                                    <img src="/assets/images/filter.png" class="me-2 filter-icon" alt="">
+                                                    Sort
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a class="dropdown-item {{ $currentSort == 'price_asc' ? 'active' : '' }}" 
+                                                        href="{{ request()->fullUrlWithQuery(['sort' => 'price_asc']) }}">
+                                                            Price: Low to High
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item {{ $currentSort == 'price_desc' ? 'active' : '' }}" 
+                                                        href="{{ request()->fullUrlWithQuery(['sort' => 'price_desc']) }}">
+                                                            Price: High to Low
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item {{ $currentSort == 'newest' ? 'active' : '' }}" 
+                                                        href="{{ request()->fullUrlWithQuery(['sort' => 'newest']) }}">
+                                                            Newest First
+                                                        </a>
+                                                    </li>
+                                                </ul>
                                             </div>
-                                            <!-- <div class="sort">
-                                                sort
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="4"
-                                                    viewBox="0 0 8 4" fill="none">
-                                                    <mask id="path-1-inside-1_286_3048" fill="white">
-                                                        <path d="M0 0H8V4H0V0Z" />
-                                                    </mask>
-                                                    <g clip-path="url(#paint0_diamond_286_3048_clip_path)"
-                                                        data-figma-skip-parse="true"
-                                                        mask="url(#path-1-inside-1_286_3048)">
-                                                        <g transform="matrix(0.004 0 0 0.004 4 0)">
-                                                            <rect x="0" y="0" width="1250" height="1250"
-                                                                fill="url(#paint0_diamond_286_3048)" opacity="1"
-                                                                shape-rendering="crispEdges" />
-                                                            <rect x="0" y="0" width="1250" height="1250"
-                                                                transform="scale(1 -1)"
-                                                                fill="url(#paint0_diamond_286_3048)" opacity="1"
-                                                                shape-rendering="crispEdges" />
-                                                            <rect x="0" y="0" width="1250" height="1250"
-                                                                transform="scale(-1 1)"
-                                                                fill="url(#paint0_diamond_286_3048)" opacity="1"
-                                                                shape-rendering="crispEdges" />
-                                                            <rect x="0" y="0" width="1250" height="1250"
-                                                                transform="scale(-1)"
-                                                                fill="url(#paint0_diamond_286_3048)" opacity="1"
-                                                                shape-rendering="crispEdges" />
-                                                        </g>
-                                                    </g>
-                                                    <path
-                                                        d="M0 0V-4H-4V0H0ZM8 0H12V-4H8V0ZM0 0V4H8V0V-4H0V0ZM8 0H4V4H8H12V0H8ZM0 4H4V0H0H-4V4H0Z"
-                                                        data-figma-gradient-fill="{&quot;type&quot;:&quot;GRADIENT_DIAMOND&quot;,&quot;stops&quot;:[{&quot;color&quot;:{&quot;r&quot;:0.45098039507865906,&quot;g&quot;:0.45098039507865906,&quot;b&quot;:0.45098039507865906,&quot;a&quot;:1.0},&quot;position&quot;:0.99999988079071045},{&quot;color&quot;:{&quot;r&quot;:0.0,&quot;g&quot;:0.0,&quot;b&quot;:0.0,&quot;a&quot;:0.0},&quot;position&quot;:1.0}],&quot;stopsVar&quot;:[{&quot;color&quot;:{&quot;r&quot;:0.45098039507865906,&quot;g&quot;:0.45098039507865906,&quot;b&quot;:0.45098039507865906,&quot;a&quot;:1.0},&quot;position&quot;:0.99999988079071045},{&quot;color&quot;:{&quot;r&quot;:0.0,&quot;g&quot;:0.0,&quot;b&quot;:0.0,&quot;a&quot;:0.0},&quot;position&quot;:1.0}],&quot;transform&quot;:{&quot;m00&quot;:8.0,&quot;m01&quot;:0.0,&quot;m02&quot;:0.0,&quot;m10&quot;:0.0,&quot;m11&quot;:8.0,&quot;m12&quot;:-4.0},&quot;opacity&quot;:1.0,&quot;blendMode&quot;:&quot;NORMAL&quot;,&quot;visible&quot;:true}"
-                                                        mask="url(#path-1-inside-1_286_3048)" />
-                                                    <defs>
-                                                        <clipPath id="paint0_diamond_286_3048_clip_path">
-                                                            <path
-                                                                d="M0 0V-4H-4V0H0ZM8 0H12V-4H8V0ZM0 0V4H8V0V-4H0V0ZM8 0H4V4H8H12V0H8ZM0 4H4V0H0H-4V4H0Z"
-                                                                mask="url(#path-1-inside-1_286_3048)" />
-                                                        </clipPath>
-                                                        <linearGradient id="paint0_diamond_286_3048" x1="0" y1="0"
-                                                            x2="500" y2="500" gradientUnits="userSpaceOnUse">
-                                                            <stop offset="1" stop-color="#737373" />
-                                                            <stop offset="1" stop-opacity="0" />
-                                                        </linearGradient>
-                                                    </defs>
-                                                </svg>
-                                            </div> -->
                                         </div>
                                     </div>
                                     <div class="listing-body">
@@ -157,10 +139,25 @@
                                                                 {{ $listing->title }}
                                                             </h5>
 
-                                                            <p class="car-distance-away">
+                                                            @php
+                                                                $dealerPostalCode = $listing->dealer_postal_code ?? '';
+                                                                $dealerCity = $listing->dealer_city ?? '';
+                                                                $hasLocation = !empty($dealerPostalCode) || !empty($dealerCity);
+                                                            @endphp
+
+                                                            <p class="car-distance-away"
+                                                                @if($hasLocation)
+                                                                    data-dealer-postal="{{ $dealerPostalCode }}"
+                                                                    data-dealer-city="{{ $dealerCity }}"
+                                                                @endif>
                                                                 <i class="fa-solid fa-location-dot"></i>
-                                                                {{-- agar future me location aaye to --}}
-                                                                12 Km away
+                                                                <span class="distance-value">
+                                                                    @if($hasLocation)
+                                                                        Loading...
+                                                                    @else
+                                                                        12 Km away
+                                                                    @endif
+                                                                </span>
                                                             </p>
 
                                                             <!-- FEATURES ICONS -->
@@ -210,6 +207,21 @@
 
 
 @endsection
+<style>
+    .filter-btn {
+        background: #f3f4f6;
+        border: none;
+        padding: 9px 20px;
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #333;
+    }
+
+</style>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const closeIcon = document.querySelector('.warning-div svg:last-child');
