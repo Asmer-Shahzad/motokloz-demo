@@ -11,6 +11,7 @@ use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\MultipartStream;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use App\Models\UserInformation;
 
 class InventoryController extends Controller
 {

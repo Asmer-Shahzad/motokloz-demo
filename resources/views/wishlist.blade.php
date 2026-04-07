@@ -25,14 +25,31 @@
 
                         <!-- Search -->
                         <div class="position-relative searchbar">
-                            <input type="text" class="form-control rounded-pill ps-5 pe-3 w-100" placeholder="Search">
+                            <form action="{{ request()->url() }}" method="GET" id="searchForm">
+                                <input type="text" 
+                                    name="search" 
+                                    class="form-control rounded-pill ps-5 pe-3 w-100" 
+                                    placeholder="Search"
+                                    value="{{ $searchTerm ?? '' }}">
 
-                            <span class="position-absolute top-50 start-0 translate-middle-y ps-3">
-                                <img src="/assets/images/Vector (13).png" alt="search" width="16" height="16">
-                            </span>
+                                <span class="position-absolute top-50 start-0 translate-middle-y ps-3">
+                                    <img src="/assets/images/Vector (13).png" alt="search" width="16" height="16">
+                                </span>
+                                
+                                {{-- Preserve u parameter --}}
+                                @if(request()->has('u'))
+                                <input type="hidden" name="u" value="{{ request()->get('u') }}">
+                                @endif
+                                
+                                {{-- Preserve sort parameter when searching --}}
+                                @if(request()->has('sort'))
+                                <input type="hidden" name="sort" value="{{ request()->get('sort') }}">
+                                @endif
+                            </form>
                         </div>
 
                         <!-- Sort -->
+                        <!-- Sort Dropdown -->
                         <div class="dropdown">
                             <button class="filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
@@ -40,14 +57,24 @@
                                 Sort
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Price: Low to High</a></li>
-                                <li><a class="dropdown-item" href="#">Price: High to Low</a></li>
-                                <li><a class="dropdown-item" href="#">Newest First</a></li>
-                                <li><a class="dropdown-item" href="#">Popularity</a></li>
                                 <li>
-                                    <hr class="dropdown-divider">
+                                    <a class="dropdown-item {{ $currentSort == 'price_asc' ? 'active' : '' }}" 
+                                    href="{{ request()->fullUrlWithQuery(['sort' => 'price_asc']) }}">
+                                        Price: Low to High
+                                    </a>
                                 </li>
-                                <li><a class="dropdown-item" href="#">Reset</a></li>
+                                <li>
+                                    <a class="dropdown-item {{ $currentSort == 'price_desc' ? 'active' : '' }}" 
+                                    href="{{ request()->fullUrlWithQuery(['sort' => 'price_desc']) }}">
+                                        Price: High to Low
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item {{ $currentSort == 'newest' ? 'active' : '' }}" 
+                                    href="{{ request()->fullUrlWithQuery(['sort' => 'newest']) }}">
+                                        Newest First
+                                    </a>
+                                </li>
                             </ul>
                         </div>
 
@@ -166,7 +193,7 @@
                                                 <span class="price-span">${{ number_format($favorite->inventory->price_retail_date ?? '', 2) }}</span>
                                                 <span class="text-span">/ USD</span>
                                             </div>
-                                            <button class="book-btn" onclick="window.location.href='{{ route('inventory_product_details', $favorite->inventory_id) }}'">Book Now</button>
+                                            <button class="book-btn" data-bs-toggle="modal" data-bs-target="#testDriveModal">Book Now</button>
                                         </div>
                                     </div>
                                 </div>
@@ -184,6 +211,48 @@
 
             </div>
 
+        </div>
+    </div>
+    <!-- Test Drive Modal -->
+    <div class="modal fade" id="testDriveModal" tabindex="-1" aria-labelledby="testDriveModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="testDriveModalLabel">Book Now</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body">
+                    <form data-ajax="true" id="testDriveForm">
+                        {{-- Preserve u parameter --}}
+                        @if(request()->has('u'))
+                        <input type="hidden" name="u" value="{{ request()->get('u') }}" id="uParam">
+                        @endif
+                        
+                        <div class="mb-3">
+                            <label for="name1" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name1" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email1" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email1" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone1" class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="phone1" name="phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="date1" class="form-label">Preferred Date</label>
+                            <input type="date" class="form-control" id="date1" name="book_date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message1" class="form-label">Message</label>
+                            <textarea class="form-control" id="message1" name="message" rows="3" placeholder="Any additional notes..."></textarea>
+                        </div>
+                        <button type="submit" class="mto-btn-orange w-100 mb-3">Submit</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -729,7 +798,134 @@
         }
     </style>
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+<script>
+$(document).ready(function(){
+
+    function handleErrors(xhr){
+        if (xhr.status === 422 && xhr.responseJSON?.errors) {
+            let msgs = [];
+            $.each(xhr.responseJSON.errors, function(field, messages) {
+                msgs.push(messages.join(', '));
+            });
+            showSnackbar(msgs.join(' | '), 'error');
+        } else if (xhr.status === 500) {
+            showSnackbar('Server error. Please try again later.', 'error');
+        } else {
+            showSnackbar(xhr.responseJSON?.message || 'Something went wrong.', 'error');
+        }
+    }
+
+    // ================= TEST DRIVE =================
+    $('#testDriveModal form').on('submit', function(e){
+        e.preventDefault();
+        
+        console.log('Form submitted');
+
+        // ✅ FIX: Use $firstFavorite instead of $favorite
+        @php
+            $dealerId = $firstFavorite->inventory->user_id 
+                ?? $firstFavorite->inventory->dealer_id 
+                ?? $firstFavorite->user_id 
+                ?? $firstFavorite->dealer_id 
+                ?? null;
+            $productId = $firstFavorite->inventory->id 
+                ?? $firstFavorite->inventory_id 
+                ?? null;
+        @endphp
+        
+        var dealerId = {{ $dealerId ?? 'null' }};
+        var productId = {{ $productId ?? 'null' }};
+        
+        console.log('Dealer ID:', dealerId, 'Product ID:', productId);
+
+        if (!dealerId || dealerId === 'null' || !productId || productId === 'null') {
+            showSnackbar('Dealer or vehicle info missing. Refresh page.', 'error');
+            console.error('Missing dealer or product ID');
+            return;
+        }
+
+        var formData = {
+            name: $('#name1').val(),
+            email: $('#email1').val(),
+            phone: $('#phone1').val(),
+            book_date: $('#date1').val(),
+            message: $('#message1').val(),
+            reason: 'Book Now',
+            type: 'WEBLEAD',
+            source: 'Motokloz',
+            lead_status: 'NEW',
+            dealer_id: dealerId,
+            product_id: productId,
+            lead_source: 'Website',
+            lead_type: 'Test Drive'
+        };
+
+        console.log('Form Data:', formData);
+
+        // Add u parameter if exists
+        var uParam = $('#uParam').val();
+        if (uParam) {
+            formData.u = uParam;
+        }
+
+        if (!formData.name || !formData.email || !formData.phone || !formData.book_date) {
+            showSnackbar('Fill all required fields', 'warning');
+            return;
+        }
+
+        var emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            showSnackbar('Invalid email address', 'warning');
+            return;
+        }
+
+        // UI STATE
+        var $btn = $(this).find('button[type="submit"]');
+        var originalText = $btn.html();
+
+        $btn.prop('disabled', true)
+            .html('<i class="fas fa-spinner fa-spin ms-2"></i>');
+
+        $('#loadingSpinner').show();
+
+        // Build URL with client_id parameter
+        var apiUrl = "{{ env('diskloz_base_url') }}/api/leads";
+        if (uParam) {
+            apiUrl += '?client_id=' + encodeURIComponent(uParam);
+        }
+        
+        console.log('API URL:', apiUrl);
+
+        $.ajax({
+            url: apiUrl,
+            method: 'POST',
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            dataType: 'json',
+            crossDomain: true,
+
+            success: function(res){
+                console.log('Success:', res);
+                showSnackbar('Booking submitted!', 'success');
+                $('#testDriveModal').modal('hide');
+                $('#testDriveModal form')[0].reset();
+            },
+
+            error: function(xhr, status, error) {
+                console.error('Error:', xhr, status, error);
+                handleErrors(xhr);
+            },
+
+            complete: function(){
+                $btn.prop('disabled', false).text('Submit');
+                $('#loadingSpinner').hide();
+            }
+        });
+    });
+});
+</script>
 
 
 @endsection

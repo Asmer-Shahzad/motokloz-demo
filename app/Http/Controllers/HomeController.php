@@ -10,6 +10,7 @@ use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\MultipartStream;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Inventory;
+use App\Models\UserInformation;
 class HomeController extends Controller
 {
     private function disklozBaseUrl(): string
@@ -203,13 +204,26 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
+
         $listings = Inventory::where('user_id', auth()->id())
                     ->with('extraServices')
                     ->latest()
-                    ->get();
+                    ->paginate(4); // 👈 4 per page
+
+        // ✅ Required for custom pagination
+        $last_page = $listings->lastPage();
+        $current_page = $listings->currentPage();
+
         $pageTitle = 'Dashboard';
         
-        return view('agent-dashboard', compact('user', 'listings', 'userInfo', 'pageTitle'));
+        return view('agent-dashboard', compact(
+            'user',
+            'listings',
+            'userInfo',
+            'pageTitle',
+            'last_page',
+            'current_page'
+        ));
     }
 
     // Add delete method in controller
