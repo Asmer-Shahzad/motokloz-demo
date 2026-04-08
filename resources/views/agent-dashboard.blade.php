@@ -108,7 +108,7 @@
                         </div>
 
                         @if($listings->count() > 0)
-                            <div class="pagination-container mt-3">
+                            <div class="pagination-container mt-0">
                                 @include('partials.pagination')
                             </div>
                         @endif
