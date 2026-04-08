@@ -926,6 +926,44 @@ $(document).ready(function(){
     });
 });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
 
+    // ✅ Snackbar function
+    function showSnackbar(message, type = 'success', duration = 3000) {
+        let snackbar = document.getElementById('snackbar');
+        if (!snackbar) {
+            snackbar = document.createElement('div');
+            snackbar.id = 'snackbar';
+            document.body.appendChild(snackbar);
+        }
+
+        snackbar.textContent = message;
+        snackbar.className = 'show ' + type;
+
+        setTimeout(() => {
+            snackbar.classList.remove('show');
+        }, duration);
+    }
+
+    // ✅ Attach click to all dropdown sort links
+    const sortDropdownLinks = document.querySelectorAll('.dropdown-item');
+    sortDropdownLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const text = this.textContent.trim();
+            // store snackbar message
+            localStorage.setItem('snackbar', `Sorted by: ${text}`);
+        });
+    });
+    
+    // ✅ Show snackbar if stored in localStorage
+    const message = localStorage.getItem('snackbar');
+    if (message) {
+        showSnackbar(message, 'info', 2000);
+        localStorage.removeItem('snackbar');
+    }
+
+});
+</script>
 
 @endsection

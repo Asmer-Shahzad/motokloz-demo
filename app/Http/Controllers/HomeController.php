@@ -200,29 +200,50 @@ class HomeController extends Controller
         return view('car-details', ['pageTitle' => 'Car Details']);
     }
 
-    public function agentdashboard()
+    public function agentdashboard(Request $request)
     {
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
 
-        $listings = Inventory::where('user_id', auth()->id())
-                    ->with('extraServices')
-                    ->latest()
-                    ->paginate(4); // 👈 4 per page
+        $sort = $request->get('sort', 'newest'); // default sort
+        $perPage = 4;
 
-        // ✅ Required for custom pagination
+        // Base query
+        $query = Inventory::where('user_id', auth()->id())->with('extraServices');
+
+        // Apply sorting
+        switch ($sort) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'oldest':
+                $query->oldest();
+                break;
+            case 'newest':
+            default:
+                $query->latest();
+                break;
+        }
+
+        $listings = $query->paginate($perPage)->withQueryString(); // preserve sort/search params
+
+        // Pagination info
         $last_page = $listings->lastPage();
         $current_page = $listings->currentPage();
 
         $pageTitle = 'Dashboard';
-        
+
         return view('agent-dashboard', compact(
             'user',
             'listings',
             'userInfo',
             'pageTitle',
             'last_page',
-            'current_page'
+            'current_page',
+            'sort'
         ));
     }
 

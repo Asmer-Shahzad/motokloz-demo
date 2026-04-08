@@ -322,14 +322,32 @@ $end = $start + count($search_inventory_result) - 1;
                     </div>
                     <div class="toolbar-right d-flex gap-2 mb-4">
                         <button type="button" class="btn-clear-filters">Clear Filters</button>
-                        <select class="form-select form-select-sm tool-select" id="sortSelect">
-                            <option value="name_asc">Sort by: Name (A-Z)</option>
-                            <option value="name_desc">Sort by: Name (Z-A)</option>
-                            <option value="price_asc">Price: Low to High</option>
-                            <option value="price_desc">Price: High to Low</option>
-                            <option value="year_desc">Year: Newest First</option>
-                            <option value="year_asc">Year: Oldest First</option>
+
+                        <!-- HIDDEN SELECT FOR BACKEND -->
+                        <select id="sortSelect" class="d-none">
+                            <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Name (A-Z)</option>
+                            <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Name (Z-A)</option>
+                            <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
+                            <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
+                            <option value="year_desc" {{ request('sort') == 'year_desc' ? 'selected' : '' }}>Year: Newest First</option>
+                            <option value="year_asc" {{ request('sort') == 'year_asc' ? 'selected' : '' }}>Year: Oldest First</option>
                         </select>
+
+                        <!-- VISIBLE DROPDOWN UI -->
+                        <div class="dropdown">
+                            <button class="btn filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="sortDropdownBtn">
+                                <img src="/assets/images/filter.png" class="me-2 filter-icon" alt="">
+                                Sort
+                            </button>
+                            <ul class="dropdown-menu" id="sortDropdownMenu">
+                                <li><a class="dropdown-item" href="#" data-value="name_asc">Name (A-Z)</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="name_desc">Name (Z-A)</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="price_asc">Price: Low to High</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="price_desc">Price: High to Low</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="year_desc">Year: Newest First</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="year_asc">Year: Oldest First</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             <div class="row g-4" id="vehicleContainer">
@@ -432,113 +450,71 @@ $end = $start + count($search_inventory_result) - 1;
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const sortSelect = document.getElementById('sortSelect');
+    const select = document.getElementById('sortSelect');
+    const dropdownItems = document.querySelectorAll('#sortDropdownMenu .dropdown-item');
+    const dropdownBtn = document.getElementById('sortDropdownBtn');
     const clearFiltersBtn = document.querySelector('.btn-clear-filters');
-    const vehicleContainer = document.getElementById('vehicleContainer');
-    
-    // Sort functionality
-    if (sortSelect) {
-        sortSelect.addEventListener('change', function() {
-            const sortValue = this.value;
-            const vehicleCards = Array.from(document.querySelectorAll('.vehicle-card'));
-            
-            if (vehicleCards.length === 0) return;
-            
-            vehicleCards.sort((a, b) => {
-                if (sortValue === 'name_asc') {
-                    const nameA = a.dataset.name || '';
-                    const nameB = b.dataset.name || '';
-                    return nameA.localeCompare(nameB);
-                } 
-                else if (sortValue === 'name_desc') {
-                    const nameA = a.dataset.name || '';
-                    const nameB = b.dataset.name || '';
-                    return nameB.localeCompare(nameA);
-                }
-                else if (sortValue === 'price_asc') {
-                    const priceA = parseFloat(a.dataset.price) || 0;
-                    const priceB = parseFloat(b.dataset.price) || 0;
-                    return priceA - priceB;
-                } 
-                else if (sortValue === 'price_desc') {
-                    const priceA = parseFloat(a.dataset.price) || 0;
-                    const priceB = parseFloat(b.dataset.price) || 0;
-                    return priceB - priceA;
-                }
-                else if (sortValue === 'year_desc') {
-                    const yearA = parseInt(a.dataset.year) || 0;
-                    const yearB = parseInt(b.dataset.year) || 0;
-                    return yearB - yearA;
-                }
-                else if (sortValue === 'year_asc') {
-                    const yearA = parseInt(a.dataset.year) || 0;
-                    const yearB = parseInt(b.dataset.year) || 0;
-                    return yearA - yearB;
-                }
-                return 0;
-            });
-            
-            // Reorder cards with animation
-            vehicleCards.forEach((card, index) => {
-                card.style.opacity = '0';
-                setTimeout(() => {
-                    vehicleContainer.appendChild(card);
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                    }, 50);
-                }, index * 50);
-            });
-            
-            // Show snackbar
-            const sortText = sortSelect.options[sortSelect.selectedIndex]?.text;
-            showSnackbar(`Sorted by: ${sortText}`, 'info', 2000);
-        });
+
+    // ✅ Update dropdown button text based on current selection
+    function updateDropdownText() {
+        const currentOption = select.options[select.selectedIndex];
+        dropdownBtn.innerHTML = `<img src="/assets/images/filter.png" class="me-2 filter-icon" alt=""> ${currentOption.text}`;
     }
-    
-    // Clear filters functionality
+    updateDropdownText();
+
+    // ✅ Handle dropdown item click
+    dropdownItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const value = this.dataset.value;
+            const text = this.textContent.trim();
+
+            // Update hidden select
+            select.value = value;
+
+            // Update button text
+            updateDropdownText();
+
+            // Show snackbar
+            localStorage.setItem('snackbar', `Sorted by: ${text}`);
+
+            // Redirect with updated sort
+            const params = new URLSearchParams(window.location.search);
+            params.set('sort', value);
+            params.delete('page'); // reset page
+            window.location.href = window.location.pathname + '?' + params.toString();
+        });
+    });
+
+    // ✅ Clear filters button
     if (clearFiltersBtn) {
         clearFiltersBtn.addEventListener('click', function() {
-            // Reset sort dropdown
-            if (sortSelect) {
-                sortSelect.value = 'name_asc';
-            }
-            
-            // Reset to original order (by ID - newest first)
-            const vehicleCards = Array.from(document.querySelectorAll('.vehicle-card'));
-            
-            vehicleCards.sort((a, b) => {
-                const idA = parseInt(a.dataset.id) || 0;
-                const idB = parseInt(b.dataset.id) || 0;
-                return idB - idA;
-            });
-            
-            vehicleCards.forEach(card => {
-                vehicleContainer.appendChild(card);
-                card.style.opacity = '1';
-            });
-            
-            showSnackbar('Filters cleared! Showing default order', 'info', 2000);
+            const params = new URLSearchParams(window.location.search);
+            params.delete('sort'); // remove sort
+            params.delete('page'); // reset page
+            localStorage.setItem('snackbar', 'Filters cleared!');
+            window.location.href = window.location.pathname + '?' + params.toString();
         });
     }
-    
-    // Show snackbar function
-    function showSnackbar(message, type = 'success', duration = 5000) {
+
+    // ✅ Show snackbar after redirect
+    const message = localStorage.getItem('snackbar');
+    if (message) {
+        showSnackbar(message, 'info', 2000);
+        localStorage.removeItem('snackbar');
+    }
+
+    function showSnackbar(message, type = 'success', duration = 3000) {
         let snackbar = document.getElementById('snackbar');
         if (!snackbar) {
             snackbar = document.createElement('div');
             snackbar.id = 'snackbar';
             document.body.appendChild(snackbar);
         }
-        
         snackbar.textContent = message;
-        snackbar.className = '';
-        snackbar.classList.add(type, 'show');
-        
-        setTimeout(() => {
-            snackbar.classList.remove('show');
-        }, duration);
+        snackbar.className = 'show ' + type;
+        setTimeout(() => snackbar.classList.remove('show'), duration);
     }
-    
 });
 </script>
 <script>
@@ -906,4 +882,29 @@ $(document).ready(function() {
 
     });
 </script>
+<style>
+    .filter-btn {
+            background: #f3f4f6;
+            border: none;
+            padding: 9px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #333;
+        }
+
+        .filter-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .filter-icon {
+            width: 14px;
+            height: 14px;
+            object-fit: contain;
+            margin-right: 0 !important;
+        }
+</style>
 @endsection

@@ -32,8 +32,8 @@
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item filter-item" href="#" data-sort="newest">Newest</a></li>
                                         <li><a class="dropdown-item filter-item" href="#" data-sort="oldest">Oldest</a></li>
-                                        <li><a class="dropdown-item filter-item" href="#" data-sort="price_low">Price: Low to High</a></li>
-                                        <li><a class="dropdown-item filter-item" href="#" data-sort="price_high">Price: High to Low</a></li>
+                                        <li><a class="dropdown-item filter-item" href="#" data-sort="price_asc">Price: Low to High</a></li>
+                                        <li><a class="dropdown-item filter-item" href="#" data-sort="price_desc">Price: High to Low</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -159,120 +159,7 @@
             }
         </style>
 
-        <script>
-            // Delete listing function with snackbar
-            function deleteListing(id) {
-                // Show loading state on the delete button
-                const deleteBtn = document.querySelector(`tr[data-id="${id}"] .delete-btn`);
-                if (deleteBtn) {
-                    deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-                    deleteBtn.disabled = true;
-                }
-                
-                fetch(`/listings/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Remove the row from table
-                        const row = document.querySelector(`tr[data-id="${id}"]`);
-                        if (row) {
-                            row.style.transition = 'all 0.3s ease';
-                            row.style.opacity = '0';
-                            setTimeout(() => {
-                                row.remove();
-                                showSnackbar('Vehicle deleted successfully!', 'success', 3000);
-                                
-                                // Check if table is empty, reload page after 2 seconds
-                                const tbody = document.getElementById('vehiclesTableBody');
-                                if (tbody && tbody.children.length === 0) {
-                                    setTimeout(() => location.reload(), 2000);
-                                }
-                            }, 300);
-                        } else {
-                            showSnackbar('Vehicle deleted successfully!', 'success', 3000);
-                            setTimeout(() => location.reload(), 1500);
-                        }
-                    } else {
-                        showSnackbar(data.message || 'Failed to delete vehicle', 'error', 4000);
-                        // Reset button
-                        if (deleteBtn) {
-                            deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
-                            deleteBtn.disabled = false;
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showSnackbar('Error deleting vehicle', 'error', 4000);
-                    // Reset button
-                    if (deleteBtn) {
-                        deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
-                        deleteBtn.disabled = false;
-                    }
-                });
-            }
-            
-            // Show snackbar function
-            function showSnackbar(message, type = 'success', duration = 5000) {
-                const snackbar = document.getElementById('snackbar');
-                if (!snackbar) return;
-                
-                snackbar.textContent = message;
-                snackbar.className = '';
-                snackbar.classList.add(type, 'show');
-                
-                setTimeout(() => {
-                    snackbar.classList.remove('show');
-                }, duration);
-            }
-            
-            // Filter functionality with snackbar
-            document.querySelectorAll('.filter-item').forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const sortType = this.dataset.sort;
-                    const tbody = document.getElementById('vehiclesTableBody');
-                    const rows = Array.from(tbody.querySelectorAll('tr'));
-                    
-                    if (rows.length === 0) return;
-                    
-                    rows.sort((a, b) => {
-                        if (sortType === 'newest') {
-                            return new Date(b.dataset.date) - new Date(a.dataset.date);
-                        } else if (sortType === 'oldest') {
-                            return new Date(a.dataset.date) - new Date(b.dataset.date);
-                        } else if (sortType === 'price_low') {
-                            return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
-                        } else if (sortType === 'price_high') {
-                            return parseFloat(b.dataset.price) - parseFloat(a.dataset.price);
-                        }
-                        return 0;
-                    });
-                    
-                    // Reorder rows
-                    rows.forEach(row => tbody.appendChild(row));
-                    
-                    // Show snackbar for filter applied
-                    showSnackbar(`Sorted by: ${this.textContent}`, 'info', 2000);
-                });
-            });
-            
-            // Add vehicle button click
-            document.querySelector('.btn-add')?.addEventListener('click', function(e) {
-                if (this.getAttribute('href')) {
-                    // If it's a link, let it navigate
-                    return;
-                }
-                e.preventDefault();
-                window.location.href = '{{ route("add.listings") }}';
-            });
-        </script>
+        
 
                     <!-- ===== Bottom Cards ===== -->
                     <div class="row g-3">
@@ -1259,7 +1146,135 @@
         }
     </style>
 
+<script>
+    // Delete listing function with snackbar
+    function deleteListing(id) {
+        // Show loading state on the delete button
+        const deleteBtn = document.querySelector(`tr[data-id="${id}"] .delete-btn`);
+        if (deleteBtn) {
+            deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            deleteBtn.disabled = true;
+        }
+        
+        fetch(`/listings/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Remove the row from table
+                const row = document.querySelector(`tr[data-id="${id}"]`);
+                if (row) {
+                    row.style.transition = 'all 0.3s ease';
+                    row.style.opacity = '0';
+                    setTimeout(() => {
+                        row.remove();
+                        showSnackbar('Vehicle deleted successfully!', 'success', 3000);
+                        
+                        // Check if table is empty, reload page after 2 seconds
+                        const tbody = document.getElementById('vehiclesTableBody');
+                        if (tbody && tbody.children.length === 0) {
+                            setTimeout(() => location.reload(), 2000);
+                        }
+                    }, 300);
+                } else {
+                    showSnackbar('Vehicle deleted successfully!', 'success', 3000);
+                    setTimeout(() => location.reload(), 1500);
+                }
+            } else {
+                showSnackbar(data.message || 'Failed to delete vehicle', 'error', 4000);
+                // Reset button
+                if (deleteBtn) {
+                    deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                    deleteBtn.disabled = false;
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showSnackbar('Error deleting vehicle', 'error', 4000);
+            // Reset button
+            if (deleteBtn) {
+                deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                deleteBtn.disabled = false;
+            }
+        });
+    }
+    
+    // Add vehicle button click
+    document.querySelector('.btn-add')?.addEventListener('click', function(e) {
+        if (this.getAttribute('href')) {
+            // If it's a link, let it navigate
+            return;
+        }
+        e.preventDefault();
+        window.location.href = '{{ route("add.listings") }}';
+    });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
 
+    function showSnackbar(message, type = 'success', duration = 3000) {
+        let snackbar = document.getElementById('snackbar');
+        if (!snackbar) {
+            snackbar = document.createElement('div');
+            snackbar.id = 'snackbar';
+            document.body.appendChild(snackbar);
+        }
 
+        snackbar.textContent = message;
+        snackbar.className = '';
+        snackbar.classList.add(type, 'show');
 
+        setTimeout(() => snackbar.classList.remove('show'), duration);
+    }
+
+    const filterItems = document.querySelectorAll('.filter-item');
+
+    // ✅ Click on filter item
+    filterItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const sort = this.dataset.sort;
+            const text = this.textContent.trim();
+
+            // Store selected sort & snackbar message in localStorage
+            localStorage.setItem('snackbar', `Sorted by: ${text}`);
+            localStorage.setItem('selectedSort', sort);
+
+            // Redirect with sort param
+            const url = new URL(window.location.href);
+            url.searchParams.set('sort', sort);
+            url.searchParams.delete('page'); // reset pagination
+            window.location.href = url.toString();
+        });
+    });
+
+    // ✅ Page load actions
+    const snackbarMessage = localStorage.getItem('snackbar');
+    const selectedSort = localStorage.getItem('selectedSort');
+
+    if (snackbarMessage) {
+        showSnackbar(snackbarMessage, 'info', 2000);
+        localStorage.removeItem('snackbar');
+    }
+
+    if (selectedSort) {
+        filterItems.forEach(item => {
+            if (item.dataset.sort === selectedSort) {
+                item.classList.add('active'); // Highlight selected
+                item.textContent = item.textContent + " ✓"; // Optional: add check mark
+            } else {
+                item.classList.remove('active');
+            }
+        });
+        localStorage.removeItem('selectedSort');
+    }
+
+});
+</script>
 @endsection

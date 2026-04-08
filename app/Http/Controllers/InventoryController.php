@@ -28,7 +28,7 @@ class InventoryController extends Controller
         $page = $request->input('page', 1);
         $perPage = 9;
 
-        $url = $this->baseUrl().'/api/inventory?';
+        $url = $this->baseUrl() . '/api/inventory?';
         $params = [
             'page' => $page,
             'per_page' => $perPage,
@@ -37,16 +37,55 @@ class InventoryController extends Controller
         if ($request->filled('txt')) {
             $params['text'] = $request->txt;
         }
+
         if (auth()->check()) {
             $params['client_id'] = auth()->id();
+        }
+
+        // ✅ Add backend sorting param
+        if ($request->filled('sort')) {
+            $params['sort'] = $request->sort;
         }
 
         $url .= http_build_query($params);
 
         $response = Http::get($url);
         $result = json_decode($response->body());
-        
-        $buying_products = $result->data ?? [];
+
+        $buying_products = collect($result->data ?? []);
+
+        // ✅ Fallback sorting in case API doesn't support it
+        if ($request->filled('sort')) {
+            switch ($request->sort) {
+                case 'price_asc':
+                    $buying_products = $buying_products->sortBy(fn($v) => (float) ($v->price ?? 0));
+                    break;
+
+                case 'price_desc':
+                    $buying_products = $buying_products->sortByDesc(fn($v) => (float) ($v->price ?? 0));
+                    break;
+
+                case 'year_asc':
+                    $buying_products = $buying_products->sortBy(fn($v) => (int) ($v->year ?? 0));
+                    break;
+
+                case 'year_desc':
+                    $buying_products = $buying_products->sortByDesc(fn($v) => (int) ($v->year ?? 0));
+                    break;
+
+                case 'name_asc':
+                    $buying_products = $buying_products->sortBy(fn($v) => strtolower($v->title ?? ''));
+                    break;
+
+                case 'name_desc':
+                    $buying_products = $buying_products->sortByDesc(fn($v) => strtolower($v->title ?? ''));
+                    break;
+            }
+        }
+
+        // ✅ Reset indexes after sorting
+        $buying_products = $buying_products->values();
+
         $current_page = $result->current_page ?? 1;
         $last_page = $result->last_page ?? 1;
         $pageTitle = 'Inventory';

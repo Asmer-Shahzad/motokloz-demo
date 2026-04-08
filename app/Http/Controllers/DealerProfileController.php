@@ -309,16 +309,47 @@ class DealerProfileController extends Controller
                     ->toArray();
             }
 
-            // Pagination
+            if ($request->sort) {
+                switch ($request->sort) {
+                    case 'price_asc':
+                        $inventoryData = $inventoryData->sortBy('price');
+                        break;
+
+                    case 'price_desc':
+                        $inventoryData = $inventoryData->sortByDesc('price');
+                        break;
+
+                    case 'year_asc':
+                        $inventoryData = $inventoryData->sortBy('year');
+                        break;
+
+                    case 'year_desc':
+                        $inventoryData = $inventoryData->sortByDesc('year');
+                        break;
+
+                    case 'name_asc':
+                        $inventoryData = $inventoryData->sortBy('title');
+                        break;
+
+                    case 'name_desc':
+                        $inventoryData = $inventoryData->sortByDesc('title');
+                        break;
+                }
+            }
+
+            // ✅ IMPORTANT: reset indexes
+            $inventoryData = $inventoryData->values();
+
+
+            // ✅ PAGINATION (BAAD ME)
             $perPage = 9;
             $currentPage = $request->page ?? 1;
 
-            $currentItems = $inventoryData->slice(($currentPage - 1) * $perPage, $perPage)->values();
-            $totalInventory = $inventoryData->count();
+            $currentItems = $inventoryData
+                ->slice(($currentPage - 1) * $perPage, $perPage)
+                ->values();
 
-            // Results info
-            $start = $totalInventory > 0 ? (($currentPage - 1) * $perPage + 1) : 0;
-            $end = min($currentPage * $perPage, $totalInventory);
+            $totalInventory = $inventoryData->count();
 
             $paginatedInventory = new \Illuminate\Pagination\LengthAwarePaginator(
                 $currentItems,
@@ -327,6 +358,10 @@ class DealerProfileController extends Controller
                 $currentPage,
                 ['path' => request()->url(), 'query' => request()->query()]
             );
+
+            // Results info
+            $start = $totalInventory > 0 ? (($currentPage - 1) * $perPage + 1) : 0;
+            $end = min($currentPage * $perPage, $totalInventory);
 
             // Asset types and conditions
             $assetType = [];

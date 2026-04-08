@@ -207,6 +207,12 @@ class SearchController extends Controller
             }
         }
 
+
+        // Add sort to API request
+        if ($request->filled('sort')) {
+            $apiData['sort'] = $request->sort; // backend ko batao
+        }
+
         /** ---------------- MAIN INVENTORY (ONLY ONCE) ---------------- */
         $response = Http::get($this->disklozBaseUrl() . '/api/search_inventory', $apiData);
         $result = json_decode($response->body());
@@ -226,6 +232,39 @@ class SearchController extends Controller
 
             return $vehicle;
         })->values();
+
+        // ✅ SORTING (SAFE + CLEAN)
+        if ($request->filled('sort')) {
+            switch ($request->sort) {
+
+                case 'price_asc':
+                    $inventoryData = $inventoryData->sortBy(fn($v) => (float) ($v->price ?? 0));
+                    break;
+
+                case 'price_desc':
+                    $inventoryData = $inventoryData->sortByDesc(fn($v) => (float) ($v->price ?? 0));
+                    break;
+
+                case 'year_asc':
+                    $inventoryData = $inventoryData->sortBy(fn($v) => (int) ($v->year ?? 0));
+                    break;
+
+                case 'year_desc':
+                    $inventoryData = $inventoryData->sortByDesc(fn($v) => (int) ($v->year ?? 0));
+                    break;
+
+                case 'name_asc':
+                    $inventoryData = $inventoryData->sortBy(fn($v) => strtolower(trim($v->title ?? '')));
+                    break;
+
+                case 'name_desc':
+                    $inventoryData = $inventoryData->sortByDesc(fn($v) => strtolower(trim($v->title ?? '')));
+                    break;
+            }
+        }
+
+        // ✅ INDEX RESET (IMPORTANT)
+        $inventoryData = $inventoryData->values();
 
         /** ---------------- FINAL DATA ---------------- */
         $data = [
