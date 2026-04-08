@@ -3,10 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>market-wp.com</title>
+    <title>Motokloz</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/favicon.png') }}">
 </head>
 
 <body>
