@@ -43,8 +43,8 @@
                         </div>
 
                         <div class="d-flex align-items-center m-4 gap-3">
-                            <img src="{{ $userInfo->avatar ?? asset('/assets/images/user.png') }}" 
-                                class="rounded" alt="Avatar" width="60" height="60" id="avatarPreview">
+                            <img src="{{ $userInfo->avatar ?? asset('/assets/images/defaultdealerlogo.png') }}" 
+                                class="rounded-5" alt="Avatar" width="60" height="60" id="avatarPreview">
                             <button type="button" class="btn btn-outline-danger btn-sm" id="deleteAvatarBtn">
                                 <i class="fas fa-trash"></i>
                             </button>

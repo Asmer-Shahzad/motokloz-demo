@@ -238,7 +238,7 @@
                             {{-- ✅ User is logged in --}}
                             <div class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="userDropdown">
-                                    <img src="{{ $userInfo->avatar ?? asset('/assets/images/user.png') }}" 
+                                    <img src="{{ $userInfo->avatar ?? asset('/assets/images/defaultdealerlogo.png') }}" 
                                         class="img-fluid" 
                                         alt="User Avatar"
                                         style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">

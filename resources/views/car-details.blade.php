@@ -416,13 +416,13 @@
                                             <!--{{ $searched_vehicle->dealer->first_name }} {{ $searched_vehicle->dealer->last_name }}-->
                                         </h6>
                                         <p class="small text-muted mb-0">
-    {{ optional($searched_vehicle->dealer) ? collect([
-        optional($searched_vehicle->dealer)->physical_address,
-        optional($searched_vehicle->dealer)->city,
-        optional($searched_vehicle->dealer)->province,
-        optional($searched_vehicle->dealer)->postal_code
-    ])->filter()->implode(', ') : '' }}
-</p>
+                                            {{ optional($searched_vehicle->dealer) ? collect([
+                                                optional($searched_vehicle->dealer)->physical_address,
+                                                optional($searched_vehicle->dealer)->city,
+                                                optional($searched_vehicle->dealer)->province,
+                                                optional($searched_vehicle->dealer)->postal_code
+                                            ])->filter()->implode(', ') : '' }}
+                                        </p>
                                     </div>
 
                                 </div>
