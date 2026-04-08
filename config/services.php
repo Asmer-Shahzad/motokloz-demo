@@ -31,7 +31,7 @@ return [
     ],
 
     'diskloz' => [
-        'base_url' => env('DISKLOZ_BASE_URL', env('diskloz_base_url', 'https://diskloz.ca')),
+        'base_url' => env('DISKLOZ_BASE_URL', env('diskloz_base_url', 'http://127.0.0.1:98/')),
     ],
 
 ];

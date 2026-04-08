@@ -69,11 +69,17 @@
                                     {{$dealer->legal_name}}
                                     <!--{{ $dealer->first_name }} {{ $dealer->last_name }}-->
                                 </h3>
+<p class="mb-3">
+    <i class="fas fa-map-marker-alt text-warning me-1"></i>
 
-                                <p class="mb-3">
-                                    <i class="fas fa-map-marker-alt text-warning me-1"></i>
-                                    {{ $dealer->city ?? '' }}{{ ($dealer->city && $dealer->province) ? ', ' : '' }}{{ $dealer->province ?? '' }}
-                                </p>
+{{ collect([
+    $dealer?->physical_address,
+    $dealer?->city,
+    $dealer?->province,
+    $dealer?->postal_code
+])->filter()->implode(', ') ?: 'Address not available' }}
+
+</p>
 
                                 <span class="badge bg-light text-dark border mt-2 p-2 rounded-5">
                                     {{ $total_inventory }} Vehicles
@@ -558,10 +564,10 @@
                         <img src="/assets/images/Background (11).png" width="20" alt="whatsapp" class="contact-icon light-dark me-2"> 
                         <strong>WhatsApp:</strong> {{ $dealer->phone_no ?? 'N/A' }}
                     </p>
-                    <p class="mb-2">
+                    {{-- <p class="mb-2">
                         <img src="/assets/images/Background (12).png" width="20" alt="fax" class="contact-icon light-dark me-2">
                         <strong>Fax:</strong> {{ $dealer->phone_no ?? 'N/A' }}
-                    </p>
+                    </p> --}}
                 </div>
 
                 <div class="content-box shadow-sm">

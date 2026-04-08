@@ -416,8 +416,13 @@
                                             <!--{{ $searched_vehicle->dealer->first_name }} {{ $searched_vehicle->dealer->last_name }}-->
                                         </h6>
                                         <p class="small text-muted mb-0">
-                                            {{ $searched_vehicle->dealer->physical_address }}
-                                        </p>
+    {{ optional($searched_vehicle->dealer) ? collect([
+        optional($searched_vehicle->dealer)->physical_address,
+        optional($searched_vehicle->dealer)->city,
+        optional($searched_vehicle->dealer)->province,
+        optional($searched_vehicle->dealer)->postal_code
+    ])->filter()->implode(', ') : '' }}
+</p>
                                     </div>
 
                                 </div>
@@ -440,10 +445,10 @@
                                     WhatsApp: {{ $searched_vehicle->dealer->phone_no }}
                                 </div>
 
-                                <div class="mb-2">
+                                {{-- <div class="mb-2">
                                     <img src="/assets/images/Background (12).png" alt="fax" class="contact-icon light-dark">
                                     Fax: {{ $searched_vehicle->dealer->phone_no }}
-                                </div>
+                                </div> --}}
 
                             </div>
                             <a href="{{ route('dealer_inventory', $searched_vehicle->dealer->id) }}">
