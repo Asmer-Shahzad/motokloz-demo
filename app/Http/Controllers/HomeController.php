@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -11,6 +12,7 @@ use GuzzleHttp\Psr7\MultipartStream;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Inventory;
 use App\Models\UserInformation;
+
 class HomeController extends Controller
 {
     private function disklozBaseUrl(): string
@@ -54,7 +56,7 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
-        
+
         $assets = [
             'AUTO',
             'FARM EQUIPMENT',
@@ -106,7 +108,7 @@ class HomeController extends Controller
                     // Use only MfgAuto for this asset
                     if (!empty($filters->MfgAuto)) {
                         $makeTypes[$asset] = collect($filters->MfgAuto)
-                            ->map(function($m) {
+                            ->map(function ($m) {
                                 return ['id' => $m->id, 'name' => $m->name];
                             })
                             ->sortBy('name')
@@ -135,7 +137,7 @@ class HomeController extends Controller
             'disklozBaseUrl' => $this->disklozBaseUrl(),
         ]);
     }
-    
+
     public function buyFlowStep1()
     {
         return view('buy-flow-step-1', ['pageTitle' => 'Step 1']);
@@ -182,11 +184,11 @@ class HomeController extends Controller
     }
 
     public function chat()
-    {   
+    {
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
-        
-        
+
+
         return view('chat', ['pageTitle' => 'Chat', 'user' => $user, 'userInfo' => $userInfo]);
     }
 
@@ -206,16 +208,16 @@ class HomeController extends Controller
         $userInfo = $user->information ?? new UserInformation();
 
         $listings = Inventory::where('user_id', auth()->id())
-                    ->with('extraServices')
-                    ->latest()
-                    ->paginate(4); // 👈 4 per page
+            ->with('extraServices')
+            ->latest()
+            ->paginate(4); // 👈 4 per page
 
         // ✅ Required for custom pagination
         $last_page = $listings->lastPage();
         $current_page = $listings->currentPage();
 
         $pageTitle = 'Dashboard';
-        
+
         return view('agent-dashboard', compact(
             'user',
             'listings',
@@ -231,13 +233,13 @@ class HomeController extends Controller
     {
         try {
             $listing = Inventory::where('user_id', auth()->id())
-                        ->where('id', $id)
-                        ->first();
-            
+                ->where('id', $id)
+                ->first();
+
             if (!$listing) {
                 return response()->json(['success' => false, 'message' => 'Listing not found'], 404);
             }
-            
+
             // Delete images from server
             if ($listing->images) {
                 $images = json_decode($listing->images, true);
@@ -248,7 +250,7 @@ class HomeController extends Controller
                     }
                 }
             }
-            
+
             // Delete primary image
             if ($listing->primary_image) {
                 $primaryImagePath = public_path(parse_url($listing->primary_image, PHP_URL_PATH));
@@ -256,15 +258,14 @@ class HomeController extends Controller
                     unlink($primaryImagePath);
                 }
             }
-            
+
             // Delete extra services
             $listing->extraServices()->delete();
-            
+
             // Delete listing
             $listing->delete();
-            
+
             return response()->json(['success' => true]);
-            
         } catch (\Exception $e) {
             \Log::error('Error deleting listing: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Error deleting listing'], 500);
@@ -281,7 +282,13 @@ class HomeController extends Controller
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
         $pageTitle = 'Account Settings';
-        
+
         return view('account-setting', compact('user', 'userInfo', 'pageTitle'));
+    }
+
+    public function pageNotFound()
+    {
+        $pageTitle = 'Page Not Found';
+        return response()->view('errors.404', compact('pageTitle'), 404);
     }
 }

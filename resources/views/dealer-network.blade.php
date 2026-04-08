@@ -101,9 +101,14 @@
 
                                         <div>
                                             <h6 class="dealer-card-head">{{ ucwords(strtolower($dealer['legal_name'] ?? 'Name not available')) }}</h6>
-                                            <p class="dealer-address mb-2">
-                                                {{ $dealer['physical_address'] ?? 'Address not available' }}
-                                            </p>
+                                           <p class="dealer-address mb-2">
+    {{ collect([
+        $dealer['physical_address'] ?? null,
+        $dealer['city'] ?? null,
+        $dealer['province'] ?? null,
+        $dealer['postal_code'] ?? null
+    ])->filter()->implode(', ') ?: 'Address not available' }}
+</p>
                                             <span class="vehicle-badge">{{ $dealer['inventory_count'] }} Vehicles</span>
                                         </div>
                                     </div>

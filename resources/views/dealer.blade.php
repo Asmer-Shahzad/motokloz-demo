@@ -39,10 +39,16 @@
                             onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultdealerlogo.png') }}';">
                         <div>
                             <h3 class="mb-0 fw-bold">{{ $dealer->legal_name }}</h3>
-                            <p class="mb-0">
-                                <i class="fas fa-map-marker-alt"></i>
-                                {{ $dealer->physical_address }}
-                            </p>
+                      <p class="mb-0">
+    <i class="fas fa-map-marker-alt"></i>
+    
+    {{ collect([
+        $dealer?->physical_address,
+        $dealer?->city,
+        $dealer?->province,
+        $dealer?->postal_code
+    ])->filter()->implode(', ') ?: 'Address not available' }}
+</p>
                             <span class="badge bg-light text-dark border mt-2 p-2 rounded-5">
                                 {{ $inventory->total() }} Vehicles
                             </span>
