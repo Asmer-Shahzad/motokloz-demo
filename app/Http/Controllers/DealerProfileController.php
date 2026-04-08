@@ -312,11 +312,11 @@ class DealerProfileController extends Controller
             if ($request->sort) {
                 switch ($request->sort) {
                     case 'price_asc':
-                        $inventoryData = $inventoryData->sortBy('price');
+                        $inventoryData = $inventoryData->sortBy('price_retail_date');
                         break;
 
                     case 'price_desc':
-                        $inventoryData = $inventoryData->sortByDesc('price');
+                        $inventoryData = $inventoryData->sortByDesc('price_retail_date');
                         break;
 
                     case 'year_asc':

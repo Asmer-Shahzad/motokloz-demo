@@ -322,9 +322,7 @@ $end = $start + count($search_inventory_result) - 1;
                     </div>
                     <div class="toolbar-right d-flex gap-2 mb-4">
                         <button type="button" class="btn-clear-filters">Clear Filters</button>
-
-                        <!-- HIDDEN SELECT FOR BACKEND -->
-                        <select id="sortSelect" class="d-none">
+                        <select class="form-select form-select-sm tool-select" id="sortSelect">
                             <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Name (A-Z)</option>
                             <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Name (Z-A)</option>
                             <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
@@ -332,22 +330,6 @@ $end = $start + count($search_inventory_result) - 1;
                             <option value="year_desc" {{ request('sort') == 'year_desc' ? 'selected' : '' }}>Year: Newest First</option>
                             <option value="year_asc" {{ request('sort') == 'year_asc' ? 'selected' : '' }}>Year: Oldest First</option>
                         </select>
-
-                        <!-- VISIBLE DROPDOWN UI -->
-                        <div class="dropdown">
-                            <button class="btn filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="sortDropdownBtn">
-                                <img src="/assets/images/filter.png" class="me-2 filter-icon" alt="">
-                                Sort
-                            </button>
-                            <ul class="dropdown-menu" id="sortDropdownMenu">
-                                <li><a class="dropdown-item" href="#" data-value="name_asc">Name (A-Z)</a></li>
-                                <li><a class="dropdown-item" href="#" data-value="name_desc">Name (Z-A)</a></li>
-                                <li><a class="dropdown-item" href="#" data-value="price_asc">Price: Low to High</a></li>
-                                <li><a class="dropdown-item" href="#" data-value="price_desc">Price: High to Low</a></li>
-                                <li><a class="dropdown-item" href="#" data-value="year_desc">Year: Newest First</a></li>
-                                <li><a class="dropdown-item" href="#" data-value="year_asc">Year: Oldest First</a></li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
             <div class="row g-4" id="vehicleContainer">
@@ -450,55 +432,51 @@ $end = $start + count($search_inventory_result) - 1;
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const select = document.getElementById('sortSelect');
-    const dropdownItems = document.querySelectorAll('#sortDropdownMenu .dropdown-item');
-    const dropdownBtn = document.getElementById('sortDropdownBtn');
+
+    const sortSelect = document.getElementById('sortSelect');
     const clearFiltersBtn = document.querySelector('.btn-clear-filters');
 
-    // ✅ Update dropdown button text based on current selection
-    function updateDropdownText() {
-        const currentOption = select.options[select.selectedIndex];
-        dropdownBtn.innerHTML = `<img src="/assets/images/filter.png" class="me-2 filter-icon" alt=""> ${currentOption.text}`;
+    // ✅ SET SELECT VALUE FROM URL (IMPORTANT UX FIX)
+    const params = new URLSearchParams(window.location.search);
+    const currentSort = params.get('sort');
+
+    if (sortSelect && currentSort) {
+        sortSelect.value = currentSort;
     }
-    updateDropdownText();
 
-    // ✅ Handle dropdown item click
-    dropdownItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            const value = this.dataset.value;
-            const text = this.textContent.trim();
+    // ✅ SORT (Backend)
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
 
-            // Update hidden select
-            select.value = value;
+            const value = this.value;
+            const text = this.options[this.selectedIndex].text;
 
-            // Update button text
-            updateDropdownText();
+            const url = new URL(window.location.href);
+            url.searchParams.set('sort', value);
 
-            // Show snackbar
             localStorage.setItem('snackbar', `Sorted by: ${text}`);
 
-            // Redirect with updated sort
-            const params = new URLSearchParams(window.location.search);
-            params.set('sort', value);
-            params.delete('page'); // reset page
-            window.location.href = window.location.pathname + '?' + params.toString();
-        });
-    });
-
-    // ✅ Clear filters button
-    if (clearFiltersBtn) {
-        clearFiltersBtn.addEventListener('click', function() {
-            const params = new URLSearchParams(window.location.search);
-            params.delete('sort'); // remove sort
-            params.delete('page'); // reset page
-            localStorage.setItem('snackbar', 'Filters cleared!');
-            window.location.href = window.location.pathname + '?' + params.toString();
+            window.location.href = url;
         });
     }
 
-    // ✅ Show snackbar after redirect
+    // ✅ CLEAR FILTERS
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', function() {
+
+            const url = new URL(window.location.href);
+
+            url.searchParams.delete('sort');
+            url.searchParams.delete('page'); // 👈 important
+
+            localStorage.setItem('snackbar', 'Filters cleared!');
+            window.location.href = url;
+        });
+    }
+
+    // ✅ SNACKBAR AFTER RELOAD
     const message = localStorage.getItem('snackbar');
+
     if (message) {
         showSnackbar(message, 'info', 2000);
         localStorage.removeItem('snackbar');
@@ -506,15 +484,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showSnackbar(message, type = 'success', duration = 3000) {
         let snackbar = document.getElementById('snackbar');
+
         if (!snackbar) {
             snackbar = document.createElement('div');
             snackbar.id = 'snackbar';
             document.body.appendChild(snackbar);
         }
+
         snackbar.textContent = message;
         snackbar.className = 'show ' + type;
-        setTimeout(() => snackbar.classList.remove('show'), duration);
+
+        setTimeout(() => {
+            snackbar.classList.remove('show');
+        }, duration);
     }
+
 });
 </script>
 <script>
@@ -882,29 +866,4 @@ $(document).ready(function() {
 
     });
 </script>
-<style>
-    .filter-btn {
-            background: #f3f4f6;
-            border: none;
-            padding: 9px 20px;
-            font-size: 14px;
-            font-weight: 500;
-            border-radius: 50px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #333;
-        }
-
-        .filter-btn:hover {
-            background: #e5e7eb;
-        }
-
-        .filter-icon {
-            width: 14px;
-            height: 14px;
-            object-fit: contain;
-            margin-right: 0 !important;
-        }
-</style>
 @endsection
