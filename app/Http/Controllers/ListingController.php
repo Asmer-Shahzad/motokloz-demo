@@ -213,6 +213,9 @@ class ListingController extends Controller
 
     public function user_inventory_product_details(Request $request, $id)
     {
+        $user = Auth::user();
+        $userInfo = $user->information ?? new UserInformation();
+
         $searched_vehicle = Inventory::where('user_id', auth()->id())
             ->with('extraServices')
             ->where('id', $id)
@@ -222,7 +225,7 @@ class ListingController extends Controller
             abort(404);
         }
 
-        return view('listing-car-details', compact('searched_vehicle'));
+        return view('listing-car-details', compact('searched_vehicle' , 'user', 'userInfo'));
     }
 
     public function addlistings()
@@ -307,135 +310,135 @@ class ListingController extends Controller
     }
 
     public function wishlist(Request $request)
-{
-    $user = Auth::user();
-    $userInfo = $user->information ?? new UserInformation();
-    
-    $response = Http::get(env("diskloz_base_url").'/api/favorites?client_id='.$request->u);
-    $data['favorites'] = json_decode($response->body());
+    {
+        $user = Auth::user();
+        $userInfo = $user->information ?? new UserInformation();
+        
+        $response = Http::get(env("diskloz_base_url").'/api/favorites?client_id='.$request->u);
+        $data['favorites'] = json_decode($response->body());
 
-    // Location map
-    $dealerLocationMap = $this->dealerLocationMap();
+        // Location map
+        $dealerLocationMap = $this->dealerLocationMap();
 
-    // Enrich favorites with location data
-    $favoritesCollection = collect($data['favorites'] ?? [])->map(function ($favorite) use ($dealerLocationMap) {
-        if (isset($favorite->inventory)) {
-            $dealerKey = (string) ($favorite->inventory->user_id ?? $favorite->inventory->dealer_id ?? '');
-            $location = $dealerLocationMap[$dealerKey] ?? [];
-            
-            $favorite->inventory->dealer_postal_code = $location['postal_code'] ?? null;
-            $favorite->inventory->dealer_city = $location['city'] ?? null;
-            $favorite->inventory->dealer_province = $location['province'] ?? null;
-            $favorite->inventory->dealer_country = $location['country'] ?? null;
-        }
-        return $favorite;
-    });
-
-    // ✅ FIX: Store original collection before any filtering
-    $originalCollection = clone $favoritesCollection;
-
-    // Apply search filter
-    $search = $request->get('search');
-    if (!empty($search)) {
-        $favoritesCollection = $favoritesCollection->filter(function ($favorite) use ($search) {
-            if (!isset($favorite->inventory)) {
-                return false;
+        // Enrich favorites with location data
+        $favoritesCollection = collect($data['favorites'] ?? [])->map(function ($favorite) use ($dealerLocationMap) {
+            if (isset($favorite->inventory)) {
+                $dealerKey = (string) ($favorite->inventory->user_id ?? $favorite->inventory->dealer_id ?? '');
+                $location = $dealerLocationMap[$dealerKey] ?? [];
+                
+                $favorite->inventory->dealer_postal_code = $location['postal_code'] ?? null;
+                $favorite->inventory->dealer_city = $location['city'] ?? null;
+                $favorite->inventory->dealer_province = $location['province'] ?? null;
+                $favorite->inventory->dealer_country = $location['country'] ?? null;
             }
-            
-            $inventory = $favorite->inventory;
-            $searchLower = strtolower($search);
-            
-            return str_contains(strtolower($inventory->mfg_auto ?? ''), $searchLower) ||
-                str_contains(strtolower($inventory->model ?? ''), $searchLower) ||
-                str_contains(strtolower($inventory->year ?? ''), $searchLower) ||
-                str_contains(strtolower($inventory->trim ?? ''), $searchLower) ||
-                str_contains(strtolower($inventory->mileage ?? ''), $searchLower) ||
-                str_contains(strtolower($inventory->body_style ?? ''), $searchLower) ||
-                str_contains(strtolower($inventory->transmission ?? ''), $searchLower) ||
-                str_contains(strtolower($inventory->engine ?? ''), $searchLower);
-        })->values();
+            return $favorite;
+        });
+
+        // ✅ FIX: Store original collection before any filtering
+        $originalCollection = clone $favoritesCollection;
+
+        // Apply search filter
+        $search = $request->get('search');
+        if (!empty($search)) {
+            $favoritesCollection = $favoritesCollection->filter(function ($favorite) use ($search) {
+                if (!isset($favorite->inventory)) {
+                    return false;
+                }
+                
+                $inventory = $favorite->inventory;
+                $searchLower = strtolower($search);
+                
+                return str_contains(strtolower($inventory->mfg_auto ?? ''), $searchLower) ||
+                    str_contains(strtolower($inventory->model ?? ''), $searchLower) ||
+                    str_contains(strtolower($inventory->year ?? ''), $searchLower) ||
+                    str_contains(strtolower($inventory->trim ?? ''), $searchLower) ||
+                    str_contains(strtolower($inventory->mileage ?? ''), $searchLower) ||
+                    str_contains(strtolower($inventory->body_style ?? ''), $searchLower) ||
+                    str_contains(strtolower($inventory->transmission ?? ''), $searchLower) ||
+                    str_contains(strtolower($inventory->engine ?? ''), $searchLower);
+            })->values();
+        }
+        
+        // Apply sorting
+        $sort = $request->get('sort', 'newest');
+        
+        switch ($sort) {
+            case 'price_asc':
+                $favoritesCollection = $favoritesCollection->sortBy(function ($favorite) {
+                    return $favorite->inventory->price_retail_date ?? 0;
+                })->values();
+                break;
+                
+            case 'price_desc':
+                $favoritesCollection = $favoritesCollection->sortByDesc(function ($favorite) {
+                    return $favorite->inventory->price_retail_date ?? 0;
+                })->values();
+                break;
+                
+            case 'newest':
+                $favoritesCollection = $favoritesCollection->sortByDesc(function ($favorite) {
+                    return $favorite->inventory->id ?? 0;
+                })->values();
+                break;
+                
+            case 'popularity':
+                $favoritesCollection = $favoritesCollection->sortByDesc(function ($favorite) {
+                    return $favorite->inventory->rating ?? 0;
+                })->values();
+                break;
+                
+            default:
+                $favoritesCollection = $favoritesCollection->sortByDesc(function ($favorite) {
+                    return $favorite->inventory->id ?? 0;
+                })->values();
+                break;
+        }
+
+        $total_favorites = $favoritesCollection->count();
+
+        // Pagination variables
+        $perPage = 3;
+        $currentPage = $request->get('page', 1);
+
+        $favorites = new LengthAwarePaginator(
+            $favoritesCollection->forPage($currentPage, $perPage),
+            $total_favorites,
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        // For your partial.pagination
+        $last_page = $favorites->lastPage();
+        $current_page = $favorites->currentPage();
+        $currentSort = $request->get('sort', 'newest');
+        $searchTerm = $request->get('search', '');
+
+        // ✅ FIX: Use ORIGINAL collection, not filtered one
+        $searched_vehicle = $originalCollection->isNotEmpty() 
+            ? $originalCollection->first()->inventory ?? null 
+            : null;
+        
+        // ✅ FIX: Get first vehicle's dealer and product IDs for the modal
+        $firstFavorite = $originalCollection->isNotEmpty() ? $originalCollection->first() : null;
+        
+        $pageTitle = 'My Wishlist';
+        $disklozBaseUrl = $this->disklozBaseUrl();
+        
+        return view('wishlist', compact(
+            'user', 
+            'userInfo', 
+            'favorites', 
+            'total_favorites', 
+            'searched_vehicle',
+            'firstFavorite',  // ✅ Add this for modal
+            'pageTitle', 
+            'disklozBaseUrl',
+            'last_page',
+            'current_page',
+            'currentSort',
+            'searchTerm'
+        ));
     }
-    
-    // Apply sorting
-    $sort = $request->get('sort', 'newest');
-    
-    switch ($sort) {
-        case 'price_asc':
-            $favoritesCollection = $favoritesCollection->sortBy(function ($favorite) {
-                return $favorite->inventory->price_retail_date ?? 0;
-            })->values();
-            break;
-            
-        case 'price_desc':
-            $favoritesCollection = $favoritesCollection->sortByDesc(function ($favorite) {
-                return $favorite->inventory->price_retail_date ?? 0;
-            })->values();
-            break;
-            
-        case 'newest':
-            $favoritesCollection = $favoritesCollection->sortByDesc(function ($favorite) {
-                return $favorite->inventory->id ?? 0;
-            })->values();
-            break;
-            
-        case 'popularity':
-            $favoritesCollection = $favoritesCollection->sortByDesc(function ($favorite) {
-                return $favorite->inventory->rating ?? 0;
-            })->values();
-            break;
-            
-        default:
-            $favoritesCollection = $favoritesCollection->sortByDesc(function ($favorite) {
-                return $favorite->inventory->id ?? 0;
-            })->values();
-            break;
-    }
-
-    $total_favorites = $favoritesCollection->count();
-
-    // Pagination variables
-    $perPage = 3;
-    $currentPage = $request->get('page', 1);
-
-    $favorites = new LengthAwarePaginator(
-        $favoritesCollection->forPage($currentPage, $perPage),
-        $total_favorites,
-        $perPage,
-        $currentPage,
-        ['path' => $request->url(), 'query' => $request->query()]
-    );
-
-    // For your partial.pagination
-    $last_page = $favorites->lastPage();
-    $current_page = $favorites->currentPage();
-    $currentSort = $request->get('sort', 'newest');
-    $searchTerm = $request->get('search', '');
-
-    // ✅ FIX: Use ORIGINAL collection, not filtered one
-    $searched_vehicle = $originalCollection->isNotEmpty() 
-        ? $originalCollection->first()->inventory ?? null 
-        : null;
-    
-    // ✅ FIX: Get first vehicle's dealer and product IDs for the modal
-    $firstFavorite = $originalCollection->isNotEmpty() ? $originalCollection->first() : null;
-    
-    $pageTitle = 'My Wishlist';
-    $disklozBaseUrl = $this->disklozBaseUrl();
-    
-    return view('wishlist', compact(
-        'user', 
-        'userInfo', 
-        'favorites', 
-        'total_favorites', 
-        'searched_vehicle',
-        'firstFavorite',  // ✅ Add this for modal
-        'pageTitle', 
-        'disklozBaseUrl',
-        'last_page',
-        'current_page',
-        'currentSort',
-        'searchTerm'
-    ));
-}
     
 }

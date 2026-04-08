@@ -87,7 +87,7 @@
                     <div class="wishlist-items">
                         @foreach($favorites as $favorite)
                         <!-- Dynamic Item -->
-                        <div class="wishlist-card mb-3" data-aos="fade-up" data-aos-duration="600">
+                        <div class="wishlist-card mb-4" data-aos="fade-up" data-aos-duration="600">
                             <div class="row g-0">
                                 <div class="col-md-5">
                                     @php $detailUrl = route('inventory_product_details', $favorite->inventory->id); @endphp
@@ -594,9 +594,9 @@
 
 
         .wishlist-img {
-            height: 360px !important;
-            width: 100% !important;
-            object-fit: cover;
+            height: 296px !important;
+            width: 93% !important;
+            object-fit: contain;
             scale: 1.1;
             transform-origin: left center;
         }
