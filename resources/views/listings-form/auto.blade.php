@@ -1,8 +1,6 @@
 <!-- CAR DETAILS -->
 <div class="row g-3">
-    <div class="col-12" hidden>
-        <input type="hidden" value="Motokloz" class="form-control" placeholder="Source *" name="source" required>
-    </div>
+
 
     <div class="col-md-4">
         <input type="text" class="form-control" placeholder="Stock Number" name="stock_number">
@@ -42,7 +40,7 @@
         <input type="text" class="form-control" placeholder="Engine Displacement" name="cc" required>
     </div>
 
-    
+
     <div class="col-md-4">
         <select class="form-select" id="transmission" name="transmission">
             <option value="">Select Transmission</option>
@@ -80,7 +78,7 @@
     <div class="col-md-4">
         <input type="text" class="form-control" placeholder="Trim *" name="trim" required>
     </div>
-    
+
     <div class="col-md-4">
         <input type="text" class="form-control" placeholder="Horse Power" name="horse_power" required>
     </div>
@@ -120,7 +118,7 @@
     <div class="col-md-4">
         <input type="text" class="form-control" placeholder="Vehicle Height" name="v_height">
     </div>
-    
+
     <div class="col-md-4">
         <input type="text" class="form-control" placeholder="GVW" name="gvw">
     </div>
@@ -140,11 +138,11 @@
     <div class="col-md-4">
         <input type="text" class="form-control" placeholder="Highway Fuel Economy" name="highway_mileage">
     </div>
-    
+
     <div class="col-md-4">
         <input type="text" class="form-control" placeholder="Ext Color" name="ext_color">
     </div>
-    
+
     <div class="col-md-4">
         <input type="text" class="form-control" placeholder="Int Color" name="int_color">
     </div>
