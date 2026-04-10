@@ -3,17 +3,13 @@
 @section('content')
 
     <div class="top-back">
-        <a href="#" class="dashboard-back">
+        <a href="{{ route('chat.index') }}" class="dashboard-back">
             <span class="back-icon">
                 <img src="/assets/images/Carento (5).png" alt="Back">
             </span>
             <span class="back-text">Go back to dashboard</span>
         </a>
     </div>
-
-
-
-
 
     <section class="main-chat">
         <div class="chat-wrapper">
@@ -22,12 +18,7 @@
             <div class="chat-sidebar">
                 <div class="sidebar-header">
                     <h3 class="sidebar-head">Conversations</h3>
-                    <div class="sidebar-icons">
-                        <!-- Search icons - both trigger search bar -->
-
-
-
-                    </div>
+                    <div class="sidebar-icons"></div>
                 </div>
 
                 <!-- Search Bar (hidden by default) -->
@@ -42,177 +33,521 @@
 
                 <!-- Chat list with scroll -->
                 <div class="chat-list scrol-bar">
-                    <!-- ===== REQUESTED MESSAGES (COLLAPSIBLE) ===== -->
-                    <div class="section-header" onclick="toggleSection('requestedSection')">
-                        <span class="section-heading" style="cursor: pointer;">˅ { Vichele Type } Messages</span>
-                    </div>
-                    <div id="requestedSection" class="section-content">
-                        <div class="chat-item request-item">
-                            <img src="https://i.pravatar.cc/40?img=5" alt="">
-                            <div>
-                                <h6 class="chat-heading">Garrett Watson</h6>
-                                <p class="chat-paragraph">Hi! Please, change the statu…</p>
-                            </div>
-                            <span class="chat-time">12:04</span>
+                    @if($conversations->isEmpty())
+                        <div style="padding: 40px 20px; text-align: center; color: #91929E;">
+                            <p style="font-size: 16px; font-weight: 600;">No conversations yet.</p>
+                            <p style="font-size: 14px; margin-top: 8px;">Start a chat from a car listing.</p>
                         </div>
-                        <div class="chat-item request-item">
-                            <img src="https://i.pravatar.cc/40?img=6" alt="">
-                            <div>
-                                <h6 class="chat-heading">Caroline Santos</h6>
-                                <p class="chat-paragraph">Hi! Please, change the statu…</p>
-                            </div>
-                            <span class="chat-time">12:04</span>
-                        </div>
-                    </div>
-
-                    <!-- ===== MESSAGES (COLLAPSIBLE) ===== -->
-                    <div class="section-header" onclick="toggleSection('messagesSection')">
-                        <span class="section-heading" style="cursor: pointer;">˅ Messages</span>
-                    </div>
-                    <div id="messagesSection" class="section-content">
-                        <div class="chat-item">
-                            <img src="https://i.pravatar.cc/40?img=1" alt="">
-                            <div>
-                                <h6 class="chat-heading">Garrett Watson</h6>
-                                <p class="chat-paragraph">Hi! Please, change the statu…</p>
-                            </div>
-                            <span class="chat-time">12:04</span>
-                        </div>
-                        <div class="chat-item">
-                            <img src="https://i.pravatar.cc/40?img=2" alt="">
-                            <div>
-                                <h6 class="chat-heading">Caroline Santos</h6>
-                                <p class="chat-paragraph">Hi Please, change the status...</p>
-                            </div>
-                            <span class="chat-time">12:04</span>
-                        </div>
-                        <div class="chat-item">
-                            <img src="https://i.pravatar.cc/40?img=3" alt="">
-                            <div>
-                                <h6 class="chat-heading">Leon Nunez</h6>
-                                <p class="chat-paragraph">Hi Please, change the status...</p>
-                            </div>
-                            <span class="chat-time">12:04</span>
-                        </div>
-                        <div class="chat-item active">
-                            <img src="https://i.pravatar.cc/40?img=4" alt="">
-                            <div>
-                                <h6 class="chat-heading">Oscar Holloway</h6>
-                                <p class="chat-paragraph">Hi Please, change the status in...</p>
-                            </div>
-                            <span class="chat-time">12:04</span>
-                        </div>
-                        <div class="chat-item">
-                            <img src="https://i.pravatar.cc/40?img=7" alt="">
-                            <div>
-                                <h6 class="chat-heading">Ralph Harris</h6>
-                                <p class="chat-paragraph">Hi Please, change the statu…</p>
-                            </div>
-                            <span class="chat-time">12:04</span>
-                        </div>
-
-                    </div>
+                    @else
+                        @foreach($conversations as $conv)
+                            @php
+                                $isActive = $activeConversation &&
+                                    $activeConversation['client_id'] == $conv['client_id'] &&
+                                    $activeConversation['user_id'] == $conv['user_id'] &&
+                                    $activeConversation['inventory_id'] == $conv['inventory_id'];
+                                $convTitle = $conv['inventory'] ? (($conv['inventory']->title ?? null) ?: ($conv['inventory']->model ?? 'Vehicle')) : 'Vehicle';
+                                $preview = $conv['latest_message'] ? \Illuminate\Support\Str::limit($conv['latest_message']->message_body, 40) : 'No messages yet';
+                                $timeLabel = $conv['latest_at'] ? \Carbon\Carbon::parse($conv['latest_at'])->format('g:i A') : '';
+                                $op = $conv['other_party'];
+                                $dealerInfo = $conv['dealer_info'] ?? null;
+                                $opName = $dealerInfo?->legal_name
+                                    ?: $op?->information?->full_name
+                                    ?: $op?->name
+                                    ?: 'Unknown';
+                                $rawLogo = $dealerInfo?->logo ?? null;
+                                if ($rawLogo) {
+                                    $opAvatar = str_starts_with($rawLogo, 'http')
+                                        ? $rawLogo
+                                        : (env('diskloz_base_url') . '/admin_assets/images/dealer_images/' . $rawLogo);
+                                } elseif ($op?->information?->avatar) {
+                                    $opAvatar = str_starts_with($op->information->avatar, 'http')
+                                        ? $op->information->avatar
+                                        : asset('storage/' . $op->information->avatar);
+                                } else {
+                                    $opAvatar = 'https://ui-avatars.com/api/?name=' . urlencode($opName) . '&background=F58D02&color=fff&size=48';
+                                }
+                            @endphp
+                            <a href="{{ route('chat.show', [$conv['client_id'], $conv['user_id'], $conv['inventory_id']]) }}"
+                               class="chat-item {{ $isActive ? 'active' : '' }}"
+                               style="text-decoration: none; color: inherit; display: flex; align-items: center; padding: 14px 18px; gap: 12px; cursor: pointer; transition: all 0.2s ease; margin-bottom: 4px; border-radius: 16px;">
+                                <img src="{{ $opAvatar }}" alt="{{ $opName }}" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($opName) }}&background=F58D02&color=fff&size=48'">
+                                <div style="flex: 1; min-width: 0;">
+                                    <h6 class="chat-heading">{{ $opName }}</h6>
+                                    <p class="chat-paragraph" style="font-size: 13px; color: #91929E;">{{ $convTitle }}</p>
+                                    <p class="chat-paragraph">{{ $preview }}</p>
+                                </div>
+                                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0;">
+                                    <span class="chat-time">{{ $timeLabel }}</span>
+                                    @if($conv['unread_count'] > 0)
+                                        <span style="background: #F58D02; color: #fff; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700;">{{ $conv['unread_count'] }}</span>
+                                    @endif
+                                </div>
+                            </a>
+                        @endforeach
+                    @endif
                 </div>
             </div>
 
             <!-- ========== RIGHT CHAT AREA ========== -->
             <div class="chat-content">
-                <div class="chat-topbar">
-                    <div style="display: flex; align-items: center;">
+                @if(!$activeConversation)
+                    <!-- No active conversation placeholder -->
+                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #91929E;">
+                        <img src="/assets/images/Carento (5).png" alt="" style="width: 80px; opacity: 0.3; margin-bottom: 20px;">
+                        <h5 style="font-size: 20px; font-weight: 700; color: #7D8592;">Select a conversation</h5>
+                        <p style="font-size: 15px; margin-top: 8px;">Choose a chat from the left panel to start messaging.</p>
+                    </div>
+                @else
+                    {{-- Active conversation --}}
+                    @php
+                        function tickSvg(string $type): string {
+                            if ($type === 'seen') {
+                                // Double blue tick
+                                return '<div class="msg-ticks-inner seen">
+                                    <svg width="18" height="11" viewBox="0 0 18 11" fill="none">
+                                        <path d="M1 5.5L5.5 10L12 1" stroke="#53BDEB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M6 5.5L10.5 10L17 1" stroke="#53BDEB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>';
+                            } elseif ($type === 'delivered') {
+                                // Double grey tick
+                                return '<div class="msg-ticks-inner delivered">
+                                    <svg width="18" height="11" viewBox="0 0 18 11" fill="none">
+                                        <path d="M1 5.5L5.5 10L12 1" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M6 5.5L10.5 10L17 1" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>';
+                            } else {
+                                // Single grey tick
+                                return '<div class="msg-ticks-inner sent">
+                                    <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+                                        <path d="M1 5L4.5 8.5L11 1" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>';
+                            }
+                        }
+                        $inv = $activeConversation['inventory'];
+                        $invTitle = $inv ? (($inv->title ?? null) ?: ($inv->model ?? 'Vehicle')) : 'Vehicle';
+                        $invPrice = $inv ? ($inv->price ?? null) : null;
+                        $rawImg   = $inv ? ($inv->primary_image ?? null) : null;
 
-                        <div class="chat-user">
-                            <img class="chat-user-img" src="https://i.pravatar.cc/40?img=4" alt="">
-                            <div>
-                                <h6 class="chat-user-heading">Oscar Holloway</h6>
-                                <small class="chat-user-category">UI/UX Designer</small>
+                        if ($rawImg && str_starts_with($rawImg, 'http')) {
+                            $invImg = $rawImg;
+                        } elseif ($rawImg && str_starts_with($rawImg, '/')) {
+                            $invImg = env('diskloz_base_url') . $rawImg;
+                        } elseif ($rawImg) {
+                            $invImg = env('diskloz_base_url') . '/admin_assets/images/inventory_images/' . $rawImg;
+                        } else {
+                            $invImg = asset('assets/images/defaultimage.jpg');
+                        }
+                        $op = $activeConversation['other_party'];
+                        $dealerInfo = $activeConversation['dealer_info'] ?? null;
+                        $opName = $dealerInfo?->legal_name
+                            ?: $op?->information?->full_name
+                            ?: $op?->name
+                            ?: 'Unknown';
+                        $rawLogo = $dealerInfo?->logo ?? null;
+                        if ($rawLogo) {
+                            $opAvatar = str_starts_with($rawLogo, 'http')
+                                ? $rawLogo
+                                : (env('diskloz_base_url') . '/admin_assets/images/dealer_images/' . $rawLogo);
+                        } elseif ($op?->information?->avatar) {
+                            $opAvatar = str_starts_with($op->information->avatar, 'http')
+                                ? $op->information->avatar
+                                : asset('storage/' . $op->information->avatar);
+                        } else {
+                            $opAvatar = 'https://ui-avatars.com/api/?name=' . urlencode($opName) . '&background=F58D02&color=fff&size=52';
+                        }
+                    @endphp
+
+                    <!-- TOP BAR -->
+                    <div class="chat-topbar">
+                        <div style="display: flex; align-items: center;">
+                            <button class="vip-back-btn" onclick="mobileBack()">
+                                <span class="back-arrow">&#8592;</span>
+                                Back
+                            </button>
+                            <div class="chat-user">
+                                <img class="chat-user-img"
+                                     src="{{ $opAvatar }}"
+                                     onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($opName) }}&background=F58D02&color=fff&size=52'"
+                                     alt="{{ $opName }}">
+                                <div>
+                                    <h6 class="chat-user-heading">{{ $opName }}</h6>
+                                    <small class="chat-user-category">{{ $invTitle }}</small>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="chat-actions">
-                        <a href="#"><img src="/assets/images/icon (7).png" alt=""></a>
-                        <a href="#"><img src="/assets/images/icon (8).png" alt=""></a>
-                        <a href="#"><img src="/assets/images/icon (9).png" mages/icon (9).png" alt=""></a>
-                    </div>
-                </div>
-
-                <div class="chat-messages scrol-bar">
-                    <!-- Request Box -->
-                    <div class="chat-request">
-                        <small>Friday, September 8</small>
-                        <h6>Oscar Holloway wants to chat with you</h6>
-                        <div class="request-buttons">
-                            <a href="#" class="btn-decline">Decline</a>
-                            <a href="#" class="btn-accept">Accept</a>
+                        <div class="chat-actions">
+                            <a href="#"><img src="/assets/images/icon (7).png" alt=""></a>
+                            <a href="#"><img src="/assets/images/icon (8).png" alt=""></a>
                         </div>
                     </div>
 
-                    <!-- ===== MESSAGES AREA - INSTAGRAM STYLE ===== -->
-                    <div class="messages-body">
-                        <!-- Received message (other person) - LEFT -->
-                        <div class="message received">
-                            <img src="https://i.pravatar.cc/40?img=4" class="msg-avatar" alt="">
-                            <div class="msg-content">
-                                <div class="msg-header">
-                                    <span class="msg-name">Oscar Holloway</span>
-                                    <span class="msg-time">12:10 AM</span>
+                    <!-- INVENTORY CONTEXT BAR -->
+                    <div class="inv-context-bar">
+                        <a href="{{ route('inventory_product_details', $inventoryId) }}" class="inv-context-link">
+                            <div class="inv-context-img-wrap">
+                                <img src="{{ $invImg }}" alt="{{ $invTitle }}"
+                                     onerror="this.src='{{ asset('assets/images/defaultimage.jpg') }}'">
+                            </div>
+                            <div class="inv-context-info">
+                                <div class="inv-context-title">{{ $invTitle }}</div>
+                                @if($inv && ($inv->model ?? null))
+                                    <div class="inv-context-model">{{ $inv->model }}</div>
+                                @endif
+                                @if($invPrice)
+                                    <div class="inv-context-price">PKR {{ number_format($invPrice) }}</div>
+                                @endif
+                            </div>
+                        </a>
+                        <a href="{{ route('inventory_product_details', $inventoryId) }}" class="inv-context-view-btn">
+                            View Listing →
+                        </a>
+                    </div>
+
+                    <!-- MESSAGES AREA -->
+                    <div class="chat-messages scrol-bar" id="chatMessagesContainer">
+                        <div class="messages-body" id="messagesBody">
+                            @forelse($messages as $msg)
+                                @php
+                                    $isMine = $msg->sender_type === $activeConversation['sender_type'];
+                                    $timeStr = \Carbon\Carbon::parse($msg->created_at)->format('g:i A');
+                                @endphp
+                                <div class="message {{ $isMine ? 'sent' : 'received' }}">
+                                    @if(!$isMine)
+                                        <img src="{{ $opAvatar }}"
+                                             onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($opName) }}&background=F58D02&color=fff&size=36'"
+                                             class="msg-avatar" alt="{{ $opName }}">
+                                    @endif
+                                    <div class="msg-content">
+                                        <div class="msg-header">
+                                            @if(!$isMine)
+                                                <span class="msg-name">{{ $activeConversation['other_party']?->name ?? 'Unknown' }}</span>
+                                            @endif
+                                            <span class="msg-time">{{ $timeStr }}</span>
+                                        </div>
+                                        <div class="msg-text">{{ $msg->message_body }}</div>
+                                        @if($isMine)
+                                            <div class="msg-ticks" data-msg-id="{{ $msg->id }}">
+                                                @if($msg->is_read)
+                                                    {!! tickSvg('seen') !!}
+                                                @else
+                                                    {!! tickSvg('sent') !!}
+                                                @endif
+                                            </div>
+                                        @endif
+                                    </div>
                                 </div>
-                                <div class="msg-text">
-                                    Hi, Oscar! Nice to meet you
-                                    We will work with new prject together
+                            @empty
+                                <div data-empty style="text-align: center; color: #91929E; padding: 40px 20px;">
+                                    <p style="font-size: 15px;">No messages yet. Say hello!</p>
                                 </div>
+                            @endforelse
+                        </div>
+                    </div>
+
+                    <!-- MESSAGE SEND FORM -->
+                    <div class="chat-input-wrapper">
+                        <!-- Mention suggestions dropdown -->
+                        <div id="mentionDropdown" class="mention-dropdown d-none">
+                            <div class="mention-item" data-name="{{ addslashes($opName) }}">
+                                <img src="{{ $opAvatar }}" onerror="this.src='{{ asset('assets/images/defaultdealerlogo.png') }}'">
+                                <span>{{ $opName }}</span>
                             </div>
                         </div>
 
-                        <!-- Sent message (You) - RIGHT -->
-                        <!-- <div class="message sent">
-                                    <div class="msg-content">
-                                        <div class="msg-header">
+                        <!-- Emoji Picker -->
+                        <div id="emojiPicker" class="emoji-picker d-none">
+                            <div class="emoji-grid">
+                                @foreach(['😀','😂','😍','🥰','😎','🤔','👍','👎','❤️','🔥','🎉','😢','😡','🙏','💯','✅','🚗','💰','📞','📧','😊','🤝','👋','💪','🎯','⭐','🏆','📱','💬','🔔'] as $emoji)
+                                    <span class="emoji-item" onclick="insertEmoji('{{ $emoji }}')">{{ $emoji }}</span>
+                                @endforeach
+                            </div>
+                        </div>
 
-                                            <span class="msg-time">12:15 AM</span>
-                                        </div>
-                                        <div class="msg-text">
-                                            Hi, Oscar! Nice to meet you<br>
-                                            We will work with new project together
-                                        </div>
-                                    </div>
-                                </div> -->
-
-                        <!-- Another received message
-                                <div class="message received">
-                                    <img src="https://i.pravatar.cc/40?img=4" class="msg-avatar" alt="">
-                                    <div class="msg-content">
-                                        <div class="msg-header">
-                                            <span class="msg-name">Oscar Holloway</span>
-                                            <span class="msg-time">12:18 AM</span>
-                                        </div>
-                                        <div class="msg-text">
-                                            Great! I'll share the wireframes soon.
-                                        </div>
-                                    </div>
-                                </div> -->
-
-                        <!-- Another sent message -->
-                        <!-- <div class="message sent">
-                                    <div class="msg-content">
-                                        <div class="msg-header">
-
-                                            <span class="msg-time">12:22 AM</span>
-                                        </div>
-                                        <div class="msg-text">
-                                            Perfect, looking forward to it!
-                                        </div>
-                                    </div>
-                                </div> -->
+                        <form id="chatForm" data-ajax="true" class="chat-input" style="margin: 0;">
+                            @csrf
+                            <button type="button" id="emojiBtn" class="chat-action-btn" title="Emoji">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
+                                </svg>
+                            </button>
+                            <div class="input-wrapper" style="flex:1; position:relative;">
+                                <input id="messageInput" class="text-input" type="text"
+                                       placeholder="Type a message... Use @ to mention"
+                                       autocomplete="off">
+                            </div>
+                            <button type="submit" id="sendBtn" class="send-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="white" viewBox="0 0 16 16">
+                                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11z"/>
+                                </svg>
+                            </button>
+                        </form>
                     </div>
-                </div>
 
-                <div class="chat-input">
-                    <a href="#"><img src="/assets/images/mention.png" alt=""></a>
-                    <input class="text-input" type="text" placeholder="Type your message here...">
-                    <a href="#"><img src="/assets/images/emoji.png" alt=""></a>
-                    <a href="#"><img src="/assets/images/chatsubmite.png" alt=""></a>
+                    <script>
+                    (function () {
+                        var CSRF      = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        var sendUrl   = "{{ isset($clientId) ? route('chat.send', [$clientId, $dealerId, $inventoryId]) : '#' }}";
+                        var pollUrl   = "{{ isset($clientId) ? route('chat.poll', [$clientId, $dealerId, $inventoryId]) : '#' }}";
+                        var tickUrl   = "{{ isset($clientId) ? route('chat.tick', [$clientId, $dealerId, $inventoryId]) : '#' }}";
+                        var myType    = "{{ $activeConversation['sender_type'] ?? '' }}";
+                        var otherName = "{{ addslashes($opName) }}";
+                        var otherAvatar = "{{ addslashes($opAvatar) }}";
 
-                </div>
+                        // Last message id — start from last rendered message
+                        var lastId = {{ $messages->isNotEmpty() ? $messages->last()->id : 0 }};
+
+                        var container = document.getElementById('chatMessagesContainer');
+                        var body      = document.getElementById('messagesBody');
+                        var form      = document.getElementById('chatForm');
+                        var input     = document.getElementById('messageInput');
+                        var sendBtn   = document.getElementById('sendBtn');
+
+                        function scrollBottom() {
+                            if (container) container.scrollTop = container.scrollHeight;
+                        }
+                        scrollBottom();
+
+                        function formatTime(dateStr) {
+                            var d = new Date(dateStr);
+                            var h = d.getHours(), m = d.getMinutes();
+                            var ampm = h >= 12 ? 'PM' : 'AM';
+                            h = h % 12 || 12;
+                            return h + ':' + (m < 10 ? '0' + m : m) + ' ' + ampm;
+                        }
+
+                        function buildBubble(msg) {
+                            var isMine = msg.is_mine;
+                            var div = document.createElement('div');
+                            div.className = 'message ' + (isMine ? 'sent' : 'received');
+                            div.setAttribute('data-id', msg.id);
+                            if (isMine) div.setAttribute('data-msg-id', msg.id);
+
+                            var avatarHtml = isMine ? '' :
+                                '<img src="' + otherAvatar + '" class="msg-avatar" alt="">';
+
+                            var readTick = isMine ? buildTickHtml('sent') : '';
+
+                            var nameHtml = isMine ? '' :
+                                '<span class="msg-name">' + otherName + '</span>';
+
+                            div.innerHTML = avatarHtml +
+                                '<div class="msg-content">' +
+                                    '<div class="msg-header">' + nameHtml +
+                                        '<span class="msg-time">' + formatTime(msg.created_at) + '</span>' +
+                                    '</div>' +
+                                    '<div class="msg-text">' + formatMessage(msg.message_body) + '</div>' +
+                                    readTick +
+                                '</div>';
+                            return div;
+                        }
+
+                        function escapeHtml(str) {
+                            return String(str)
+                                .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                                .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+                        }
+
+                        function buildTickHtml(status) {
+                            if (status === 'seen') {
+                                return '<div class="msg-ticks" style="text-align:right;margin-top:3px;">' +
+                                    '<svg width="18" height="11" viewBox="0 0 18 11" fill="none">' +
+                                    '<path d="M1 5.5L5.5 10L12 1" stroke="#53BDEB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                                    '<path d="M6 5.5L10.5 10L17 1" stroke="#53BDEB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                                    '</svg></div>';
+                            } else if (status === 'delivered') {
+                                return '<div class="msg-ticks" style="text-align:right;margin-top:3px;">' +
+                                    '<svg width="18" height="11" viewBox="0 0 18 11" fill="none">' +
+                                    '<path d="M1 5.5L5.5 10L12 1" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                                    '<path d="M6 5.5L10.5 10L17 1" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                                    '</svg></div>';
+                            } else {
+                                return '<div class="msg-ticks" style="text-align:right;margin-top:3px;">' +
+                                    '<svg width="12" height="10" viewBox="0 0 12 10" fill="none">' +
+                                    '<path d="M1 5L4.5 8.5L11 1" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                                    '</svg></div>';
+                            }
+                        }
+
+                        function formatMessage(str) {
+                            return escapeHtml(str).replace(/@(\w[\w\s]*)/g, '<span class="mention-tag">@$1</span>');
+                        }
+
+                        // ── EMOJI PICKER ─────────────────────────────────────
+                        var emojiBtn    = document.getElementById('emojiBtn');
+                        var emojiPicker = document.getElementById('emojiPicker');
+
+                        window.insertEmoji = function(emoji) {
+                            var pos = input.selectionStart;
+                            var val = input.value;
+                            input.value = val.slice(0, pos) + emoji + val.slice(pos);
+                            input.focus();
+                            input.setSelectionRange(pos + emoji.length, pos + emoji.length);
+                            emojiPicker.classList.add('d-none');
+                        };
+
+                        if (emojiBtn) {
+                            emojiBtn.addEventListener('click', function(e) {
+                                e.stopPropagation();
+                                emojiPicker.classList.toggle('d-none');
+                                mentionDropdown.classList.add('d-none');
+                            });
+                        }
+
+                        document.addEventListener('click', function() {
+                            emojiPicker.classList.add('d-none');
+                        });
+
+                        // ── MENTION (@) ──────────────────────────────────────
+                        var mentionDropdown = document.getElementById('mentionDropdown');
+
+                        input.addEventListener('input', function() {
+                            var val = input.value;
+                            var pos = input.selectionStart;
+                            var lastAt = val.lastIndexOf('@', pos - 1);
+                            if (lastAt !== -1 && pos - lastAt <= 20) {
+                                var query = val.slice(lastAt + 1, pos).toLowerCase();
+                                var items = mentionDropdown.querySelectorAll('.mention-item');
+                                var anyVisible = false;
+                                items.forEach(function(item) {
+                                    var name = item.getAttribute('data-name').toLowerCase();
+                                    if (name.includes(query)) {
+                                        item.style.display = 'flex';
+                                        anyVisible = true;
+                                    } else {
+                                        item.style.display = 'none';
+                                    }
+                                });
+                                if (anyVisible) {
+                                    mentionDropdown.classList.remove('d-none');
+                                } else {
+                                    mentionDropdown.classList.add('d-none');
+                                }
+                            } else {
+                                mentionDropdown.classList.add('d-none');
+                            }
+                        });
+
+                        mentionDropdown.querySelectorAll('.mention-item').forEach(function(item) {
+                            item.addEventListener('click', function() {
+                                var name = item.getAttribute('data-name');
+                                var val = input.value;
+                                var pos = input.selectionStart;
+                                var lastAt = val.lastIndexOf('@', pos - 1);
+                                input.value = val.slice(0, lastAt) + '@' + name + ' ' + val.slice(pos);
+                                input.focus();
+                                mentionDropdown.classList.add('d-none');
+                            });
+                        });
+
+
+                        if (form) {
+                            form.addEventListener('submit', function (e) {
+                                e.preventDefault();
+                                var text = input.value.trim();
+                                if (!text) return;
+
+                                sendBtn.disabled = true;
+                                input.disabled   = true;
+
+                                fetch(sendUrl, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': CSRF,
+                                        'X-Requested-With': 'XMLHttpRequest',
+                                        'Accept': 'application/json'
+                                    },
+                                    body: JSON.stringify({ message_body: text })
+                                })
+                                .then(function (r) { return r.json(); })
+                                .then(function (data) {
+                                    sendBtn.disabled = false;
+                                    input.disabled   = false;
+                                    if (data.success) {
+                                        input.value = '';
+                                        // Remove "no messages" placeholder if present
+                                        var empty = body.querySelector('[data-empty]');
+                                        if (empty) empty.remove();
+
+                                        body.appendChild(buildBubble(data.message));
+                                        lastId = data.message.id;
+                                        scrollBottom();
+                                    }
+                                })
+                                .catch(function () {
+                                    sendBtn.disabled = false;
+                                    input.disabled   = false;
+                                });
+                            });
+
+                            // Enter key sends
+                            input.addEventListener('keydown', function (e) {
+                                if (e.key === 'Enter' && !e.shiftKey) {
+                                    e.preventDefault();
+                                    form.dispatchEvent(new Event('submit'));
+                                }
+                            });
+                        }
+
+                        // ── AJAX POLLING (every 3 seconds) ───────────────────────
+                        if (pollUrl !== '#') {
+                            setInterval(function () {
+                                fetch(pollUrl + '?after=' + lastId, {
+                                    headers: {
+                                        'X-Requested-With': 'XMLHttpRequest',
+                                        'Accept': 'application/json'
+                                    }
+                                })
+                                .then(function (r) { return r.json(); })
+                                .then(function (data) {
+                                    if (data.messages && data.messages.length > 0) {
+                                        var empty = body.querySelector('[data-empty]');
+                                        if (empty) empty.remove();
+
+                                        data.messages.forEach(function (msg) {
+                                            // Don't duplicate messages we already rendered
+                                            if (!body.querySelector('[data-id="' + msg.id + '"]')) {
+                                                body.appendChild(buildBubble(msg));
+                                            }
+                                        });
+                                        lastId = data.messages[data.messages.length - 1].id;
+                                        scrollBottom();
+                                    }
+                                })
+                                .catch(function () { /* silent fail */ });
+                            }, 3000);
+
+                            // ── TICK STATUS POLLING (every 5 seconds) ────────────
+                            var lowestUnreadId = 0;
+                            setInterval(function () {
+                                fetch(tickUrl + '?after=' + lowestUnreadId, {
+                                    headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                                })
+                                .then(function(r) { return r.json(); })
+                                .then(function(data) {
+                                    if (data.read_ids && data.read_ids.length > 0) {
+                                        data.read_ids.forEach(function(id) {
+                                            var tickEl = body.querySelector('[data-msg-id="' + id + '"] .msg-ticks');
+                                            if (tickEl && !tickEl.classList.contains('seen-done')) {
+                                                tickEl.outerHTML = buildTickHtml('seen');
+                                                // Mark as done so we don't re-process
+                                                var newTick = body.querySelector('[data-msg-id="' + id + '"] .msg-ticks');
+                                                if (newTick) newTick.classList.add('seen-done');
+                                            }
+                                        });
+                                        lowestUnreadId = Math.max(lowestUnreadId, Math.max.apply(null, data.read_ids));
+                                    }
+                                })
+                                .catch(function() {});
+                            }, 5000);
+                        }
+                    })();
+                    </script>
+
+                @endif {{-- end activeConversation --}}
             </div>
         </div>
     </section>
@@ -789,17 +1124,199 @@
         }
 
         /* ----- Chat Input ----- */
+        .chat-input-wrapper {
+            position: relative;
+            margin: 12px 20px 16px;
+        }
         .chat-input {
-            margin: 16px 20px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 30px;
+            border: 1.5px solid #E6EBF5;
+            background: var(--bg-color) !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin: 0;
+        }
+        .chat-action-btn {
+            background: none;
+            border: none;
+            color: #91929E;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            transition: color 0.2s, background 0.2s;
+            flex-shrink: 0;
+        }
+        .chat-action-btn:hover { color: #F58D02; background: rgba(245,141,2,0.08); }
+        .send-btn {
+            background: #F58D02;
+            border: none;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .send-btn:hover { background: #e68c00; }
+        .send-btn:active { transform: scale(0.95); }
+        .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Emoji Picker */
+        .emoji-picker {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 0;
+            background: #fff;
+            border: 1px solid #E6EBF5;
+            border-radius: 14px;
+            padding: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            z-index: 100;
+            width: 260px;
+            max-width: calc(100vw - 40px);
+        }
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 4px;
+        }
+        .emoji-item {
+            font-size: 20px;
+            cursor: pointer;
+            text-align: center;
+            padding: 4px;
+            border-radius: 6px;
+            transition: background 0.15s;
+            line-height: 1.4;
+        }
+        .emoji-item:hover { background: #FFF3E0; }
+
+        /* Mention Dropdown */
+        .mention-dropdown {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50px;
+            background: #fff;
+            border: 1px solid #E6EBF5;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            z-index: 100;
+            min-width: 200px;
+            overflow: hidden;
+        }
+        .mention-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0A1629;
+        }
+        .mention-item:hover { background: #FFF3E0; }
+        .mention-item img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        /* Highlight @mention in messages */
+        .mention-tag {
+            color: #F58D02;
+            font-weight: 700;
+        }
+
+        /* Inventory Context Bar */
+        .inv-context-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            border-bottom: 1px solid #E6EBF5;
+            background: var(--bg-color);
+            gap: 12px;
+        }
+        .inv-context-link {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 20px 18px;
-            border-radius: 8px;
-            border: 1px solid #E6EBF5;
-            background: var(--bg-color) !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            text-decoration: none;
+            flex: 1;
+            min-width: 0;
         }
+        .inv-context-link:hover .inv-context-title { color: #F58D02; }
+        .inv-context-img-wrap {
+            flex-shrink: 0;
+            width: 72px;
+            height: 52px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1.5px solid #E6EBF5;
+            background: #f5f5f5;
+        }
+        .inv-context-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .inv-context-info { min-width: 0; }
+        .inv-context-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--select-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color 0.2s;
+        }
+        .inv-context-model {
+            font-size: 12px;
+            color: #91929E;
+            margin-top: 2px;
+        }
+        .inv-context-price {
+            font-size: 13px;
+            font-weight: 700;
+            color: #F58D02;
+            margin-top: 2px;
+        }
+        .inv-context-view-btn {
+            flex-shrink: 0;
+            font-size: 12px;
+            font-weight: 700;
+            color: #F58D02;
+            text-decoration: none;
+            border: 1.5px solid #F58D02;
+            border-radius: 20px;
+            padding: 5px 14px;
+            white-space: nowrap;
+            transition: background 0.2s, color 0.2s;
+        }
+        .inv-context-view-btn:hover {
+            background: #F58D02;
+            color: #fff;
+        }
+
+        /* WhatsApp-style ticks */
+        .msg-ticks {
+            text-align: right;
+            margin-top: 3px;
+            line-height: 1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        .msg-ticks svg { display: block; }
 
         /* width */
         .chat-list::-webkit-scrollbar {

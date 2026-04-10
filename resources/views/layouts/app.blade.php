@@ -962,6 +962,7 @@
     @yield('content')
     @include('partials.footer')
     @include('partials.script')
+    @include('partials.login-modal')
 </body>
 
 </html>
