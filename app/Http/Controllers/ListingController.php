@@ -228,83 +228,360 @@ class ListingController extends Controller
         return view('listing-car-details', compact('searched_vehicle' , 'user', 'userInfo'));
     }
 
+    public function loadAssetForm(Request $request)
+    {
+        $asset = $request->asset;
+
+        $partialMap = [
+            'AUTO' => 'listings-form.auto',
+            'FARM EQUIPMENT' => 'listings-form.farm_equipment',
+            'HEAVY DUTY TRAILERS' => 'listings-form.heavy_duty_trailers',
+            'HEAVY TRUCK/EQUIPMENT' => 'listings-form.heavy_truck_equipment',
+            'MARINE' => 'listings-form.marine',
+            'MOTORCYCLE / ATV / POWERSPORTS' => 'listings-form.motorcycle_atv_powersports',
+            'RV / TRAILER' => 'listings-form.rv_trailer',
+            'SNOWSPORTS' => 'listings-form.snowsports',
+            'WATERSPORT' => 'listings-form.watersport',
+        ];
+
+        $view = $partialMap[$asset] ?? 'listings-form.default';
+
+        // -------- FILTERS API --------
+        $res = Http::get(env("diskloz_base_url").'/api/search_inventory', [
+            'selected_asset' => $asset,
+            'per_page' => 1,
+        ]);
+
+        $inv = json_decode($res->body());
+
+        $makes = [];
+        $bodyStyles = [];
+
+        $map = [
+            'AUTO' => ['make' => 'MfgAuto', 'body' => 'BodyStyle'],
+            'SNOWSPORTS' => ['make' => 'MfgSnowsport', 'body' => 'BodyStyleSnowSport'],
+            'WATERSPORT' => ['make' => 'MfgWatersport', 'body' => 'BodyStyle'],
+            'MARINE' => ['make' => 'MfgMarine', 'body' => 'BodyStyle'],
+            'RV / TRAILER' => ['make' => 'MfgRvTrailer', 'body' => 'BodyStyleRvTrailer'],
+            'MOTORCYCLE / ATV / POWERSPORTS' => ['make' => 'MfgMotorcycleAtv', 'body' => 'BodyStyleMotorcycleAtv'],
+            'HEAVY TRUCK/EQUIPMENT' => ['make' => 'MfgHeavyTruckEquipment', 'body' => 'BodyStyleHeavyTruckEquipment'],
+            'HEAVY DUTY TRAILERS' => ['make' => 'MfgHeavyDutyTrailer', 'body' => 'BodyStyleHeavyDutyTrailer'],
+            'FARM EQUIPMENT' => ['make' => 'MfgFarmEquipment', 'body' => 'BodyStyleFarmEquipment'],
+        ];
+
+        $key = $map[$asset] ?? null;
+
+        $makes = $key ? ($inv->filters->{$key['make']} ?? []) : [];
+        $bodyStyles = $key ? ($inv->filters->{$key['body']} ?? []) : [];
+
+        // -------- FORM API --------
+        $formRes = Http::get(env("diskloz_base_url").'/api/inventory-form');
+        $formData = json_decode($formRes->body());
+
+        $year = $formData->Year ?? []; 
+        $engine = $formData->Engine ?? []; 
+        $condition = $formData->condition ?? []; 
+        $transmission = $formData->Transmission ?? []; 
+        $driveTrain = $formData->Drivetrain ?? [];
+
+        return response()->json([
+            'html' => view($view, compact('year', 'engine', 'condition', 'transmission', 'driveTrain'))->render(),
+
+            'makes' => collect($makes)->map(fn($m) => [
+                'id' => $m->id,
+                'name' => $m->name
+            ])->values(),
+
+            'bodyStyles' => collect($bodyStyles)->map(fn($b) => [
+                'id' => $b->id,
+                'name' => $b->name
+            ])->values(),
+
+            'year' => collect($year)->map(fn($y) => [
+                'id' => $y->id ?? $y,
+                'name' => $y->name ?? $y
+            ])->values(),
+
+            'engine' => collect($engine)->map(fn($e) => [
+                'id' => $e->id ?? $e,
+                'name' => $e->name ?? $e
+            ])->values(),
+
+            'condition' => collect($condition)->map(fn($c) => [
+                'id' => $c->id ?? $c,
+                'name' => $c->name ?? $c
+            ])->values(),
+
+            'transmission' => collect($transmission)->map(fn($t) => [
+                'id' => $t->id ?? $t,
+                'name' => $t->name ?? $t
+            ])->values(),
+
+            'driveTrain' => collect($driveTrain)->map(fn($d) => [
+                'id' => $d->id ?? $d,
+                'name' => $d->name ?? $d
+            ])->values(),
+        ]);
+    }
+    
+
     public function addlistings()
     {
+        $assets = [
+            'AUTO',
+            'FARM EQUIPMENT',
+            'HEAVY DUTY TRAILERS',
+            'HEAVY TRUCK/EQUIPMENT',
+            'MARINE',
+            'MOTORCYCLE / ATV / POWERSPORTS',
+            'RV / TRAILER',
+            'SNOWSPORTS',
+            'WATERSPORT'
+        ];
+
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
         $pageTitle = 'Add Listing';
+
+        /*
+        =========================================
+         FILTERS (MAKE + BODY STYLE)
+        =========================================
+        */
+        $makeTypes = [];
+        $bodyStyleTypes = [];
+        $year = [];
+        $transmission = [];
+        $driveTrain = [];
+
+        foreach ($assets as $asset) {
+
+            $res = Http::get(env("diskloz_base_url").'/api/inventory-form', [
+                'selected_asset' => $asset,
+                'per_page' => 1,
+            ]);
+
+            if ($res->successful()) {
+
+                $inv = json_decode($res->body());
+
+                switch($asset) {
+                    case 'AUTO':
+                        $makes = $inv->filters->MfgAuto ?? [];
+                        $bodyStyles = $inv->filters->BodyStyle ?? [];
+                        break;
+
+                    case 'SNOWSPORTS':
+                        $makes = $inv->filters->MfgSnowsport ?? [];
+                        $bodyStyles = $inv->filters->BodyStyleSnowSport ?? [];
+                        break;
+
+                    case 'WATERSPORT':
+                        $makes = $inv->filters->MfgWatersport ?? [];
+                        $bodyStyles = $inv->filters->BodyStyle ?? [];
+                        break;
+
+                    case 'MARINE':
+                        $makes = $inv->filters->MfgMarine ?? [];
+                        $bodyStyles = $inv->filters->BodyStyle ?? [];
+                        break;
+
+                    case 'RV / TRAILER':
+                        $makes = $inv->filters->MfgRvTrailer ?? [];
+                        $bodyStyles = $inv->filters->BodyStyleRvTrailer ?? [];
+                        break;
+
+                    case 'MOTORCYCLE / ATV / POWERSPORTS':
+                        $makes = $inv->filters->MfgMotorcycleAtv ?? [];
+                        $bodyStyles = $inv->filters->BodyStyleMotorcycleAtv ?? [];
+                        break;
+
+                    case 'HEAVY TRUCK/EQUIPMENT':
+                        $makes = $inv->filters->MfgHeavyTruckEquipment ?? [];
+                        $bodyStyles = $inv->filters->BodyStyleHeavyTruckEquipment ?? [];
+                        break;
+
+                    case 'HEAVY DUTY TRAILERS':
+                        $makes = $inv->filters->MfgHeavyDutyTrailer ?? [];
+                        $bodyStyles = $inv->filters->BodyStyleHeavyDutyTrailer ?? [];
+                        break;
+
+                    case 'FARM EQUIPMENT':
+                        $makes = $inv->filters->MfgFarmEquipment ?? [];
+                        $bodyStyles = $inv->filters->BodyStyleFarmEquipment ?? [];
+                        break;
+
+                    default:
+                        $makes = [];
+                        $bodyStyles = [];
+                }
+
+                //  format makes
+                $makeTypes[$asset] = !empty($makes)
+                    ? collect($makes)->map(fn($m) => [
+                        'id' => $m->id,
+                        'name' => $m->name
+                    ])->sortBy('name')->values()
+                    : collect();
+
+                //  format body styles
+                $bodyStyleTypes[$asset] = !empty($bodyStyles)
+                    ? collect($bodyStyles)->map(fn($b) => [
+                        'id' => $b->id,
+                        'name' => $b->name
+                    ])->sortBy('name')->values()
+                    : collect();
+
+            } else {
+                $makeTypes[$asset] = collect();
+                $bodyStyleTypes[$asset] = collect();
+            }
+        }
+
+        /*
+        =========================================
+         INVENTORY FORM DATA
+        =========================================
+        */
+        $response = Http::get(env("diskloz_base_url").'/api/inventory-form');
+        $data = json_decode($response->body());
+
+        $array = [];
+        foreach ($data as $key => $value) {
+            $array[$key] = $value;
+        }
+
+        // dd($array);
         
-        return view('add-listing', compact('user', 'userInfo', 'pageTitle'));
+        $year = $array['Year'] ?? [];
+        $engine = $array['Engine'] ?? [];
+        $transmission = $array['Transmission'] ?? [];
+        $condition = $array['condition'] ?? [];
+        $driveTrain = $array['Drivetrain'] ?? [];
+
+        return view('add-listing', compact(
+            'user',
+            'userInfo',
+            'pageTitle',
+            'array',
+            'year',
+            'engine',
+            'transmission',
+            'condition',
+            'assets',
+            'makeTypes',
+            'bodyStyleTypes',
+            'driveTrain'
+        ));
     }
 
-    public function create(Request $request)
+    
+
+
+    // public function create(Request $request)
+    // {
+    //     $request->validate([
+    //         'title' => 'required|string|max:255',
+    //         'model' => 'nullable|string|max:255',
+    //         'type' => 'nullable|string|max:255',
+    //         'condition' => 'nullable|string|max:255',
+    //         'stock_number' => 'nullable|string|max:255',
+    //         'mileage' => 'nullable|string|max:255',
+    //         'transmission' => 'nullable|string|max:255',
+    //         'description' => 'nullable|string',
+    //         'price' => 'nullable|string|max:255',
+    //         'features' => 'nullable|array',
+    //         'extra_services' => 'nullable|array',
+    //         'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+    //         'primary_image_index' => 'required|integer|min:0',  // new validation
+    //     ]);
+
+    //     // Handle images
+    //     $imageUrls = [];
+    //     if ($request->hasFile('images')) {
+    //         $destinationPath = public_path('listing_images');
+    //         if (!file_exists($destinationPath)) {
+    //             mkdir($destinationPath, 0755, true);
+    //         }
+
+    //         foreach ($request->file('images') as $image) {
+    //             $filename = uniqid() . '_' . time() . '.' . $image->getClientOriginalExtension();
+    //             $image->move($destinationPath, $filename);
+    //             $imageUrls[] = asset('listing_images/' . $filename);
+    //         }
+    //     }
+
+    //     // Ensure primary index is within range
+    //     $primaryIndex = $request->primary_image_index;
+    //     if (!isset($imageUrls[$primaryIndex])) {
+    //         return back()->withErrors(['primary_image_index' => 'Invalid primary image selection.'])->withInput();
+    //     }
+    //     $primaryImageUrl = $imageUrls[$primaryIndex];
+
+    //     // Create inventory
+    //     $inventory = Inventory::create([
+    //         'user_id' => auth()->id(),
+    //         'title' => $request->title,
+    //         'model' => $request->model,
+    //         'type' => $request->type,
+    //         'condition' => $request->condition,
+    //         'stock_number' => $request->stock_number,
+    //         'mileage' => $request->mileage,
+    //         'transmission' => $request->transmission,
+    //         'description' => $request->description,
+    //         'features' => json_encode($request->features ?? []),
+    //         'price' => $request->price,
+    //         'images' => json_encode($imageUrls),
+    //         'primary_image' => $primaryImageUrl,   // new field
+    //     ]);
+
+    //     // Extra services logic same as before
+    //     if ($request->extra_services) {
+    //         foreach ($request->extra_services as $service) {
+    //             if (!empty($service['title']) || !empty($service['price'])) {
+    //                 $inventory->extraServices()->create([
+    //                     'title' => $service['title'] ?? '',
+    //                     'price' => $service['price'] ?? null,
+    //                 ]);
+    //             }
+    //         }
+    //     }
+
+    //     return redirect()->back()->with('success', 'Listing added successfully!');
+    // }
+
+    // public function selling(Request $request){
+    //     $response = Http::get($this->baseUrl().'/api/inventory-form');
+    //     $data = json_decode($response->body());
+    //     $array = [];
+    //     foreach ($data as $key => $value) {
+    //             $array[$key] = $value;
+    //     }
+    //     return view('selling', ['array' => $array] );
+    // }
+
+    public function save_inventory(Request $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'model' => 'nullable|string|max:255',
-            'type' => 'nullable|string|max:255',
-            'condition' => 'nullable|string|max:255',
-            'stock_number' => 'nullable|string|max:255',
-            'mileage' => 'nullable|string|max:255',
-            'transmission' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'nullable|string|max:255',
-            'features' => 'nullable|array',
-            'extra_services' => 'nullable|array',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'primary_image_index' => 'required|integer|min:0',  // new validation
-        ]);
+        $payload = $request->except('images'); // images alag handle karenge
+        $payload['user_id'] = auth()->id();
 
-        // Handle images
-        $imageUrls = [];
+        $http = Http::asMultipart();
+
+        // Attach images
         if ($request->hasFile('images')) {
-            $destinationPath = public_path('listing_images');
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0755, true);
-            }
-
-            foreach ($request->file('images') as $image) {
-                $filename = uniqid() . '_' . time() . '.' . $image->getClientOriginalExtension();
-                $image->move($destinationPath, $filename);
-                $imageUrls[] = asset('listing_images/' . $filename);
+            foreach ($request->file('images') as $index => $image) {
+                $http->attach(
+                    "inventory_logo[]", // API field name
+                    file_get_contents($image->getRealPath()),
+                    $image->getClientOriginalName()
+                );
             }
         }
 
-        // Ensure primary index is within range
-        $primaryIndex = $request->primary_image_index;
-        if (!isset($imageUrls[$primaryIndex])) {
-            return back()->withErrors(['primary_image_index' => 'Invalid primary image selection.'])->withInput();
-        }
-        $primaryImageUrl = $imageUrls[$primaryIndex];
+        // Send request
+        $response = Http::post(env("diskloz_base_url").'/api/inventory-form-save', $payload);
 
-        // Create inventory
-        $inventory = Inventory::create([
-            'user_id' => auth()->id(),
-            'title' => $request->title,
-            'model' => $request->model,
-            'type' => $request->type,
-            'condition' => $request->condition,
-            'stock_number' => $request->stock_number,
-            'mileage' => $request->mileage,
-            'transmission' => $request->transmission,
-            'description' => $request->description,
-            'features' => json_encode($request->features ?? []),
-            'price' => $request->price,
-            'images' => json_encode($imageUrls),
-            'primary_image' => $primaryImageUrl,   // new field
-        ]);
-
-        // Extra services logic same as before
-        if ($request->extra_services) {
-            foreach ($request->extra_services as $service) {
-                if (!empty($service['title']) || !empty($service['price'])) {
-                    $inventory->extraServices()->create([
-                        'title' => $service['title'] ?? '',
-                        'price' => $service['price'] ?? null,
-                    ]);
-                }
-            }
-        }
+        $data = json_decode($response->body());
 
         return redirect()->back()->with('success', 'Listing added successfully!');
     }

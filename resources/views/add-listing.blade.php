@@ -21,8 +21,9 @@
         <div class="col-lg-9">
 
             <div class="container">
+                
                 <!-- FORM START -->
-                <form action="{{ route('store.create') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('store.save_inventory') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="card-container">
@@ -54,31 +55,26 @@
 
                         <!-- CAR DETAILS -->
                         <div class="row g-3">
+
                             <div class="col-12">
-                                <input type="text" class="form-control" placeholder="Listing Title *" name="title" required>
+                                <input type="hidden" value="Motokloz" name="source">
                             </div>
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" placeholder="Model *" name="model" required>
+
+                            <div class="col-md-12">
+                                <select id="asset" name="selected_asset" class="form-select">
+                                    <option value="">Select Asset</option>
+                                    @foreach($assets as $asset)
+                                        <option value="{{ $asset }}">{{ $asset }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" placeholder="Type *" name="type" required>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" placeholder="Condition *" name="condition" required>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" placeholder="Stock Number" name="stock_number">
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" placeholder="Mileage" name="mileage">
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" placeholder="Transmission" name="transmission">
-                            </div>
-                            <div class="col-12">
-                                <textarea class="form-control" rows="4" placeholder="Description" name="description"></textarea>
+
+                            <!--  HERE IS WHERE PARTIAL WILL LOAD -->
+                            <div id="dynamic-form-area">
+                                @include('listings-form.default')
                             </div>
                         </div>
+
 
                         <!-- FEATURES -->
                         <h4 class="mt-4 mb-3 fw-bold">Features</h4>
@@ -274,7 +270,217 @@
     }
 </style>
 @endsection
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+<script>
+$(document).ready(function () {
+
+    $('#asset').on('change', function () {
+
+        let asset = $(this).val();
+
+        if (!asset) return;
+
+        $.ajax({
+            url: "{{ route('load.asset.form') }}",
+            type: "GET",
+            data: { asset },
+
+            success: function (res) {
+
+                // ---------------- FORM ----------------
+                $('#dynamic-form-area').html(res.html);
+
+                // ---------------- MAKE ----------------
+                let make = $('#make');
+                make.html('<option value="">Select Make</option>');
+
+                res.makes.forEach(m => {
+                    make.append(`<option value="${m.name}">${m.name}</option>`);
+                });
+
+                // ---------------- BODY STYLE ----------------
+                let body = $('#body_style');
+                body.html('<option value="">Select Body Style</option>');
+
+                res.bodyStyles.forEach(b => {
+                    body.append(`<option value="${b.name}">${b.name}</option>`);
+                });
+
+                
+                // ---------------- Year STYLE ----------------
+                let year = $('#year');
+                year.html('<option value="">Select Year</option>');
+
+                res.year.forEach(y => {
+                    year.append(`<option value="${y.name}">${y.name}</option>`);
+                });
+                
+                // ---------------- Condition STYLE ----------------
+                let condition = $('#condition');
+                condition.html('<option value="">Select Condition</option>');
+
+                res.condition.forEach(c => {
+                    condition.append(`<option value="${c.name}">${c.name}</option>`);
+                });
+
+                // ENGINE
+                let engine = $('#engine');
+                engine.html('<option value="">Select Engine</option>');
+
+                if (res.engine) {
+                    res.engine.forEach(e => {
+                        engine.append(`<option value="${e.name}">${e.name}</option>`);
+                    });
+                }
+
+                
+                // TRANSMISSION
+                let transmission = $('#transmission');
+                transmission.html('<option value="">Select Transmission</option>');
+
+                if (res.transmission) {
+                    res.transmission.forEach(t => {
+                        transmission.append(`<option value="${t.name}">${t.name}</option>`);
+                    });
+                }
+
+                // DRIVE TRAIN
+                let driveTrain = $('#drive_train');
+                driveTrain.html('<option value="">Select Drive Train</option>');
+
+                if (res.driveTrain) {
+                    res.driveTrain.forEach(d => {
+                        driveTrain.append(`<option value="${d.name}">${d.name}</option>`);
+                    });
+                }
+            }
+        });
+
+    });
+
+});
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+    const assetSelect = document.getElementById('asset');
+    const makeSelect = document.getElementById('make');
+    const bodySelect = document.getElementById('body_style');
+
+    // -------- RESET --------
+    function resetSelect(select, placeholder) {
+        select.innerHTML = `<option value="">${placeholder}</option>`;
+    }
+
+    // -------- FETCH DATA --------
+    function fetchFiltersByAsset(asset) {
+        return fetch(`{{ env('diskloz_base_url') }}/api/search_inventory?selected_asset=${encodeURIComponent(asset)}&per_page=1`)
+            .then(res => res.json())
+            .then(data => {
+
+                if (!data || !data.filters) return { makes: [], bodies: [] };
+
+                switch (asset) {
+
+                    case 'AUTO':
+                        return {
+                            makes: data.filters.MfgAuto || [],
+                            bodies: data.filters.BodyStyle || []
+                        };
+
+                    case 'SNOWSPORTS':
+                        return {
+                            makes: data.filters.MfgSnowsport || [],
+                            bodies: data.filters.BodyStyleSnowSport || []
+                        };
+
+                    case 'WATERSPORT':
+                        return {
+                            makes: data.filters.MfgWatersport || [],
+                            bodies: data.filters.BodyStyle || []
+                        };
+
+                    case 'MARINE':
+                        return {
+                            makes: data.filters.MfgMarine || [],
+                            bodies: data.filters.BodyStyle || []
+                        };
+
+                    case 'RV / TRAILER':
+                        return {
+                            makes: data.filters.MfgRvTrailer || [],
+                            bodies: data.filters.BodyStyleRvTrailer || []
+                        };
+
+                    case 'MOTORCYCLE / ATV / POWERSPORTS':
+                        return {
+                            makes: data.filters.MfgMotorcycleAtv || [],
+                            bodies: data.filters.BodyStyleMotorcycleAtv || []
+                        };
+
+                    case 'HEAVY TRUCK/EQUIPMENT':
+                        return {
+                            makes: data.filters.MfgHeavyTruckEquipment || [],
+                            bodies: data.filters.BodyStyleHeavyTruckEquipment || []
+                        };
+
+                    case 'HEAVY DUTY TRAILERS':
+                        return {
+                            makes: data.filters.MfgHeavyDutyTrailer || [],
+                            bodies: data.filters.BodyStyleHeavyDutyTrailer || []
+                        };
+
+                    case 'FARM EQUIPMENT':
+                        return {
+                            makes: data.filters.MfgFarmEquipment || [],
+                            bodies: data.filters.BodyStyleFarmEquipment || []
+                        };
+
+                    default:
+                        return { makes: [], bodies: [] };
+                }
+            })
+            .catch(() => ({ makes: [], bodies: [] }));
+    }
+
+    // -------- POPULATE --------
+    function populateSelect(select, items, placeholder) {
+        resetSelect(select, placeholder);
+
+        items.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.name;
+            option.textContent = item.name;
+            select.appendChild(option);
+        });
+    }
+
+    // -------- EVENT --------
+    if (assetSelect) {
+        assetSelect.addEventListener('change', function () {
+
+            const asset = this.value;
+
+            resetSelect(makeSelect, 'Select Make');
+            resetSelect(bodySelect, 'Select Body Style');
+
+            if (!asset) return;
+
+            fetchFiltersByAsset(asset).then(res => {
+                populateSelect(makeSelect, res.makes, 'Select Make');
+                populateSelect(bodySelect, res.bodies, 'Select Body Style');
+            });
+        });
+
+        // page load default
+        if (assetSelect.value) {
+            assetSelect.dispatchEvent(new Event('change'));
+        }
+    }
+
+    });
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         // ---------- Extra services logic (same as before) ----------

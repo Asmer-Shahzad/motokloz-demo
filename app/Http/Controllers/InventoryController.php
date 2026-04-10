@@ -100,15 +100,15 @@ class InventoryController extends Controller
         ]);
     }
 
-    public function selling(Request $request){
-        $response = Http::get($this->baseUrl().'/api/inventory-form');
-        $data = json_decode($response->body());
-        $array = [];
-        foreach ($data as $key => $value) {
-                $array[$key] = $value;
-        }
-        return view('selling', ['array' => $array] );
-    }
+    // public function selling(Request $request){
+    //     $response = Http::get($this->baseUrl().'/api/inventory-form');
+    //     $data = json_decode($response->body());
+    //     $array = [];
+    //     foreach ($data as $key => $value) {
+    //             $array[$key] = $value;
+    //     }
+    //     return view('selling', ['array' => $array] );
+    // }
     
     public function inventory_product_details(Request $request, $id)
     {
@@ -144,13 +144,13 @@ class InventoryController extends Controller
         ]);
     }
 
-    public function save_inventory(Request $request){
-        $payload = $request->all();
-        $payload['user_id'] = auth()->user()->id;
-        $response = Http::post($this->baseUrl().'/api/inventory-form-save', $payload);
-        $data = json_decode($response->body());
-        return redirect()->route('selling')->with('info',$data->message);
-    }
+    // public function save_inventory(Request $request){
+    //     $payload = $request->all();
+    //     $payload['user_id'] = auth()->user()->id;
+    //     $response = Http::post($this->baseUrl().'/api/inventory-form-save', $payload);
+    //     $data = json_decode($response->body());
+    //     return redirect()->route('selling')->with('info',$data->message);
+    // }
 
     public function edit_inventory(Request $request, $id){
         $payload = $request->all();
