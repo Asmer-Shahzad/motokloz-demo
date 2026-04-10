@@ -2775,6 +2775,12 @@ ul.list-unstyled.service-list li {
     box-shadow: none;
 }
 
+.form-select:focus {
+    background-color: #fff;
+    border-color: #ff9800 !important;
+    box-shadow: none;
+}
+
 .btn-orange {
     background-color: #ff9800;
     color: white;

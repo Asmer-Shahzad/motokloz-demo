@@ -57,20 +57,14 @@ Route::get('/sell', function () {
     if (Auth::check()) {
         // user logged in
         return redirect()->route('add.listings');
-    }
+        }
 
     // agar login nahi hai to login page
     return redirect()->route('login');
-})->name('sell');
-
-
-Route::get('/wishlist', [ListingController::class, 'wishlist'])->name('wishlist');
-Route::get('/add-listing', [ListingController::class, 'addlistings'])->name('add.listings');
-Route::post('/add-listing', [ListingController::class, 'create'])->name('store.create');
-Route::get('/listings', [ListingController::class, 'listingsIndex'])->name('listings');
-Route::get('/listing-car-details/{id}', [ListingController::class, 'user_inventory_product_details'])->name('user_inventory_product_details');
-Route::middleware('auth')->group(function () {
-
+    })->name('sell');
+    
+    Route::middleware('auth')->group(function () {
+        
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
     Route::post('/chat/start', [ChatController::class, 'startOrGet'])->name('chat.start');
@@ -81,7 +75,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/chat/{clientId}/{dealerId}/{inventoryId}/tick-status', [ChatController::class, 'tickStatus'])->name('chat.tick');
     Route::get('/agent-settings', [HomeController::class, 'agentsettings'])->name('agent.settings');
     Route::get('/agent-dashboard', [HomeController::class, 'agentdashboard'])->name('agent.dashboard');
-
+    Route::get('/wishlist', [ListingController::class, 'wishlist'])->name('wishlist');
+    
+    Route::get('/add-listing', [ListingController::class, 'addlistings'])->name('add.listings');
+    Route::post('/add-listing', [ListingController::class, 'save_inventory'])->name('store.save_inventory');
+    Route::get('/load-asset-form', [ListingController::class, 'loadAssetForm'])->name('load.asset.form');
+    Route::get('/listings', [ListingController::class, 'listingsIndex'])->name('listings');
+    Route::get('/listing-car-details/{id}', [ListingController::class, 'user_inventory_product_details'])->name('user_inventory_product_details');
     Route::get('/account-setting', [HomeController::class, 'accountsettings'])->name('account.settings');
     Route::get('/agent-settings', [ProfileController::class, 'index'])->name('profile.settings');
     Route::put('/agent-settings', [ProfileController::class, 'updateProfile'])->name('profile.update');
