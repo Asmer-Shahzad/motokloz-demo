@@ -158,7 +158,7 @@
         </select>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-6">
         <select class="form-select" id="num_of_tyres" name="num_of_tyres">
             <option value=""># Of Sets Of Tires</option>
             <option value="1">1</option>
@@ -167,11 +167,11 @@
         </select>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-6">
         <input type="text" class="form-control" placeholder="Search Keyword" name="search_keyword">
     </div>
 
     <div class="col-12">
-        <textarea class="form-control" rows="4" placeholder="Description" name="description"></textarea>
+        <textarea class="form-control" rows="4" placeholder="Description" name="notes_dicussion"></textarea>
     </div>
 </div>

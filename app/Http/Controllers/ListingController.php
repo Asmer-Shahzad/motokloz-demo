@@ -560,30 +560,125 @@ class ListingController extends Controller
     //     return view('selling', ['array' => $array] );
     // }
 
+    // public function save_inventory(Request $request)
+    // {
+    //     try {
+
+    //         $http = Http::asMultipart();
+
+    //         // 1. send normal fields
+    //         foreach ($request->except('inventory_logo') as $key => $value) {
+    //             if (!is_null($value)) {
+    //                 $http = $http->attach(
+    //                     $key,
+    //                     is_array($value) ? json_encode($value) : $value
+    //                 );
+    //             }
+    //         }
+
+    //         // 2. user id
+    //         $http = $http->attach('user_id', auth()->id());
+
+    //         // 3. images attach (IMPORTANT FIX)
+    //         if ($request->hasFile('inventory_logo')) {
+    //             foreach ($request->file('inventory_logo') as $image) {
+    //                 $http = $http->attach(
+    //                     'images[]', // 👉 MUST match API side
+    //                     file_get_contents($image->getRealPath()),
+    //                     $image->getClientOriginalName()
+    //                 );
+    //             }
+    //         }
+
+    //         // 4. primary index
+    //         if ($request->primary_image_index !== null) {
+    //             $http = $http->attach('primary_image_index', $request->primary_image_index);
+    //         }
+
+    //         // 5. FINAL REQUEST (IMPORTANT)
+    //         $response = $http->post(env("DISKLOZ_BASE_URL") . '/api/inventory-form-save');
+
+    //         return redirect()->back()->with('success', 'Listing added successfully!');
+
+    //     } catch (\Exception $e) {
+    //         return redirect()->back()->with('error', $e->getMessage());
+    //     }
+    // }
+
+
     public function save_inventory(Request $request)
     {
-        $payload = $request->except('images'); // images alag handle karenge
-        $payload['user_id'] = auth()->id();
+        Log::info('Incoming Request Data:', $request->all());
 
-        $http = Http::asMultipart();
+        $skip = ['inventory_logo', '_token', 'features', 'extra_services', 'inventory_logo'];
+        
+        // ✅ Saare fields collect karo
+        $postFields = [];
 
-        // Attach images
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $index => $image) {
-                $http->attach(
-                    "inventory_logo[]", // API field name
-                    file_get_contents($image->getRealPath()),
-                    $image->getClientOriginalName()
-                );
+        foreach ($request->except($skip) as $key => $value) {
+            if (is_null($value) || is_array($value)) continue;
+            $postFields[$key] = (string) $value;
+        }
+
+        $postFields['user_id'] = (string) auth()->id();
+
+        // features[]
+        foreach ((array) $request->input('features', []) as $i => $feature) {
+            $postFields["features[{$i}]"] = (string) $feature;
+        }
+
+        // extra_services[]
+        foreach ((array) $request->input('extra_services', []) as $i => $service) {
+            if (is_array($service)) {
+                foreach ($service as $key => $val) {
+                    $postFields["extra_services[{$i}][{$key}]"] = (string) $val;
+                }
             }
         }
 
-        // Send request
-        $response = Http::post(env("diskloz_base_url").'/api/inventory-form-save', $payload);
+        // ✅ CURLFile se images attach karo
+        if ($request->hasFile('inventory_logo')) {
+            foreach ($request->file('inventory_logo') as $i => $file) {
+                if ($file instanceof \Illuminate\Http\UploadedFile && $file->isValid()) {
+                    $postFields["inventory_logo[{$i}]"] = new \CURLFile(
+                        $file->getRealPath(),
+                        $file->getMimeType(),
+                        $file->getClientOriginalName()
+                    );
+                }
+            }
+        }
 
-        $data = json_decode($response->body());
+        // ✅ CURL se request bhejo
+        $url = env("diskloz_base_url") . '/api/inventory-form-save';
 
-        return redirect()->back()->with('success', 'Listing added successfully!');
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Accept: application/json',
+        ]);
+
+        $responseBody = curl_exec($ch);
+        $httpStatus   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError    = curl_error($ch);
+        curl_close($ch);
+
+        if ($curlError) {
+            Log::error('CURL Error: ' . $curlError);
+            return back()->with('error', 'Request failed: ' . $curlError);
+        }
+
+        Log::info('API Response:', [
+            'status' => $httpStatus,
+            'body'   => $responseBody
+        ]);
+
+        $data = json_decode($responseBody, true);
+
+        return back()->with('success', 'Listing added successfully!');
     }
 
     public function wishlist(Request $request)

@@ -36,7 +36,7 @@
                                 <div class="img-upload-box" id="img-upload-box">
                                     <i class="fa-regular fa-image fa-2x mb-2"></i>
                                     <span>Upload Image</span>
-                                    <input type="file" id="image-input" multiple style="display:none;" name="images[]">
+                                    <input type="file" id="image-input" multiple style="display:none;" name="inventory_logo[]">
                                     <input type="hidden" name="primary_image_index" id="primary_image_index" value="">
                                 </div>
                             </div>
@@ -73,6 +73,9 @@
                             <div id="dynamic-form-area">
                                 @include('listings-form.default')
                             </div>
+
+                            
+    
                         </div>
 
 

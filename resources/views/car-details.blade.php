@@ -179,8 +179,10 @@
                         {{ isset($searched_vehicle->mfg_auto) ? $searched_vehicle->mfg_auto : '' }}
                         {{isset( $searched_vehicle->model) ? $searched_vehicle->model : '' }} {{ isset($searched_vehicle->trim) ? $searched_vehicle->trim : '' }}</h2>
                     <div class="mto-meta-row d-flex flex-wrap gap-3 mt-3">
-                        <span class="mto-meta-item"><i class="fa-solid fa-location-dot me-1"></i> {{$searched_vehicle->dealer->city}}, {{$searched_vehicle->dealer->province}}</span>
-                        <a href="{{ route('dealer_inventory_details', $searched_vehicle->dealer->id) }}" class="mto-map-link fw-bold">Show on map</a>
+                        <span class="mto-meta-item"><i class="fa-solid fa-location-dot me-1"></i> {{ optional($searched_vehicle->dealer)->city }}, {{ optional($searched_vehicle->dealer)->province }}</span>
+                        @if($dealer)
+                            <a href="{{ route('dealer_inventory_details', $dealer->id) }}" class="mto-map-link fw-bold">Show on map</a>
+                        @endif
                         <!-- <span class="mto-meta-item flatt">
                             <img src="/assets/images/code.png" class="light-dark" alt="">
                             <span class="">Fleet Code:</span>
@@ -393,13 +395,15 @@
                                         class="fw-normal text-muted ms-1">(672 reviews)</span></span>
                             </div>
                             @php
-                                $detailUrl = route('dealer_inventory_details', $searched_vehicle->dealer->id);
-
-                                $dealerLogo = $searched_vehicle->dealer->logo
+                                $dealerLogo = optional($searched_vehicle->dealer)->logo
                                     ? (Str::startsWith($searched_vehicle->dealer->logo, 'http')
                                         ? $searched_vehicle->dealer->logo
                                         : env('diskloz_base_url') . '/admin_assets/images/dealer_images/' . $searched_vehicle->dealer->logo)
                                     : asset('assets/images/defaultdealerlogo.png');
+
+                                $detailUrl = $searched_vehicle->dealer
+                                    ? route('dealer_inventory_details', $searched_vehicle->dealer->id)
+                                    : '#';
                             @endphp
 
                             <a class="link-text-decoration" href="{{ $detailUrl }}">
@@ -412,8 +416,7 @@
             
                                     <div>
                                         <h6 class="mb-0 fw-bold">
-                                            {{$searched_vehicle->dealer->legal_name}}
-                                            <!--{{ $searched_vehicle->dealer->first_name }} {{ $searched_vehicle->dealer->last_name }}-->
+                                            {{ optional($searched_vehicle->dealer)->legal_name }}
                                         </h6>
                                         <p class="small text-muted mb-0">
                                             {{ optional($searched_vehicle->dealer) ? collect([
@@ -421,7 +424,7 @@
                                                 optional($searched_vehicle->dealer)->city,
                                                 optional($searched_vehicle->dealer)->province,
                                                 optional($searched_vehicle->dealer)->postal_code
-                                            ])->filter()->implode(', ') : '' }}
+                                            ])->filter()->implode(', ') : 'Address not available' }}
                                         </p>
                                     </div>
 
@@ -432,17 +435,17 @@
 
                                 <div class="mb-2">
                                     <img src="/assets/images/Background (8).png" alt="phone" class="contact-icon light-dark">
-                                    Mobile: {{ $searched_vehicle->dealer->phone_no }}
+                                    Mobile: {{ optional($searched_vehicle->dealer)->phone_no ?? 'N/A' }}
                                 </div>
 
                                 <div class="mb-2">
                                     <img src="/assets/images/Background (10).png" alt="email" class="contact-icon light-dark">
-                                    Email: {{ $searched_vehicle->dealer->email }}
+                                    Email: {{ optional($searched_vehicle->dealer)->email ?? 'N/A' }}
                                 </div>
 
                                 <div class="mb-2">
                                     <img src="/assets/images/Background (11).png" alt="whatsapp" class="contact-icon light-dark">
-                                    WhatsApp: {{ $searched_vehicle->dealer->phone_no }}
+                                    WhatsApp: {{ optional($searched_vehicle->dealer)->phone_no ?? 'N/A' }}
                                 </div>
 
                                 {{-- <div class="mb-2">
@@ -451,12 +454,14 @@
                                 </div> --}}
 
                             </div>
-                            <a href="{{ route('dealer_inventory', $searched_vehicle->dealer->id) }}">
-                                <button class="mto-btn-orange w-100 mt-4 py-2">
-                                    Dealer's Inventory 
-                                    <i class="fa-solid fa-arrow-right ms-2"></i>
-                                </button>
-                            </a>
+                            @if($dealer)
+                                <a href="{{ route('dealer_inventory', optional($searched_vehicle->dealer)->id) }}">
+                                    <button class="mto-btn-orange w-100 mt-4 py-2">
+                                        Dealer's Inventory 
+                                        <i class="fa-solid fa-arrow-right ms-2"></i>
+                                    </button>
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>
