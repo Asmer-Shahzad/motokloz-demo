@@ -457,14 +457,6 @@
                                 </div> --}}
 
                             </div>
-                            @if($dealer)
-                                <a href="{{ route('dealer_inventory', optional($searched_vehicle->dealer)->id) }}">
-                                    <button class="mto-btn-orange w-100 mt-4 py-2">
-                                        Dealer's Inventory 
-                                        <i class="fa-solid fa-arrow-right ms-2"></i>
-                                    </button>
-                                </a>
-                            @endif
                             {{-- Chat with Dealer Button --}}
                             @php
                                 $localInventoryId = $searched_vehicle->id ?? null;
@@ -491,12 +483,14 @@
                                 @endauth
                             @endif
 
-                            <a href="{{ route('dealer_inventory', $searched_vehicle->dealer->id) }}">
-                                <button class="mto-btn-orange w-100 mt-4 py-2">
-                                    Dealer's Inventory 
-                                    <i class="fa-solid fa-arrow-right ms-2"></i>
-                                </button>
-                            </a>
+                            @if($dealer)
+                                <a href="{{ route('dealer_inventory', optional($searched_vehicle->dealer)->id) }}">
+                                    <button class="mto-btn-orange w-100 mt-4 py-2">
+                                        Dealer's Inventory 
+                                        <i class="fa-solid fa-arrow-right ms-2"></i>
+                                    </button>
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>
