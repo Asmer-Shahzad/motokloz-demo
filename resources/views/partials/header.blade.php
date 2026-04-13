@@ -207,7 +207,7 @@
                     @endphp
 
                     @if(in_array(Route::currentRouteName(), $showImageRoutes))
-                        <a href="{{ route('chat') }}">
+                        <a href="{{ route('chat.index') }}">
                             <img src="/assets/images/Frame 1707481624.png" alt="Logo">
                         </a>
                     @endif

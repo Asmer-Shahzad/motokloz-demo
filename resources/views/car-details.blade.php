@@ -209,6 +209,9 @@
                 <div class="col-lg-4">
                     <div class="mto-utility-btns d-flex gap-2 justify-content-lg-end mt-3 mt-lg-0">
                         <input type="hidden" id="inv_id" value="{{ $searched_vehicle->id ?? '' }}">
+                          <a >
+                            <img src="/assets/images/Frame 1707481624.png" alt="Logo">
+                        </a>
 
                         <!-- Your button with ID -->
                         <button id="fetchButton" onclick="fetchAndPrint()" class="mto-pill-btn">
@@ -462,6 +465,38 @@
                                     </button>
                                 </a>
                             @endif
+                            {{-- Chat with Dealer Button --}}
+                            @php
+                                $localInventoryId = $searched_vehicle->id ?? null;
+                                $localDealerId = $searched_vehicle->user_id ?? null;  // local user_id from inventories table
+                            @endphp
+
+                            @if($localInventoryId && $localDealerId)
+                                @auth
+                                    {{-- Logged in: direct form submit --}}
+                                    <form method="POST" action="{{ route('chat.start') }}" class="mb-3 mt-4">
+                                        @csrf
+                                        <input type="hidden" name="inventory_id" value="{{ $localInventoryId }}">
+                                        <input type="hidden" name="dealer_id" value="{{ $localDealerId }}">
+                                        <button type="submit" class="mto-btn-black w-100 py-2">
+                                            <i class="fa-regular fa-comment me-2"></i> Chat with Dealer
+                                        </button>
+                                    </form>
+                                @else
+                                    {{-- Guest: open login modal --}}
+                                    <button type="button" class="mto-btn-black w-100 mt-4 mb-3 py-2"
+                                        onclick="openChatLoginModal({{ $localInventoryId }}, {{ $localDealerId }}, '{{ route('chat.start') }}')">
+                                        <i class="fa-regular fa-comment me-2"></i> Chat with Dealer
+                                    </button>
+                                @endauth
+                            @endif
+
+                            <a href="{{ route('dealer_inventory', $searched_vehicle->dealer->id) }}">
+                                <button class="mto-btn-orange w-100 mt-4 py-2">
+                                    Dealer's Inventory 
+                                    <i class="fa-solid fa-arrow-right ms-2"></i>
+                                </button>
+                            </a>
                         </div>
                     </div>
                 </div>

@@ -2,29 +2,35 @@
 
 @section('content')
 
-<section class="agent-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                @include('partials.user-account-breadcrumbs')
-                <h2 class="fw-bold mb-4">Add Listing</h2>
+    <section class="agent-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    @include('partials.user-account-breadcrumbs')
+                    <h2 class="fw-bold mb-4">Add Listing</h2>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<div class="container">
-    <div class="row">
+    <div class="container">
+        <div class="row">
 
-        @include('partials.user-account-sidebar')
+            @include('partials.user-account-sidebar')
 
-        <div class="col-lg-9">
+            <div class="col-lg-9">
 
-            <div class="container">
-                
-                <!-- FORM START -->
-                <form action="{{ route('store.save_inventory') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
+                <div class="container">
+
+                    <!-- FORM START -->
+                    <form action="{{ route('store.save_inventory') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="col-12" hidden>
+                            <input type="hidden" value="Motokloz" class="form-control" placeholder="Source *" name="source"
+                                required>
+                        </div>
+                        <div class="card-container">
+                            <h2 class="section-title">Car details</h2>
 
                     <div class="card-container">
                         <h2 class="section-title">Car details</h2>
@@ -47,27 +53,31 @@
                                     <div class="swiper-wrapper" id="swiper-wrapper">
                                         <!-- JS se images slides yaha add honge -->
                                     </div>
-                                    <div class="swiper-button-next"></div>
-                                    <div class="swiper-button-prev"></div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- CAR DETAILS -->
-                        <div class="row g-3">
+                            <!-- CAR DETAILS -->
+                            <div class="row g-3">
 
-                            <div class="col-12">
-                                <input type="hidden" value="Motokloz" name="source">
+                                <div class="col-12">
+                                    <input type="hidden" value="Motokloz" name="source">
+                                </div>
+
+                                <div class="col-md-12">
+                                    <select id="asset" name="selected_asset" class="form-select">
+                                        <option value="">Select Asset</option>
+                                        @foreach($assets as $asset)
+                                            <option value="{{ $asset }}">{{ $asset }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <!--  HERE IS WHERE PARTIAL WILL LOAD -->
+                                <div id="dynamic-form-area">
+                                    @include('listings-form.default')
+                                </div>
                             </div>
 
-                            <div class="col-md-12">
-                                <select id="asset" name="selected_asset" class="form-select">
-                                    <option value="">Select Asset</option>
-                                    @foreach($assets as $asset)
-                                        <option value="{{ $asset }}">{{ $asset }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
 
                             <!--  HERE IS WHERE PARTIAL WILL LOAD -->
                             <div id="dynamic-form-area">
@@ -148,339 +158,431 @@
                         <div id="extra-services-container">
                             <div class="row g-3 align-items-center extra-service-row mb-3">
                                 <div class="col-md-6">
-                                    <input type="text" class="form-control" placeholder="Service title 1" name="extra_services[0][title]">
+                                    <div class="form-check feature-checkbox">
+                                        <input class="form-check-input" type="checkbox" name="features[]"
+                                            value="A/C: Front">
+                                        <label class="form-check-label">A/C: Front</label>
+                                    </div>
+                                    <div class="form-check feature-checkbox">
+                                        <input class="form-check-input" type="checkbox" name="features[]"
+                                            value="Cruise Control">
+                                        <label class="form-check-label">Cruise Control</label>
+                                    </div>
+                                    <div class="form-check feature-checkbox">
+                                        <input class="form-check-input" type="checkbox" name="features[]"
+                                            value="Touchscreen display">
+                                        <label class="form-check-label">Touchscreen display</label>
+                                    </div>
+                                    <div class="form-check feature-checkbox">
+                                        <input class="form-check-input" type="checkbox" name="features[]"
+                                            value="Phone connectivity">
+                                        <label class="form-check-label">Phone connectivity</label>
+                                    </div>
+                                    <div class="form-check feature-checkbox">
+                                        <input class="form-check-input" type="checkbox" name="features[]"
+                                            value="In-car Wi-Fi">
+                                        <label class="form-check-label">In-car Wi-Fi</label>
+                                    </div>
+                                    <div class="form-check feature-checkbox">
+                                        <input class="form-check-input" type="checkbox" name="features[]"
+                                            value="Brake assist (BA)">
+                                        <label class="form-check-label">Brake assist (BA)</label>
+                                    </div>
                                 </div>
-                                <div class="col-md-5">
-                                    <input type="text" class="form-control" placeholder="Price ($)" name="extra_services[0][price]">
-                                </div>
-                                <div class="col-md-1 text-end">
-                                    <i class="fa-solid fa-trash-can text-muted remove-service" style="cursor: pointer;"></i>
+                                <div class="col-md-6">
+                                    <div class="form-check feature-checkbox">
+                                        <input class="form-check-input" type="checkbox" name="features[]"
+                                            value="Backup Camera">
+                                        <label class="form-check-label">Backup Camera</label>
+                                    </div>
+                                    <div class="form-check feature-checkbox">
+                                        <input class="form-check-input" type="checkbox" name="features[]"
+                                            value="Audio system">
+                                        <label class="form-check-label">Audio system</label>
+                                    </div>
+                                    <div class="form-check feature-checkbox">
+                                        <input class="form-check-input" type="checkbox" name="features[]"
+                                            value="GPS navigation">
+                                        <label class="form-check-label">GPS navigation</label>
+                                    </div>
+                                    <div class="form-check feature-checkbox">
+                                        <input class="form-check-input" type="checkbox" name="features[]" value="Breakfast">
+                                        <label class="form-check-label">Breakfast</label>
+                                    </div>
+                                    <div class="form-check feature-checkbox">
+                                        <input class="form-check-input" type="checkbox" name="features[]"
+                                            value="Anti-lock brake system (ABS)">
+                                        <label class="form-check-label">Anti-lock brake system (ABS)</label>
+                                    </div>
+                                    <div class="form-check feature-checkbox">
+                                        <input class="form-check-input" type="checkbox" name="features[]" value="Airbags">
+                                        <label class="form-check-label">Airbags</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="text-end mt-3">
-                            <button type="button" class="btn btn-light-custom fw-bold" id="add-service-btn">Add More</button>
+                        <!-- PRICING -->
+                        <div class="card-container mt-4">
+                            <h2 class="section-title">Pricing</h2>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" placeholder="Tour price ($)" name="price">
+                            </div>
+
+                            <label class="form-label fw-bold">Extra Services</label>
+                            <div id="extra-services-container">
+                                <div class="row g-3 align-items-center extra-service-row mb-3">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" placeholder="Service title 1"
+                                            name="extra_services[0][title]">
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control" placeholder="Price ($)"
+                                            name="extra_services[0][price]">
+                                    </div>
+                                    <div class="col-md-1 text-end">
+                                        <i class="fa-solid fa-trash-can text-muted remove-service"
+                                            style="cursor: pointer;"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-end mt-3">
+                                <button type="button" class="btn btn-light-custom fw-bold" id="add-service-btn">Add
+                                    More</button>
+                            </div>
+                            <button type="submit" class="btn btn-orange mt-3">Save Changes</button>
                         </div>
-                        <button type="submit" class="btn btn-orange mt-3">Save Changes</button>
-                    </div>
-                </form>
-                <!-- FORM END -->
+                    </form>
+                    <!-- FORM END -->
+
+                </div>
 
             </div>
-
         </div>
     </div>
-</div>
-<style>
-    /* Base styling */
-    .custom-swiper-btn {
-        width: 40px;
-        height: 40px;
-        background-color: rgba(0, 0, 0, 0.6);
-        border-radius: 50%;
-        color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background 0.3s;
-        top: 50%;
-        transform: translateY(-50%);
-    }
+    <style>
+        /* Base styling */
+        .custom-swiper-btn {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+            top: 50%;
+            transform: translateY(-50%);
+        }
 
-    /* Hover effect */
-    .custom-swiper-btn:hover {
-        background-color: #ff6b00; /* bright orange */
-    }
+        /* Hover effect */
+        .custom-swiper-btn:hover {
+            background-color: #ff6b00;
+            /* bright orange */
+        }
 
-    /* Icon size */
-    .swiper-button-next::after,
-    .swiper-button-prev::after {
-        font-size: 20px;
-    }
+        /* Icon size */
+        .swiper-button-next::after,
+        .swiper-button-prev::after {
+            font-size: 20px;
+        }
 
-    /* Position tweaks */
-    .swiper-button-prev {
-        left: 10px;
-        color:#fff;
-        background-color: #ff9800;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-    }
-    .swiper-button-next {
-        right: 10px;
-        z-index: 10;
-        color:#fff;
-        background-color: #ff9800;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-    }
+        /* Position tweaks */
+        .swiper-button-prev {
+            left: 10px;
+            color: #fff;
+            background-color: #ff9800;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+        }
 
-    /* Optional: Add shadow for better visibility */
-    .custom-swiper-btn {
-        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-    }
+        .swiper-button-next {
+            right: 10px;
+            z-index: 10;
+            color: #fff;
+            background-color: #ff9800;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+        }
 
-    .swiper-pagination-bullet-active {
-        opacity: var(--swiper-pagination-bullet-opacity, 1);
-        background: #ff9800;
-    }
+        /* Optional: Add shadow for better visibility */
+        .custom-swiper-btn {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
 
-    .primary-selected .preview-img-container {
-        border: 3px solid #ff9800 !important;
-        box-shadow: 0 0 0 2px #ff9800;
-    }
-    .set-primary-btn:hover {
-        background-color: #ff9800 !important;
-        color: #000 !important;
-    }
-    .primary-badge i {
-        margin-right: 4px;
-    }
+        .swiper-pagination-bullet-active {
+            opacity: var(--swiper-pagination-bullet-opacity, 1);
+            background: #ff9800;
+        }
 
-    /* Set as Primary button - always visible & active */
-    .set-primary-btn {
-        transition: all 0.3s ease;
-        opacity: 0.9;
-    }
+        .primary-selected .preview-img-container {
+            border: 3px solid #ff9800 !important;
+            box-shadow: 0 0 0 2px #ff9800;
+        }
 
-    .set-primary-btn:hover {
-        background-color: #ff9800 !important;
-        color: #000 !important;
-        transform: scale(1.02);
-    }
+        .set-primary-btn:hover {
+            background-color: #ff9800 !important;
+            color: #000 !important;
+        }
 
-    .set-primary-btn i {
-        margin-right: 5px;
-    }
+        .primary-badge i {
+            margin-right: 4px;
+        }
 
-    /* Preview image container hover effect */
-    .preview-img-container {
-        transition: all 0.2s ease;
-    }
+        /* Set as Primary button - always visible & active */
+        .set-primary-btn {
+            transition: all 0.3s ease;
+            opacity: 0.9;
+        }
 
-    .preview-img-container:hover {
-        transform: scale(1.02);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
+        .set-primary-btn:hover {
+            background-color: #ff9800 !important;
+            color: #000 !important;
+            transform: scale(1.02);
+        }
 
-    /* Primary selected border */
-    .primary-selected .preview-img-container {
-        border: 3px solid #ff9800 !important;
-        box-shadow: 0 0 0 2px #ff9800;
-    }
-</style>
+        .set-primary-btn i {
+            margin-right: 5px;
+        }
+
+        /* Preview image container hover effect */
+        .preview-img-container {
+            transition: all 0.2s ease;
+        }
+
+        .preview-img-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Primary selected border */
+        .primary-selected .preview-img-container {
+            border: 3px solid #ff9800 !important;
+            box-shadow: 0 0 0 2px #ff9800;
+        }
+    </style>
 @endsection
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <script>
-$(document).ready(function () {
+    $(document).ready(function () {
 
-    $('#asset').on('change', function () {
+        $('#asset').on('change', function () {
 
-        let asset = $(this).val();
+            let asset = $(this).val();
 
-        if (!asset) return;
+            if (!asset) return;
 
-        $.ajax({
-            url: "{{ route('load.asset.form') }}",
-            type: "GET",
-            data: { asset },
+            $.ajax({
+                url: "{{ route('load.asset.form') }}",
+                type: "GET",
+                data: { asset },
 
-            success: function (res) {
+                success: function (res) {
 
-                // ---------------- FORM ----------------
-                $('#dynamic-form-area').html(res.html);
+                    // ---------------- FORM ----------------
+                    $('#dynamic-form-area').html(res.html);
 
-                // ---------------- MAKE ----------------
-                let make = $('#make');
-                make.html('<option value="">Select Make</option>');
+                    // Re-init floor plans multiselect if present
+                    if (document.getElementById('fpMultiselect')) {
+                        window.fpSelected = [];
+                        // Execute any scripts injected via AJAX
+                        $('#dynamic-form-area script').each(function() {
+                            try { eval($(this).text()); } catch(e) {}
+                        });
+                    }
 
-                res.makes.forEach(m => {
-                    make.append(`<option value="${m.name}">${m.name}</option>`);
-                });
+                    // ---------------- MAKE ----------------
+                    let make = $('#make');
+                    make.html('<option value="">Select Make</option>');
 
-                // ---------------- BODY STYLE ----------------
-                let body = $('#body_style');
-                body.html('<option value="">Select Body Style</option>');
-
-                res.bodyStyles.forEach(b => {
-                    body.append(`<option value="${b.name}">${b.name}</option>`);
-                });
-
-                
-                // ---------------- Year STYLE ----------------
-                let year = $('#year');
-                year.html('<option value="">Select Year</option>');
-
-                res.year.forEach(y => {
-                    year.append(`<option value="${y.name}">${y.name}</option>`);
-                });
-                
-                // ---------------- Condition STYLE ----------------
-                let condition = $('#condition');
-                condition.html('<option value="">Select Condition</option>');
-
-                res.condition.forEach(c => {
-                    condition.append(`<option value="${c.name}">${c.name}</option>`);
-                });
-
-                // ENGINE
-                let engine = $('#engine');
-                engine.html('<option value="">Select Engine</option>');
-
-                if (res.engine) {
-                    res.engine.forEach(e => {
-                        engine.append(`<option value="${e.name}">${e.name}</option>`);
+                    res.makes.forEach(m => {
+                        make.append(`<option value="${m.name}">${m.name}</option>`);
                     });
-                }
 
-                
-                // TRANSMISSION
-                let transmission = $('#transmission');
-                transmission.html('<option value="">Select Transmission</option>');
+                    // ---------------- BODY STYLE ----------------
+                    let body = $('#body_style');
+                    body.html('<option value="">Select Body Style</option>');
 
-                if (res.transmission) {
-                    res.transmission.forEach(t => {
-                        transmission.append(`<option value="${t.name}">${t.name}</option>`);
+                    res.bodyStyles.forEach(b => {
+                        body.append(`<option value="${b.name}">${b.name}</option>`);
                     });
-                }
 
-                // DRIVE TRAIN
-                let driveTrain = $('#drive_train');
-                driveTrain.html('<option value="">Select Drive Train</option>');
 
-                if (res.driveTrain) {
-                    res.driveTrain.forEach(d => {
-                        driveTrain.append(`<option value="${d.name}">${d.name}</option>`);
+                    // ---------------- Year STYLE ----------------
+                    let year = $('#year');
+                    year.html('<option value="">Select Year</option>');
+
+                    res.year.forEach(y => {
+                        year.append(`<option value="${y.name}">${y.name}</option>`);
                     });
+
+                    // ---------------- Condition STYLE ----------------
+                    let condition = $('#condition');
+                    condition.html('<option value="">Select Condition</option>');
+
+                    res.condition.forEach(c => {
+                        condition.append(`<option value="${c.name}">${c.name}</option>`);
+                    });
+
+                    // ENGINE
+                    let engine = $('#engine');
+                    engine.html('<option value="">Select Engine</option>');
+
+                    if (res.engine) {
+                        res.engine.forEach(e => {
+                            engine.append(`<option value="${e.name}">${e.name}</option>`);
+                        });
+                    }
+
+
+                    // TRANSMISSION
+                    let transmission = $('#transmission');
+                    transmission.html('<option value="">Select Transmission</option>');
+
+                    if (res.transmission) {
+                        res.transmission.forEach(t => {
+                            transmission.append(`<option value="${t.name}">${t.name}</option>`);
+                        });
+                    }
+
+                    // DRIVE TRAIN
+                    let driveTrain = $('#drive_train');
+                    driveTrain.html('<option value="">Select Drive Train</option>');
+
+                    if (res.driveTrain) {
+                        res.driveTrain.forEach(d => {
+                            driveTrain.append(`<option value="${d.name}">${d.name}</option>`);
+                        });
+                    }
                 }
-            }
+            });
+
         });
 
     });
-
-});
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-    const assetSelect = document.getElementById('asset');
-    const makeSelect = document.getElementById('make');
-    const bodySelect = document.getElementById('body_style');
+        const assetSelect = document.getElementById('asset');
+        const makeSelect = document.getElementById('make');
+        const bodySelect = document.getElementById('body_style');
 
-    // -------- RESET --------
-    function resetSelect(select, placeholder) {
-        select.innerHTML = `<option value="">${placeholder}</option>`;
-    }
-
-    // -------- FETCH DATA --------
-    function fetchFiltersByAsset(asset) {
-        return fetch(`{{ env('diskloz_base_url') }}/api/search_inventory?selected_asset=${encodeURIComponent(asset)}&per_page=1`)
-            .then(res => res.json())
-            .then(data => {
-
-                if (!data || !data.filters) return { makes: [], bodies: [] };
-
-                switch (asset) {
-
-                    case 'AUTO':
-                        return {
-                            makes: data.filters.MfgAuto || [],
-                            bodies: data.filters.BodyStyle || []
-                        };
-
-                    case 'SNOWSPORTS':
-                        return {
-                            makes: data.filters.MfgSnowsport || [],
-                            bodies: data.filters.BodyStyleSnowSport || []
-                        };
-
-                    case 'WATERSPORT':
-                        return {
-                            makes: data.filters.MfgWatersport || [],
-                            bodies: data.filters.BodyStyle || []
-                        };
-
-                    case 'MARINE':
-                        return {
-                            makes: data.filters.MfgMarine || [],
-                            bodies: data.filters.BodyStyle || []
-                        };
-
-                    case 'RV / TRAILER':
-                        return {
-                            makes: data.filters.MfgRvTrailer || [],
-                            bodies: data.filters.BodyStyleRvTrailer || []
-                        };
-
-                    case 'MOTORCYCLE / ATV / POWERSPORTS':
-                        return {
-                            makes: data.filters.MfgMotorcycleAtv || [],
-                            bodies: data.filters.BodyStyleMotorcycleAtv || []
-                        };
-
-                    case 'HEAVY TRUCK/EQUIPMENT':
-                        return {
-                            makes: data.filters.MfgHeavyTruckEquipment || [],
-                            bodies: data.filters.BodyStyleHeavyTruckEquipment || []
-                        };
-
-                    case 'HEAVY DUTY TRAILERS':
-                        return {
-                            makes: data.filters.MfgHeavyDutyTrailer || [],
-                            bodies: data.filters.BodyStyleHeavyDutyTrailer || []
-                        };
-
-                    case 'FARM EQUIPMENT':
-                        return {
-                            makes: data.filters.MfgFarmEquipment || [],
-                            bodies: data.filters.BodyStyleFarmEquipment || []
-                        };
-
-                    default:
-                        return { makes: [], bodies: [] };
-                }
-            })
-            .catch(() => ({ makes: [], bodies: [] }));
-    }
-
-    // -------- POPULATE --------
-    function populateSelect(select, items, placeholder) {
-        resetSelect(select, placeholder);
-
-        items.forEach(item => {
-            const option = document.createElement('option');
-            option.value = item.name;
-            option.textContent = item.name;
-            select.appendChild(option);
-        });
-    }
-
-    // -------- EVENT --------
-    if (assetSelect) {
-        assetSelect.addEventListener('change', function () {
-
-            const asset = this.value;
-
-            resetSelect(makeSelect, 'Select Make');
-            resetSelect(bodySelect, 'Select Body Style');
-
-            if (!asset) return;
-
-            fetchFiltersByAsset(asset).then(res => {
-                populateSelect(makeSelect, res.makes, 'Select Make');
-                populateSelect(bodySelect, res.bodies, 'Select Body Style');
-            });
-        });
-
-        // page load default
-        if (assetSelect.value) {
-            assetSelect.dispatchEvent(new Event('change'));
+        // -------- RESET --------
+        function resetSelect(select, placeholder) {
+            select.innerHTML = `<option value="">${placeholder}</option>`;
         }
-    }
+
+        // -------- FETCH DATA --------
+        function fetchFiltersByAsset(asset) {
+            return fetch(`{{ env('diskloz_base_url') }}/api/search_inventory?selected_asset=${encodeURIComponent(asset)}&per_page=1`)
+                .then(res => res.json())
+                .then(data => {
+
+                    if (!data || !data.filters) return { makes: [], bodies: [] };
+
+                    switch (asset) {
+
+                        case 'AUTO':
+                            return {
+                                makes: data.filters.MfgAuto || [],
+                                bodies: data.filters.BodyStyle || []
+                            };
+
+                        case 'SNOWSPORTS':
+                            return {
+                                makes: data.filters.MfgSnowsport || [],
+                                bodies: data.filters.BodyStyleSnowSport || []
+                            };
+
+                        case 'WATERSPORT':
+                            return {
+                                makes: data.filters.MfgWatersport || [],
+                                bodies: data.filters.BodyStyle || []
+                            };
+
+                        case 'MARINE':
+                            return {
+                                makes: data.filters.MfgMarine || [],
+                                bodies: data.filters.BodyStyle || []
+                            };
+
+                        case 'RV / TRAILER':
+                            return {
+                                makes: data.filters.MfgRvTrailer || [],
+                                bodies: data.filters.BodyStyleRvTrailer || []
+                            };
+
+                        case 'MOTORCYCLE / ATV / POWERSPORTS':
+                            return {
+                                makes: data.filters.MfgMotorcycleAtv || [],
+                                bodies: data.filters.BodyStyleMotorcycleAtv || []
+                            };
+
+                        case 'HEAVY TRUCK/EQUIPMENT':
+                            return {
+                                makes: data.filters.MfgHeavyTruckEquipment || [],
+                                bodies: data.filters.BodyStyleHeavyTruckEquipment || []
+                            };
+
+                        case 'HEAVY DUTY TRAILERS':
+                            return {
+                                makes: data.filters.MfgHeavyDutyTrailer || [],
+                                bodies: data.filters.BodyStyleHeavyDutyTrailer || []
+                            };
+
+                        case 'FARM EQUIPMENT':
+                            return {
+                                makes: data.filters.MfgFarmEquipment || [],
+                                bodies: data.filters.BodyStyleFarmEquipment || []
+                            };
+
+                        default:
+                            return { makes: [], bodies: [] };
+                    }
+                })
+                .catch(() => ({ makes: [], bodies: [] }));
+        }
+
+        // -------- POPULATE --------
+        function populateSelect(select, items, placeholder) {
+            resetSelect(select, placeholder);
+
+            items.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.name;
+                option.textContent = item.name;
+                select.appendChild(option);
+            });
+        }
+
+        // -------- EVENT --------
+        if (assetSelect) {
+            assetSelect.addEventListener('change', function () {
+
+                const asset = this.value;
+
+                resetSelect(makeSelect, 'Select Make');
+                resetSelect(bodySelect, 'Select Body Style');
+
+                if (!asset) return;
+
+                fetchFiltersByAsset(asset).then(res => {
+                    populateSelect(makeSelect, res.makes, 'Select Make');
+                    populateSelect(bodySelect, res.bodies, 'Select Body Style');
+                });
+            });
+
+            // page load default
+            if (assetSelect.value) {
+                assetSelect.dispatchEvent(new Event('change'));
+            }
+        }
 
     });
 </script>
@@ -510,10 +612,10 @@ $(document).ready(function () {
             });
         }
         if (container) {
-            container.addEventListener('click', function(e){
-                if(e.target.classList.contains('remove-service')){
+            container.addEventListener('click', function (e) {
+                if (e.target.classList.contains('remove-service')) {
                     const row = e.target.closest('.extra-service-row');
-                    if(row) row.remove();
+                    if (row) row.remove();
                 }
             });
         }
@@ -562,13 +664,13 @@ $(document).ready(function () {
         function setPrimaryImage(index) {
             const slides = document.querySelectorAll('.swiper-slide');
             if (!slides[index]) return false;
-            
+
             slides.forEach(slide => {
                 const badge = slide.querySelector('.primary-badge');
                 if (badge) badge.remove();
                 slide.classList.remove('primary-selected');
             });
-            
+
             const selectedSlide = slides[index];
             selectedSlide.classList.add('primary-selected');
             const badge = document.createElement('div');
@@ -585,7 +687,7 @@ $(document).ready(function () {
             badge.style.fontWeight = 'bold';
             badge.style.zIndex = '10';
             selectedSlide.querySelector('.preview-img-container').appendChild(badge);
-            
+
             primaryIndexInput.value = index;
             return true;
         }
@@ -597,16 +699,16 @@ $(document).ready(function () {
         }
 
         // When files are selected
-        imageInput.addEventListener('change', function() {
+        imageInput.addEventListener('change', function () {
             swiperWrapper.innerHTML = '';
             resetPrimarySelection();
-            
+
             const files = Array.from(this.files);
             if (files.length === 0) return;
-            
+
             files.forEach((file, idx) => {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     const slide = document.createElement('div');
                     slide.classList.add('swiper-slide');
                     slide.innerHTML = `
@@ -622,7 +724,7 @@ $(document).ready(function () {
                     `;
                     swiperWrapper.appendChild(slide);
                     swiper.update();
-                    
+
                     // ---- FIX: Set as Primary button - use runtime index ----
                     const setPrimaryBtn = slide.querySelector('.set-primary-btn');
                     setPrimaryBtn.addEventListener('click', (event) => {
@@ -630,7 +732,7 @@ $(document).ready(function () {
                         const currentIndex = getSlideIndex(slide);
                         setPrimaryImage(currentIndex);
                     });
-                    
+
                     // Delete button logic
                     const deleteBtn = slide.querySelector('.delete-btn');
                     deleteBtn.addEventListener('click', (event) => {
@@ -642,11 +744,11 @@ $(document).ready(function () {
                         currentFiles.splice(currentIdx, 1);
                         currentFiles.forEach(f => dt.items.add(f));
                         imageInput.files = dt.files;
-                        
+
                         // Remove slide
                         slide.remove();
                         swiper.update();
-                        
+
                         // Adjust primary selection after deletion
                         const currentPrimary = parseInt(primaryIndexInput.value);
                         if (currentPrimary === currentIdx) {
@@ -661,7 +763,7 @@ $(document).ready(function () {
                             }
                         }
                     });
-                    
+
                     // OPTIONAL: Click on whole image also sets primary (aap chahe to enable karein)
                     const imgContainer = slide.querySelector('.preview-img-container');
                     imgContainer.style.cursor = 'pointer';
@@ -678,7 +780,7 @@ $(document).ready(function () {
         // Form submit validation
         const form = document.querySelector('form');
         if (form) {
-            form.addEventListener('submit', function(e) {
+            form.addEventListener('submit', function (e) {
                 const primaryIndex = primaryIndexInput.value;
                 const files = imageInput.files;
                 if (files.length === 0) {
@@ -696,16 +798,16 @@ $(document).ready(function () {
     });
 </script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Check for flash messages from Laravel
         @if(session('success'))
             showSnackbar('{{ session('success') }}', 'success');
         @endif
-        
+
         @if(session('error'))
             showSnackbar('{{ session('error') }}', 'error');
         @endif
-        
+
         @if($errors->any())
             showSnackbar('{{ $errors->first() }}', 'error');
         @endif
