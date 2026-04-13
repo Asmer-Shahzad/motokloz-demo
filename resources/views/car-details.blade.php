@@ -209,9 +209,9 @@
                 <div class="col-lg-4">
                     <div class="mto-utility-btns d-flex gap-2 justify-content-lg-end mt-3 mt-lg-0">
                         <input type="hidden" id="inv_id" value="{{ $searched_vehicle->id ?? '' }}">
-                          <a >
+                          <!-- <a >
                             <img src="/assets/images/Frame 1707481624.png" alt="Logo">
-                        </a>
+                        </a> -->
 
                         <!-- Your button with ID -->
                         <button id="fetchButton" onclick="fetchAndPrint()" class="mto-pill-btn">
@@ -485,7 +485,7 @@
 
                             @if($dealer)
                                 <a href="{{ route('dealer_inventory', optional($searched_vehicle->dealer)->id) }}">
-                                    <button class="mto-btn-orange w-100 mt-4 py-2">
+                                    <button class="mto-btn-orange w-100 py-2">
                                         Dealer's Inventory 
                                         <i class="fa-solid fa-arrow-right ms-2"></i>
                                     </button>

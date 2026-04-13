@@ -97,12 +97,15 @@
         <input type="text" class="form-control" placeholder="Max Tow Capacity" name="max_tow_capacity">
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-6">
         <input type="text" class="form-control" placeholder="Fuel Economy" name="fuel_economy">
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-6">
         <input type="text" class="form-control" placeholder="Color" name="color">
     </div>
 
+    <div class="col-12">
+        <textarea class="form-control" rows="4" placeholder="Description" name="notes_dicussion"></textarea>
+    </div>
 </div>

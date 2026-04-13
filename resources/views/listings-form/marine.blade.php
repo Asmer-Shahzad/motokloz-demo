@@ -114,8 +114,12 @@
         </select>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-12">
         <input type="text" class="form-control" placeholder="In Floor Storage Size" name="in_floor_storage_size"
             value="{{ old('in_floor_storage_size') }}">
+    </div>
+
+    <div class="col-12">
+        <textarea class="form-control" rows="4" placeholder="Description" name="notes_dicussion"></textarea>
     </div>
 </div>

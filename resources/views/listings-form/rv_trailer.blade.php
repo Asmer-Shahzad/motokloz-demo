@@ -146,7 +146,7 @@
 
 
     <!-- Floor Plans -->
-    <div class="col-md-4">
+    <div class="col-md-8">
         <div class="fp-multiselect" id="fpMultiselect">
             <div class="fp-trigger" onclick="toggleFpDropdown()">
                 <div class="fp-tags" id="fpTags">
@@ -166,6 +166,10 @@
         </div>
         {{-- Hidden inputs for form submission --}}
         <div id="fpHiddenInputs"></div>
+    </div>
+    
+    <div class="col-12">
+        <textarea class="form-control" rows="4" placeholder="Description" name="notes_dicussion"></textarea>
     </div>
 
     <style>

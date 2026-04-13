@@ -32,26 +32,26 @@
                         <div class="card-container">
                             <h2 class="section-title">Car details</h2>
 
-                    <div class="card-container">
-                        <h2 class="section-title">Car details</h2>
-
-                        <!-- IMAGE UPLOAD -->
-                        <div class="row g-3 mb-4" id="image-upload-container">
-                            <!-- Fixed Upload Box -->
-                            <div class="col-md-3 col-6">
-                                <div class="img-upload-box" id="img-upload-box">
-                                    <i class="fa-regular fa-image fa-2x mb-2"></i>
-                                    <span>Upload Image</span>
-                                    <input type="file" id="image-input" multiple style="display:none;" name="inventory_logo[]">
-                                    <input type="hidden" name="primary_image_index" id="primary_image_index" value="">
+                            <!-- IMAGE UPLOAD -->
+                            <div class="row g-3 mb-4" id="image-upload-container">
+                                <!-- Fixed Upload Box -->
+                                <div class="col-md-3 col-6">
+                                    <div class="img-upload-box" id="img-upload-box">
+                                        <i class="fa-regular fa-image fa-2x mb-2"></i>
+                                        <span>Upload Image</span>
+                                        <input type="file" id="image-input" multiple style="display:none;" name="images[]">
+                                        <input type="hidden" name="primary_image_index" id="primary_image_index" value="">
+                                    </div>
                                 </div>
-                            </div>
 
-                            <!-- Swiper Slider Container -->
-                            <div class="col-9">
-                                <div class="swiper mySwiper">
-                                    <div class="swiper-wrapper" id="swiper-wrapper">
-                                        <!-- JS se images slides yaha add honge -->
+                                <!-- Swiper Slider Container -->
+                                <div class="col-9">
+                                    <div class="swiper mySwiper">
+                                        <div class="swiper-wrapper" id="swiper-wrapper">
+                                            <!-- JS se images slides yaha add honge -->
+                                        </div>
+                                        <div class="swiper-button-next"></div>
+                                        <div class="swiper-button-prev"></div>
                                     </div>
                                 </div>
                             </div>
@@ -79,84 +79,9 @@
                             </div>
 
 
-                            <!--  HERE IS WHERE PARTIAL WILL LOAD -->
-                            <div id="dynamic-form-area">
-                                @include('listings-form.default')
-                            </div>
-
-                            
-    
-                        </div>
-
-
-                        <!-- FEATURES -->
-                        <h4 class="mt-4 mb-3 fw-bold">Features</h4>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-check feature-checkbox">
-                                    <input class="form-check-input" type="checkbox" name="features[]" value="A/C: Front">
-                                    <label class="form-check-label">A/C: Front</label>
-                                </div>
-                                <div class="form-check feature-checkbox">
-                                    <input class="form-check-input" type="checkbox" name="features[]" value="Cruise Control">
-                                    <label class="form-check-label">Cruise Control</label>
-                                </div>
-                                <div class="form-check feature-checkbox">
-                                    <input class="form-check-input" type="checkbox" name="features[]" value="Touchscreen display">
-                                    <label class="form-check-label">Touchscreen display</label>
-                                </div>
-                                <div class="form-check feature-checkbox">
-                                    <input class="form-check-input" type="checkbox" name="features[]" value="Phone connectivity">
-                                    <label class="form-check-label">Phone connectivity</label>
-                                </div>
-                                <div class="form-check feature-checkbox">
-                                    <input class="form-check-input" type="checkbox" name="features[]" value="In-car Wi-Fi">
-                                    <label class="form-check-label">In-car Wi-Fi</label>
-                                </div>
-                                <div class="form-check feature-checkbox">
-                                    <input class="form-check-input" type="checkbox" name="features[]" value="Brake assist (BA)">
-                                    <label class="form-check-label">Brake assist (BA)</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-check feature-checkbox">
-                                    <input class="form-check-input" type="checkbox" name="features[]" value="Backup Camera">
-                                    <label class="form-check-label">Backup Camera</label>
-                                </div>
-                                <div class="form-check feature-checkbox">
-                                    <input class="form-check-input" type="checkbox" name="features[]" value="Audio system">
-                                    <label class="form-check-label">Audio system</label>
-                                </div>
-                                <div class="form-check feature-checkbox">
-                                    <input class="form-check-input" type="checkbox" name="features[]" value="GPS navigation">
-                                    <label class="form-check-label">GPS navigation</label>
-                                </div>
-                                <div class="form-check feature-checkbox">
-                                    <input class="form-check-input" type="checkbox" name="features[]" value="Breakfast">
-                                    <label class="form-check-label">Breakfast</label>
-                                </div>
-                                <div class="form-check feature-checkbox">
-                                    <input class="form-check-input" type="checkbox" name="features[]" value="Anti-lock brake system (ABS)">
-                                    <label class="form-check-label">Anti-lock brake system (ABS)</label>
-                                </div>
-                                <div class="form-check feature-checkbox">
-                                    <input class="form-check-input" type="checkbox" name="features[]" value="Airbags">
-                                    <label class="form-check-label">Airbags</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PRICING -->
-                    <div class="card-container mt-4">
-                        <h2 class="section-title">Pricing</h2>
-                        <div class="mb-3">
-                            <input type="text" class="form-control" placeholder="Tour price ($)" name="price">
-                        </div>
-
-                        <label class="form-label fw-bold">Extra Services</label>
-                        <div id="extra-services-container">
-                            <div class="row g-3 align-items-center extra-service-row mb-3">
+                            <!-- FEATURES -->
+                            <h4 class="mt-4 mb-3 fw-bold">Features</h4>
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-check feature-checkbox">
                                         <input class="form-check-input" type="checkbox" name="features[]"
