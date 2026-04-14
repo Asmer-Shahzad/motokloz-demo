@@ -5,9 +5,11 @@ $end = $start + count($search_inventory_result) - 1;
 @endphp
 
 @php
-    function formatPrice($price) {
-        return number_format($price, 2, '.', ',');
-    }
+  function formatPrice($price) {
+    $cleaned = str_replace(['$', ','], '', $price);
+    $number = is_numeric($cleaned) ? (float)$cleaned : 0;
+    return number_format($number, 2, '.', ',');
+}
 @endphp
 
 @extends('layouts.app')
@@ -417,7 +419,7 @@ $end = $start + count($search_inventory_result) - 1;
                                 </div>
 
                                 <div class="car-price-block text-end">
-                                    <h4 class="price-value">${{ formatPrice($recent_vehicle->price_retail_date ?? '0') }}</h4>
+                                    <h4 class="price-value">${{isset($recent_vehicle->price_retail_date) ? formatPrice($recent_vehicle->price_retail_date) : 0}}</h4>
                                 </div>
                             </div>
                         </div>
