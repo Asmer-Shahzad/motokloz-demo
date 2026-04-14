@@ -128,6 +128,7 @@ class SearchController extends Controller
 
     public function search_inventory(Request $request)
     {
+        $selectedAsset = $request->selected_asset;
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
 
@@ -164,89 +165,171 @@ class SearchController extends Controller
         $makeTypes = [];
         $bodyStyleTypes = [];
 
-        // ✅ LOOP only for filters (makes + body styles)
-        foreach ($assets as $asset) {
+        $res = Http::get(env("diskloz_base_url").'/api/search_inventory', [
+            'selected_asset' => $selectedAsset,
+            'per_page' => 1,
+        ]);
+        
+        if ($res->successful()) {
+            $inv = json_decode($res->body());
 
-            $res = Http::get($this->disklozBaseUrl() . '/api/search_inventory', [
-                'selected_asset' => $asset,
-                'per_page' => 1,
-            ]);
+            /** ---------------- MAKES ---------------- */
+            switch($selectedAsset) {
+                case 'AUTO':
+                    $makes = $inv->filters->MfgAuto ?? [];
+                    $bodyStyles = $inv->filters->BodyStyle ?? [];
+                    break;
 
-            if ($res->successful()) {
-                $inv = json_decode($res->body());
+                case 'SNOWSPORTS':
+                    $makes = $inv->filters->MfgSnowsport ?? [];
+                    $bodyStyles = $inv->filters->BodyStyleSnowSport ?? [];
+                    break;
 
-                /** ---------------- MAKES ---------------- */
-                switch ($asset) {
-                    case 'AUTO':
-                        $makes = $inv->filters->MfgAuto ?? [];
-                        $bodyStyles = $inv->filters->BodyStyle ?? [];
-                        break;
+                case 'WATERSPORT':
+                    $makes = $inv->filters->MfgWatersport ?? [];
+                    $bodyStyles = $inv->filters->BodyStyle ?? [];
+                    break;
 
-                    case 'SNOWSPORTS':
-                        $makes = $inv->filters->MfgSnowsport ?? [];
-                        $bodyStyles = $inv->filters->BodyStyleSnowSport ?? [];
-                        break;
+                case 'MARINE':
+                    $makes = $inv->filters->MfgMarine ?? [];
+                    $bodyStyles = $inv->filters->BodyStyle ?? [];
+                    break;
 
-                    case 'WATERSPORT':
-                        $makes = $inv->filters->MfgWatersport ?? [];
-                        $bodyStyles = $inv->filters->BodyStyle ?? [];
-                        break;
+                case 'RV / TRAILER':
+                    $makes = $inv->filters->MfgRvTrailer ?? [];
+                    $bodyStyles = $inv->filters->BodyStyleRvTrailer ?? [];
+                    break;
 
-                    case 'MARINE':
-                        $makes = $inv->filters->MfgMarine ?? [];
-                        $bodyStyles = $inv->filters->BodyStyle ?? [];
-                        break;
+                case 'MOTORCYCLE / ATV / POWERSPORTS':
+                    $makes = $inv->filters->MfgMotorcycleAtv ?? [];
+                    $bodyStyles = $inv->filters->BodyStyleMotorcycleAtv ?? [];
+                    break;
 
-                    case 'RV / TRAILER':
-                        $makes = $inv->filters->MfgRvTrailer ?? [];
-                        $bodyStyles = $inv->filters->BodyStyleRvTrailer ?? [];
-                        break;
+                case 'HEAVY TRUCK/EQUIPMENT':
+                    $makes = $inv->filters->MfgHeavyTruckEquipment ?? [];
+                    $bodyStyles = $inv->filters->BodyStyleHeavyTruckEquipment ?? [];
+                    break;
 
-                    case 'MOTORCYCLE / ATV / POWERSPORTS':
-                        $makes = $inv->filters->MfgMotorcycleAtv ?? [];
-                        $bodyStyles = $inv->filters->BodyStyleMotorcycleAtv ?? [];
-                        break;
+                case 'HEAVY DUTY TRAILERS':
+                    $makes = $inv->filters->MfgHeavyDutyTrailer ?? [];
+                    $bodyStyles = $inv->filters->BodyStyleHeavyDutyTrailer ?? [];
+                    break;
 
-                    case 'HEAVY TRUCK/EQUIPMENT':
-                        $makes = $inv->filters->MfgHeavyTruckEquipment ?? [];
-                        $bodyStyles = $inv->filters->BodyStyleHeavyTruckEquipment ?? [];
-                        break;
+                case 'FARM EQUIPMENT':
+                    $makes = $inv->filters->MfgFarmEquipment ?? [];
+                    $bodyStyles = $inv->filters->BodyStyleFarmEquipment ?? [];
+                    break;
 
-                    case 'HEAVY DUTY TRAILERS':
-                        $makes = $inv->filters->MfgHeavyDutyTrailer ?? [];
-                        $bodyStyles = $inv->filters->BodyStyleHeavyDutyTrailer ?? [];
-                        break;
-
-                    case 'FARM EQUIPMENT':
-                        $makes = $inv->filters->MfgFarmEquipment ?? [];
-                        $bodyStyles = $inv->filters->BodyStyleFarmEquipment ?? [];
-                        break;
-
-                    default:
-                        $makes = [];
-                        $bodyStyles = [];
-                }
-
-                // ✅ Format Makes
-                $makeTypes[$asset] = !empty($makes)
-                    ? collect($makes)->map(fn($m) => [
-                        'id' => $m->id,
-                        'name' => $m->name
-                    ])->sortBy('name')->values()
-                    : collect();
-
-                // ✅ Format Body Styles
-                $bodyStyleTypes[$asset] = !empty($bodyStyles)
-                    ? collect($bodyStyles)->map(fn($b) => [
-                        'id' => $b->id,
-                        'name' => $b->name
-                    ])->sortBy('name')->values()
-                    : collect();
-            } else {
-                $makeTypes[$asset] = collect();
-                $bodyStyleTypes[$asset] = collect();
+                default:
+                    $makes = [];
+                    $bodyStyles = [];
             }
+
+            // ✅ Format Makes
+            $makeTypes[$selectedAsset] = !empty($makes)
+                ? collect($makes)->map(fn($m) => [
+                    'id' => $m->id,
+                    'name' => $m->name
+                ])->sortBy('name')->values()
+                : collect();
+
+            // ✅ Format Body Styles
+            $bodyStyleTypes[$selectedAsset] = !empty($bodyStyles)
+                ? collect($bodyStyles)->map(fn($b) => [
+                    'id' => $b->id,
+                    'name' => $b->name
+                ])->sortBy('name')->values()
+                : collect();
+
+        } else {
+            $makeTypes[$selectedAsset] = collect();
+            $bodyStyleTypes[$selectedAsset] = collect();
         }
+
+        // ✅ LOOP only for filters (makes + body styles)
+        // foreach ($assets as $asset) {
+
+        //     $res = Http::get(env("diskloz_base_url").'/api/search_inventory', [
+        //         'selected_asset' => $asset,
+        //         'per_page' => 1,
+        //     ]);
+
+            // if ($res->successful()) {
+            //     $inv = json_decode($res->body());
+
+            //     /** ---------------- MAKES ---------------- */
+            //     switch($asset) {
+            //         case 'AUTO':
+            //             $makes = $inv->filters->MfgAuto ?? [];
+            //             $bodyStyles = $inv->filters->BodyStyle ?? [];
+            //             break;
+
+            //         case 'SNOWSPORTS':
+            //             $makes = $inv->filters->MfgSnowsport ?? [];
+            //             $bodyStyles = $inv->filters->BodyStyleSnowSport ?? [];
+            //             break;
+
+            //         case 'WATERSPORT':
+            //             $makes = $inv->filters->MfgWatersport ?? [];
+            //             $bodyStyles = $inv->filters->BodyStyle ?? [];
+            //             break;
+
+            //         case 'MARINE':
+            //             $makes = $inv->filters->MfgMarine ?? [];
+            //             $bodyStyles = $inv->filters->BodyStyle ?? [];
+            //             break;
+
+            //         case 'RV / TRAILER':
+            //             $makes = $inv->filters->MfgRvTrailer ?? [];
+            //             $bodyStyles = $inv->filters->BodyStyleRvTrailer ?? [];
+            //             break;
+
+            //         case 'MOTORCYCLE / ATV / POWERSPORTS':
+            //             $makes = $inv->filters->MfgMotorcycleAtv ?? [];
+            //             $bodyStyles = $inv->filters->BodyStyleMotorcycleAtv ?? [];
+            //             break;
+
+            //         case 'HEAVY TRUCK/EQUIPMENT':
+            //             $makes = $inv->filters->MfgHeavyTruckEquipment ?? [];
+            //             $bodyStyles = $inv->filters->BodyStyleHeavyTruckEquipment ?? [];
+            //             break;
+
+            //         case 'HEAVY DUTY TRAILERS':
+            //             $makes = $inv->filters->MfgHeavyDutyTrailer ?? [];
+            //             $bodyStyles = $inv->filters->BodyStyleHeavyDutyTrailer ?? [];
+            //             break;
+
+            //         case 'FARM EQUIPMENT':
+            //             $makes = $inv->filters->MfgFarmEquipment ?? [];
+            //             $bodyStyles = $inv->filters->BodyStyleFarmEquipment ?? [];
+            //             break;
+
+            //         default:
+            //             $makes = [];
+            //             $bodyStyles = [];
+            //     }
+
+            //     // ✅ Format Makes
+            //     $makeTypes[$asset] = !empty($makes)
+            //         ? collect($makes)->map(fn($m) => [
+            //             'id' => $m->id,
+            //             'name' => $m->name
+            //         ])->sortBy('name')->values()
+            //         : collect();
+
+            //     // ✅ Format Body Styles
+            //     $bodyStyleTypes[$asset] = !empty($bodyStyles)
+            //         ? collect($bodyStyles)->map(fn($b) => [
+            //             'id' => $b->id,
+            //             'name' => $b->name
+            //         ])->sortBy('name')->values()
+            //         : collect();
+
+            // } else {
+            //     $makeTypes[$asset] = collect();
+            //     $bodyStyleTypes[$asset] = collect();
+            // }
+        // }
 
 
         // Add sort to API request
@@ -340,6 +423,8 @@ class SearchController extends Controller
             'selected_body_style' => $request->selected_body_style,
             'disklozBaseUrl' => $this->disklozBaseUrl(),
         ];
+
+
 
         return view('car-listing', $data);
     }

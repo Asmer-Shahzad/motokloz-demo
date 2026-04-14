@@ -24,7 +24,6 @@ class ListingController extends Controller
         return rtrim(config('services.diskloz.base_url', 'http://127.0.0.1:8000'), '/');
     }
 
-
     private function dealerLocationMap(): array
     {
         $map = [];
@@ -110,106 +109,106 @@ class ListingController extends Controller
         return response()->json($json);
     }
 
-
     public function listingsIndex(Request $request)
-{
-    $user = Auth::user();
-    $userInfo = $user->information ?? new UserInformation();
-    
-    // Get logged-in user's location
-    $userLocation = $this->getUserLocation();
-
-    // Base query
-    $query = Inventory::where('user_id', auth()->id())->with('extraServices');
-    
-    // Apply search filter
-    $search = $request->get('search');
-    if (!empty($search)) {
-        $query->where(function ($q) use ($search) {
-            $q->where('title', 'LIKE', "%{$search}%")
-            ->orWhere('model', 'LIKE', "%{$search}%")
-            ->orWhere('type', 'LIKE', "%{$search}%")
-            ->orWhere('condition', 'LIKE', "%{$search}%")
-            ->orWhere('stock_number', 'LIKE', "%{$search}%")
-            ->orWhere('mileage', 'LIKE', "%{$search}%")
-            ->orWhere('transmission', 'LIKE', "%{$search}%")
-            ->orWhere('description', 'LIKE', "%{$search}%")
-            ->orWhere('features', 'LIKE', "%{$search}%");
-            
-            // Numeric fields ke liye exact match ya range search
-            if (is_numeric($search)) {
-                $q->orWhere('price', $search);
-            } else {
-                $q->orWhere('price', 'LIKE', "%{$search}%");
-            }
-        });
-    }
-    
-    // Apply sorting based on request
-    $sort = $request->get('sort', 'newest');
-    
-    switch ($sort) {
-        case 'price_asc':
-            $query->orderBy('price', 'asc');
-            break;
-        case 'price_desc':
-            $query->orderBy('price', 'desc');
-            break;
-        case 'newest':
-            $query->latest();
-            break;
-        case 'oldest':
-            $query->oldest();
-            break;
-        default:
-            $query->latest();
-            break;
-    }
-    
-    $listings = $query->get();
-
-    // Enrich listings with user's location data
-    $listingsCollection = $listings->map(function ($listing) use ($userLocation) {
-        $listing->dealer_postal_code = $userLocation['postalCode'] ?? null;
-        $listing->dealer_city = $userLocation['city'] ?? null;
-        $listing->dealer_country = $userLocation['country'] ?? null;
-        $listing->dealer_complete_address = $userLocation['complete_address'] ?? null;
+    {
+        $user = Auth::user();
+        $userInfo = $user->information ?? new UserInformation();
         
-        return $listing;
-    });
+        $userLocation = $this->getUserLocation();
 
-    $total_listings = $listingsCollection->count();
+        // ✅ Diskloz API se Motokloz inventory fetch karo
+        try {
+            $inventoryResponse = Http::get(env("diskloz_base_url") . '/api/search_motokloz_inventory', [
+                'client_id' => auth()->id(),
+            ]);
 
-    $perPage = 6;
-    $currentPage = $request->get('page', 1);
+            $allListings = $inventoryResponse->successful()
+                ? collect($inventoryResponse->json()['data'] ?? [])
+                : collect();
 
-    $listings = new LengthAwarePaginator(
-        $listingsCollection->forPage($currentPage, $perPage),
-        $total_listings,
-        $perPage,
-        $currentPage,
-        ['path' => $request->url(), 'query' => $request->query()]
-    );
+        } catch (\Exception $e) {
+            \Log::error('Motokloz listings fetch error: ' . $e->getMessage());
+            $allListings = collect();
+        }
 
-    $last_page = $listings->lastPage();
-    $current_page = $listings->currentPage();
-    $pageTitle = 'Listings';
-    
-    // Current sort and search for view
-    $currentSort = $request->get('sort', 'newest');
-    $searchTerm = $request->get('search', '');
+        // ✅ Search filter
+        $search = $request->get('search');
+        if (!empty($search)) {
+            $allListings = $allListings->filter(function ($item) use ($search) {
+                $item = (object) $item;
+                return str_contains(strtolower($item->title        ?? ''), strtolower($search))
+                    || str_contains(strtolower($item->model        ?? ''), strtolower($search))
+                    || str_contains(strtolower($item->type         ?? ''), strtolower($search))
+                    || str_contains(strtolower($item->condition    ?? ''), strtolower($search))
+                    || str_contains(strtolower($item->stock_number ?? ''), strtolower($search))
+                    || str_contains(strtolower($item->transmission ?? ''), strtolower($search))
+                    || str_contains(strtolower($item->description  ?? ''), strtolower($search))
+                    || str_contains(strtolower($item->features     ?? ''), strtolower($search))
+                    || str_contains((string)($item->price          ?? ''), $search);
+            })->values();
+        }
 
-    return view('listings', compact(
-        'user',
-        'userInfo',
-        'listings',
-        'pageTitle',
-        'last_page',       
-        'current_page',
-        'currentSort',
-        'searchTerm'
-    ));
-}
+        // ✅ Sorting
+        $sort = $request->get('sort', 'newest');
+
+        $allListings = match($sort) {
+            'price_asc'  => $allListings->sortBy('price')->values(),
+            'price_desc' => $allListings->sortByDesc('price')->values(),
+            'oldest'     => $allListings->sortBy('created_at')->values(),
+            default      => $allListings->sortByDesc('created_at')->values(),
+        };
+
+        // ✅ Location enrich karo
+        $allListings = $allListings->map(function ($item) use ($userLocation) {
+            $item = (object) $item;
+            $item->dealer_postal_code      = $userLocation['postalCode']       ?? null;
+            $item->dealer_city             = $userLocation['city']             ?? null;
+            $item->dealer_country          = $userLocation['country']          ?? null;
+            $item->dealer_complete_address = $userLocation['complete_address'] ?? null;
+            
+            // ✅ features null na ho
+            $item->features  = $item->features  ?? null;
+            $item->title     = $item->title     ?? '';
+            $item->mileage   = $item->mileage   ?? null;
+            $item->price     = $item->price     ?? 0;
+            $item->primary_image = $item->primary_image ?? null;
+            
+            return $item;
+        });
+
+        // ✅ Pagination
+        $total_listings = $allListings->count();
+        $perPage        = 6;
+        $currentPage    = $request->get('page', 1);
+
+        $disklozBaseUrl = env("diskloz_base_url");
+
+        $listings = new LengthAwarePaginator(
+            $allListings->forPage($currentPage, $perPage),
+            $total_listings,
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        $last_page    = $listings->lastPage();
+        $current_page = $listings->currentPage();
+        $pageTitle    = 'Listings';
+        $currentSort  = $request->get('sort', 'newest');
+        $searchTerm   = $request->get('search', '');
+
+       return view('listings', compact(
+            'user',
+            'userInfo',
+            'listings',
+            'pageTitle',
+            'last_page',
+            'current_page',
+            'currentSort',
+            'searchTerm',
+            'disklozBaseUrl' // ✅ add this
+        ));
+    }
 
     public function user_inventory_product_details(Request $request, $id)
     {
@@ -324,7 +323,6 @@ class ListingController extends Controller
         ]);
     }
     
-
     public function addlistings()
     {
         $assets = [
@@ -474,137 +472,6 @@ class ListingController extends Controller
             'driveTrain'
         ));
     }
-
-    
-
-
-    // public function create(Request $request)
-    // {
-    //     $request->validate([
-    //         'title' => 'required|string|max:255',
-    //         'model' => 'nullable|string|max:255',
-    //         'type' => 'nullable|string|max:255',
-    //         'condition' => 'nullable|string|max:255',
-    //         'stock_number' => 'nullable|string|max:255',
-    //         'mileage' => 'nullable|string|max:255',
-    //         'transmission' => 'nullable|string|max:255',
-    //         'description' => 'nullable|string',
-    //         'price' => 'nullable|string|max:255',
-    //         'features' => 'nullable|array',
-    //         'extra_services' => 'nullable|array',
-    //         'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-    //         'primary_image_index' => 'required|integer|min:0',  // new validation
-    //     ]);
-
-    //     // Handle images
-    //     $imageUrls = [];
-    //     if ($request->hasFile('images')) {
-    //         $destinationPath = public_path('listing_images');
-    //         if (!file_exists($destinationPath)) {
-    //             mkdir($destinationPath, 0755, true);
-    //         }
-
-    //         foreach ($request->file('images') as $image) {
-    //             $filename = uniqid() . '_' . time() . '.' . $image->getClientOriginalExtension();
-    //             $image->move($destinationPath, $filename);
-    //             $imageUrls[] = asset('listing_images/' . $filename);
-    //         }
-    //     }
-
-    //     // Ensure primary index is within range
-    //     $primaryIndex = $request->primary_image_index;
-    //     if (!isset($imageUrls[$primaryIndex])) {
-    //         return back()->withErrors(['primary_image_index' => 'Invalid primary image selection.'])->withInput();
-    //     }
-    //     $primaryImageUrl = $imageUrls[$primaryIndex];
-
-    //     // Create inventory
-    //     $inventory = Inventory::create([
-    //         'user_id' => auth()->id(),
-    //         'title' => $request->title,
-    //         'model' => $request->model,
-    //         'type' => $request->type,
-    //         'condition' => $request->condition,
-    //         'stock_number' => $request->stock_number,
-    //         'mileage' => $request->mileage,
-    //         'transmission' => $request->transmission,
-    //         'description' => $request->description,
-    //         'features' => json_encode($request->features ?? []),
-    //         'price' => $request->price,
-    //         'images' => json_encode($imageUrls),
-    //         'primary_image' => $primaryImageUrl,   // new field
-    //     ]);
-
-    //     // Extra services logic same as before
-    //     if ($request->extra_services) {
-    //         foreach ($request->extra_services as $service) {
-    //             if (!empty($service['title']) || !empty($service['price'])) {
-    //                 $inventory->extraServices()->create([
-    //                     'title' => $service['title'] ?? '',
-    //                     'price' => $service['price'] ?? null,
-    //                 ]);
-    //             }
-    //         }
-    //     }
-
-    //     return redirect()->back()->with('success', 'Listing added successfully!');
-    // }
-
-    // public function selling(Request $request){
-    //     $response = Http::get($this->baseUrl().'/api/inventory-form');
-    //     $data = json_decode($response->body());
-    //     $array = [];
-    //     foreach ($data as $key => $value) {
-    //             $array[$key] = $value;
-    //     }
-    //     return view('selling', ['array' => $array] );
-    // }
-
-    // public function save_inventory(Request $request)
-    // {
-    //     try {
-
-    //         $http = Http::asMultipart();
-
-    //         // 1. send normal fields
-    //         foreach ($request->except('inventory_logo') as $key => $value) {
-    //             if (!is_null($value)) {
-    //                 $http = $http->attach(
-    //                     $key,
-    //                     is_array($value) ? json_encode($value) : $value
-    //                 );
-    //             }
-    //         }
-
-    //         // 2. user id
-    //         $http = $http->attach('user_id', auth()->id());
-
-    //         // 3. images attach (IMPORTANT FIX)
-    //         if ($request->hasFile('inventory_logo')) {
-    //             foreach ($request->file('inventory_logo') as $image) {
-    //                 $http = $http->attach(
-    //                     'images[]', // 👉 MUST match API side
-    //                     file_get_contents($image->getRealPath()),
-    //                     $image->getClientOriginalName()
-    //                 );
-    //             }
-    //         }
-
-    //         // 4. primary index
-    //         if ($request->primary_image_index !== null) {
-    //             $http = $http->attach('primary_image_index', $request->primary_image_index);
-    //         }
-
-    //         // 5. FINAL REQUEST (IMPORTANT)
-    //         $response = $http->post(env("DISKLOZ_BASE_URL") . '/api/inventory-form-save');
-
-    //         return redirect()->back()->with('success', 'Listing added successfully!');
-
-    //     } catch (\Exception $e) {
-    //         return redirect()->back()->with('error', $e->getMessage());
-    //     }
-    // }
-
 
     public function save_inventory(Request $request)
     {

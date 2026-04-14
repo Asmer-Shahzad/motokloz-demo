@@ -419,15 +419,13 @@
                                             </div>
                                         </div>
                             @endforeach
-                        @else
-                            <div class="col-12">
-                                <div class="text-center py-5">
-                                    <i class="fas fa-car fa-3x text-muted mb-3"></i>
-                                    <h5>No vehicles found</h5>
-                                    <p class="text-muted">Try adjusting your filters or add a new vehicle.</p>
-                                </div>
-                            </div>
-                        @endif
+                    </div>
+                    @else
+                        <div class="col-12 text-center my-5">
+                            <i class="fas fa-car fa-3x text-muted mb-3"></i>
+                            <p class="text-center">No vehicles found matching your criteria.</p>
+                        </div>
+                    @endif
 
                     @if ($search_inventory_result != null && count($search_inventory_result) > 0)
                         <div class="my-4">

@@ -39,7 +39,7 @@
                                     <div class="img-upload-box" id="img-upload-box">
                                         <i class="fa-regular fa-image fa-2x mb-2"></i>
                                         <span>Upload Image</span>
-                                        <input type="file" id="image-input" multiple style="display:none;" name="images[]">
+                                        <input type="file" id="image-input" multiple style="display:none;" name="inventory_logo[]">
                                         <input type="hidden" name="primary_image_index" id="primary_image_index" value="">
                                     </div>
                                 </div>
@@ -300,7 +300,18 @@
 
             let asset = $(this).val();
 
-            if (!asset) return;
+            // ✅ Clear everything and stop if no asset selected
+            if (!asset) {
+                $('#dynamic-form-area').html('');
+                $('#make').html('<option value="">Select Make</option>');
+                $('#body_style').html('<option value="">Select Body Style</option>');
+                $('#year').html('<option value="">Select Year</option>');
+                $('#condition').html('<option value="">Select Condition</option>');
+                $('#engine').html('<option value="">Select Engine</option>');
+                $('#transmission').html('<option value="">Select Transmission</option>');
+                $('#drive_train').html('<option value="">Select Drive Train</option>');
+                return;
+            }
 
             $.ajax({
                 url: "{{ route('load.asset.form') }}",
