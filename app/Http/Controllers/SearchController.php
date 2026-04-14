@@ -9,12 +9,50 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserInformation;
+use App\Models\User;
 
 class SearchController extends Controller
 {
     private function disklozBaseUrl(): string
     {
         return rtrim(config('services.diskloz.base_url', 'https://diskloz.ca'), '/');
+    }
+
+    private function getUserLocation(): array
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return [];
+        }
+
+        $userInfo = $user->information ?? null;
+
+        if (!$userInfo) {
+            return [];
+        }
+
+        return [
+            'city' => $userInfo->city ?? null,
+            'postalCode' => $userInfo->postalCode ?? null,
+            'complete_address' => $userInfo->complete_address ?? null,
+        ];
+    }
+
+
+
+    private function motoklozUserLocationMap(): array
+    {
+        return UserInformation::whereNotNull('postalCode')
+            ->orWhereNotNull('city')
+            ->get(['user_id', 'postalCode', 'city', 'country'])
+            ->keyBy(fn($info) => (string) $info->user_id)
+            ->map(fn($info) => [
+                'postal_code' => $info->postalCode,
+                'city'        => $info->city,
+                'country'     => $info->country,
+            ])
+            ->toArray();
     }
 
     private function dealerLocationMap(): array
@@ -50,9 +88,13 @@ class SearchController extends Controller
     }
 
 
-    public function curl_get($url):JsonResponse
+
+
+
+
+    public function curl_get($url): JsonResponse
     {
-        $json = ["status"=>false, "message" => "", "data"=>[]];
+        $json = ["status" => false, "message" => "", "data" => []];
         // $url = "https://portaldesignunit.com/terminal/agents";
         // for sending data as json type
         $apiUrl = $this->disklozBaseUrl() . $url;
@@ -62,7 +104,7 @@ class SearchController extends Controller
             CURLOPT_HTTPHEADER,
             array(
                 'Content-Type: application/json', // if the content type is json
-                )
+            )
         );
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -75,7 +117,7 @@ class SearchController extends Controller
             $error_msg = curl_error($ch);
         }
         curl_close($ch);
-        if ($status_code > 199 && $status_code < 203){
+        if ($status_code > 199 && $status_code < 203) {
             $json["status"] = true;
         }
         $json["data"] = json_decode($result);
@@ -84,11 +126,11 @@ class SearchController extends Controller
 
 
 
-   public function search_inventory(Request $request)
+    public function search_inventory(Request $request)
     {
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
-        
+
         $assets = [
             'AUTO',
             'FARM EQUIPMENT',
@@ -125,7 +167,7 @@ class SearchController extends Controller
         // ✅ LOOP only for filters (makes + body styles)
         foreach ($assets as $asset) {
 
-            $res = Http::get(env("diskloz_base_url").'/api/search_inventory', [
+            $res = Http::get($this->disklozBaseUrl() . '/api/search_inventory', [
                 'selected_asset' => $asset,
                 'per_page' => 1,
             ]);
@@ -134,7 +176,7 @@ class SearchController extends Controller
                 $inv = json_decode($res->body());
 
                 /** ---------------- MAKES ---------------- */
-                switch($asset) {
+                switch ($asset) {
                     case 'AUTO':
                         $makes = $inv->filters->MfgAuto ?? [];
                         $bodyStyles = $inv->filters->BodyStyle ?? [];
@@ -200,7 +242,6 @@ class SearchController extends Controller
                         'name' => $b->name
                     ])->sortBy('name')->values()
                     : collect();
-
             } else {
                 $makeTypes[$asset] = collect();
                 $bodyStyleTypes[$asset] = collect();
@@ -220,15 +261,24 @@ class SearchController extends Controller
         $inventory = $result->inventory ?? null;
 
         $dealerLocationMap = $this->dealerLocationMap();
+        $motoklozUserMap   = $this->motoklozUserLocationMap();
 
-        $inventoryData = collect($inventory->data ?? [])->map(function ($vehicle) use ($dealerLocationMap) {
+        $inventoryData = collect($inventory->data ?? [])->map(function ($vehicle) use ($dealerLocationMap, $motoklozUserMap) {
             $dealerKey = (string) ($vehicle->user_id ?? $vehicle->dealer_id ?? '');
-            $location = $dealerLocationMap[$dealerKey] ?? [];
+            $clientKey = (string) ($vehicle->client_id ?? '');
+
+            // Priority 1: motokloz user_information (most up-to-date, user controls it)
+            // Priority 2: diskloz dealer map fallback
+            $location = $motoklozUserMap[$dealerKey]
+                ?? $motoklozUserMap[$clientKey]
+                ?? $dealerLocationMap[$dealerKey]
+                ?? [];
 
             $vehicle->dealer_postal_code = $location['postal_code'] ?? null;
-            $vehicle->dealer_city = $location['city'] ?? null;
-            $vehicle->dealer_province = $location['province'] ?? null;
-            $vehicle->dealer_country = $location['country'] ?? null;
+            $vehicle->dealer_city        = $location['city'] ?? null;
+            $vehicle->dealer_province    = $location['province'] ?? null;
+            $vehicle->dealer_country     = $location['country'] ?? null;
+            $vehicle->dealer_complete_address = $location['complete_address'] ?? null;
 
             return $vehicle;
         })->values();
@@ -293,7 +343,4 @@ class SearchController extends Controller
 
         return view('car-listing', $data);
     }
-
-    
-
 }
