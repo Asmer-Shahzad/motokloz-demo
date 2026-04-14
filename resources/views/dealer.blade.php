@@ -41,16 +41,17 @@ function formatPrice($price) {
                             onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultdealerlogo.png') }}';">
                         <div>
                             <h3 class="mb-0 fw-bold">{{ $dealer->legal_name }}</h3>
-                      <p class="mb-0">
-    <i class="fas fa-map-marker-alt"></i>
-    
-    {{ collect([
-        $dealer?->physical_address,
-        $dealer?->city,
-        $dealer?->province,
-        $dealer?->postal_code
-    ])->filter()->implode(', ') ?: 'Address not available' }}
-</p>
+                            <p class="mb-3">
+                                <i class="fas fa-map-marker-alt text-warning me-1"></i>
+
+                            {{ collect([
+                                $dealer?->physical_address,
+                                $dealer?->city,
+                                $dealer?->province,
+                                $dealer?->postal_code
+                            ])->filter()->implode(', ') ?: 'Address not available' }}
+
+                            </p>
                             <span class="badge bg-light text-dark border mt-2 p-2 rounded-5">
                                 {{ $inventory->total() }} Vehicles
                             </span>
@@ -435,9 +436,7 @@ function formatPrice($price) {
                         </div>
                         <div class="toolbar-right d-flex gap-2 mb-4">
                             <button type="button" class="btn-clear-filters">Clear Filters</button>
-
-                            <!-- HIDDEN SELECT FOR BACKEND -->
-                            <select id="sortSelect" class="d-none">
+                            <select class="form-select form-select-sm tool-select" id="sortSelect">
                                 <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Name (A-Z)</option>
                                 <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Name (Z-A)</option>
                                 <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
@@ -445,22 +444,6 @@ function formatPrice($price) {
                                 <option value="year_desc" {{ request('sort') == 'year_desc' ? 'selected' : '' }}>Year: Newest First</option>
                                 <option value="year_asc" {{ request('sort') == 'year_asc' ? 'selected' : '' }}>Year: Oldest First</option>
                             </select>
-
-                            <!-- VISIBLE DROPDOWN UI -->
-                            <div class="dropdown">
-                                <button class="btn filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="sortDropdownBtn">
-                                    <img src="/assets/images/filter.png" class="me-2 filter-icon" alt="">
-                                    Sort
-                                </button>
-                                <ul class="dropdown-menu" id="sortDropdownMenu">
-                                    <li><a class="dropdown-item" href="#" data-value="name_asc">Name (A-Z)</a></li>
-                                    <li><a class="dropdown-item" href="#" data-value="name_desc">Name (Z-A)</a></li>
-                                    <li><a class="dropdown-item" href="#" data-value="price_asc">Price: Low to High</a></li>
-                                    <li><a class="dropdown-item" href="#" data-value="price_desc">Price: High to Low</a></li>
-                                    <li><a class="dropdown-item" href="#" data-value="year_desc">Year: Newest First</a></li>
-                                    <li><a class="dropdown-item" href="#" data-value="year_asc">Year: Oldest First</a></li>
-                                </ul>
-                            </div>
                         </div>
                     </div>
 
@@ -567,71 +550,68 @@ function formatPrice($price) {
     </section>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const select = document.getElementById('sortSelect');
-    const dropdownItems = document.querySelectorAll('#sortDropdownMenu .dropdown-item');
-    const dropdownBtn = document.getElementById('sortDropdownBtn');
+
+    const sortSelect = document.getElementById('sortSelect');
     const clearFiltersBtn = document.querySelector('.btn-clear-filters');
 
-    // ✅ Update dropdown button text based on current selection
-    function updateDropdownText() {
-        const currentOption = select.options[select.selectedIndex];
-        dropdownBtn.innerHTML = `<img src="/assets/images/filter.png" class="me-2 filter-icon" alt=""> ${currentOption.text}`;
-    }
-    updateDropdownText();
+    // ✅ SORT (Backend call)
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
 
-    // ✅ Handle dropdown item click
-    dropdownItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            const value = this.dataset.value;
-            const text = this.textContent.trim();
+            const value = this.value;
+            const text = this.options[this.selectedIndex].text;
 
-            // Update hidden select
-            select.value = value;
+            const url = new URL(window.location.href);
+            url.searchParams.set('sort', value);
 
-            // Update button text
-            updateDropdownText();
-
-            // Show snackbar
+            // snackbar store (after reload show hoga)
             localStorage.setItem('snackbar', `Sorted by: ${text}`);
 
-            // Redirect with updated sort
-            const params = new URLSearchParams(window.location.search);
-            params.set('sort', value);
-            params.delete('page'); // reset page
-            window.location.href = window.location.pathname + '?' + params.toString();
-        });
-    });
-
-    // ✅ Clear filters button
-    if (clearFiltersBtn) {
-        clearFiltersBtn.addEventListener('click', function() {
-            const params = new URLSearchParams(window.location.search);
-            params.delete('sort'); // remove sort
-            params.delete('page'); // reset page
-            localStorage.setItem('snackbar', 'Filters cleared!');
-            window.location.href = window.location.pathname + '?' + params.toString();
+            window.location.href = url;
         });
     }
 
-    // ✅ Show snackbar after redirect
+    // ✅ CLEAR FILTERS
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', function() {
+
+            const url = new URL(window.location.href);
+
+            // sort remove karo
+            url.searchParams.delete('sort');
+
+            localStorage.setItem('snackbar', 'Filters cleared!');
+            window.location.href = url;
+        });
+    }
+
+    // ✅ SHOW SNACKBAR AFTER RELOAD
     const message = localStorage.getItem('snackbar');
+
     if (message) {
         showSnackbar(message, 'info', 2000);
         localStorage.removeItem('snackbar');
     }
 
+    // ✅ SNACKBAR FUNCTION
     function showSnackbar(message, type = 'success', duration = 3000) {
         let snackbar = document.getElementById('snackbar');
+
         if (!snackbar) {
             snackbar = document.createElement('div');
             snackbar.id = 'snackbar';
             document.body.appendChild(snackbar);
         }
+
         snackbar.textContent = message;
-        snackbar.className = 'show ' + type;
-        setTimeout(() => snackbar.classList.remove('show'), duration);
+        snackbar.className = '';
+        snackbar.classList.add('show', type);
+
+        setTimeout(() => {
+            snackbar.classList.remove('show');
+        }, duration);
     }
+
 });
 </script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -957,29 +937,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 </script>
-<style>
-    .filter-btn {
-        background: #f3f4f6;
-        border: none;
-        padding: 9px 20px;
-        font-size: 14px;
-        font-weight: 500;
-        border-radius: 50px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        color: #333;
-    }
-
-    .filter-btn:hover {
-        background: #e5e7eb;
-    }
-
-    .filter-icon {
-        width: 14px;
-        height: 14px;
-        object-fit: contain;
-        margin-right: 0 !important;
-    }
-</style>
 @endsection

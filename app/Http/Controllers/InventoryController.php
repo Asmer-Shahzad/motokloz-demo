@@ -58,11 +58,11 @@ class InventoryController extends Controller
         if ($request->filled('sort')) {
             switch ($request->sort) {
                 case 'price_asc':
-                    $buying_products = $buying_products->sortBy(fn($v) => (float) ($v->price ?? 0));
+                    $buying_products = $buying_products->sortBy(fn($v) => (float) ($v->price_retail_date ?? 0));
                     break;
 
                 case 'price_desc':
-                    $buying_products = $buying_products->sortByDesc(fn($v) => (float) ($v->price ?? 0));
+                    $buying_products = $buying_products->sortByDesc(fn($v) => (float) ($v->price_retail_date ?? 0));
                     break;
 
                 case 'year_asc':
@@ -100,57 +100,118 @@ class InventoryController extends Controller
         ]);
     }
 
-    public function selling(Request $request){
-        $response = Http::get($this->baseUrl().'/api/inventory-form');
-        $data = json_decode($response->body());
-        $array = [];
-        foreach ($data as $key => $value) {
-                $array[$key] = $value;
-        }
-        return view('selling', ['array' => $array] );
-    }
+    // public function selling(Request $request){
+    //     $response = Http::get($this->baseUrl().'/api/inventory-form');
+    //     $data = json_decode($response->body());
+    //     $array = [];
+    //     foreach ($data as $key => $value) {
+    //             $array[$key] = $value;
+    //     }
+    //     return view('selling', ['array' => $array] );
+    // }
     
     public function inventory_product_details(Request $request, $id)
     {
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
-        
-        $response_search = Http::get($this->baseUrl().'/api/search_by_id', [
+
+        $response_search = Http::get($this->baseUrl() . '/api/search_by_id', [
             'id' => $id
         ]);
 
-        // correct decoding
         $searched_vehicle = json_decode($response_search->body());
 
-        // videos from API
         $videos = $searched_vehicle->videos ?? [];
 
-        // contact
-        $contact = isset($searched_vehicle->dealer)
-            ? $searched_vehicle->dealer->phone_no
-            : null;
+        // ✅ Source check karo — motokloz hai to local user dhundho
+        $isMotokloz = strtolower($searched_vehicle->source ?? '') === 'motokloz';
 
-        // dealer
         $dealer = $searched_vehicle->dealer ?? null;
 
+        if ($isMotokloz && !empty($searched_vehicle->client_id)) {
+
+            // ✅ Seedha local user dhundho — diskloz API skip
+            $clientId  = $searched_vehicle->client_id;
+            $localUser = \App\Models\User::with('information')->where('id', $clientId)->first();
+
+            if ($localUser) {
+                $dealer = $this->buildDealerFromLocalUser($localUser);
+            }
+
+        } elseif (!$dealer && !empty($searched_vehicle->client_id)) {
+
+            // ✅ Dealer null hai aur motokloz bhi nahi — diskloz API try karo
+            $clientId  = $searched_vehicle->client_id;
+            $localUser = \App\Models\User::with('information')->where('id', $clientId)->first();
+
+            if ($localUser) {
+                try {
+                    $dealerResponse = Http::get($this->baseUrl() . '/api/get_dealer_by_client_id', [
+                        'client_id' => $clientId
+                    ]);
+
+                    if ($dealerResponse->successful()) {
+                        $dealerData = json_decode($dealerResponse->body());
+
+                        $dealer = (!empty($dealerData) && isset($dealerData->id))
+                            ? $dealerData
+                            : $this->buildDealerFromLocalUser($localUser);
+                    } else {
+                        $dealer = $this->buildDealerFromLocalUser($localUser);
+                    }
+
+                } catch (\Exception $e) {
+                    \Log::error('Dealer fetch error: ' . $e->getMessage());
+                    $dealer = $this->buildDealerFromLocalUser($localUser);
+                }
+            }
+        }
+
+        $contact = $dealer->phone_no ?? null;
+
         return view('car-details', [
-            'user' => $user,
-            'userInfo' => $userInfo,
+            'user'             => $user,
+            'userInfo'         => $userInfo,
             'searched_vehicle' => $searched_vehicle,
-            'videos' => $videos,
-            'contact' => $contact,
-            'dealer' => $dealer,
-            'pageTitle' => $searched_vehicle->title ?? 'Car Details'
+            'videos'           => $videos,
+            'contact'          => $contact,
+            'dealer'           => $dealer,
+            'pageTitle'        => $searched_vehicle->title ?? 'Car Details'
         ]);
     }
 
-    public function save_inventory(Request $request){
-        $payload = $request->all();
-        $payload['user_id'] = auth()->user()->id;
-        $response = Http::post($this->baseUrl().'/api/inventory-form-save', $payload);
-        $data = json_decode($response->body());
-        return redirect()->route('selling')->with('info',$data->message);
+
+    // Controller mein private function
+    private function buildDealerFromLocalUser($localUser): object
+    {
+        $info = $localUser->information;
+
+        return (object) [
+            'id'               => $localUser->id,
+            'legal_name'       => $info->full_name       ?? $localUser->name ?? 'N/A',
+            'first_name'       => $info->full_name       ?? $localUser->name ?? '',
+            'last_name'        => '',
+            'email'            => $localUser->email      ?? 'N/A',
+            'phone_no'         => $info->contact_number  ?? 'N/A',
+            'logo'             => $info->avatar          ?? null,
+            'city'             => $info->city            ?? null,
+            'province'         => null,                         // motokloz has no province field
+            'physical_address' => $info->complete_address ?? null,
+            'postal_code'      => $info->postalCode      ?? null,
+            'country'          => $info->country         ?? null,
+            'internal_notes'   => $info->bio             ?? null,
+            'is_motokloz_user' => true,
+            'inventory'        => [],
+        ];
     }
+
+    // public function save_inventory(Request $request){
+    //     $payload = $request->all();
+    //     $payload['user_id'] = auth()->user()->id;
+    //     $response = Http::post($this->baseUrl().'/api/inventory-form-save', $payload);
+    //     $data = json_decode($response->body());
+    //     return redirect()->route('selling')->with('info',$data->message);
+    // }
 
     public function edit_inventory(Request $request, $id){
         $payload = $request->all();
@@ -344,8 +405,8 @@ class InventoryController extends Controller
                 'inventory_id' => $vehicleId
             ];
             
-            // Get base URL from env
-            $baseUrl = env('DISKLOZ_BASE_URL');
+            // Get base URL
+            $baseUrl = $this->baseUrl();
             if (!$baseUrl) {
                 return response()->json([
                     'success' => false,
@@ -400,7 +461,7 @@ class InventoryController extends Controller
             ];
 
             // Use DELETE for removing
-            $response = Http::delete(env("DISKLOZ_BASE_URL") . '/api/remove_like_status', $data);
+            $response = Http::delete($this->baseUrl() . '/api/remove_like_status', $data);
 
             if ($response->successful()) {
                 return response()->json($response->json());

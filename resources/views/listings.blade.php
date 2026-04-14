@@ -110,57 +110,51 @@
                                         <div class="row g-4" id="vehicleContainer">
 
                                             @forelse($listings as $listing)
-
-                                                @php
-                                                    $features = json_decode($listing->features, true);
-                                                @endphp
-
-                                                <div class="col-lg-4 col-sm-6 vehicle-card">
+                                                <div class="col-lg-4 col-sm-6 vehicle-card" 
+                                                    data-id="{{ $listing->id }}"
+                                                    data-name="{{ strtolower($listing->mfg_auto ?? '') }} {{ strtolower($listing->model ?? '') }}"
+                                                    data-price="{{ $listing->price_retail_date ?? 0 }}"
+                                                    data-year="{{ $listing->year ?? 0 }}">
                                                     <div class="modern-car-card shadow-sm">
-                                                        <a href="{{ route('user_inventory_product_details', $listing->id) }}">
-                                                        <!-- IMAGE -->
-                                                            <div class="car-card-top">
-                                                                @if(!empty($listing->primary_image))
-                                                                    <img src="{{ $listing->primary_image }}" alt="Car">
-                                                                @else
-                                                                    <img src="{{ asset('assets/images/defaultimage.jpg') }}" alt="Car">
-                                                                @endif
+                                                        <div class="car-card-top">
 
-                                                                <div class="badge-mileage">
-                                                                    <img src="/assets/images/mile1.png" class="me-2" style="width:20px; height:12px;">
-                                                                    {{ $listing->mileage ?? 'N/A' }} Km
-                                                                </div>
+                                                            <a href="{{ route('inventory_product_details', $listing->id) }}">
+                                                                <img style="width:100%" src="{{ $listing->primary_image
+                                                                ? (Str::startsWith($listing->primary_image, 'http')
+                                                                    ? $listing->primary_image
+                                                                    : $disklozBaseUrl . '/admin_assets/images/inventory_images/' . $listing->primary_image)
+                                                                : asset('assets/images/defaultimage.jpg') }}" alt="Vehicle Image"
+                                                            class="img-box img-fluid"
+                                                            onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
+                                                            </a>
+                                                            <div class="badge-mileage d-flex align-items-center">
+                                                                <img src="/assets/images/mile1.png" alt="Mileage" class="me-2" style="width:20px; height:12px;">
+                                                                {{ $listing->mileage
+                                                                    ? trim(str_ireplace('km', '', $listing->mileage)) . ' km'
+                                                                    : '0 km' }}
                                                             </div>
-                                                        </a>
-                                                        <!-- CONTENT -->
+                                                        </div>
                                                         <div class="car-card-bottom">
-
                                                             <h5 class="car-main-title">
-                                                                {{ $listing->title }}
+                                                                {{ $listing->year }} {{ $listing->mfg_auto }} {{ $listing->model }} {{ $listing->trim }}
                                                             </h5>
 
                                                             @php
                                                                 $dealerPostalCode = $listing->dealer_postal_code ?? '';
-                                                                $dealerCity = $listing->dealer_city ?? '';
-                                                                $hasLocation = !empty($dealerPostalCode) || !empty($dealerCity);
+                                                                $dealerCity       = $listing->dealer_city        ?? '';
+                                                                $dealerProvince   = $listing->dealer_province    ?? '';
+                                                                $dealerCountry    = $listing->dealer_country     ?? '';
                                                             @endphp
 
-                                                            <p class="car-distance-away"
-                                                                @if($hasLocation)
-                                                                    data-dealer-postal="{{ $dealerPostalCode }}"
-                                                                    data-dealer-city="{{ $dealerCity }}"
-                                                                @endif>
+                                                            <p class="car-distance-away" 
+                                                                data-dealer-postal="{{ $dealerPostalCode }}"
+                                                                data-dealer-city="{{ $dealerCity }}"
+                                                                data-dealer-province="{{ $dealerProvince }}"
+                                                                data-dealer-country="{{ $dealerCountry }}">
                                                                 <i class="fa-solid fa-location-dot"></i>
-                                                                <span class="distance-value">
-                                                                    @if($hasLocation)
-                                                                        Loading...
-                                                                    @else
-                                                                        12 Km away
-                                                                    @endif
-                                                                </span>
+                                                                <span class="distance-value">Loading...</span>
                                                             </p>
 
-                                                            <!-- FEATURES ICONS -->
                                                             <div class="car-circle-icons-group">
                                                                 <img src="/assets/images/no-accidents.png" alt="">
                                                                 <img src="/assets/images/low-mileage.png" alt="">
@@ -169,18 +163,14 @@
                                                                 <span class="extra-icons-count">12+</span>
                                                             </div>
 
-                                                            <!-- PRICE -->
                                                             <div class="car-price-block text-end">
                                                                 <h4 class="price-value">
-                                                                    ${{ number_format($listing->price, 2) }}
+                                                                    ${{ number_format((float)($listing->price_retail_date ?? 0)) }}
                                                                 </h4>
                                                             </div>
-
                                                         </div>
-
                                                     </div>
                                                 </div>
-                                                
 
                                             @empty
                                                 <div class="col-12">

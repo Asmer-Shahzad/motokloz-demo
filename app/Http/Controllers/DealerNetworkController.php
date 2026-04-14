@@ -10,15 +10,13 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserInformation;
+use App\Http\Controllers\Concerns\EnrichesVehicleLocation;
 
 
 class DealerNetworkController extends Controller
 {
-    private function baseUrl(): string
-    {
-        return config('services.diskloz.base_url', env('DISKLOZ_BASE_URL', env('diskloz_base_url', '')));
-    }
-
+    use EnrichesVehicleLocation;
+   
     public function fetch_dealers(Request $request)
     {
         
@@ -32,7 +30,7 @@ class DealerNetworkController extends Controller
             $dealerName = $request->input('dealer_name');
             $postalCode = $request->input('postal_code');
 
-            $response = Http::get(env("diskloz_base_url") . '/api/all_dealers_with_inventory_count');
+            $response = Http::get($this->disklozBaseUrl() . '/api/all_dealers_with_inventory_count');
 
             if (!$response->successful()) {
                 $dealers = [];

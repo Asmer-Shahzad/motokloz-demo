@@ -9,6 +9,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\DealerNetworkController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ChatController;
 
 
 /*
@@ -56,21 +57,29 @@ Route::get('/sell', function () {
     if (Auth::check()) {
         // user logged in
         return redirect()->route('add.listings');
-    }
+        }
 
     // agar login nahi hai to login page
     return redirect()->route('login');
-})->name('sell');
-
-Route::middleware('auth')->group(function () {
-
+    })->name('sell');
+    
+    Route::middleware('auth')->group(function () {
+        
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/chat', [HomeController::class, 'chat'])->name('chat');
+    Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+    Route::post('/chat/start', [ChatController::class, 'startOrGet'])->name('chat.start');
+    Route::get('/chat/{clientId}/{dealerId}/{inventoryId}', [ChatController::class, 'show'])->name('chat.show');
+    Route::post('/chat/{clientId}/{dealerId}/{inventoryId}/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+    Route::get('/chat/{clientId}/{dealerId}/{inventoryId}/poll', [ChatController::class, 'pollMessages'])->name('chat.poll');
+    Route::post('/chat/{clientId}/{dealerId}/{inventoryId}/read', [ChatController::class, 'markRead'])->name('chat.read');
+    Route::get('/chat/{clientId}/{dealerId}/{inventoryId}/tick-status', [ChatController::class, 'tickStatus'])->name('chat.tick');
     Route::get('/agent-settings', [HomeController::class, 'agentsettings'])->name('agent.settings');
     Route::get('/agent-dashboard', [HomeController::class, 'agentdashboard'])->name('agent.dashboard');
     Route::get('/wishlist', [ListingController::class, 'wishlist'])->name('wishlist');
+    
     Route::get('/add-listing', [ListingController::class, 'addlistings'])->name('add.listings');
-    Route::post('/add-listing', [ListingController::class, 'create'])->name('store.create');
+    Route::post('/add-listing', [ListingController::class, 'save_inventory'])->name('store.save_inventory');
+    Route::get('/load-asset-form', [ListingController::class, 'loadAssetForm'])->name('load.asset.form');
     Route::get('/listings', [ListingController::class, 'listingsIndex'])->name('listings');
     Route::get('/listing-car-details/{id}', [ListingController::class, 'user_inventory_product_details'])->name('user_inventory_product_details');
     Route::get('/account-setting', [HomeController::class, 'accountsettings'])->name('account.settings');
@@ -82,3 +91,21 @@ Route::middleware('auth')->group(function () {
     Route::delete('/agent-settings/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.delete');
     Route::delete('/listings/{id}', [HomeController::class, 'deleteListing'])->name('delete.listing');
 });
+
+// Guest-accessible AJAX routes (auth modal)
+Route::post('/auth/login-ajax', [AuthController::class, 'loginAjax'])->name('auth.login.ajax');
+Route::post('/auth/register-ajax', [AuthController::class, 'registerAjax'])->name('auth.register.ajax');
+
+// OAuth routes (Google, Facebook)
+Route::get('/auth/{provider}/redirect', [AuthController::class, 'redirectToProvider'])
+    ->where('provider', 'google|facebook')
+    ->name('auth.oauth.redirect');
+Route::get('/auth/{provider}/callback', [AuthController::class, 'handleProviderCallback'])
+    ->where('provider', 'google|facebook')
+    ->name('auth.oauth.callback');
+
+// Store chat intent in session (guest accessible)
+Route::post('/chat/set-intent', function (Illuminate\Http\Request $request) {
+    session(['intended_chat_url' => $request->input('url')]);
+    return response()->json(['ok' => true]);
+})->name('chat.set.intent');

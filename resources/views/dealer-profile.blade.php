@@ -7,21 +7,16 @@
     return number_format($number, 2, '.', ',');
 }
 @endphp
+@php
+    $source     = request()->query('source', 'diskloz');
+    $isMotokloz = $source === 'motokloz';
+@endphp
 
 @section('content')
 
     <!-- DEALER PROFILE BANNER — Google Maps Embed -->
     <section class="dealer-network-section p-3">
         <div class="dealer-profile-banner">
-            @php
-                $mapAddress = urlencode(
-                    trim(($dealer->physical_address ?? '') . ', ' .
-                    ($dealer->city ?? '') . ', ' .
-                    ($dealer->province ?? '') . ' ' .
-                    ($dealer->postal_code ?? '') . ', ' .
-                    ($dealer->country ?? 'Canada'))
-                );
-            @endphp
             <iframe
                 width="100%"
                 height="465"
@@ -71,17 +66,17 @@
                                     {{$dealer->legal_name}}
                                     <!--{{ $dealer->first_name }} {{ $dealer->last_name }}-->
                                 </h3>
-<p class="mb-3">
-    <i class="fas fa-map-marker-alt text-warning me-1"></i>
+                                <p class="mb-3">
+                                    <i class="fas fa-map-marker-alt text-warning me-1"></i>
 
-{{ collect([
-    $dealer?->physical_address,
-    $dealer?->city,
-    $dealer?->province,
-    $dealer?->postal_code
-])->filter()->implode(', ') ?: 'Address not available' }}
+                                {{ collect([
+                                    $dealer?->physical_address,
+                                    $dealer?->city,
+                                    $dealer?->province,
+                                    $dealer?->postal_code
+                                ])->filter()->implode(', ') ?: 'Address not available' }}
 
-</p>
+                                </p>
 
                                 <span class="badge bg-light text-dark border mt-2 p-2 rounded-5">
                                     {{ $total_inventory }} Vehicles
@@ -593,12 +588,14 @@
                         {{ $dealer->physical_address }}
                     </p>
                 </div>
-                <a href="{{ route('dealer_inventory', $dealer->id) }}">
-                    <button class="mto-btn-orange w-100 mb-3">
-                        View This Dealer's Inventory
-                        <i class="fa-solid fa-arrow-right ms-2"></i>
-                    </button>
-                </a>
+                @if(!$isMotokloz)
+                    <a href="{{ route('dealer_inventory', $dealer->id) }}">
+                        <button class="mto-btn-orange w-100 mb-3">
+                            View This Dealer's Inventory
+                            <i class="fa-solid fa-arrow-right ms-2"></i>
+                        </button>
+                    </a>
+                @endif
                 <a href="/car-listing">
                     <button class="mto-btn-black w-100 mb-3">View all inventory  <i class="fa-solid fa-arrow-right ms-2"></i></button>
                 </a>

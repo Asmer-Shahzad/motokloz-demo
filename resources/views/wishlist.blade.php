@@ -190,7 +190,7 @@
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="price-wrap">
                                                 <span class="text-span">From</span>
-                                                <span class="price-span">${{ number_format($favorite->inventory->price_retail_date ?? '', 2) }}</span>
+                                                <span class="price-span">${{ number_format((float)($favorite->inventory->price_retail_date ?? 0), 2) }}</span>
                                                 <span class="text-span">/ USD</span>
                                             </div>
                                             <button class="book-btn" data-bs-toggle="modal" data-bs-target="#testDriveModal">Book Now</button>

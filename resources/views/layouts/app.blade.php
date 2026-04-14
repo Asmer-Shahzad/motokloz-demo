@@ -14,6 +14,7 @@
     <!-- Anime JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
     <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/user-auth.css') }}">
@@ -34,7 +35,7 @@
 
 </head>
 
-<body>
+<body @yield('body-attrs')>
     <!-- Premium Page Loader -->
     <div id="page-loader">
         <!-- Ambient glow orbs -->
@@ -363,6 +364,13 @@
     <script>
         (function () {
             var loader = document.getElementById('page-loader');
+
+            // Disable loader entirely on pages that opt out
+            if (document.body.dataset.noLoader) {
+                loader.style.display = 'none';
+                return;
+            }
+
             var numEl = loader.querySelector('.mto-speed-num');
             var rafId = null;
             var current = 0;
@@ -511,9 +519,10 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             transition: all 0.4s ease;
-            pointer-events: none; /* Prevent clicks while hidden */
+            pointer-events: none;
+            /* Prevent clicks while hidden */
         }
 
         /* ===================== Show State ===================== */
@@ -521,18 +530,24 @@
             visibility: visible;
             opacity: 1;
             transform: translateX(-50%) translateY(0);
-            pointer-events: auto; /* Allow interactions */
+            pointer-events: auto;
+            /* Allow interactions */
         }
 
         /* ===================== Variants ===================== */
         #snackbar.success {
-            background-color: #ff9d00; /* Green */
+            background-color: #ff9d00;
+            /* Green */
         }
+
         #snackbar.error {
-            background-color: #ff9d00; /* Red */
+            background-color: #ff9d00;
+            /* Red */
         }
+
         #snackbar.warning {
-            background-color: #ffc107; /* Yellow */
+            background-color: #ffc107;
+            /* Yellow */
             color: #212529;
         }
 
@@ -544,13 +559,27 @@
             height: 20px;
             flex-shrink: 0;
             border-radius: 50%;
-            background-color: rgba(255,255,255,0.3);
+            background-color: rgba(255, 255, 255, 0.3);
         }
 
         /* Icons for different types */
-        #snackbar.success::before { background-color: rgba(255, 255, 255, 0.5); mask: url('data:image/svg+xml;utf8,<svg fill="white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M13.485 1.929l-7.778 7.778-3.182-3.182-1.06 1.06 4.242 4.242 8.838-8.838-1.06-1.06z"/></svg>') no-repeat center / contain; -webkit-mask: url(...) no-repeat center / contain; }
-        #snackbar.error::before   { background-color: rgba(255, 255, 255, 0.5); mask: url('data:image/svg+xml;utf8,<svg fill="white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.646 4.646l6.708 6.708m0-6.708l-6.708 6.708"/></svg>') no-repeat center / contain; -webkit-mask: url(...) no-repeat center / contain; }
-        #snackbar.warning::before { background-color: rgba(0, 0, 0, 0.5); mask: url('data:image/svg+xml;utf8,<svg fill="black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M8 1l7 14H1L8 1zm0 10v-4m0 6v-2"/></svg>') no-repeat center / contain; -webkit-mask: url(...) no-repeat center / contain; }
+        #snackbar.success::before {
+            background-color: rgba(255, 255, 255, 0.5);
+            mask: url('data:image/svg+xml;utf8,<svg fill="white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M13.485 1.929l-7.778 7.778-3.182-3.182-1.06 1.06 4.242 4.242 8.838-8.838-1.06-1.06z"/></svg>') no-repeat center / contain;
+            -webkit-mask: url(...) no-repeat center / contain;
+        }
+
+        #snackbar.error::before {
+            background-color: rgba(255, 255, 255, 0.5);
+            mask: url('data:image/svg+xml;utf8,<svg fill="white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.646 4.646l6.708 6.708m0-6.708l-6.708 6.708"/></svg>') no-repeat center / contain;
+            -webkit-mask: url(...) no-repeat center / contain;
+        }
+
+        #snackbar.warning::before {
+            background-color: rgba(0, 0, 0, 0.5);
+            mask: url('data:image/svg+xml;utf8,<svg fill="black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M8 1l7 14H1L8 1zm0 10v-4m0 6v-2"/></svg>') no-repeat center / contain;
+            -webkit-mask: url(...) no-repeat center / contain;
+        }
 
         /* Lightbox overlay */
         #mto-lightbox {
@@ -669,7 +698,8 @@
             object-fit: contain;
             transform-origin: center center;
             transition: transform 0.2s ease;
-            user-select: none; pointer-events: none;
+            user-select: none;
+            pointer-events: none;
             border-radius: 12px;
         }
 
@@ -889,45 +919,45 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function () {
 
-        gsap.registerPlugin(ScrollTrigger);
+            gsap.registerPlugin(ScrollTrigger);
 
-        function animateCards(container, cardSelector) {
+            function animateCards(container, cardSelector) {
 
-            let cards = document.querySelectorAll(container + " " + cardSelector);
+                let cards = document.querySelectorAll(container + " " + cardSelector);
 
-            if (!cards.length) return;
+                if (!cards.length) return;
 
-            gsap.fromTo(cards,
-                {
-                    y: 100,
-                    opacity: 0,
-                    scale: 0.95
-                },
-                {
-                    y: 0,
-                    opacity: 1,
-                    scale: 1,
-                    duration: 0.9,
-                    ease: "power3.out",
-                    stagger: 0.15,
-                    scrollTrigger: {
-                        trigger: container,
-                        start: "top 80%",   // 👈 jab section viewport me aaye
-                        end: "bottom 60%",
-                        toggleActions: "play none none none",
-                        once: true          // 👈 sirf 1 dafa chale
+                gsap.fromTo(cards,
+                    {
+                        y: 100,
+                        opacity: 0,
+                        scale: 0.95
+                    },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.9,
+                        ease: "power3.out",
+                        stagger: 0.15,
+                        scrollTrigger: {
+                            trigger: container,
+                            start: "top 80%",   // 👈 jab section viewport me aaye
+                            end: "bottom 60%",
+                            toggleActions: "play none none none",
+                            once: true          // 👈 sirf 1 dafa chale
+                        }
                     }
-                }
-            );
-        }
+                );
+            }
 
-        // ✅ dono sections
-        animateCards("#vehicleContainer", ".vehicle-card");
-        animateCards("#inventoryContainer", ".dealer-vehicle-card");
+            // ✅ dono sections
+            animateCards("#vehicleContainer", ".vehicle-card");
+            animateCards("#inventoryContainer", ".dealer-vehicle-card");
 
-    });
+        });
     </script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
@@ -962,6 +992,7 @@
     @yield('content')
     @include('partials.footer')
     @include('partials.script')
+    @include('partials.login-modal')
 </body>
 
 </html>
