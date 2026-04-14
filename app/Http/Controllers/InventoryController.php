@@ -195,12 +195,12 @@ class InventoryController extends Controller
             'phone_no'         => $info->contact_number  ?? 'N/A',
             'logo'             => $info->avatar          ?? null,
             'city'             => $info->city            ?? null,
-            'province'         => $info->country         ?? null,
+            'province'         => null,                         // motokloz has no province field
             'physical_address' => $info->complete_address ?? null,
             'postal_code'      => $info->postalCode      ?? null,
             'country'          => $info->country         ?? null,
             'internal_notes'   => $info->bio             ?? null,
-            'is_motokloz_user' => true,  // ✅ Ye flag blade mein $source = 'motokloz' set karega
+            'is_motokloz_user' => true,
             'inventory'        => [],
         ];
     }
@@ -405,8 +405,8 @@ class InventoryController extends Controller
                 'inventory_id' => $vehicleId
             ];
             
-            // Get base URL from env
-            $baseUrl = env('DISKLOZ_BASE_URL');
+            // Get base URL
+            $baseUrl = $this->baseUrl();
             if (!$baseUrl) {
                 return response()->json([
                     'success' => false,
@@ -461,7 +461,7 @@ class InventoryController extends Controller
             ];
 
             // Use DELETE for removing
-            $response = Http::delete(env("DISKLOZ_BASE_URL") . '/api/remove_like_status', $data);
+            $response = Http::delete($this->baseUrl() . '/api/remove_like_status', $data);
 
             if ($response->successful()) {
                 return response()->json($response->json());

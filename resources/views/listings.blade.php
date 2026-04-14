@@ -165,7 +165,7 @@
 
                                                             <div class="car-price-block text-end">
                                                                 <h4 class="price-value">
-                                                                    ${{ number_format($listing->price_retail_date ?? '0') }}
+                                                                    ${{ number_format((float)($listing->price_retail_date ?? 0)) }}
                                                                 </h4>
                                                             </div>
                                                         </div>

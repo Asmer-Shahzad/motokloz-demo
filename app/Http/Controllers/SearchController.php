@@ -10,82 +10,11 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserInformation;
 use App\Models\User;
+use App\Http\Controllers\Concerns\EnrichesVehicleLocation;
 
 class SearchController extends Controller
 {
-    private function disklozBaseUrl(): string
-    {
-        return rtrim(config('services.diskloz.base_url', 'https://diskloz.ca'), '/');
-    }
-
-    private function getUserLocation(): array
-    {
-        $user = Auth::user();
-
-        if (!$user) {
-            return [];
-        }
-
-        $userInfo = $user->information ?? null;
-
-        if (!$userInfo) {
-            return [];
-        }
-
-        return [
-            'city' => $userInfo->city ?? null,
-            'postalCode' => $userInfo->postalCode ?? null,
-            'complete_address' => $userInfo->complete_address ?? null,
-        ];
-    }
-
-
-
-    private function motoklozUserLocationMap(): array
-    {
-        return UserInformation::whereNotNull('postalCode')
-            ->orWhereNotNull('city')
-            ->get(['user_id', 'postalCode', 'city', 'country'])
-            ->keyBy(fn($info) => (string) $info->user_id)
-            ->map(fn($info) => [
-                'postal_code' => $info->postalCode,
-                'city'        => $info->city,
-                'country'     => $info->country,
-            ])
-            ->toArray();
-    }
-
-    private function dealerLocationMap(): array
-    {
-        $map = [];
-        $response = Http::get($this->disklozBaseUrl() . '/api/all_dealers_with_inventory_count');
-        if (!$response->successful()) {
-            return $map;
-        }
-
-        $dealers = $response->json('data', []);
-        foreach ($dealers as $dealer) {
-            $locationPayload = [
-                'postal_code' => $dealer['postal_code'] ?? null,
-                'city' => $dealer['city'] ?? null,
-                'province' => $dealer['province'] ?? null,
-                'country' => $dealer['country'] ?? null,
-            ];
-
-            if (!$locationPayload['postal_code'] && !$locationPayload['city']) {
-                continue;
-            }
-
-            if (!empty($dealer['id'])) {
-                $map[(string) $dealer['id']] = $locationPayload;
-            }
-            if (!empty($dealer['user_id'])) {
-                $map[(string) $dealer['user_id']] = $locationPayload;
-            }
-        }
-
-        return $map;
-    }
+    use EnrichesVehicleLocation;
 
 
 
@@ -165,7 +94,7 @@ class SearchController extends Controller
         $makeTypes = [];
         $bodyStyleTypes = [];
 
-        $res = Http::get(env("diskloz_base_url").'/api/search_inventory', [
+        $res = Http::get($this->disklozBaseUrl() . '/api/search_inventory', [
             'selected_asset' => $selectedAsset,
             'per_page' => 1,
         ]);
@@ -347,23 +276,7 @@ class SearchController extends Controller
         $motoklozUserMap   = $this->motoklozUserLocationMap();
 
         $inventoryData = collect($inventory->data ?? [])->map(function ($vehicle) use ($dealerLocationMap, $motoklozUserMap) {
-            $dealerKey = (string) ($vehicle->user_id ?? $vehicle->dealer_id ?? '');
-            $clientKey = (string) ($vehicle->client_id ?? '');
-
-            // Priority 1: motokloz user_information (most up-to-date, user controls it)
-            // Priority 2: diskloz dealer map fallback
-            $location = $motoklozUserMap[$dealerKey]
-                ?? $motoklozUserMap[$clientKey]
-                ?? $dealerLocationMap[$dealerKey]
-                ?? [];
-
-            $vehicle->dealer_postal_code = $location['postal_code'] ?? null;
-            $vehicle->dealer_city        = $location['city'] ?? null;
-            $vehicle->dealer_province    = $location['province'] ?? null;
-            $vehicle->dealer_country     = $location['country'] ?? null;
-            $vehicle->dealer_complete_address = $location['complete_address'] ?? null;
-
-            return $vehicle;
+            return $this->enrichVehicleLocation($vehicle, $motoklozUserMap, $dealerLocationMap);
         })->values();
 
         // ✅ SORTING (SAFE + CLEAN)

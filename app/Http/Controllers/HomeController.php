@@ -12,45 +12,11 @@ use GuzzleHttp\Psr7\MultipartStream;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Inventory;
 use App\Models\UserInformation;
+use App\Http\Controllers\Concerns\EnrichesVehicleLocation;
 
 class HomeController extends Controller
 {
-    private function disklozBaseUrl(): string
-    {
-        return rtrim(config('services.diskloz.base_url', 'http://127.0.0.1:8000'), '/');
-    }
-
-    private function dealerLocationMap(): array
-    {
-        $map = [];
-        $response = Http::get($this->disklozBaseUrl() . '/api/all_dealers_with_inventory_count');
-        if (!$response->successful()) {
-            return $map;
-        }
-
-        $dealers = $response->json('data', []);
-        foreach ($dealers as $dealer) {
-            $locationPayload = [
-                'postal_code' => $dealer['postal_code'] ?? null,
-                'city' => $dealer['city'] ?? null,
-                'province' => $dealer['province'] ?? null,
-                'country' => $dealer['country'] ?? null,
-            ];
-
-            if (!$locationPayload['postal_code'] && !$locationPayload['city']) {
-                continue;
-            }
-
-            if (!empty($dealer['id'])) {
-                $map[(string) $dealer['id']] = $locationPayload;
-            }
-            if (!empty($dealer['user_id'])) {
-                $map[(string) $dealer['user_id']] = $locationPayload;
-            }
-        }
-
-        return $map;
-    }
+    use EnrichesVehicleLocation;
 
     public function home()
     {
@@ -72,7 +38,8 @@ class HomeController extends Controller
         $assetCounts = [];
         $allVehicles = collect();
         $makeTypes = []; // will hold grouped makes
-        $dealerLocationMap = $this->dealerLocationMap();
+        $dealerLocationMap  = $this->dealerLocationMap();
+        $motoklozLocationMap = $this->motoklozUserLocationMap();
 
         foreach ($assets as $asset) {
             $response = Http::get($this->disklozBaseUrl() . '/api/search_inventory', [
@@ -88,14 +55,8 @@ class HomeController extends Controller
 
                 // Merge latest vehicles
                 if (!empty($inventory->inventory->data)) {
-                    $enrichedVehicles = collect($inventory->inventory->data)->map(function ($vehicle) use ($dealerLocationMap) {
-                        $dealerKey = (string) ($vehicle->user_id ?? $vehicle->dealer_id ?? '');
-                        $location = $dealerLocationMap[$dealerKey] ?? [];
-                        $vehicle->dealer_postal_code = $location['postal_code'] ?? null;
-                        $vehicle->dealer_city = $location['city'] ?? null;
-                        $vehicle->dealer_province = $location['province'] ?? null;
-                        $vehicle->dealer_country = $location['country'] ?? null;
-                        return $vehicle;
+                    $enrichedVehicles = collect($inventory->inventory->data)->map(function ($vehicle) use ($dealerLocationMap, $motoklozLocationMap) {
+                        return $this->enrichVehicleLocation($vehicle, $motoklozLocationMap, $dealerLocationMap);
                     });
                     $allVehicles = $allVehicles->merge($enrichedVehicles);
                 }

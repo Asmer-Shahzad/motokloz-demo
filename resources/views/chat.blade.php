@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('body-attrs') data-no-loader="1" @endsection
+
 @section('content')
 
     <div class="top-back">
