@@ -419,56 +419,13 @@
                                             </div>
                                         </div>
                             @endforeach
-                        @else
-                            <div class="col-12">
-                                <div class="text-center py-5">
-                                    <i class="fas fa-car fa-3x text-muted mb-3"></i>
-                                    <h5>No vehicles found</h5>
-                                    <p class="text-muted">Try adjusting your filters or add a new vehicle.</p>
-                                </div>
-                            </div>
-                            <div class="car-card-bottom">
-                                <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
-                                    {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}</h5>
-                                
-                                @php
-                                    $dealerPostalCode = data_get($recent_vehicle, 'dealer.postal_code')
-                                        ?? $recent_vehicle->dealer_postal_code
-                                        ?? $recent_vehicle->postal_code
-                                        ?? '';
-                                    $dealerCity = data_get($recent_vehicle, 'dealer.city')
-                                        ?? $recent_vehicle->dealer_city
-                                        ?? '';
-                                    $dealerProvince = data_get($recent_vehicle, 'dealer.province')
-                                        ?? $recent_vehicle->dealer_province
-                                        ?? '';
-                                    $dealerCountry = data_get($recent_vehicle, 'dealer.country')
-                                        ?? $recent_vehicle->dealer_country
-                                        ?? '';
-                                @endphp
-                                <p class="car-distance-away"
-                                    data-dealer-postal="{{ $dealerPostalCode }}"
-                                    data-dealer-city="{{ $dealerCity }}"
-                                    data-dealer-province="{{ $dealerProvince }}"
-                                    data-dealer-country="{{ $dealerCountry }}">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                    <span class="distance-value">Loading...</span>
-                                </p>
-
-                                <div class="car-circle-icons-group">
-                                    <img src="/assets/images/no-accidents.png" alt="">
-                                    <img src="/assets/images/low-mileage.png" alt="">
-                                    <img src="/assets/images/service-plan.png" alt="">
-                                    <img src="/assets/images/powertrain-warranty.png" alt="">
-                                    <span class="extra-icons-count">12+</span>
-                                </div>
-
-                                <div class="car-price-block text-end">
-                                    <h4 class="price-value">${{ formatPrice($recent_vehicle->price_retail_date ?? 0) }}</h4>
-                                </div>
-                            </div>
-                        </div>
                     </div>
+                    @else
+                        <div class="col-12 text-center my-5">
+                            <i class="fas fa-car fa-3x text-muted mb-3"></i>
+                            <p class="text-center">No vehicles found matching your criteria.</p>
+                        </div>
+                    @endif
 
                     @if ($search_inventory_result != null && count($search_inventory_result) > 0)
                         <div class="my-4">

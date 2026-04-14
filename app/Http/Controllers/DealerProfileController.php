@@ -53,6 +53,7 @@ class DealerProfileController extends Controller
 
         return $map;
     }
+    
 
     public function curl_get($url):JsonResponse
     {
@@ -86,71 +87,131 @@ class DealerProfileController extends Controller
         return response()->json($json);
     }
 
-    public function dealer_inventory_details($id)
+    public function dealer_inventory_details($id, Request $request)
     {
-        $user = Auth::user();
+        $user     = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
 
+        $isMotokloz = $request->query('source') === 'motokloz';
+
+        if ($isMotokloz) {
+            // ✅ Motokloz: local user + search_by_id API se inventory
+            $localUser = \App\Models\User::with('information')->where('id', $id)->first();
+
+            if (!$localUser) {
+                abort(404, 'Dealer not found');
+            }
+
+            $dealer = $this->buildDealerFromLocalUser($localUser);
+
+            try {
+                $inventoryResponse = Http::get(env("diskloz_base_url") . '/api/search_motokloz_inventory', [
+                    'client_id' => $id,
+                ]);
+
+                $inventoryData = $inventoryResponse->successful()
+                    ? ($inventoryResponse->json()['data'] ?? [])
+                    : [];
+
+                // dd($inventoryData);
+
+                    
+            } catch (\Exception $e) {
+                \Log::error('Motokloz inventory fetch error: ' . $e->getMessage());
+                $inventoryData = [];
+            }
+
+            return $this->buildDealerProfileView($user, $userInfo, $dealer, $inventoryData);
+        }
+
+        // ✅ Diskloz: dealer_by_id API se dealer + inventory
         $response = Http::get(env("diskloz_base_url") . '/api/dealer_by_id/' . $id);
 
-        if (!$response->successful()) {
+        if (!$response->successful() || !($response->json()['status'] ?? false)) {
             abort(404, 'Dealer not found');
         }
 
-        $data = $response->json();
+        $data          = $response->json();
+        $dealer        = (object) $data['data'];
+        $inventoryData = $dealer->inventory ?? [];
 
-        if (!($data['status'] ?? false)) {
-            abort(404, 'Dealer not found');
-        }
+        return $this->buildDealerProfileView($user, $userInfo, $dealer, $inventoryData);
+    }
 
-        $dealer = (object) $data['data'];
 
-        // ✅ Location map
+    // ✅ Helper — view build karo
+    private function buildDealerProfileView($user, $userInfo, $dealer, $inventoryData): \Illuminate\View\View
+    {
         $dealerLocationMap = $this->dealerLocationMap();
+        $total_inventory   = count($inventoryData);
 
-        // total inventory count
-        $total_inventory = count($dealer->inventory ?? []);
-
-        // ✅ IMPORTANT: enrich inventory with location
-        $inventory = collect($dealer->inventory ?? [])
+        $inventory = collect($inventoryData)
             ->map(function ($item) use ($dealerLocationMap) {
-
-                $item = (object) $item;
-
+                $item      = (object) $item;
                 $dealerKey = (string) ($item->user_id ?? $item->dealer_id ?? '');
-                $location = $dealerLocationMap[$dealerKey] ?? [];
+                $location  = $dealerLocationMap[$dealerKey] ?? [];
 
-                // inject location fields
                 $item->dealer_postal_code = $location['postal_code'] ?? null;
-                $item->dealer_city = $location['city'] ?? null;
-                $item->dealer_province = $location['province'] ?? null;
-                $item->dealer_country = $location['country'] ?? null;
+                $item->dealer_city        = $location['city']        ?? null;
+                $item->dealer_province    = $location['province']    ?? null;
+                $item->dealer_country     = $location['country']     ?? null;
 
                 return $item;
             })
             ->take(4)
             ->values();
 
-        // ✅ Get the first vehicle from inventory to use as searched_vehicle
         $searched_vehicle = $inventory->first();
 
+        $mapAddress = urlencode(
+            trim(
+                ($dealer->physical_address ?? '') . ', ' .
+                ($dealer->city             ?? '') . ', ' .
+                ($dealer->province         ?? '') . ' '  .
+                ($dealer->postal_code      ?? '') . ', ' .
+                ($dealer->country          ?? 'Canada')
+            )
+        );
+
         return view('dealer-profile', [
-            'user' => $user,
-            'userInfo' => $userInfo,
+            'user'             => $user,
+            'userInfo'         => $userInfo,
             'dealer'           => $dealer,
             'contact'          => $dealer->phone_no ?? null,
             'inventory'        => $inventory,
             'total_inventory'  => $total_inventory,
-            'searched_vehicle' => $searched_vehicle,  // Add this line
+            'searched_vehicle' => $searched_vehicle,
             'disklozBaseUrl'   => $this->disklozBaseUrl(),
+            'mapAddress'       => $mapAddress,
         ]);
+    }
+
+    private function buildDealerFromLocalUser($localUser): object
+    {
+        $info = $localUser->information;
+
+        return (object) [
+            'id'               => $localUser->id,
+            'legal_name'       => $info->full_name      ?? $localUser->name ?? 'N/A',
+            'first_name'       => $info->full_name      ?? $localUser->name ?? '',
+            'last_name'        => '',
+            'email'            => $localUser->email     ?? 'N/A',
+            'phone_no'         => $info->contact_number ?? 'N/A',
+            'logo'             => $info->avatar         ?? null,
+            'city'             => $info->city           ?? null,
+            'province'         => $info->country        ?? null,
+            'physical_address' => $info->complete_address ?? null,
+            'postal_code'      => $info->postalCode     ?? null,
+            'country'          => $info->country        ?? null,
+            'internal_notes'   => $info->bio            ?? null,
+        ];
     }
 
     public function dealer_inventory(Request $request, $id)
     {
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
-        
+        $selectedAsset = $request->selected_asset;
 
         $assets = [
             'AUTO',
@@ -185,41 +246,90 @@ class DealerProfileController extends Controller
         $apiData = array_filter($apiData, fn($value) => $value !== null && $value !== '' && $value !== []);
 
         $makeTypes = [];
+        $bodyStyleTypes = [];
 
-        foreach ($assets as $asset) {
-            try {
-                $res = Http::timeout(30)->get(env("diskloz_base_url") . '/api/dealer_by_id/' . $id, [
-                    'selected_asset' => $asset,
-                    'per_page' => 1,
-                ]);
+        $res = Http::timeout(30)->get(env("diskloz_base_url") . '/api/dealer_by_id/' . $id, [
+            'selected_asset' => $selectedAsset,
+            'per_page' => 1,
+        ]);
 
-                if ($res->successful()) {
-                    $inv = json_decode($res->body());
+        if ($res->successful()) {
+
+            $inv = json_decode($res->body());
+
+            switch($selectedAsset) {
+
+                case 'AUTO':
+                    $makes = $inv->filters->MfgAuto ?? [];
+                    $bodyStyles = $inv->filters->BodyStyle ?? [];
+                    break;
+
+                case 'SNOWSPORTS':
+                    $makes = $inv->filters->MfgSnowsport ?? [];
+                    $bodyStyles = $inv->filters->BodyStyleSnowSport ?? [];
+                    break;
+
+                case 'WATERSPORT':
+                    $makes = $inv->filters->MfgWatersport ?? [];
+                    $bodyStyles = $inv->filters->BodyStyle ?? [];
+                    break;
+
+                case 'MARINE':
+                    $makes = $inv->filters->MfgMarine ?? [];
+                    $bodyStyles = $inv->filters->BodyStyle ?? [];
+                    break;
+
+                case 'RV / TRAILER':
+                    $makes = $inv->filters->MfgRvTrailer ?? [];
+                    $bodyStyles = $inv->filters->BodyStyleRvTrailer ?? [];
+                    break;
+
+                case 'MOTORCYCLE / ATV / POWERSPORTS':
+                    $makes = $inv->filters->MfgMotorcycleAtv ?? [];
+                    $bodyStyles = $inv->filters->BodyStyleMotorcycleAtv ?? [];
+                    break;
+
+                case 'HEAVY TRUCK/EQUIPMENT':
+                    $makes = $inv->filters->MfgHeavyTruckEquipment ?? [];
+                    $bodyStyles = $inv->filters->BodyStyleHeavyTruckEquipment ?? [];
+                    break;
+
+                case 'HEAVY DUTY TRAILERS':
+                    $makes = $inv->filters->MfgHeavyDutyTrailer ?? [];
+                    $bodyStyles = $inv->filters->BodyStyleHeavyDutyTrailer ?? [];
+                    break;
+
+                case 'FARM EQUIPMENT':
+                    $makes = $inv->filters->MfgFarmEquipment ?? [];
+                    $bodyStyles = $inv->filters->BodyStyleFarmEquipment ?? [];
+                    break;
+
+                default:
                     $makes = [];
-                    switch($asset) {
-                        case 'AUTO': $makes = $inv->filters->MfgAuto ?? []; break;
-                        case 'MARINE': $makes = $inv->filters->MfgMarine ?? []; break;
-                        case 'SNOWSPORTS': $makes = $inv->filters->MfgSnowsport ?? []; break;
-                        case 'WATERSPORT': $makes = $inv->filters->MfgWatersport ?? []; break;
-                        case 'RV / TRAILER': $makes = $inv->filters->MfgRvTrailer ?? []; break;
-                        case 'MOTORCYCLE / ATV / POWERSPORTS': $makes = $inv->filters->MfgMotorcycleAtv ?? []; break;
-                        case 'HEAVY TRUCK/EQUIPMENT': $makes = $inv->filters->MfgHeavyTruckEquipment ?? []; break;
-                        case 'HEAVY DUTY TRAILERS': $makes = $inv->filters->MfgHeavyDutyTrailer ?? []; break;
-                        case 'FARM EQUIPMENT': $makes = $inv->filters->MfgFarmEquipment ?? []; break;
-                    }
-
-                    $makeTypes[$asset] = !empty($makes)
-                        ? collect($makes)->map(fn($m) => ['id' => $m->id, 'name' => $m->name])->sortBy('name')->values()->toArray()
-                        : [];
-                } else {
-                    $makeTypes[$asset] = [];
-                }
-            } catch (\Exception $e) {
-                \Log::error('Error fetching makes for asset ' . $asset . ': ' . $e->getMessage());
-                $makeTypes[$asset] = [];
+                    $bodyStyles = [];
             }
-        }
 
+            // ✅ Makes
+            $makeTypes[$selectedAsset] = !empty($makes)
+            ? collect($makes)->map(fn($m) => [
+                'id' => $m->id,
+                'name' => $m->name
+            ])->sortBy('name')->values()->toArray()
+            : [];
+
+            // ✅ Body Styles
+            $bodyStyleTypes[$selectedAsset] = !empty($bodyStyles)
+            ? collect($bodyStyles)->map(fn($b) => [
+                'id' => $b->id,
+                'name' => $b->name
+            ])->sortBy('name')->values()->toArray()
+            : [];
+
+        } else {
+            $makeTypes[$selectedAsset] = collect();
+            $bodyStyleTypes[$selectedAsset] = collect();
+        }
+        
         try {
             $response = Http::timeout(30)->get(env("diskloz_base_url") . '/api/dealer_by_id/' . $id, $apiData);
 
