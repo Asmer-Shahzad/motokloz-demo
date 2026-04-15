@@ -67,6 +67,7 @@ Route::get('/sell', function () {
         
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+    Route::get('/chat/unread-count', [ChatController::class, 'unreadCount'])->name('chat.unread.count');
     Route::post('/chat/start', [ChatController::class, 'startOrGet'])->name('chat.start');
     Route::get('/chat/{clientId}/{dealerId}/{inventoryId}', [ChatController::class, 'show'])->name('chat.show');
     Route::post('/chat/{clientId}/{dealerId}/{inventoryId}/send', [ChatController::class, 'sendMessage'])->name('chat.send');

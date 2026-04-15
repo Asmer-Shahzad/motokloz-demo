@@ -36,8 +36,10 @@ class ChatController extends Controller
     private function buildConversations(int $authId): \Illuminate\Support\Collection
     {
         $groups = Chat::selectRaw('client_id, user_id, inventory_id, MAX(created_at) as latest_at')
-            ->where('client_id', $authId)
-            ->orWhere('user_id', $authId)
+            ->where(function ($q) use ($authId) {
+                $q->where('client_id', $authId)
+                  ->orWhere('user_id', $authId);
+            })
             ->groupBy('client_id', 'user_id', 'inventory_id')
             ->orderByDesc('latest_at')
             ->get();
@@ -68,15 +70,16 @@ class ChatController extends Controller
 
             // Dealer info from Diskloz API (only when other party is dealer)
             $dealerInfo = null;
+            $apiData = $this->getInventoryFromApi($group->inventory_id);
+
             if ($authId == $group->client_id) {
-                $apiData    = $this->getInventoryFromApi($group->inventory_id);
                 $dealerInfo = $apiData?->dealer ?? null;
-                // Use API inventory if local not found
-                if (!$inventory && $apiData) {
-                    $inventory = $apiData;
-                }
             }
 
+            // Use API inventory if local not found (covers both buyer and dealer views)
+            if (!$inventory && $apiData) {
+                $inventory = $apiData;
+            }
             return [
                 'client_id'      => $group->client_id,
                 'user_id'        => $group->user_id,
@@ -315,6 +318,29 @@ class ChatController extends Controller
 
         return response()->json(['read_ids' => $readIds]);
     }
+    public function unreadCount()
+    {
+        $authId = Auth::id();
+        if (!$authId) {
+            return response()->json(['count' => 0]);
+        }
+
+        // Count unread messages received by this user
+        // As client: messages where sender_type = 'dealer' and client_id = authId
+        // As dealer: messages where sender_type = 'client' and user_id = authId
+        $count = Chat::where('is_read', 0)
+            ->where(function ($q) use ($authId) {
+                $q->where(function ($q2) use ($authId) {
+                    $q2->where('client_id', $authId)->where('sender_type', 'dealer');
+                })->orWhere(function ($q2) use ($authId) {
+                    $q2->where('user_id', $authId)->where('sender_type', 'client');
+                });
+            })
+            ->count();
+
+        return response()->json(['count' => $count]);
+    }
+
     public function markRead(int $clientId, int $dealerId, int $inventoryId)
     {
         $authId = Auth::id();
