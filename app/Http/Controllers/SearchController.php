@@ -7,8 +7,11 @@ use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Models\UserInformation;
+
 
 class SearchController extends Controller
 {
@@ -378,6 +381,169 @@ class SearchController extends Controller
         return view('car-listing', $data);
     }
 
-    
+    public function testDriveMail(Request $request)
+    {
+        try {
+            // Log request
+            Log::info('Test drive request received', $request->except('_token'));
+            
+            // Validate
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email',
+                'phone' => 'required|string',
+                'date' => 'required|date',
+                'dealer_email' => 'required|email'
+            ]);
+
+            $dealerEmail = $validated['dealer_email'];
+
+            // Prepare email content
+            $emailBody = "==========================================\n";
+            $emailBody .= "      NEW TEST DRIVE REQUEST\n";
+            $emailBody .= "==========================================\n\n";
+            $emailBody .= "Name: " . $validated['name'] . "\n";
+            $emailBody .= "Email: " . $validated['email'] . "\n";
+            $emailBody .= "Phone: " . $validated['phone'] . "\n";
+            $emailBody .= "Preferred Date: " . $validated['date'] . "\n";
+            $emailBody .= "Vehicle ID: " . ($request->vehicle_id ?? 'N/A') . "\n";
+            $emailBody .= "Message: " . ($request->message ?? 'No message') . "\n";
+            $emailBody .= "Submitted At: " . now()->format('Y-m-d H:i:s') . "\n";
+            $emailBody .= "\n==========================================\n";
+
+            // Send email - .env se config automatically lega
+            Mail::raw($emailBody, function ($message) use ($dealerEmail, $validated) {
+                $message->to($dealerEmail)
+                        ->subject('New Test Drive Request - ' . $validated['name'])
+                        ->replyTo($validated['email'], $validated['name']);
+            });
+
+            Log::info('Test drive email sent to: ' . $dealerEmail);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Test drive request sent successfully!'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Test Drive Email Error: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to send. Please try again.'
+            ], 500);
+        }
+    }
+
+    public function offerMail(Request $request)
+    {
+        try {
+            // Log request
+            Log::info('Offer request received', $request->except('_token'));
+            
+            // Validate
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email',
+                'phone' => 'required|string',
+                'offer_price' => 'required|numeric',
+                'dealer_email' => 'required|email'
+            ]);
+
+            $dealerEmail = $validated['dealer_email'];
+
+            // Prepare email content
+            $emailBody = "==========================================\n";
+            $emailBody .= "         NEW OFFER REQUEST\n";
+            $emailBody .= "==========================================\n\n";
+            $emailBody .= "Name: " . $validated['name'] . "\n";
+            $emailBody .= "Email: " . $validated['email'] . "\n";
+            $emailBody .= "Phone: " . $validated['phone'] . "\n";
+            $emailBody .= "Offer Price: $" . number_format($validated['offer_price'], 2) . "\n";
+            $emailBody .= "Vehicle ID: " . ($request->vehicle_id ?? 'N/A') . "\n";
+            $emailBody .= "Submitted At: " . now()->format('Y-m-d H:i:s') . "\n";
+            $emailBody .= "\n==========================================\n";
+
+            // Send email - .env se config automatically lega
+            Mail::raw($emailBody, function ($message) use ($dealerEmail, $validated) {
+                $message->to($dealerEmail)
+                        ->subject('New Offer Request - $' . number_format($validated['offer_price'], 2))
+                        ->replyTo($validated['email'], $validated['name']);
+            });
+
+            Log::info('Offer email sent to: ' . $dealerEmail);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Offer sent successfully!'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Offer Email Error: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to send. Please try again.'
+            ], 500);
+        }
+    }
+
+     public function contactMail(Request $request)
+    {
+        try {
+            
+            // Log request
+            Log::info('Contact form request received', $request->except('_token'));
+            
+            // Validate
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email',
+                'phone' => 'required|string',
+                'message' => 'required|string',
+                'dealer_email' => 'required|email'
+            ]);
+
+            $dealerEmail = $validated['dealer_email'];
+            
+            Log::info('Sending contact email to: ' . $dealerEmail);
+
+            // Prepare email content
+            $emailBody = "==========================================\n";
+            $emailBody .= "         NEW CONTACT MESSAGE\n";
+            $emailBody .= "==========================================\n\n";
+            $emailBody .= "Name: " . $validated['name'] . "\n";
+            $emailBody .= "Email: " . $validated['email'] . "\n";
+            $emailBody .= "Phone: " . $validated['phone'] . "\n";
+            $emailBody .= "Vehicle ID: " . ($request->vehicle_id ?? 'N/A') . "\n";
+            $emailBody .= "Source: " . ($request->source ?? 'Website') . "\n";
+            $emailBody .= "Submitted At: " . now()->format('Y-m-d H:i:s') . "\n";
+            $emailBody .= "\n--- Message ---\n";
+            $emailBody .= $validated['message'] . "\n";
+            $emailBody .= "\n==========================================\n";
+
+            // Send email
+            Mail::raw($emailBody, function ($message) use ($dealerEmail, $validated) {
+                $message->to($dealerEmail)
+                        ->subject('New Contact Message - ' . $validated['name'])
+                        ->replyTo($validated['email'], $validated['name']);
+            });
+
+            Log::info('Contact email sent to: ' . $dealerEmail);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Message sent successfully!'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Contact Email Error: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to send message. Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 
 }

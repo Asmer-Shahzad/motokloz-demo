@@ -307,18 +307,41 @@
             <div class="col-lg-4" data-aos="fade-left" data-aos-duration="700" data-aos-delay="100">
                 <div class="mto-sticky-side">
 
-                    <!-- Get Started -->
-                    <div class="mto-card-unit mb-4 p-4 shadow-sm">
-                        <h6 class="fw-bold mb-3">Get Started</h6>
-                        <button type="button" class="mto-btn-orange w-100 mb-3"
-                            data-bs-toggle="modal" data-bs-target="#testDriveModal">
-                            Schedule Test Drive <i class="fa-solid fa-arrow-right ms-2"></i>
-                        </button>
-                        <button type="button" class="mto-btn-black w-100"
-                            data-bs-toggle="modal" data-bs-target="#offerModal">
-                            Make An Offer Price <i class="fa-solid fa-arrow-right ms-2"></i>
-                        </button>
-                    </div>
+                    
+                    @if(strtolower($source ?? '') === 'motokloz')
+                        <div class="mto-card-unit mb-4 p-4 shadow-sm">
+
+                            <h6 class="fw-bold mb-3">Get Started</h6>
+
+                            <!-- NEW Test Drive Button -->
+                            <button type="button" class="mto-btn-orange w-100 mb-3"
+                                data-bs-toggle="modal" data-bs-target="#motoklozTestDriveModal">
+                                Schedule Test Drive <i class="fa-solid fa-car ms-2"></i>
+                            </button>
+
+                            <!-- NEW Offer Button -->
+                            <button type="button" class="mto-btn-black w-100"
+                                data-bs-toggle="modal" data-bs-target="#motoklozOfferModal">
+                                Make An Offer Price <i class="fa-solid fa-hand-holding-dollar ms-2"></i>
+                            </button>
+
+                        </div>
+                    @else
+                        <!-- Get Started -->
+                        <div class="mto-card-unit mb-4 p-4 shadow-sm">
+                            <h6 class="fw-bold mb-3">Get Started</h6>
+
+                            <button type="button" class="mto-btn-orange w-100 mb-3"
+                                data-bs-toggle="modal" data-bs-target="#testDriveModal">
+                                Schedule Test Drive <i class="fa-solid fa-car ms-2"></i>
+                            </button>
+
+                            <button type="button" class="mto-btn-black w-100"
+                                data-bs-toggle="modal" data-bs-target="#offerModal">
+                                Make An Offer Price <i class="fa-solid fa-hand-holding-dollar ms-2"></i>
+                            </button>
+                        </div>
+                    @endif
 
                     <!-- Dealer Card -->
                     <div class="mto-card-unit p-4 shadow-sm">
@@ -468,6 +491,86 @@
         </div>
     </div>
 
+    <!-- Motokloz Test Drive Modal -->
+    <div class="modal fade" id="motoklozTestDriveModal" tabindex="-1" aria-labelledby="motoklozTestDriveModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="motoklozTestDriveModalLabel">Schedule Test Drive</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="motoklozTestDriveForm" data-ajax="true">
+                        @csrf
+                        <input type="hidden" name="source" value="motokloz">
+                        <input type="hidden" name="vehicle_id" value="{{ $searched_vehicle->id ?? '' }}">
+                        <input type="hidden" name="dealer_email" value="{{ $dealerEmail }}">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" name="name" id="m_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" id="m_email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" name="phone" id="m_phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Preferred Date</label>
+                            <input type="date" class="form-control" name="date" id="m_date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Message</label>
+                            <textarea class="form-control" name="message" id="m_message" rows="3" placeholder="Any additional notes..."></textarea>
+                        </div>
+                        <button type="submit" class="mto-btn-orange w-100 mb-3">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Motokloz Offer Modal -->
+    <div class="modal fade" id="motoklozOfferModal" tabindex="-1" aria-labelledby="motoklozOfferModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="motoklozOfferModalLabel">Make An Offer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="motoklozOfferForm" data-ajax="true">
+                        @csrf
+                        <input type="hidden" name="source" value="motokloz">
+                        <input type="hidden" name="vehicle_id" value="{{ $searched_vehicle->id ?? '' }}">
+                        <input type="hidden" name="dealer_email" value="{{ $dealerEmail }}">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" name="name" id="m_offer_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" id="m_offer_email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" name="phone" id="m_offer_phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Offer Price</label>
+                            <input type="number" class="form-control" name="offer_price" id="m_offer_price" required>
+                        </div>
+                        <button type="submit" class="mto-btn-orange w-100 mb-3">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Video Modal -->
     <div class="modal fade" id="videoModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -505,6 +608,13 @@
 
 // ===================== GLOBAL ERROR HANDLER =====================
 function handleAjaxError(xhr) {
+    console.error('AJAX Error Details:', {
+        status: xhr.status,
+        statusText: xhr.statusText,
+        responseText: xhr.responseText,
+        responseJSON: xhr.responseJSON
+    });
+    
     if (xhr.status === 422 && xhr.responseJSON?.errors) {
         const msgs = Object.values(xhr.responseJSON.errors).flat();
         showSnackbar(msgs.join(' | '), 'error');
@@ -528,6 +638,7 @@ function setButtonLoading($btn) {
         .data('original-html', $btn.html())
         .html('<i class="fas fa-spinner fa-spin"></i> Please wait...');
 }
+
 function resetButton($btn) {
     $btn.prop('disabled', false).html($btn.data('original-html'));
 }
@@ -538,7 +649,123 @@ $.ajaxSetup({
 });
 
 $(document).ready(function () {
+    
+    // CSRF Setup
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    
+    // Test Drive Form Submit
+    $('#motoklozTestDriveForm').on('submit', function (e) {
+        e.preventDefault();
+        
+        var $form = $(this);
+        var $btn = $form.find('button[type="submit"]');
+        
+        // Get form data
+        var formData = {
+            name: $('#m_name').val().trim(),
+            email: $('#m_email').val().trim(),
+            phone: $('#m_phone').val().trim(),
+            date: $('#m_date').val().trim(),
+            message: $('#m_message').val(),
+            source: $form.find('input[name="source"]').val(),
+            vehicle_id: $form.find('input[name="vehicle_id"]').val(),
+            dealer_email: $form.find('input[name="dealer_email"]').val()
+        };
 
+        // Validation
+        if (!formData.name || !formData.email || !formData.phone || !formData.date) {
+            showSnackbar('Please fill all required fields!', 'warning');
+            return;
+        }
+
+        // Disable button
+        var $btn = $(this).find('button[type="submit"]');
+        setButtonLoading($btn);
+
+        // Send AJAX
+        $.ajax({
+            url: "/test-drive-mail",
+            method: "POST",
+            data: formData,
+            success: function (response) {
+                showSnackbar('Test drive request sent successfully!');
+                $('#motoklozTestDriveModal').modal('hide');
+                $form[0].reset();
+            },
+            error: function (xhr) {
+                if (xhr.status === 419) {
+                    showSnackbar('Session expired. Refreshing page...', 'error');
+                    location.reload();
+                } else {
+                    showSnackbar('Error: ' + (xhr.responseJSON?.message || 'Something went wrong'), 'error');
+                }
+            },
+            complete: function () {
+                $btn.prop('disabled', false).text('Submit');
+            }
+        });
+    });
+
+    // Offer Form Submit
+    $('#motoklozOfferForm').on('submit', function (e) {
+        e.preventDefault();
+        
+        var $form = $(this);
+        var $btn = $form.find('button[type="submit"]');
+        
+        // Get form data
+        var formData = {
+            name: $('#m_offer_name').val().trim(),
+            email: $('#m_offer_email').val().trim(),
+            phone: $('#m_offer_phone').val().trim(),
+            offer_price: $('#m_offer_price').val(),
+            source: $form.find('input[name="source"]').val(),
+            vehicle_id: $form.find('input[name="vehicle_id"]').val(),
+            dealer_email: $form.find('input[name="dealer_email"]').val()
+        };
+
+        // Validation
+        if (!formData.name || !formData.email || !formData.phone || !formData.offer_price) {
+            showSnackbar('Please fill all required fields!', 'warning');
+            return;
+        }
+
+        // Disable button
+        var $btn = $(this).find('button[type="submit"]');
+        setButtonLoading($btn);
+
+        // Send AJAX
+        $.ajax({
+            url: "/offer-mail",
+            method: "POST",
+            data: formData,
+            success: function (response) {
+                showSnackbar('Offer sent successfully!');
+                $('#motoklozOfferModal').modal('hide');
+                $form[0].reset();
+            },
+            error: function (xhr) {
+                if (xhr.status === 419) {
+                    showSnackbar('Session expired. Refreshing page...', 'error');
+                    location.reload();
+                } else {
+                    showSnackbar('Error: ' + (xhr.responseJSON?.message || 'Something went wrong'), 'error');
+                }
+            },
+            complete: function () {
+                $btn.prop('disabled', false).text('Submit');
+            }
+        });
+    });
+
+});
+
+
+$(document).ready(function () {
     // ✅ dealer id — PHP se ek baar set karo
     var dealerId = {{ ($dealer && !empty($dealer->id)) ? $dealer->id : 'null' }};
     var productId = {{ $searched_vehicle->id ?? 'null' }};

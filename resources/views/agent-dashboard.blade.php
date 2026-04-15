@@ -52,44 +52,32 @@
                                 </thead>
                                 <tbody class="table-content" id="vehiclesTableBody">
                                     @forelse($listings as $listing)
-                                    <tr data-id="{{ $listing->id }}" data-price="{{ $listing->price }}" data-date="{{ $listing->created_at }}">
+                                    @php $listing = (object) $listing; @endphp
+                                    <tr data-id="{{ $listing->id }}" 
+                                        data-price="{{ $listing->price_retail_date ?? 0 }}" 
+                                        data-date="{{ $listing->created_at }}">
                                         <td class="id">#{{ $listing->id }}</td>
                                         <td>
                                             <div class="d-flex align-items-center gap-2">
-                                                <img src="{{ $listing->primary_image ?? asset('/assets/images/default-car.png') }}" 
-                                                    class="car-img" 
-                                                    alt="{{ $listing->title }}"
-                                                    style="width: 60px; height: 50px; object-fit: cover; border-radius: 8px;">
+                                                <a href="{{ route('inventory_product_details', $listing->id) }}">
+                                                    <img style="width: 60px; height: 50px; object-fit: cover; border-radius: 8px;" src="{{ $listing->primary_image
+                                                    ? (Str::startsWith($listing->primary_image, 'http')
+                                                        ? $listing->primary_image
+                                                        : $disklozBaseUrl . '/admin_assets/images/inventory_images/' . $listing->primary_image)
+                                                    : asset('assets/images/defaultimage.jpg') }}" alt="Vehicle Image"
+                                                class="img-box img-fluid"
+                                                onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
+                                                </a>
                                                 <div>
-                                                    <div class="fw-semibold">{{ $listing->title ?? 'N/A' }}</div>
-                                                    <small class="text-muted">{{ $listing->type ?? 'N/A' }}</small>
+                                                    <div class="fw-semibold">
+                                                        {{ $listing->year ?? '' }} {{ $listing->mfg_auto ?? '' }} {{ $listing->model ?? 'N/A' }}
+                                                    </div>
+                                                    <small class="text-muted">{{ $listing->trim ?? 'N/A' }}</small>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>${{ number_format($listing->price ?? 0, 2) }}</td>
-                                        <td>{{ $listing->created_at ? $listing->created_at->format('d M Y') : 'N/A' }}</td>
-                                        <!-- <td>
-                                            <div class="dropdown">
-                                                <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown">
-                                                    <i class="fas fa-ellipsis-v"></i>
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li>
-                                                        <a class="dropdown-item" href="{{ route('inventory_product_details', $listing->id) }}">
-                                                            <i class="fas fa-eye me-2"></i> View
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <hr class="dropdown-divider">
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item text-danger" href="#" onclick="deleteListing({{ $listing->id }})">
-                                                            <i class="fas fa-trash me-2"></i> Delete
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td> -->
+                                        <td>${{ number_format($listing->price_retail_date ?? '0') }}</td>
+                                        <td>{{ $listing->created_at ? \Carbon\Carbon::parse($listing->created_at)->format('d M Y') : 'N/A' }}</td>
                                     </tr>
                                     @empty
                                     <tr>
@@ -98,7 +86,7 @@
                                                 <i class="fas fa-car fa-3x text-muted mb-3"></i>
                                                 <h6>No vehicles found</h6>
                                                 <p class="text-muted">Click "Add a Vehicle" to create your first listing.</p>
-                                                <a href="{{ route('add.listing') }}" class="btn-add">Add a Vehicle</a>
+                                                <a href="{{ route('add.listings') }}" class="btn-add">Add a Vehicle</a>
                                             </div>
                                         </td>
                                     </tr>

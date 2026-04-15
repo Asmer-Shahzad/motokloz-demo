@@ -52,6 +52,10 @@ Route::get('/buy/step-3', [HomeController::class, 'buyFlowStep3'])->name('buy.st
 Route::get('/buy/step-4', [HomeController::class, 'buyFlowStep4'])->name('buy.step4');
 Route::get('/buy/step-5', [HomeController::class, 'buyFlowStep5'])->name('buy.step5');
 Route::get('/buy/step-6', [HomeController::class, 'buyFlowStep6'])->name('buy.step6');
+Route::post('/contact-mail', [SearchController::class, 'contactMail'])->name('contact.mail');
+Route::post('/test-drive-mail', [SearchController::class, 'testDriveMail']);
+Route::post('/offer-mail', [SearchController::class, 'offerMail']);
+
 Route::get('/sell', function () {
 
     if (Auth::check()) {
