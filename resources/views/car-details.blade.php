@@ -39,7 +39,10 @@
                         ])->filter()->implode(', ') : '';
 
     $localInventoryId = $searched_vehicle->id     ?? null;
-    $localDealerId    = $searched_vehicle->user_id ?? null;
+    $localDealerId    = $searched_vehicle->user_id
+                        ?? $searched_vehicle->client_id
+                        ?? $dealer->id
+                        ?? null;
 @endphp
 
 <section class="gallery-section">
@@ -389,14 +392,23 @@
                         {{-- Chat with Dealer --}}
                         @if($localInventoryId && $localDealerId)
                             @auth
-                                <form method="POST" action="{{ route('chat.start') }}" class="mb-3 mt-4">
-                                    @csrf
-                                    <input type="hidden" name="inventory_id" value="{{ $localInventoryId }}">
-                                    <input type="hidden" name="dealer_id"    value="{{ $localDealerId }}">
-                                    <button type="submit" class="mto-btn-black w-100 py-2">
-                                        <i class="fa-regular fa-comment me-2"></i> Chat with Dealer
-                                    </button>
-                                </form>
+                                @if(auth()->id() == $localDealerId)
+                                    {{-- Owner: go to messages page --}}
+                                    <a href="{{ route('chat.index') }}" class="mb-3 mt-4 d-block">
+                                        <button type="button" class="mto-btn-black w-100 py-2">
+                                            <i class="fa-regular fa-comment me-2"></i> My Messages
+                                        </button>
+                                    </a>
+                                @else
+                                    <form method="POST" action="{{ route('chat.start') }}" class="mb-3 mt-4">
+                                        @csrf
+                                        <input type="hidden" name="inventory_id" value="{{ $localInventoryId }}">
+                                        <input type="hidden" name="dealer_id"    value="{{ $localDealerId }}">
+                                        <button type="submit" class="mto-btn-black w-100 py-2">
+                                            <i class="fa-regular fa-comment me-2"></i> Chat with Dealer
+                                        </button>
+                                    </form>
+                                @endif
                             @else
                                 <button type="button" class="mto-btn-black w-100 mt-4 mb-3 py-2"
                                     onclick="openChatLoginModal({{ $localInventoryId }}, {{ $localDealerId }}, '{{ route('chat.start') }}')">
@@ -406,7 +418,7 @@
                         @endif
 
                         {{-- Dealer Inventory Button --}}
-                        @if($dealer && !empty($dealer->id) && $source !== 'motokloz')
+                        @if($dealer && !empty($dealer->id))
                             <a href="{{ $inventoryUrl }}">
                                 <button class="mto-btn-orange w-100 py-2">
                                     Dealer's Inventory

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('body-attrs') data-no-loader="1" @endsection
+
 @section('content')
 
     <div class="top-back">
@@ -72,8 +74,10 @@
                                style="text-decoration: none; color: inherit; display: flex; align-items: center; padding: 14px 18px; gap: 12px; cursor: pointer; transition: all 0.2s ease; margin-bottom: 4px; border-radius: 16px;">
                                 <img src="{{ $opAvatar }}" alt="{{ $opName }}" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($opName) }}&background=F58D02&color=fff&size=48'">
                                 <div style="flex: 1; min-width: 0;">
-                                    <h6 class="chat-heading">{{ $opName }}</h6>
-                                    <p class="chat-paragraph" style="font-size: 13px; color: #91929E;">{{ $convTitle }}</p>
+                                    <h6 class="chat-heading" style="display:flex; align-items:baseline; gap:4px; white-space:nowrap; overflow:hidden;">
+                                        <span style="flex-shrink:0; max-width:55%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $opName }}</span>
+                                        <span style="font-weight:400; font-size:12px; color:#91929E; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">({{ $convTitle }})</span>
+                                    </h6>
                                     <p class="chat-paragraph">{{ $preview }}</p>
                                 </div>
                                 <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0;">
@@ -93,7 +97,8 @@
                 @if(!$activeConversation)
                     <!-- No active conversation placeholder -->
                     <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #91929E;">
-                        <img src="/assets/images/Carento (5).png" alt="" style="width: 80px; opacity: 0.3; margin-bottom: 20px;">
+                        <!-- <img src="/assets/images/Carento (5).png" alt="" style="width: 80px; opacity: 0.3; margin-bottom: 20px;"> -->
+                         <i class="fa-solid fa-message"></i>
                         <h5 style="font-size: 20px; font-weight: 700; color: #7D8592;">Select a conversation</h5>
                         <p style="font-size: 15px; margin-top: 8px;">Choose a chat from the left panel to start messaging.</p>
                     </div>
@@ -173,8 +178,10 @@
                                      onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($opName) }}&background=F58D02&color=fff&size=52'"
                                      alt="{{ $opName }}">
                                 <div>
-                                    <h6 class="chat-user-heading">{{ $opName }}</h6>
-                                    <small class="chat-user-category">{{ $invTitle }}</small>
+                                    <h6 class="chat-user-heading" style="display:flex; align-items:baseline; gap:4px; white-space:nowrap; overflow:hidden; max-width:400px;">
+                                        <span style="flex-shrink:0; max-width:55%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $opName }}</span>
+                                        <span style="font-weight:400; font-size:13px; opacity:0.7; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">({{ $invTitle }})</span>
+                                    </h6>
                                 </div>
                             </div>
                         </div>
@@ -801,11 +808,14 @@
 
         .chat-item .chat-heading {
             margin: 0 0 4px 0;
-            font-size: 18px;
+            font-size: 15px;
             font-weight: 700;
             color: var(--select-color);
             line-height: 1.3;
             transition: .3s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .chat-item .chat-paragraph {
@@ -875,11 +885,15 @@
         }
 
         .chat-user-heading {
-            font-size: 19px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--select-color);
-            margin: 0 0 4px 0;
-            line-height: 1.2;
+            margin: 0;
+            line-height: 1.3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 400px;
         }
 
         .chat-user-category {
@@ -1349,6 +1363,7 @@
             box-shadow: none;
             background: transparent !important;
             color: var(--select-color);
+                width: 100%;
         }
 
         .text-input::placeholder {

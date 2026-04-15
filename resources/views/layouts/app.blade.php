@@ -35,7 +35,7 @@
 
 </head>
 
-<body>
+<body @yield('body-attrs')>
     <!-- Premium Page Loader -->
     <div id="page-loader">
         <!-- Ambient glow orbs -->
@@ -364,6 +364,13 @@
     <script>
         (function () {
             var loader = document.getElementById('page-loader');
+
+            // Disable loader entirely on pages that opt out
+            if (document.body.dataset.noLoader) {
+                loader.style.display = 'none';
+                return;
+            }
+
             var numEl = loader.querySelector('.mto-speed-num');
             var rafId = null;
             var current = 0;

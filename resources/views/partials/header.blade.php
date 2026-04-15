@@ -207,8 +207,11 @@
                     @endphp
 
                     @if(in_array(Route::currentRouteName(), $showImageRoutes))
-                        <a href="{{ route('chat.index') }}">
+                        <a href="{{ route('chat.index') }}" style="position:relative; display:inline-flex;">
                             <img src="/assets/images/Frame 1707481624.png" alt="Logo">
+                            @auth
+                                <span id="chatUnreadBadge" style="display:none; position:absolute; top:-4px; right:-4px; background:#F58D02; color:#fff; border-radius:50%; min-width:18px; height:18px; font-size:11px; font-weight:700; align-items:center; justify-content:center; line-height:1; padding:0 4px;"></span>
+                            @endauth
                         </a>
                     @endif
                     <a href="{{ route('buy.step1') }}" style="text-decoration: none; color: inherit;">
@@ -340,7 +343,11 @@
             </div>
         </div>
     </div>
-</header>
+</headerx>
+
+@auth
+
+@endauth
 
 
 <style>

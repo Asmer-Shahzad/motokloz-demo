@@ -4,9 +4,10 @@
 
 
     @php
-        function formatPrice($price)
-        {
-            return number_format($price, 2, '.', ',');
+        function formatPrice($price) {
+            $cleaned = str_replace(['$', ','], '', $price);
+            $number = is_numeric($cleaned) ? (float)$cleaned : 0;
+            return number_format($number, 2, '.', ',');
         }
     @endphp
 
@@ -252,6 +253,16 @@
     /* RIGHT */
     .next-btn {
         right: -50px;
+    }
+    @media screen and (max-width: 767px) {
+       .prev-btn {
+        left: -10px;
+    }
+
+    /* RIGHT */
+    .next-btn {
+        right: -10px;
+    } 
     }
 </style>
 

@@ -11,51 +11,22 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Models\UserInformation;
+use App\Models\User;
+use App\Http\Controllers\Concerns\EnrichesVehicleLocation;
 
 
 class SearchController extends Controller
 {
-    private function disklozBaseUrl(): string
+    use EnrichesVehicleLocation;
+
+
+
+
+
+
+    public function curl_get($url): JsonResponse
     {
-        return rtrim(config('services.diskloz.base_url', 'https://diskloz.ca'), '/');
-    }
-
-    private function dealerLocationMap(): array
-    {
-        $map = [];
-        $response = Http::get($this->disklozBaseUrl() . '/api/all_dealers_with_inventory_count');
-        if (!$response->successful()) {
-            return $map;
-        }
-
-        $dealers = $response->json('data', []);
-        foreach ($dealers as $dealer) {
-            $locationPayload = [
-                'postal_code' => $dealer['postal_code'] ?? null,
-                'city' => $dealer['city'] ?? null,
-                'province' => $dealer['province'] ?? null,
-                'country' => $dealer['country'] ?? null,
-            ];
-
-            if (!$locationPayload['postal_code'] && !$locationPayload['city']) {
-                continue;
-            }
-
-            if (!empty($dealer['id'])) {
-                $map[(string) $dealer['id']] = $locationPayload;
-            }
-            if (!empty($dealer['user_id'])) {
-                $map[(string) $dealer['user_id']] = $locationPayload;
-            }
-        }
-
-        return $map;
-    }
-
-
-    public function curl_get($url):JsonResponse
-    {
-        $json = ["status"=>false, "message" => "", "data"=>[]];
+        $json = ["status" => false, "message" => "", "data" => []];
         // $url = "https://portaldesignunit.com/terminal/agents";
         // for sending data as json type
         $apiUrl = $this->disklozBaseUrl() . $url;
@@ -65,7 +36,7 @@ class SearchController extends Controller
             CURLOPT_HTTPHEADER,
             array(
                 'Content-Type: application/json', // if the content type is json
-                )
+            )
         );
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -78,7 +49,7 @@ class SearchController extends Controller
             $error_msg = curl_error($ch);
         }
         curl_close($ch);
-        if ($status_code > 199 && $status_code < 203){
+        if ($status_code > 199 && $status_code < 203) {
             $json["status"] = true;
         }
         $json["data"] = json_decode($result);
@@ -92,7 +63,7 @@ class SearchController extends Controller
         $selectedAsset = $request->selected_asset;
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
-        
+
         $assets = [
             'AUTO',
             'FARM EQUIPMENT',
@@ -126,7 +97,7 @@ class SearchController extends Controller
         $makeTypes = [];
         $bodyStyleTypes = [];
 
-        $res = Http::get(env("diskloz_base_url").'/api/search_inventory', [
+        $res = Http::get($this->disklozBaseUrl() . '/api/search_inventory', [
             'selected_asset' => $selectedAsset,
             'per_page' => 1,
         ]);
@@ -305,17 +276,10 @@ class SearchController extends Controller
         $inventory = $result->inventory ?? null;
 
         $dealerLocationMap = $this->dealerLocationMap();
+        $motoklozUserMap   = $this->motoklozUserLocationMap();
 
-        $inventoryData = collect($inventory->data ?? [])->map(function ($vehicle) use ($dealerLocationMap) {
-            $dealerKey = (string) ($vehicle->user_id ?? $vehicle->dealer_id ?? '');
-            $location = $dealerLocationMap[$dealerKey] ?? [];
-
-            $vehicle->dealer_postal_code = $location['postal_code'] ?? null;
-            $vehicle->dealer_city = $location['city'] ?? null;
-            $vehicle->dealer_province = $location['province'] ?? null;
-            $vehicle->dealer_country = $location['country'] ?? null;
-
-            return $vehicle;
+        $inventoryData = collect($inventory->data ?? [])->map(function ($vehicle) use ($dealerLocationMap, $motoklozUserMap) {
+            return $this->enrichVehicleLocation($vehicle, $motoklozUserMap, $dealerLocationMap);
         })->values();
 
         // ✅ SORTING (SAFE + CLEAN)

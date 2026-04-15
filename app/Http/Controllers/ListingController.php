@@ -15,67 +15,12 @@ use App\Models\Inventory;
 use App\Models\InventoryExtraService;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserInformation;
+use App\Http\Controllers\Concerns\EnrichesVehicleLocation;
 
 
 class ListingController extends Controller
 {
-    private function disklozBaseUrl(): string
-    {
-        return rtrim(config('services.diskloz.base_url', 'http://127.0.0.1:8000'), '/');
-    }
-
-    private function dealerLocationMap(): array
-    {
-        $map = [];
-        $response = Http::get($this->disklozBaseUrl() . '/api/all_dealers_with_inventory_count');
-        if (!$response->successful()) {
-            return $map;
-        }
-
-        $dealers = $response->json('data', []);
-        foreach ($dealers as $dealer) {
-            $locationPayload = [
-                'postal_code' => $dealer['postal_code'] ?? null,
-                'city' => $dealer['city'] ?? null,
-                'province' => $dealer['province'] ?? null,
-                'country' => $dealer['country'] ?? null,
-            ];
-
-            if (!$locationPayload['postal_code'] && !$locationPayload['city']) {
-                continue;
-            }
-
-            if (!empty($dealer['id'])) {
-                $map[(string) $dealer['id']] = $locationPayload;
-            }
-            if (!empty($dealer['user_id'])) {
-                $map[(string) $dealer['user_id']] = $locationPayload;
-            }
-        }
-
-        return $map;
-    }
-
-    private function getUserLocation(): array
-    {
-        $user = Auth::user();
-
-        if (!$user) {
-            return [];
-        }
-
-        $userInfo = $user->information ?? null;
-
-        if (!$userInfo) {
-            return [];
-        }
-
-        return [
-            'city' => $userInfo->city ?? null,
-            'postalCode' => $userInfo->postalCode ?? null,
-            'complete_address' => $userInfo->complete_address ?? null,
-        ];
-    }
+    use EnrichesVehicleLocation;
     
     public function curl_get($url):JsonResponse
     {
@@ -114,11 +59,22 @@ class ListingController extends Controller
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
         
-        $userLocation = $this->getUserLocation();
+        $userLocation = [];
+        if (auth()->check()) {
+            $info = auth()->user()->information;
+            if ($info) {
+                $userLocation = [
+                    'postalCode'       => $info->postalCode       ?? null,
+                    'city'             => $info->city             ?? null,
+                    'country'          => $info->country          ?? null,
+                    'complete_address' => $info->complete_address ?? null,
+                ];
+            }
+        }
 
         // ✅ Diskloz API se Motokloz inventory fetch karo
         try {
-            $inventoryResponse = Http::get(env("diskloz_base_url") . '/api/search_motokloz_inventory', [
+            $inventoryResponse = Http::get($this->disklozBaseUrl() . '/api/search_motokloz_inventory', [
                 'client_id' => auth()->id(),
             ]);
 
@@ -181,7 +137,7 @@ class ListingController extends Controller
         $perPage        = 6;
         $currentPage    = $request->get('page', 1);
 
-        $disklozBaseUrl = env("diskloz_base_url");
+        $disklozBaseUrl = $this->disklozBaseUrl();
 
         $listings = new LengthAwarePaginator(
             $allListings->forPage($currentPage, $perPage),
@@ -246,7 +202,7 @@ class ListingController extends Controller
         $view = $partialMap[$asset] ?? 'listings-form.default';
 
         // -------- FILTERS API --------
-        $res = Http::get(env("diskloz_base_url").'/api/search_inventory', [
+        $res = Http::get($this->disklozBaseUrl().'/api/search_inventory', [
             'selected_asset' => $asset,
             'per_page' => 1,
         ]);
@@ -274,7 +230,7 @@ class ListingController extends Controller
         $bodyStyles = $key ? ($inv->filters->{$key['body']} ?? []) : [];
 
         // -------- FORM API --------
-        $formRes = Http::get(env("diskloz_base_url").'/api/inventory-form');
+        $formRes = Http::get($this->disklozBaseUrl().'/api/inventory-form');
         $formData = json_decode($formRes->body());
 
         $year = $formData->Year ?? []; 
@@ -354,7 +310,7 @@ class ListingController extends Controller
 
         foreach ($assets as $asset) {
 
-            $res = Http::get(env("diskloz_base_url").'/api/inventory-form', [
+            $res = Http::get($this->disklozBaseUrl().'/api/inventory-form', [
                 'selected_asset' => $asset,
                 'per_page' => 1,
             ]);
@@ -441,7 +397,7 @@ class ListingController extends Controller
          INVENTORY FORM DATA
         =========================================
         */
-        $response = Http::get(env("diskloz_base_url").'/api/inventory-form');
+        $response = Http::get($this->disklozBaseUrl().'/api/inventory-form');
         $data = json_decode($response->body());
 
         $array = [];
@@ -576,22 +532,21 @@ class ListingController extends Controller
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
         
-        $response = Http::get(env("diskloz_base_url").'/api/favorites?client_id='.$request->u);
+        $response = Http::get($this->disklozBaseUrl().'/api/favorites?client_id='.$request->u);
         $data['favorites'] = json_decode($response->body());
 
         // Location map
-        $dealerLocationMap = $this->dealerLocationMap();
+        $dealerLocationMap   = $this->dealerLocationMap();
+        $motoklozLocationMap = $this->motoklozUserLocationMap();
 
         // Enrich favorites with location data
-        $favoritesCollection = collect($data['favorites'] ?? [])->map(function ($favorite) use ($dealerLocationMap) {
+        $favoritesCollection = collect($data['favorites'] ?? [])->map(function ($favorite) use ($dealerLocationMap, $motoklozLocationMap) {
             if (isset($favorite->inventory)) {
-                $dealerKey = (string) ($favorite->inventory->user_id ?? $favorite->inventory->dealer_id ?? '');
-                $location = $dealerLocationMap[$dealerKey] ?? [];
-                
-                $favorite->inventory->dealer_postal_code = $location['postal_code'] ?? null;
-                $favorite->inventory->dealer_city = $location['city'] ?? null;
-                $favorite->inventory->dealer_province = $location['province'] ?? null;
-                $favorite->inventory->dealer_country = $location['country'] ?? null;
+                $favorite->inventory = $this->enrichVehicleLocation(
+                    (object) $favorite->inventory,
+                    $motoklozLocationMap,
+                    $dealerLocationMap
+                );
             }
             return $favorite;
         });

@@ -13,47 +13,12 @@ use Illuminate\Pagination\LengthAwarePaginator; // ✅ ADD THIS
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserInformation;
+use App\Http\Controllers\Concerns\EnrichesVehicleLocation;
 
 
 class DealerProfileController extends Controller
 {
-    private function disklozBaseUrl(): string
-    {
-        return rtrim(config('services.diskloz.base_url', 'http://127.0.0.1:8000'), '/');
-    }
-
-    private function dealerLocationMap(): array
-    {
-        $map = [];
-        $response = Http::get($this->disklozBaseUrl() . '/api/all_dealers_with_inventory_count');
-        if (!$response->successful()) {
-            return $map;
-        }
-
-        $dealers = $response->json('data', []);
-        foreach ($dealers as $dealer) {
-            $locationPayload = [
-                'postal_code' => $dealer['postal_code'] ?? null,
-                'city' => $dealer['city'] ?? null,
-                'province' => $dealer['province'] ?? null,
-                'country' => $dealer['country'] ?? null,
-            ];
-
-            if (!$locationPayload['postal_code'] && !$locationPayload['city']) {
-                continue;
-            }
-
-            if (!empty($dealer['id'])) {
-                $map[(string) $dealer['id']] = $locationPayload;
-            }
-            if (!empty($dealer['user_id'])) {
-                $map[(string) $dealer['user_id']] = $locationPayload;
-            }
-        }
-
-        return $map;
-    }
-    
+    use EnrichesVehicleLocation;
 
     public function curl_get($url):JsonResponse
     {
@@ -105,7 +70,7 @@ class DealerProfileController extends Controller
             $dealer = $this->buildDealerFromLocalUser($localUser);
 
             try {
-                $inventoryResponse = Http::get(env("diskloz_base_url") . '/api/search_motokloz_inventory', [
+                $inventoryResponse = Http::get($this->disklozBaseUrl() . '/api/search_motokloz_inventory', [
                     'client_id' => $id,
                 ]);
 
@@ -125,7 +90,7 @@ class DealerProfileController extends Controller
         }
 
         // ✅ Diskloz: dealer_by_id API se dealer + inventory
-        $response = Http::get(env("diskloz_base_url") . '/api/dealer_by_id/' . $id);
+        $response = Http::get($this->disklozBaseUrl() . '/api/dealer_by_id/' . $id);
 
         if (!$response->successful() || !($response->json()['status'] ?? false)) {
             abort(404, 'Dealer not found');
@@ -142,21 +107,14 @@ class DealerProfileController extends Controller
     // ✅ Helper — view build karo
     private function buildDealerProfileView($user, $userInfo, $dealer, $inventoryData): \Illuminate\View\View
     {
-        $dealerLocationMap = $this->dealerLocationMap();
-        $total_inventory   = count($inventoryData);
+        $dealerLocationMap   = $this->dealerLocationMap();
+        $motoklozLocationMap = $this->motoklozUserLocationMap();
+        $total_inventory     = count($inventoryData);
 
         $inventory = collect($inventoryData)
-            ->map(function ($item) use ($dealerLocationMap) {
-                $item      = (object) $item;
-                $dealerKey = (string) ($item->user_id ?? $item->dealer_id ?? '');
-                $location  = $dealerLocationMap[$dealerKey] ?? [];
-
-                $item->dealer_postal_code = $location['postal_code'] ?? null;
-                $item->dealer_city        = $location['city']        ?? null;
-                $item->dealer_province    = $location['province']    ?? null;
-                $item->dealer_country     = $location['country']     ?? null;
-
-                return $item;
+            ->map(function ($item) use ($dealerLocationMap, $motoklozLocationMap) {
+                $item = (object) $item;
+                return $this->enrichVehicleLocation($item, $motoklozLocationMap, $dealerLocationMap);
             })
             ->take(4)
             ->values();
@@ -192,18 +150,18 @@ class DealerProfileController extends Controller
 
         return (object) [
             'id'               => $localUser->id,
-            'legal_name'       => $info->full_name      ?? $localUser->name ?? 'N/A',
-            'first_name'       => $info->full_name      ?? $localUser->name ?? '',
+            'legal_name'       => $info->full_name        ?? $localUser->name ?? 'N/A',
+            'first_name'       => $info->full_name        ?? $localUser->name ?? '',
             'last_name'        => '',
-            'email'            => $localUser->email     ?? 'N/A',
-            'phone_no'         => $info->contact_number ?? 'N/A',
-            'logo'             => $info->avatar         ?? null,
-            'city'             => $info->city           ?? null,
-            'province'         => $info->country        ?? null,
+            'email'            => $localUser->email       ?? 'N/A',
+            'phone_no'         => $info->contact_number   ?? 'N/A',
+            'logo'             => $info->avatar           ?? null,
+            'city'             => $info->city             ?? null,
+            'province'         => null,                          // motokloz has no province field
             'physical_address' => $info->complete_address ?? null,
-            'postal_code'      => $info->postalCode     ?? null,
-            'country'          => $info->country        ?? null,
-            'internal_notes'   => $info->bio            ?? null,
+            'postal_code'      => $info->postalCode       ?? null,
+            'country'          => $info->country          ?? null,
+            'internal_notes'   => $info->bio              ?? null,
         ];
     }
 
@@ -211,6 +169,12 @@ class DealerProfileController extends Controller
     {
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
+
+        // ✅ Motokloz dealer — redirect to dealer_inventory_details with source=motokloz
+        if ($request->query('source') === 'motokloz') {
+            return $this->dealer_inventory_details($id, $request);
+        }
+
         $selectedAsset = $request->selected_asset;
 
         $assets = [
@@ -248,7 +212,7 @@ class DealerProfileController extends Controller
         $makeTypes = [];
         $bodyStyleTypes = [];
 
-        $res = Http::timeout(30)->get(env("diskloz_base_url") . '/api/dealer_by_id/' . $id, [
+        $res = Http::timeout(30)->get($this->disklozBaseUrl() . '/api/dealer_by_id/' . $id, [
             'selected_asset' => $selectedAsset,
             'per_page' => 1,
         ]);
@@ -331,7 +295,7 @@ class DealerProfileController extends Controller
         }
         
         try {
-            $response = Http::timeout(30)->get(env("diskloz_base_url") . '/api/dealer_by_id/' . $id, $apiData);
+            $response = Http::timeout(30)->get($this->disklozBaseUrl() . '/api/dealer_by_id/' . $id, $apiData);
 
             if (!$response->successful()) abort(404, 'Dealer not found');
 
@@ -341,17 +305,12 @@ class DealerProfileController extends Controller
             $dealer = (object) $result['data'];
             $inventory = $dealer->inventory ?? [];
             $filters = (object) ($result['filters'] ?? []);
-            $dealerLocationMap = $this->dealerLocationMap();
+            $dealerLocationMap   = $this->dealerLocationMap();
+            $motoklozLocationMap = $this->motoklozUserLocationMap();
 
-            $inventoryData = collect($inventory)->map(function ($vehicle) use ($dealerLocationMap) {
+            $inventoryData = collect($inventory)->map(function ($vehicle) use ($dealerLocationMap, $motoklozLocationMap) {
                 $vehicle = (object) $vehicle;
-                $dealerKey = (string) ($vehicle->user_id ?? $vehicle->dealer_id ?? '');
-                $location = $dealerLocationMap[$dealerKey] ?? [];
-                $vehicle->dealer_postal_code = $location['postal_code'] ?? null;
-                $vehicle->dealer_city = $location['city'] ?? null;
-                $vehicle->dealer_province = $location['province'] ?? null;
-                $vehicle->dealer_country = $location['country'] ?? null;
-                return $vehicle;
+                return $this->enrichVehicleLocation($vehicle, $motoklozLocationMap, $dealerLocationMap);
             })->values();
 
             $bodyStyles = [];
@@ -476,13 +435,13 @@ class DealerProfileController extends Controller
             // Asset types and conditions
             $assetType = [];
             try {
-                $assetTypeResponse = Http::timeout(30)->get(env("diskloz_base_url") . '/api/assetType');
+                $assetTypeResponse = Http::timeout(30)->get($this->disklozBaseUrl() . '/api/assetType');
                 if ($assetTypeResponse->successful()) $assetType = $assetTypeResponse->json()['data'] ?? [];
             } catch (\Exception $e) { \Log::error('Error fetching asset types: ' . $e->getMessage()); }
 
             $conditions = [];
             try {
-                $conditionsResponse = Http::timeout(30)->get(env("diskloz_base_url") . '/api/conditions');
+                $conditionsResponse = Http::timeout(30)->get($this->disklozBaseUrl() . '/api/conditions');
                 if ($conditionsResponse->successful()) $conditions = $conditionsResponse->json()['data'] ?? [];
             } catch (\Exception $e) { \Log::error('Error fetching conditions: ' . $e->getMessage()); }
 
