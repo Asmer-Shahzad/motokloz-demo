@@ -98,7 +98,8 @@
                     <!-- No active conversation placeholder -->
                     <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #91929E;">
                         <!-- <img src="/assets/images/Carento (5).png" alt="" style="width: 80px; opacity: 0.3; margin-bottom: 20px;"> -->
-                         <i class="fa-solid fa-message"></i>
+                         <i style="font-size: 128px; color: #91929E;" class="fa-solid fa-message"></i>
+                         <br>
                         <h5 style="font-size: 20px; font-weight: 700; color: #7D8592;">Select a conversation</h5>
                         <p style="font-size: 15px; margin-top: 8px;">Choose a chat from the left panel to start messaging.</p>
                     </div>

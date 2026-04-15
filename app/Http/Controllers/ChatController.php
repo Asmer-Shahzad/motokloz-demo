@@ -7,6 +7,7 @@ use App\Models\Inventory;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\UserInformation;
 use Illuminate\Support\Facades\Http;
 
 class ChatController extends Controller
@@ -99,12 +100,18 @@ class ChatController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
+        $userInfo = $user->information ?? new UserInformation();
+    
         $authId = Auth::id();
         $conversations = $this->buildConversations($authId);
+        
 
         return view('chat', [
             'conversations'      => $conversations,
             'activeConversation' => null,
+            'user'               => $user,
+            'userInfo'           => $userInfo,
         ]);
     }
 
@@ -114,6 +121,9 @@ class ChatController extends Controller
      */
     public function startOrGet(Request $request)
     {
+        $user = Auth::user();
+        $userInfo = $user->information ?? new UserInformation();
+
         $request->validate([
             'inventory_id' => 'required|integer',
             'dealer_id'    => 'required|integer',
@@ -130,7 +140,7 @@ class ChatController extends Controller
             ->exists();
 
         // Exist kare ya na kare — sirf redirect karo (pehla message user bhejega)
-        return redirect()->route('chat.show', [$authId, $dealerId, $inventoryId]);
+        return redirect()->route('chat.show', [$authId, $dealerId, $inventoryId,$user,$userInfo]);
     }     
 
     /**
@@ -139,6 +149,8 @@ class ChatController extends Controller
      */
     public function show(int $clientId, int $dealerId, int $inventoryId)
     {
+        $user = Auth::user();
+        $userInfo = $user->information ?? new UserInformation();
         $authId = Auth::id();
 
         // Authorization check
@@ -196,6 +208,8 @@ class ChatController extends Controller
             'clientId'           => $clientId,
             'dealerId'           => $dealerId,
             'inventoryId'        => $inventoryId,
+            'user'               => $user,
+            'userInfo'           => $userInfo,
         ]);
     }
 
