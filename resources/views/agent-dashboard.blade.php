@@ -98,7 +98,7 @@
                                                 <i class="fas fa-car fa-3x text-muted mb-3"></i>
                                                 <h6>No vehicles found</h6>
                                                 <p class="text-muted">Click "Add a Vehicle" to create your first listing.</p>
-                                                <a href="{{ route('add.listing') }}" class="btn-add">Add a Vehicle</a>
+                                                <a href="{{ route('add.listings') }}" class="btn-add">Add a Vehicle</a>
                                             </div>
                                         </td>
                                     </tr>
