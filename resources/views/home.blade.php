@@ -253,6 +253,16 @@
     .next-btn {
         right: -50px;
     }
+    @media screen and (max-width: 767px) {
+       .prev-btn {
+        left: -10px;
+    }
+
+    /* RIGHT */
+    .next-btn {
+        right: -10px;
+    } 
+    }
 </style>
 
 
