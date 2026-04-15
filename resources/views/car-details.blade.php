@@ -418,7 +418,7 @@
                         @endif
 
                         {{-- Dealer Inventory Button --}}
-                        @if($dealer && !empty($dealer->id))
+                        @if($dealer && !empty($dealer->id) && $source !== 'motokloz')
                             <a href="{{ $inventoryUrl }}">
                                 <button class="mto-btn-orange w-100 py-2">
                                     Dealer's Inventory
