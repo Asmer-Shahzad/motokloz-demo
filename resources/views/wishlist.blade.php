@@ -155,7 +155,7 @@
                                             <span class="distance-value">Loading...</span>
                                         </p>
 
-                                        <div class="features d-flex flex-wrap gap-2 mb-3">
+                                        {{-- <div class="features d-flex flex-wrap gap-2 mb-3">
                                             <span class="feature">
                                                 <img src="/assets/images/icon01.png" class="icon light-dark">
                                                 {{ $favorite->inventory->mileage ?? '0' }}
@@ -185,7 +185,7 @@
                                                 <img src="/assets/images/icon08.png" alt="" class="icon light-dark"> 
                                                 {{ isset($favorite->inventory->engine) ? $favorite->inventory->engine : '' }}
                                             </span>
-                                        </div>
+                                        </div> --}}
 
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="price-wrap">
