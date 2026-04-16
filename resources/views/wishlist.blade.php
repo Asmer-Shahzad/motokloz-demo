@@ -155,7 +155,7 @@
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="price-wrap">
                                                     <span class="text-span">From</span>
-                                                    <span class="price-span">${{ number_format((float)($inventory->price_retail_date ?? 0), 2) }}</span>
+                                                    <span class="price-span">${{ number_format((float)($inventory->disclosed_price ?? 0), 2) }}</span>
                                                     <span class="text-span">/ USD</span>
                                                 </div>
                                                 

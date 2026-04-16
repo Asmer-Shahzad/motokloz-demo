@@ -58,11 +58,11 @@ class InventoryController extends Controller
         if ($request->filled('sort')) {
             switch ($request->sort) {
                 case 'price_asc':
-                    $buying_products = $buying_products->sortBy(fn($v) => (float) ($v->price_retail_date ?? 0));
+                    $buying_products = $buying_products->sortBy(fn($v) => (float) ($v->disclosed_price ?? 0));
                     break;
 
                 case 'price_desc':
-                    $buying_products = $buying_products->sortByDesc(fn($v) => (float) ($v->price_retail_date ?? 0));
+                    $buying_products = $buying_products->sortByDesc(fn($v) => (float) ($v->disclosed_price ?? 0));
                     break;
 
                 case 'year_asc':

@@ -85,7 +85,7 @@
                             <div class="mb-3">
                                 <input type="text" class="form-control" placeholder="Tour price ($)" name="price">
                             </div>
-
+    
                             <label class="form-label fw-bold">Extra Services</label>
                             <div id="extra-services-container">
                                 <div class="row g-3 align-items-center extra-service-row mb-3">

@@ -765,7 +765,7 @@
 
                                     <div class="car-price-block text-end">
                                         <h4 class="price-value">
-                                            ${{ formatPrice($recent_vehicle->price_retail_date ?? 0) }}
+                                            ${{ formatPrice($recent_vehicle->disclosed_price ?? 0) }}
                                         </h4>
                                         <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                     </div>

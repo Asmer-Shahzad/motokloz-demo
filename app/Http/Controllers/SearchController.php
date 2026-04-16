@@ -287,11 +287,11 @@ class SearchController extends Controller
             switch ($request->sort) {
 
                 case 'price_asc':
-                    $inventoryData = $inventoryData->sortBy(fn($v) => (float) ($v->price_retail_date ?? 0));
+                    $inventoryData = $inventoryData->sortBy(fn($v) => (float) ($v->disclosed_price ?? 0));
                     break;
 
                 case 'price_desc':
-                    $inventoryData = $inventoryData->sortByDesc(fn($v) => (float) ($v->price_retail_date ?? 0));
+                    $inventoryData = $inventoryData->sortByDesc(fn($v) => (float) ($v->disclosed_price ?? 0));
                     break;
 
                 case 'year_asc':
