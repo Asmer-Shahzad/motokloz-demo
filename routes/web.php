@@ -55,6 +55,7 @@ Route::get('/buy/step-6', [HomeController::class, 'buyFlowStep6'])->name('buy.st
 Route::post('/contact-mail', [SearchController::class, 'contactMail'])->name('contact.mail');
 Route::post('/test-drive-mail', [SearchController::class, 'testDriveMail']);
 Route::post('/offer-mail', [SearchController::class, 'offerMail']);
+Route::post('/motokloz-test-drive-mail', [SearchController::class, 'MotokloztestDriveMail']);
 
 Route::get('/sell', function () {
 

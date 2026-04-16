@@ -547,6 +547,18 @@ class ListingController extends Controller
                     $motoklozLocationMap,
                     $dealerLocationMap
                 );
+                
+                // ✅ Ensure source is set
+                if (!isset($favorite->inventory->source)) {
+                    $favorite->inventory->source = $favorite->inventory->source ?? 'other';
+                }
+
+                // ✅ Agar source Motokloz hai toh user ki email lo
+                if ($favorite->inventory->source === 'Motokloz') {
+                    $userId = $favorite->inventory->user_id ?? $favorite->inventory->client_id ?? null;
+                    $motoklozUser = \App\Models\User::find($userId);
+                    $favorite->inventory->dealer_email = $motoklozUser->email ?? 'info@motokloz.com';
+                }
             }
             return $favorite;
         });
@@ -648,7 +660,7 @@ class ListingController extends Controller
             'favorites', 
             'total_favorites', 
             'searched_vehicle',
-            'firstFavorite',  // ✅ Add this for modal
+            'firstFavorite',
             'pageTitle', 
             'disklozBaseUrl',
             'last_page',

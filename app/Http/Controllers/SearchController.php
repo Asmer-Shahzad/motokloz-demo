@@ -452,7 +452,7 @@ class SearchController extends Controller
         }
     }
 
-     public function contactMail(Request $request)
+    public function contactMail(Request $request)
     {
         try {
             
@@ -509,5 +509,101 @@ class SearchController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Send test drive request email to dealer
+    */
+    public function MotokloztestDriveMail(Request $request)
+    {
+        try {
+            
+            // Log request
+            Log::info('Test Drive Request Received', $request->except('_token'));
+            
+            // Validate
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email',
+                'phone' => 'required|string',
+                'date' => 'required|date',
+                'dealer_email' => 'required|email',
+                'vehicle_id' => 'nullable',
+                'message' => 'nullable|string',
+                'source' => 'nullable|string'
+            ]);
+
+            $dealerEmail = $validated['dealer_email'];
+            
+            Log::info('Sending test drive email to dealer: ' . $dealerEmail);
+
+            // Prepare email content
+            $emailBody = "==========================================\n";
+            $emailBody .= "         NEW TEST DRIVE REQUEST\n";
+            $emailBody .= "==========================================\n\n";
+            $emailBody .= "Customer Information:\n";
+            $emailBody .= "-------------------\n";
+            $emailBody .= "Name: " . $validated['name'] . "\n";
+            $emailBody .= "Email: " . $validated['email'] . "\n";
+            $emailBody .= "Phone: " . $validated['phone'] . "\n";
+            $emailBody .= "Preferred Date: " . $validated['date'] . "\n\n";
+            
+            if (!empty($validated['vehicle_id'])) {
+                $emailBody .= "Vehicle Information:\n";
+                $emailBody .= "-------------------\n";
+                $emailBody .= "Vehicle ID: " . $validated['vehicle_id'] . "\n\n";
+            }
+            
+            if (!empty($validated['message'])) {
+                $emailBody .= "Customer Message:\n";
+                $emailBody .= "-------------------\n";
+                $emailBody .= $validated['message'] . "\n\n";
+            }
+            
+            $emailBody .= "Additional Information:\n";
+            $emailBody .= "-------------------\n";
+            $emailBody .= "Source: " . ($validated['source'] ?? 'Motokloz Website') . "\n";
+            $emailBody .= "Submitted At: " . now()->format('Y-m-d H:i:s') . "\n";
+            $emailBody .= "IP Address: " . $request->ip() . "\n";
+            $emailBody .= "\n==========================================\n";
+            $emailBody .= "This request was submitted via Motokloz.\n";
+            $emailBody .= "Please contact the customer directly.\n";
+            $emailBody .= "==========================================\n";
+
+            // Send email
+            Mail::raw($emailBody, function ($message) use ($dealerEmail, $validated) {
+                $message->to($dealerEmail)
+                        ->subject('New Test Drive Request - ' . $validated['name'])
+                        ->from('no-reply@diskloz.com', 'Motokloz')
+                        ->replyTo($validated['email'], $validated['name']);
+            });
+
+            Log::info('Test drive email sent successfully to: ' . $dealerEmail);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Test drive request sent to dealer successfully!'
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Test Drive Validation Error: ' . json_encode($e->errors()));
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+            
+        } catch (\Exception $e) {
+            Log::error('Test Drive Email Error: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to send email. Please try again.'
+            ], 500);
+        }
+    }
+
+
 
 }

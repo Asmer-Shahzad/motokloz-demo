@@ -408,7 +408,7 @@
                                             <i class="fa-regular fa-comment me-2"></i> Chat with Dealer
                                         </button>
                                     </form>
-                                @endif
+                            @endif
                             @else
                                 <button type="button" class="mto-btn-black w-100 mt-4 mb-3 py-2"
                                     onclick="openChatLoginModal({{ $localInventoryId }}, {{ $localDealerId }}, '{{ route('chat.start') }}')">
