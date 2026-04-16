@@ -476,76 +476,149 @@
                 <div class="content-box shadow-sm p-4" data-aos="fade-left" data-aos-duration="700">
                 <h5 class="fw-bold mb-4">Get in touch</h5>
 
-                <form data-ajax="true" id="leadForm" action="#" method="POST">
-                    <!-- CSRF Token -->
-                    @csrf
-                    
-                    <!-- Hidden fields -->
-                    <input type="hidden" name="dealer_id" id="dealer_id" value="{{ $dealer->id ?? '' }}">
-                    <input type="hidden" name="product_id" id="product_id" value="{{ $searched_vehicle->id ?? '' }}">
-                    <input type="hidden" name="reason" id="reason" value="Contact Form">
-                    <input type="hidden" name="type" value="WEBLEAD">
-                    <input type="hidden" name="source" value="Motokloz">
-                    <input type="hidden" name="lead_status" value="NEW">
-                    <input type="hidden" name="lead_source" value="Website Contact Form">
-                    <input type="hidden" name="lead_type" value="General Inquiry">
+                @if(!$isMotokloz)
+                    <form data-ajax="true" id="leadForm" action="#" method="POST">
+                        <!-- CSRF Token -->
+                        @csrf
+                        
+                        <!-- Hidden fields -->
+                        <input type="hidden" name="dealer_id" id="dealer_id" value="{{ $dealer->id ?? '' }}">
+                        <input type="hidden" name="product_id" id="product_id" value="{{ $searched_vehicle->id ?? '' }}">
+                        <input type="hidden" name="reason" id="reason" value="Contact Form">
+                        <input type="hidden" name="type" value="WEBLEAD">
+                        <input type="hidden" name="source" value="Motokloz">
+                        <input type="hidden" name="lead_status" value="NEW">
+                        <input type="hidden" name="lead_source" value="Website Contact Form">
+                        <input type="hidden" name="lead_type" value="General Inquiry">
 
-                    <!-- Show error messages if IDs are missing -->
-                    @if(!($dealer->id ?? false))
-                        <div class="alert alert-danger mb-3">
-                            <strong>Error:</strong> Vehicle or dealer information is missing. 
-                            Please contact support.
+                        <!-- Show error messages if IDs are missing -->
+                        @if(!($dealer->id ?? false))
+                            <div class="alert alert-danger mb-3">
+                                <strong>Error:</strong> Vehicle or dealer information is missing. 
+                                Please contact support.
+                            </div>
+                        @endif
+
+                        <!-- Name Field -->
+                        <div class="mb-3 position-relative">
+                            <img src="/assets/images/userlogin.png" class="input-icon" alt="" width="20">
+                            <input type="text" 
+                                id="name"
+                                name="name"
+                                class="form-control ps-5" 
+                                placeholder="Your name"
+                                required>
                         </div>
-                    @endif
 
-                    <!-- Name Field -->
-                    <div class="mb-3 position-relative">
-                        <img src="/assets/images/userlogin.png" class="input-icon" alt="" width="20">
-                        <input type="text" 
-                            id="name"
-                            name="name"
-                            class="form-control ps-5" 
-                            placeholder="Your name"
-                            required>
-                    </div>
+                        <!-- Email Field -->
+                        <div class="mb-3 position-relative">
+                            <img src="/assets/images/email.png" class="input-icon" alt="" width="20">
+                            <input type="email" 
+                                id="email"
+                                name="email"
+                                class="form-control ps-5" 
+                                placeholder="Your email"
+                                required>
+                        </div>
 
-                    <!-- Email Field -->
-                    <div class="mb-3 position-relative">
-                        <img src="/assets/images/email.png" class="input-icon" alt="" width="20">
-                        <input type="email" 
-                            id="email"
-                            name="email"
-                            class="form-control ps-5" 
-                            placeholder="Your email"
-                            required>
-                    </div>
+                        <!-- Phone Field -->
+                        <div class="mb-3 position-relative">
+                            <img src="/assets/images/telephone.png" class="input-icon" alt="" width="20">
+                            <input type="tel" 
+                                id="phone"
+                                name="phone"
+                                class="form-control ps-5" 
+                                placeholder="Your phone"
+                                required>
+                        </div>
 
-                    <!-- Phone Field -->
-                    <div class="mb-3 position-relative">
-                        <img src="/assets/images/telephone.png" class="input-icon" alt="" width="20">
-                        <input type="tel" 
-                            id="phone"
-                            name="phone"
-                            class="form-control ps-5" 
-                            placeholder="Your phone"
-                            required>
-                    </div>
+                        <!-- Message Field -->
+                        <div class="mb-3">
+                            <textarea id="message"
+                                    name="message" 
+                                    class="form-control" 
+                                    rows="5" 
+                                    placeholder="Message"
+                                    required></textarea>
+                        </div>
 
-                    <!-- Message Field -->
-                    <div class="mb-3">
-                        <textarea id="message"
-                                name="message" 
-                                class="form-control" 
-                                rows="5" 
-                                placeholder="Message"
-                                required></textarea>
-                    </div>
+                        <button type="submit" id="submitBtn" class="btn btn-orange w-100 mb-4 text-white"
+                                @if(!($dealer->id ?? false)) @endif>
+                            Send message <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </form>
+                @else
+                    <form data-ajax="true" id="leadForm" action="#" method="POST">
+                        <!-- CSRF Token -->
+                        @csrf
+                        
+                        <!-- Hidden fields -->
+                        <input type="hidden" name="dealer_id" id="dealer_id" value="{{ $dealer->id ?? '' }}">
+                        <input type="hidden" name="product_id" id="product_id" value="{{ $searched_vehicle->id ?? '' }}">
+                        <input type="hidden" name="dealer_email" id="dealer_email" value="{{ $dealer->email ?? 'N/A' }}">
+                        <input type="hidden" name="reason" id="reason" value="Contact Form">
+                        <input type="hidden" name="type" value="WEBLEAD">
+                        <input type="hidden" name="source" value="Motokloz">
+                        <input type="hidden" name="lead_status" value="NEW">
+                        <input type="hidden" name="lead_source" value="Website Contact Form">
+                        <input type="hidden" name="lead_type" value="General Inquiry">
 
-                    <button type="submit" id="submitBtn" class="btn btn-orange w-100 mb-4 text-white"
-                            @if(!($dealer->id ?? false)) @endif>
-                        Send message <i class="fas fa-arrow-right ms-2"></i>
-                    </button>
-                </form>
+                        <!-- Show error messages if IDs are missing -->
+                        @if(!($dealer->id ?? false))
+                            <div class="alert alert-danger mb-3">
+                                <strong>Error:</strong> Vehicle or dealer information is missing. 
+                                Please contact support.
+                            </div>
+                        @endif
+
+                        <!-- Name Field -->
+                        <div class="mb-3 position-relative">
+                            <img src="/assets/images/userlogin.png" class="input-icon" alt="" width="20">
+                            <input type="text" 
+                                id="name"
+                                name="name"
+                                class="form-control ps-5" 
+                                placeholder="Your name"
+                                required>
+                        </div>
+
+                        <!-- Email Field -->
+                        <div class="mb-3 position-relative">
+                            <img src="/assets/images/email.png" class="input-icon" alt="" width="20">
+                            <input type="email" 
+                                id="email"
+                                name="email"
+                                class="form-control ps-5" 
+                                placeholder="Your email"
+                                required>
+                        </div>
+
+                        <!-- Phone Field -->
+                        <div class="mb-3 position-relative">
+                            <img src="/assets/images/telephone.png" class="input-icon" alt="" width="20">
+                            <input type="tel" 
+                                id="phone"
+                                name="phone"
+                                class="form-control ps-5" 
+                                placeholder="Your phone"
+                                required>
+                        </div>
+
+                        <!-- Message Field -->
+                        <div class="mb-3">
+                            <textarea id="message"
+                                    name="message" 
+                                    class="form-control" 
+                                    rows="5" 
+                                    placeholder="Message"
+                                    required></textarea>
+                        </div>
+
+                        <button type="submit" id="submitBtn" class="btn btn-orange w-100 mb-4 text-white">
+                            Send message <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </form>
+                @endif
 
                 <!-- Contact Info -->
                 <div class="small">
@@ -682,13 +755,13 @@
                                         <span class="distance-value">Loading...</span>
                                     </p>
 
-                                    <div class="car-circle-icons-group">
+                                    <!-- <div class="car-circle-icons-group">
                                         <img src="/assets/images/no-accidents.png" alt="">
                                         <img src="/assets/images/low-mileage.png" alt="">
                                         <img src="/assets/images/service-plan.png" alt="">
                                         <img src="/assets/images/powertrain-warranty.png" alt="">
                                         <span class="extra-icons-count">12+</span>
-                                    </div>
+                                    </div> -->
 
                                     <div class="car-price-block text-end">
                                         <h4 class="price-value">
@@ -708,6 +781,14 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
+
+            // CSRF Setup
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
 
             function handleErrors(xhr){
                 console.log('Error Response:', xhr.responseJSON);
@@ -730,6 +811,75 @@
                     showSnackbar(xhr.responseJSON?.message || 'Something went wrong.', 'error');
                 }
             }
+
+
+            // ===================== CONTACT FORM (Email Only) =====================
+            $('#leadForm').on('submit', function (e) {
+                e.preventDefault();
+                
+                var $form = $(this);
+                var $btn = $form.find('button[type="submit"]');
+                
+                // Check if dealer email exists
+                var dealerEmail = $form.find('input[name="dealer_email"]').val();
+                if (!dealerEmail) {
+                    alert('Error: Dealer email is missing. Please contact support.');
+                    return;
+                }
+                
+                // Get form data
+                var formData = {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    name: $('#name').val().trim(),
+                    email: $('#email').val().trim(),
+                    phone: $('#phone').val().trim(),
+                    message: $('#message').val().trim(),
+                    dealer_email: dealerEmail,
+                    vehicle_id: $form.find('input[name="product_id"]').val(),
+                    source: 'Motokloz'
+                };
+                
+                // Validation
+                if (!formData.name || !formData.email || !formData.phone || !formData.message) {
+                    alert('Please fill all required fields!');
+                    return;
+                }
+                
+                // Email validation
+                if (!/^[^\s@]+@([^\s@]+\.)+[^\s@]+$/.test(formData.email)) {
+                    alert('Please enter a valid email address.');
+                    return;
+                }
+                
+                // Disable button
+                $btn.prop('disabled', true);
+                var originalText = $btn.html();
+                $btn.html('<i class="fas fa-spinner fa-spin"></i> Sending...');
+                
+                console.log('Sending contact email to:', dealerEmail);
+                
+                // Send AJAX to send email
+                $.ajax({
+                    url: "/contact-mail",
+                    method: "POST",
+                    data: formData,
+                    success: function (response) {
+                        alert(response.message || 'Message sent successfully!');
+                        $form[0].reset();
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 419) {
+                            alert('Session expired. Refreshing page...');
+                            location.reload();
+                        } else {
+                            alert('Error: ' + (xhr.responseJSON?.message || 'Something went wrong'));
+                        }
+                    },
+                    complete: function () {
+                        $btn.prop('disabled', false).html(originalText);
+                    }
+                });
+            });
 
             $('#leadForm').on('submit', function(e){
                 e.preventDefault();

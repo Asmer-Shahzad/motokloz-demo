@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Collection;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
+use Illuminate\Pagination\LengthAwarePaginator;
 use GuzzleHttp\Psr7\MultipartStream;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Inventory;
@@ -165,40 +166,54 @@ class HomeController extends Controller
 
     public function agentdashboard(Request $request)
     {
-        $user = Auth::user();
+        $user     = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
 
-        $sort = $request->get('sort', 'newest'); // default sort
+        $sort    = $request->get('sort', 'newest');
         $perPage = 4;
 
-        // Base query
-        $query = Inventory::where('user_id', auth()->id())->with('extraServices');
+        // ✅ Diskloz API se Motokloz inventory fetch karo
+        try {
+            $inventoryResponse = Http::get(env("DISKLOZ_BASE_URL") . '/api/search_motokloz_inventory', [
+                'client_id' => auth()->id(),
+            ]);
 
-        // Apply sorting
-        switch ($sort) {
-            case 'price_asc':
-                $query->orderBy('price', 'asc');
-                break;
-            case 'price_desc':
-                $query->orderBy('price', 'desc');
-                break;
-            case 'oldest':
-                $query->oldest();
-                break;
-            case 'newest':
-            default:
-                $query->latest();
-                break;
+            $allListings = $inventoryResponse->successful()
+                ? collect($inventoryResponse->json()['data'] ?? [])
+                : collect();
+
+        } catch (\Exception $e) {
+            \Log::error('Motokloz dashboard fetch error: ' . $e->getMessage());
+            $allListings = collect();
         }
 
-        $listings = $query->paginate($perPage)->withQueryString(); // preserve sort/search params
+        // ✅ Sorting
+        $allListings = match($sort) {
+            'price_asc'  => $allListings->sortBy('price_retail_date')->values(),
+            'price_desc' => $allListings->sortByDesc('price_retail_date')->values(),
+            'oldest'     => $allListings->sortBy('created_at')->values(),
+            default      => $allListings->sortByDesc('created_at')->values(),
+        };
 
-        // Pagination info
-        $last_page = $listings->lastPage();
+        // ✅ Manual pagination
+        $total        = $allListings->count();
+        $currentPage  = $request->get('page', 1);
+
+        $disklozBaseUrl = env("diskloz_base_url");
+
+        $listings = new LengthAwarePaginator(
+            $allListings->forPage($currentPage, $perPage),
+            $total,
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        $last_page    = $listings->lastPage();
         $current_page = $listings->currentPage();
+        $pageTitle    = 'Dashboard';
 
-        $pageTitle = 'Dashboard';
-
+        
         return view('agent-dashboard', compact(
             'user',
             'listings',
@@ -206,7 +221,8 @@ class HomeController extends Controller
             'pageTitle',
             'last_page',
             'current_page',
-            'sort'
+            'sort',
+            'disklozBaseUrl' 
         ));
     }
 

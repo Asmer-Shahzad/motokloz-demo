@@ -433,33 +433,56 @@ class ListingController extends Controller
     {
         Log::info('Incoming Request Data:', $request->all());
 
-        $skip = ['inventory_logo', '_token', 'features', 'extra_services', 'inventory_logo'];
-        
-        // ✅ Saare fields collect karo
+        $skip = ['inventory_logo', '_token', 'features', 'extra_services'];
+
         $postFields = [];
 
+        // ✅ Saare regular fields bhejo (NULL bhi)
         foreach ($request->except($skip) as $key => $value) {
-            if (is_null($value) || is_array($value)) continue;
-            $postFields[$key] = (string) $value;
+            if (is_array($value)) continue;
+            $postFields[$key] = (string) ($value ?? '');
         }
 
-        $postFields['user_id'] = (string) auth()->id();
+        // ✅ Fixed fields
+        $postFields['user_id']          = (string) auth()->id();
+        $postFields['client_id']        = (string) auth()->id();
+        $postFields['user_role']        = 'MOTOKLOZ';
+        $postFields['share_indicators'] = 'SHARE TO MOTOKLOZ';
+        $postFields['status']           = '1';
 
-        // features[]
-        foreach ((array) $request->input('features', []) as $i => $feature) {
-            $postFields["features[{$i}]"] = (string) $feature;
+        // ✅ Features → interior ke naam se bhejo
+        $features = (array) $request->input('features', []);
+        foreach ($features as $i => $feature) {
+            $postFields["interior[{$i}]"] = (string) $feature;
         }
 
-        // extra_services[]
-        foreach ((array) $request->input('extra_services', []) as $i => $service) {
-            if (is_array($service)) {
-                foreach ($service as $key => $val) {
-                    $postFields["extra_services[{$i}][{$key}]"] = (string) $val;
+        // ✅ Extra Services
+        $extraServices = $request->input('extra_services', []);
+        $validServices = [];
+        $validIndex = 0;
+
+        if (is_array($extraServices)) {
+            foreach ($extraServices as $service) {
+                if (isset($service['title']) && !empty(trim($service['title']))) {
+                    $validServices[] = [
+                        'title' => trim($service['title']),
+                        'price' => $service['price'] ?? null
+                    ];
+                    $postFields["extra_services[{$validIndex}][title]"] = trim($service['title']);
+                    $postFields["extra_services[{$validIndex}][price]"] = (string) ($service['price'] ?? '');
+                    $validIndex++;
                 }
             }
         }
 
-        // ✅ CURLFile se images attach karo
+        if (!empty($validServices)) {
+            $postFields['extras'] = implode(',', array_column($validServices, 'title'));
+        }
+
+        Log::info('Extra Services:', $validServices);
+        Log::info('Post Fields being sent:', array_filter($postFields, fn($v) => !($v instanceof \CURLFile)));
+
+        // ✅ Images
         if ($request->hasFile('inventory_logo')) {
             foreach ($request->file('inventory_logo') as $i => $file) {
                 if ($file instanceof \Illuminate\Http\UploadedFile && $file->isValid()) {
@@ -472,17 +495,16 @@ class ListingController extends Controller
             }
         }
 
-        // ✅ CURL se request bhejo
-        $url = $this->disklozBaseUrl() . '/api/inventory-form-save';
+        // ✅ CURL
+        $url = env("diskloz_base_url") . '/api/inventory-form-save';
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Accept: application/json',
-        ]);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/json']);
 
         $responseBody = curl_exec($ch);
         $httpStatus   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -491,19 +513,20 @@ class ListingController extends Controller
 
         if ($curlError) {
             Log::error('CURL Error: ' . $curlError);
-            return back()->with('error', 'Request failed: ' . $curlError);
+            return back()->with('error', 'Request failed: ' . $curlError)->withInput();
         }
 
-        Log::info('API Response:', [
-            'status' => $httpStatus,
-            'body'   => $responseBody
-        ]);
+        Log::info('API Response:', ['status' => $httpStatus, 'body' => $responseBody]);
 
         $data = json_decode($responseBody, true);
 
-        return back()->with('success', 'Listing added successfully!');
+        if ($httpStatus === 200 && isset($data['status']) && $data['status'] === true) {
+            return back()->with('success', 'Listing added successfully!');
+        } else {
+            $errorMsg = $data['message'] ?? $data['error'] ?? 'Failed to save inventory';
+            return back()->with('error', $errorMsg)->withInput();
+        }
     }
-
     public function wishlist(Request $request)
     {
         $user = Auth::user();
@@ -524,6 +547,18 @@ class ListingController extends Controller
                     $motoklozLocationMap,
                     $dealerLocationMap
                 );
+                
+                // ✅ Ensure source is set
+                if (!isset($favorite->inventory->source)) {
+                    $favorite->inventory->source = $favorite->inventory->source ?? 'other';
+                }
+
+                // ✅ Agar source Motokloz hai toh user ki email lo
+                if ($favorite->inventory->source === 'Motokloz') {
+                    $userId = $favorite->inventory->user_id ?? $favorite->inventory->client_id ?? null;
+                    $motoklozUser = \App\Models\User::find($userId);
+                    $favorite->inventory->dealer_email = $motoklozUser->email ?? 'info@motokloz.com';
+                }
             }
             return $favorite;
         });
@@ -625,7 +660,7 @@ class ListingController extends Controller
             'favorites', 
             'total_favorites', 
             'searched_vehicle',
-            'firstFavorite',  // ✅ Add this for modal
+            'firstFavorite',
             'pageTitle', 
             'disklozBaseUrl',
             'last_page',

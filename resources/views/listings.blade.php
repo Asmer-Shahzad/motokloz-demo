@@ -155,13 +155,13 @@
                                                                 <span class="distance-value">Loading...</span>
                                                             </p>
 
-                                                            <div class="car-circle-icons-group">
+                                                            <!-- <div class="car-circle-icons-group">
                                                                 <img src="/assets/images/no-accidents.png" alt="">
                                                                 <img src="/assets/images/low-mileage.png" alt="">
                                                                 <img src="/assets/images/service-plan.png" alt="">
                                                                 <img src="/assets/images/powertrain-warranty.png" alt="">
                                                                 <span class="extra-icons-count">12+</span>
-                                                            </div>
+                                                            </div> -->
 
                                                             <div class="car-price-block text-end">
                                                                 <h4 class="price-value">
