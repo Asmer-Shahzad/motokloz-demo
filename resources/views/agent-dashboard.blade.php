@@ -54,7 +54,7 @@
                                     @forelse($listings as $listing)
                                     @php $listing = (object) $listing; @endphp
                                     <tr data-id="{{ $listing->id }}" 
-                                        data-price="{{ $listing->price_retail_date ?? 0 }}" 
+                                        data-price="{{ $listing->disclosed_price ?? 0 }}" 
                                         data-date="{{ $listing->created_at }}">
                                         <td class="id">#{{ $listing->id }}</td>
                                         <td>
@@ -76,7 +76,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>${{ number_format($listing->price_retail_date ?? '0') }}</td>
+                                        <td>${{ number_format($listing->disclosed_price ?? '0') }}</td>
                                         <td>{{ $listing->created_at ? \Carbon\Carbon::parse($listing->created_at)->format('d M Y') : 'N/A' }}</td>
                                     </tr>
                                     @empty

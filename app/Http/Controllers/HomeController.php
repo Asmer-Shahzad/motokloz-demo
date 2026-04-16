@@ -189,8 +189,8 @@ class HomeController extends Controller
 
         // ✅ Sorting
         $allListings = match($sort) {
-            'price_asc'  => $allListings->sortBy('price_retail_date')->values(),
-            'price_desc' => $allListings->sortByDesc('price_retail_date')->values(),
+            'price_asc'  => $allListings->sortBy('disclosed_price')->values(),
+            'price_desc' => $allListings->sortByDesc('disclosed_price')->values(),
             'oldest'     => $allListings->sortBy('created_at')->values(),
             default      => $allListings->sortByDesc('created_at')->values(),
         };

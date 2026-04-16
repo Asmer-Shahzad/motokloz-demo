@@ -594,13 +594,13 @@ class ListingController extends Controller
         switch ($sort) {
             case 'price_asc':
                 $favoritesCollection = $favoritesCollection->sortBy(function ($favorite) {
-                    return $favorite->inventory->price_retail_date ?? 0;
+                    return $favorite->inventory->disclosed_price ?? 0;
                 })->values();
                 break;
                 
             case 'price_desc':
                 $favoritesCollection = $favoritesCollection->sortByDesc(function ($favorite) {
-                    return $favorite->inventory->price_retail_date ?? 0;
+                    return $favorite->inventory->disclosed_price ?? 0;
                 })->values();
                 break;
                 
