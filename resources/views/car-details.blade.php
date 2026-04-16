@@ -1,8 +1,62 @@
 @extends('layouts.app')
+@section('meta')
+@php
+    $year = $searched_vehicle->year ?? '';
+    $make = $searched_vehicle->mfg_auto ?? '';
+    $model = $searched_vehicle->model ?? '';
+    $trim = $searched_vehicle->trim ?? '';
+    $condition = $searched_vehicle->inventory_condition ?? '';
+    
+    // ✅ Add dots (.) between variables
+    $vehicleTitle = trim($year . ' ' . $make . ' ' . $model);
+    if (empty($vehicleTitle)) {
+        $vehicleTitle = "Vehicle for Sale | Motokloz";
+    }
+    
+    // ✅ Add dots (.) between variables
+    $vehicleDescription = trim($condition . ' ' . $year . ' ' . $make . ' ' . $model . ' ' . $trim);
+    if (empty($vehicleDescription)) {
+        $vehicleDescription = "Check out this vehicle at Motokloz. Contact us for more details and pricing.";
+    }
+    
+    $primaryImage = $searched_vehicle->primary_image ?? '';
+    $defaultImage = 'https://motokloz.com/assets/images/defaultimage.jpg';
+    $imageUrl = $defaultImage;
+    
+    if (!empty($primaryImage)) {
+        // ✅ Fix: Remove spaces from filename
+        $cleanImage = str_replace(' ', '%20', $primaryImage);
+        
+        if (str_starts_with($primaryImage, 'http')) {
+            $imageUrl = $primaryImage;
+        } else {
+            $imageUrl = 'https://diskloz.ca/admin_assets/images/inventory_images/' . $cleanImage;
+        }
+    }
+@endphp
+
+{{-- CRITICAL META TAGS --}}
+<title>{{ $vehicleTitle }}</title>
+<meta name="title" content="{{ $vehicleTitle }}">
+<meta name="description" content="{{ $vehicleDescription }}">
+
+<meta property="og:url" content="{{ url()->current() }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ $vehicleTitle }}">
+<meta property="og:description" content="{{ $vehicleDescription }}">
+<meta property="og:image" content="{{ $imageUrl }}">
+<meta property="og:site_name" content="Motokloz">
+
+{{-- Twitter Card --}}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ $vehicleTitle }}">
+<meta name="twitter:description" content="{{ $vehicleDescription }}">
+<meta name="twitter:image" content="{{ $imageUrl }}">
+
+@endsection
 <script>
     const BASE_URL = "{{ env('diskloz_base_url') }}";
 </script>
-
 @section('content')
 
 @php

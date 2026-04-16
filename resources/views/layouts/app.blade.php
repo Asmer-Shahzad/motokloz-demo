@@ -31,7 +31,7 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/favicon.png') }}">
-
+     @yield('meta')
 
 </head>
 
