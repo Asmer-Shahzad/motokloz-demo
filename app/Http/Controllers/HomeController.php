@@ -19,6 +19,10 @@ class HomeController extends Controller
 {
     use EnrichesVehicleLocation;
 
+     private function baseUrl(): string
+    {
+        return config('services.diskloz.base_url', env('DISKLOZ_BASE_URL', env('diskloz_base_url', '')));
+    }
     public function home()
     {
         $user = Auth::user();
@@ -174,7 +178,7 @@ class HomeController extends Controller
 
         // ✅ Diskloz API se Motokloz inventory fetch karo
         try {
-            $inventoryResponse = Http::get(env("DISKLOZ_BASE_URL") . '/api/search_motokloz_inventory', [
+            $inventoryResponse = Http::get($this->baseUrl() .'/api/search_motokloz_inventory', [
                 'client_id' => auth()->id(),
             ]);
 
