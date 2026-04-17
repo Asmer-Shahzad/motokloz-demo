@@ -9,7 +9,11 @@ class RemoveLatLngFromUserInformationTable extends Migration
     public function up()
     {
         Schema::table('user_information', function (Blueprint $table) {
-            $table->dropColumn(['latitude', 'longitude']);
+            $columns = ['latitude', 'longitude'];
+            $existing = array_filter($columns, fn($col) => Schema::hasColumn('user_information', $col));
+            if (!empty($existing)) {
+                $table->dropColumn(array_values($existing));
+            }
         });
     }
 

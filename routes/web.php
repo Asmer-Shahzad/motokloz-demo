@@ -68,12 +68,14 @@ Route::get('/sell', function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
     Route::get('/chat/unread-count', [ChatController::class, 'unreadCount'])->name('chat.unread.count');
+    Route::get('/chat/conversations-unread', [ChatController::class, 'conversationsUnread'])->name('chat.conversations.unread');
     Route::post('/chat/start', [ChatController::class, 'startOrGet'])->name('chat.start');
     Route::get('/chat/{clientId}/{dealerId}/{inventoryId}', [ChatController::class, 'show'])->name('chat.show');
     Route::post('/chat/{clientId}/{dealerId}/{inventoryId}/send', [ChatController::class, 'sendMessage'])->name('chat.send');
     Route::get('/chat/{clientId}/{dealerId}/{inventoryId}/poll', [ChatController::class, 'pollMessages'])->name('chat.poll');
     Route::post('/chat/{clientId}/{dealerId}/{inventoryId}/read', [ChatController::class, 'markRead'])->name('chat.read');
     Route::get('/chat/{clientId}/{dealerId}/{inventoryId}/tick-status', [ChatController::class, 'tickStatus'])->name('chat.tick');
+    Route::get('/chat/{clientId}/{dealerId}/{inventoryId}/data', [ChatController::class, 'showJson'])->name('chat.show.json');
     Route::get('/agent-settings', [HomeController::class, 'agentsettings'])->name('agent.settings');
     Route::get('/agent-dashboard', [HomeController::class, 'agentdashboard'])->name('agent.dashboard');
     Route::get('/wishlist', [ListingController::class, 'wishlist'])->name('wishlist');

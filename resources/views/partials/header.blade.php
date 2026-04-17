@@ -206,14 +206,23 @@
                         ];
                     @endphp
 
-                    @if(in_array(Route::currentRouteName(), $showImageRoutes))
+                    @auth
                         <a href="{{ route('chat.index') }}" style="position:relative; display:inline-flex;">
-                            <img src="/assets/images/Frame 1707481624.png" alt="Logo">
-                            @auth
-                                <span id="chatUnreadBadge" style="display:none; position:absolute; top:-4px; right:-4px; background:#F58D02; color:#fff; border-radius:50%; min-width:18px; height:18px; font-size:11px; font-weight:700; align-items:center; justify-content:center; line-height:1; padding:0 4px;"></span>
-                            @endauth
+                            @if(in_array(Route::currentRouteName(), $showImageRoutes))
+                                <img src="/assets/images/Frame 1707481624.png" alt="Logo">
+                            @else
+                                <img src="/assets/images/Frame 1707481624.png" alt="Logo">
+                            @endif
+                            <span id="chatUnreadBadge" style="display:none; position:absolute; top:-4px; right:-4px; background:#F58D02; color:#fff; border-radius:50%; min-width:18px; height:18px; font-size:11px; font-weight:700; align-items:center; justify-content:center; line-height:1; padding:0 4px;"></span>
                         </a>
-                    @endif
+                    @endauth
+                    @guest
+                        @if(in_array(Route::currentRouteName(), $showImageRoutes))
+                            <a href="{{ route('chat.index') }}">
+                                <img src="/assets/images/Frame 1707481624.png" alt="Logo">
+                            </a>
+                        @endif
+                    @endguest
                     <a href="{{ route('buy.step1') }}" style="text-decoration: none; color: inherit;">
                         <div class="logo-o">
                             Buy
@@ -290,6 +299,15 @@
                                         </a>
                                     </li>
 
+                                    <li>
+                                        <a class="dropdown-item {{ request()->routeIs('chat.index') ? 'active-link' : '' }}"
+                                        href="{{ route('chat.index') }}"
+                                        style="display:flex; align-items:center; justify-content:space-between;">
+                                            <span><i class="fa-regular fa-comment me-2"></i> Messages</span>
+                                            <span id="dropdownUnreadBadge" style="display:none; background:#F58D02; color:#fff; border-radius:50%; min-width:20px; height:20px; font-size:11px; font-weight:700; align-items:center; justify-content:center; padding:0 4px;"></span>
+                                        </a>
+                                    </li>
+
                                     <li><hr class="dropdown-divider"></li>
 
                                     <li>
@@ -346,6 +364,60 @@
 </headerx>
 
 @auth
+
+<script>
+(function () {
+    var badge = document.getElementById('chatUnreadBadge');
+    if (!badge) return;
+
+    function updateBadge() {
+        fetch('/chat/unread-count', {
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            var count = data.count || 0;
+            // Header icon badge
+            var badge = document.getElementById('chatUnreadBadge');
+            if (badge) {
+                if (count > 0) {
+                    badge.textContent = count > 99 ? '99+' : count;
+                    badge.style.display = 'inline-flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+            // Dropdown badge
+            var dropBadge = document.getElementById('dropdownUnreadBadge');
+            if (dropBadge) {
+                if (count > 0) {
+                    dropBadge.textContent = count > 99 ? '99+' : count;
+                    dropBadge.style.display = 'inline-flex';
+                } else {
+                    dropBadge.style.display = 'none';
+                }
+            }
+            // Sidebar conversation badges (chat page)
+            if (data.conversations) {
+                document.querySelectorAll('.conv-unread-badge').forEach(function(el) {
+                    var key = el.getAttribute('data-conv');
+                    var c = data.conversations[key] || 0;
+                    if (c > 0) {
+                        el.textContent = c > 99 ? '99+' : c;
+                        el.style.display = 'inline-flex';
+                    } else {
+                        el.style.display = 'none';
+                    }
+                });
+            }
+        })
+        .catch(function() {});
+    }
+
+    updateBadge();
+    setInterval(updateBadge, 5000);
+})();
+</script>
 
 @endauth
 

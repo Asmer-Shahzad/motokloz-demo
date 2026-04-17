@@ -18,7 +18,10 @@ class Chat extends Model
         'message_body',
         'sender_type',
         'is_read',
+        'is_delivered',
         'time',
+        'source',
+        'diskloz_reply_id',
     ];
 
     public function client()

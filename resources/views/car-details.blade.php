@@ -8,8 +8,12 @@
 @php
     $dealer = $dealer ?? null;
 
-    // ✅ Source ek baar yahan set karo
-    $source = ($dealer && !empty($dealer->is_motokloz_user)) ? 'motokloz' : 'diskloz';
+    // ✅ Source directly from inventory record — most reliable
+    $source = strtolower($searched_vehicle->source ?? '');
+    if (!in_array($source, ['motokloz', 'diskloz'])) {
+        // fallback: is_motokloz_user flag check
+        $source = ($dealer && !empty($dealer->is_motokloz_user)) ? 'motokloz' : 'diskloz';
+    }
 
     $dealerLogo = ($dealer && !empty($dealer->logo))
         ? (Str::startsWith($dealer->logo, 'http')
@@ -381,6 +385,7 @@
                                         @csrf
                                         <input type="hidden" name="inventory_id" value="{{ $localInventoryId }}">
                                         <input type="hidden" name="dealer_id"    value="{{ $localDealerId }}">
+                                        <input type="hidden" name="source"       value="{{ $source }}">
                                         <button type="submit" class="mto-btn-black w-100 py-2">
                                             <i class="fa-regular fa-comment me-2"></i> Chat with Dealer
                                         </button>

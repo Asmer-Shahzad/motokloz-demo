@@ -14,11 +14,12 @@ class DeleteLocationColumnsToInventoriesTable extends Migration
     public function up(): void
     {
         Schema::table('inventories', function (Blueprint $table) {
-            // Drop location columns
-            $table->dropColumn(['country', 'state', 'city', 'address', 'address2']);
-
-            // Drop extra_services JSON column
-            $table->dropColumn('extra_services');
+            // Drop location columns (only if they exist — safe for fresh migrations)
+            $columns = ['country', 'state', 'city', 'address', 'address2', 'extra_services'];
+            $existing = array_filter($columns, fn($col) => Schema::hasColumn('inventories', $col));
+            if (!empty($existing)) {
+                $table->dropColumn(array_values($existing));
+            }
         });
     }
 

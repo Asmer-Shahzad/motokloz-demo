@@ -47,9 +47,18 @@
                                     $activeConversation['client_id'] == $conv['client_id'] &&
                                     $activeConversation['user_id'] == $conv['user_id'] &&
                                     $activeConversation['inventory_id'] == $conv['inventory_id'];
-                                $convTitle = $conv['inventory'] ? (($conv['inventory']->title ?? null) ?: ($conv['inventory']->model ?? 'Vehicle')) : 'Vehicle';
+                                $convInv = $conv['inventory'];
+                                $convTitle = 'Vehicle';
+                                if ($convInv) {
+                                    $convTitle = trim(collect([
+                                        $convInv->title ?? null,
+                                        $convInv->year ?? null,
+                                        $convInv->mfg_auto ?? null,
+                                        $convInv->model ?? null,
+                                    ])->filter()->implode(' ')) ?: ($convInv->model ?? 'Vehicle');
+                                }
                                 $preview = $conv['latest_message'] ? \Illuminate\Support\Str::limit($conv['latest_message']->message_body, 40) : 'No messages yet';
-                                $timeLabel = $conv['latest_at'] ? \Carbon\Carbon::parse($conv['latest_at'])->format('g:i A') : '';
+                                $timeLabel = $conv['latest_at'] ? \Carbon\Carbon::parse($conv['latest_at'])->format('Y-m-d H:i:s') : '';
                                 $op = $conv['other_party'];
                                 $dealerInfo = $conv['dealer_info'] ?? null;
                                 $opName = $dealerInfo?->legal_name
@@ -57,33 +66,53 @@
                                     ?: $op?->name
                                     ?: 'Unknown';
                                 $rawLogo = $dealerInfo?->logo ?? null;
+                                $disklozBase = rtrim(config('services.diskloz.base_url', ''), '/');
                                 if ($rawLogo) {
                                     $opAvatar = str_starts_with($rawLogo, 'http')
                                         ? $rawLogo
-                                        : (env('diskloz_base_url') . '/admin_assets/images/dealer_images/' . $rawLogo);
+                                        : ($disklozBase . '/admin_assets/images/dealer_images/' . $rawLogo);
                                 } elseif ($op?->information?->avatar) {
-                                    $opAvatar = str_starts_with($op->information->avatar, 'http')
-                                        ? $op->information->avatar
-                                        : asset('storage/' . $op->information->avatar);
+                                    $av = $op->information->avatar;
+                                    $opAvatar = str_starts_with($av, 'http')
+                                        ? $av
+                                        : (str_starts_with($av, 'uploads/') || str_starts_with($av, 'avatars/')
+                                            ? asset('storage/' . $av)
+                                            : $av);
                                 } else {
                                     $opAvatar = 'https://ui-avatars.com/api/?name=' . urlencode($opName) . '&background=F58D02&color=fff&size=48';
                                 }
+                                // Dealer profile URL
+                                $otherPartyId = $conv['user_id']; // dealer is always user_id
+                                $isMotoklozDealer = !$dealerInfo && $op;
+                                $dealerProfileUrl = $isMotoklozDealer
+                                    ? route('dealer_inventory_details', ['id' => $otherPartyId, 'source' => 'motokloz'])
+                                    : route('dealer_inventory_details', ['id' => $otherPartyId]);
+                                // Inventory detail URL
+                                $invDetailUrl = route('inventory_product_details', $conv['inventory_id']);
                             @endphp
                             <a href="{{ route('chat.show', [$conv['client_id'], $conv['user_id'], $conv['inventory_id']]) }}"
                                class="chat-item {{ $isActive ? 'active' : '' }}"
+                               data-conv="{{ $conv['client_id'] }}-{{ $conv['user_id'] }}-{{ $conv['inventory_id'] }}"
                                style="text-decoration: none; color: inherit; display: flex; align-items: center; padding: 14px 18px; gap: 12px; cursor: pointer; transition: all 0.2s ease; margin-bottom: 4px; border-radius: 16px;">
-                                <img src="{{ $opAvatar }}" alt="{{ $opName }}" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($opName) }}&background=F58D02&color=fff&size=48'">
+                                <img src="{{ $opAvatar }}" alt="{{ $opName }}"
+                                     onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($opName) }}&background=F58D02&color=fff&size=48'"
+                                     onclick="event.preventDefault(); event.stopPropagation(); window.location='{{ $dealerProfileUrl }}';"
+                                     style="width:48px; height:48px; border-radius:50%; object-fit:cover; cursor:pointer; flex-shrink:0;">
                                 <div style="flex: 1; min-width: 0;">
-                                    <h6 class="chat-heading" style="display:flex; align-items:baseline; gap:4px; white-space:nowrap; overflow:hidden;">
-                                        <span style="flex-shrink:0; max-width:55%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $opName }}</span>
-                                        <span style="font-weight:400; font-size:12px; color:#91929E; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">({{ $convTitle }})</span>
+                                    <h6 class="chat-heading" style="display:flex; align-items:baseline; gap:4px; white-space:nowrap; overflow:hidden; margin:0;">
+                                        <span onclick="event.preventDefault(); event.stopPropagation(); window.location='{{ $dealerProfileUrl }}';"
+                                              style="flex-shrink:0; max-width:55%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer; font-weight:700;">{{ $opName }}</span>
+                                        <span onclick="event.preventDefault(); event.stopPropagation(); window.location='{{ $invDetailUrl }}';"
+                                              style="font-weight:400; font-size:12px; color:#91929E; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer;">({{ $convTitle }})</span>
                                     </h6>
                                     <p class="chat-paragraph">{{ $preview }}</p>
                                 </div>
                                 <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0;">
-                                    <span class="chat-time">{{ $timeLabel }}</span>
+                                    <span class="chat-time" data-utc="{{ $timeLabel }}"></span>
                                     @if($conv['unread_count'] > 0)
-                                        <span style="background: #F58D02; color: #fff; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700;">{{ $conv['unread_count'] }}</span>
+                                        <span class="conv-unread-badge" data-conv="{{ $conv['client_id'] }}-{{ $conv['user_id'] }}-{{ $conv['inventory_id'] }}" style="background: #F58D02; color: #fff; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700;">{{ $conv['unread_count'] }}</span>
+                                    @else
+                                        <span class="conv-unread-badge" data-conv="{{ $conv['client_id'] }}-{{ $conv['user_id'] }}-{{ $conv['inventory_id'] }}" style="display:none; background: #F58D02; color: #fff; border-radius: 50%; width: 20px; height: 20px; align-items: center; justify-content: center; font-size: 11px; font-weight: 700;"></span>
                                     @endif
                                 </div>
                             </a>
@@ -107,15 +136,15 @@
                     @php
                         function tickSvg(string $type): string {
                             if ($type === 'seen') {
-                                // Double blue tick
+                                // Double black tick (seen/read)
                                 return '<div class="msg-ticks-inner seen">
                                     <svg width="18" height="11" viewBox="0 0 18 11" fill="none">
-                                        <path d="M1 5.5L5.5 10L12 1" stroke="#53BDEB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M6 5.5L10.5 10L17 1" stroke="#53BDEB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M1 5.5L5.5 10L12 1" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M6 5.5L10.5 10L17 1" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
                                 </div>';
                             } elseif ($type === 'delivered') {
-                                // Double grey tick
+                                // Double grey tick (delivered)
                                 return '<div class="msg-ticks-inner delivered">
                                     <svg width="18" height="11" viewBox="0 0 18 11" fill="none">
                                         <path d="M1 5.5L5.5 10L12 1" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -123,7 +152,7 @@
                                     </svg>
                                 </div>';
                             } else {
-                                // Single grey tick
+                                // Single grey tick (sent)
                                 return '<div class="msg-ticks-inner sent">
                                     <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
                                         <path d="M1 5L4.5 8.5L11 1" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -132,16 +161,24 @@
                             }
                         }
                         $inv = $activeConversation['inventory'];
-                        $invTitle = $inv ? (($inv->title ?? null) ?: ($inv->model ?? 'Vehicle')) : 'Vehicle';
+                        $invTitle = 'Vehicle';
+                        if ($inv) {
+                            $invTitle = trim(collect([
+                                $inv->title ?? null,
+                                $inv->year ?? null,
+                                $inv->mfg_auto ?? null,
+                                $inv->model ?? null,
+                            ])->filter()->implode(' ')) ?: ($inv->model ?? 'Vehicle');
+                        }
                         $invPrice = $inv ? ($inv->price ?? null) : null;
                         $rawImg   = $inv ? ($inv->primary_image ?? null) : null;
 
                         if ($rawImg && str_starts_with($rawImg, 'http')) {
                             $invImg = $rawImg;
                         } elseif ($rawImg && str_starts_with($rawImg, '/')) {
-                            $invImg = env('diskloz_base_url') . $rawImg;
+                            $invImg = rtrim(config('services.diskloz.base_url', ''), '/') . $rawImg;
                         } elseif ($rawImg) {
-                            $invImg = env('diskloz_base_url') . '/admin_assets/images/inventory_images/' . $rawImg;
+                            $invImg = rtrim(config('services.diskloz.base_url', ''), '/') . '/admin_assets/images/inventory_images/' . $rawImg;
                         } else {
                             $invImg = asset('assets/images/defaultimage.jpg');
                         }
@@ -152,17 +189,29 @@
                             ?: $op?->name
                             ?: 'Unknown';
                         $rawLogo = $dealerInfo?->logo ?? null;
+                        $disklozBase = rtrim(config('services.diskloz.base_url', ''), '/');
                         if ($rawLogo) {
                             $opAvatar = str_starts_with($rawLogo, 'http')
                                 ? $rawLogo
-                                : (env('diskloz_base_url') . '/admin_assets/images/dealer_images/' . $rawLogo);
+                                : ($disklozBase . '/admin_assets/images/dealer_images/' . $rawLogo);
                         } elseif ($op?->information?->avatar) {
-                            $opAvatar = str_starts_with($op->information->avatar, 'http')
-                                ? $op->information->avatar
-                                : asset('storage/' . $op->information->avatar);
+                            $av = $op->information->avatar;
+                            $opAvatar = str_starts_with($av, 'http')
+                                ? $av
+                                : (str_starts_with($av, 'uploads/') || str_starts_with($av, 'avatars/')
+                                    ? asset('storage/' . $av)
+                                    : $av);
                         } else {
                             $opAvatar = 'https://ui-avatars.com/api/?name=' . urlencode($opName) . '&background=F58D02&color=fff&size=52';
                         }
+
+                        // Dealer profile & inventory URLs for header
+                        $headerDealerId = $activeConversation['user_id'];
+                        $headerIsMotokloz = !$dealerInfo && $op;
+                        $headerDealerUrl = $headerIsMotokloz
+                            ? route('dealer_inventory_details', ['id' => $headerDealerId, 'source' => 'motokloz'])
+                            : route('dealer_inventory_details', ['id' => $headerDealerId]);
+                        $headerInvUrl = route('inventory_product_details', $inventoryId);
                     @endphp
 
                     <!-- TOP BAR -->
@@ -173,14 +222,16 @@
                                 Back
                             </button>
                             <div class="chat-user">
-                                <img class="chat-user-img"
-                                     src="{{ $opAvatar }}"
-                                     onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($opName) }}&background=F58D02&color=fff&size=52'"
-                                     alt="{{ $opName }}">
+                                <a href="{{ $headerDealerUrl }}" style="flex-shrink:0;">
+                                    <img class="chat-user-img"
+                                         src="{{ $opAvatar }}"
+                                         onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($opName) }}&background=F58D02&color=fff&size=52'"
+                                         alt="{{ $opName }}">
+                                </a>
                                 <div>
                                     <h6 class="chat-user-heading" style="display:flex; align-items:baseline; gap:4px; white-space:nowrap; overflow:hidden; max-width:400px;">
-                                        <span style="flex-shrink:0; max-width:55%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $opName }}</span>
-                                        <span style="font-weight:400; font-size:13px; opacity:0.7; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">({{ $invTitle }})</span>
+                                        <a href="{{ $headerDealerUrl }}" style="flex-shrink:0; max-width:55%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:inherit; text-decoration:none; font-weight:700;">{{ $opName }}</a>
+                                        <a href="{{ $headerInvUrl }}" style="font-weight:400; font-size:13px; opacity:0.7; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-decoration:none; color:inherit;">({{ $invTitle }})</a>
                                     </h6>
                                 </div>
                             </div>
@@ -219,9 +270,9 @@
                             @forelse($messages as $msg)
                                 @php
                                     $isMine = $msg->sender_type === $activeConversation['sender_type'];
-                                    $timeStr = \Carbon\Carbon::parse($msg->created_at)->format('g:i A');
+                                    $timeStr = \Carbon\Carbon::parse($msg->created_at)->format('Y-m-d H:i:s');
                                 @endphp
-                                <div class="message {{ $isMine ? 'sent' : 'received' }}">
+                                <div class="message {{ $isMine ? 'sent' : 'received' }}" data-id="{{ $msg->id }}">
                                     @if(!$isMine)
                                         <img src="{{ $opAvatar }}"
                                              onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($opName) }}&background=F58D02&color=fff&size=36'"
@@ -230,15 +281,17 @@
                                     <div class="msg-content">
                                         <div class="msg-header">
                                             @if(!$isMine)
-                                                <span class="msg-name">{{ $activeConversation['other_party']?->name ?? 'Unknown' }}</span>
+                                                <span class="msg-name">{{ $activeConversation['other_party']?->information?->full_name ?: ($activeConversation['other_party']?->name ?? 'Unknown') }}</span>
                                             @endif
-                                            <span class="msg-time">{{ $timeStr }}</span>
+                                            <span class="msg-time" data-utc="{{ $timeStr }}"></span>
                                         </div>
                                         <div class="msg-text">{{ $msg->message_body }}</div>
                                         @if($isMine)
-                                            <div class="msg-ticks" data-msg-id="{{ $msg->id }}">
+                                            <div class="msg-ticks" data-msg-id="{{ $msg->id }}" data-status="{{ $msg->is_read ? 'seen' : ($msg->is_delivered ? 'delivered' : 'sent') }}">
                                                 @if($msg->is_read)
                                                     {!! tickSvg('seen') !!}
+                                                @elseif($msg->is_delivered)
+                                                    {!! tickSvg('delivered') !!}
                                                 @else
                                                     {!! tickSvg('sent') !!}
                                                 @endif
@@ -267,7 +320,10 @@
                         <!-- Emoji Picker -->
                         <div id="emojiPicker" class="emoji-picker d-none">
                             <div class="emoji-grid">
-                                @foreach(['😀','😂','😍','🥰','😎','🤔','👍','👎','❤️','🔥','🎉','😢','😡','🙏','💯','✅','🚗','💰','📞','📧','😊','🤝','👋','💪','🎯','⭐','🏆','📱','💬','🔔'] as $emoji)
+                                @foreach(['😀','😂','😃','😄','😅','😆','😍','🥰','😎','🤔','😊','😇','🤩','😏','😒','😢','😭','😡','🤬','😱','😴','🤗','😬','🙄','😮','🥳','🎉','😤','🥺','😳',
+                                '🚗','🚕','🚙','🚌','🏎','🚓','🚑','🚒','🚐','🛻','🚚','🚛','🚜','🏍','🛵','🚲','🛺','🚁','✈️','🚀','🛸','⛵','🚢','🛥','🚤','🛳','🚂','🚄','🚅','🚆',
+                                '👍','👎','👋','🤝','🙏','💪','✌️','🤞','👌','🤙','☝️','👆','👇','👈','👉','✋','🖖','🤜','🤛','👊','✊','🫶','👏','🤲','💅','🤳','🫵','🖐','🤚','🤌',
+                                '❤️','🧡','💛','💚','💙','💜','🖤','🤍','💔','🔥','⭐','🌟','✨','💫','🎯','🏆','🥇','💯','✅','❌','⚡','🔔','💰','📞','📧','📱','💬','🔑','🎁','🌈'] as $emoji)
                                     <span class="emoji-item" onclick="insertEmoji('{{ $emoji }}')">{{ $emoji }}</span>
                                 @endforeach
                             </div>
@@ -303,6 +359,34 @@
                         var otherName = "{{ addslashes($opName) }}";
                         var otherAvatar = "{{ addslashes($opAvatar) }}";
 
+                        @php
+                            $convSrc = 'motokloz';
+                            if (isset($clientId, $dealerId, $inventoryId)) {
+                                $convSrc = session("chat_source_{$clientId}_{$dealerId}_{$inventoryId}");
+                                if (!$convSrc) {
+                                    $convSrc = \App\Models\Chat::where('client_id', $clientId)
+                                        ->where('user_id', $dealerId)
+                                        ->where('inventory_id', $inventoryId)
+                                        ->orderByDesc('id')->value('source') ?? 'motokloz';
+                                }
+                            }
+                        @endphp
+
+                        // Diskloz: jab buyer chat khole — Diskloz ko mark-read call karo (dealer messages seen)
+                        @if($convSrc === 'diskloz' && ($activeConversation['sender_type'] ?? '') === 'client')
+                        @php $disklozMarkReadUrl = rtrim(config('services.diskloz.base_url', env('DISKLOZ_BASE_URL', env('diskloz_base_url', ''))), '/') . '/api/chat/mark-read'; @endphp
+                        (function() {
+                            fetch('{{ $disklozMarkReadUrl }}', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    inventory_id: {{ $inventoryId }},
+                                    buyer_email: '{{ addslashes(Auth::user()->email) }}'
+                                })
+                            }).catch(function() {});
+                        })();
+                        @endif
+
                         // Last message id — start from last rendered message
                         var lastId = {{ $messages->isNotEmpty() ? $messages->last()->id : 0 }};
 
@@ -317,23 +401,35 @@
                         }
                         scrollBottom();
 
+                        // Convert all data-utc times to local browser time
+                        function convertUtcTimes() {
+                            document.querySelectorAll('[data-utc]').forEach(function(el) {
+                                var utc = el.getAttribute('data-utc');
+                                if (utc) el.textContent = formatTime(utc);
+                            });
+                        }
+
                         function formatTime(dateStr) {
-                            var d = new Date(dateStr);
+                            // Ensure UTC parsing — append Z if not present
+                            var str = dateStr.replace(' ', 'T');
+                            if (!str.endsWith('Z') && !str.includes('+')) str += 'Z';
+                            var d = new Date(str);
                             var h = d.getHours(), m = d.getMinutes();
                             var ampm = h >= 12 ? 'PM' : 'AM';
                             h = h % 12 || 12;
                             return h + ':' + (m < 10 ? '0' + m : m) + ' ' + ampm;
                         }
 
+                        convertUtcTimes();
+
                         function buildBubble(msg) {
                             var isMine = msg.is_mine;
                             var div = document.createElement('div');
                             div.className = 'message ' + (isMine ? 'sent' : 'received');
                             div.setAttribute('data-id', msg.id);
-                            if (isMine) div.setAttribute('data-msg-id', msg.id);
 
                             var avatarHtml = isMine ? '' :
-                                '<img src="' + otherAvatar + '" class="msg-avatar" alt="">';
+                                '<img src="' + otherAvatar + '" class="msg-avatar" alt="" onerror="this.src=\'https://ui-avatars.com/api/?name=' + encodeURIComponent(otherName) + '&background=F58D02&color=fff&size=36\'">';
 
                             var readTick = isMine ? buildTickHtml('sent') : '';
 
@@ -343,10 +439,10 @@
                             div.innerHTML = avatarHtml +
                                 '<div class="msg-content">' +
                                     '<div class="msg-header">' + nameHtml +
-                                        '<span class="msg-time">' + formatTime(msg.created_at) + '</span>' +
+                                        '<span class="msg-time" data-utc="' + msg.created_at + '"></span>' +
                                     '</div>' +
                                     '<div class="msg-text">' + formatMessage(msg.message_body) + '</div>' +
-                                    readTick +
+                                    (isMine ? '<div class="msg-ticks" data-msg-id="' + msg.id + '" data-status="sent">' + buildTickHtml('sent') + '</div>' : '') +
                                 '</div>';
                             return div;
                         }
@@ -359,22 +455,19 @@
 
                         function buildTickHtml(status) {
                             if (status === 'seen') {
-                                return '<div class="msg-ticks" style="text-align:right;margin-top:3px;">' +
-                                    '<svg width="18" height="11" viewBox="0 0 18 11" fill="none">' +
-                                    '<path d="M1 5.5L5.5 10L12 1" stroke="#53BDEB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
-                                    '<path d="M6 5.5L10.5 10L17 1" stroke="#53BDEB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
-                                    '</svg></div>';
+                                return '<svg width="18" height="11" viewBox="0 0 18 11" fill="none">' +
+                                    '<path d="M1 5.5L5.5 10L12 1" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                                    '<path d="M6 5.5L10.5 10L17 1" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                                    '</svg>';
                             } else if (status === 'delivered') {
-                                return '<div class="msg-ticks" style="text-align:right;margin-top:3px;">' +
-                                    '<svg width="18" height="11" viewBox="0 0 18 11" fill="none">' +
+                                return '<svg width="18" height="11" viewBox="0 0 18 11" fill="none">' +
                                     '<path d="M1 5.5L5.5 10L12 1" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
                                     '<path d="M6 5.5L10.5 10L17 1" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
-                                    '</svg></div>';
+                                    '</svg>';
                             } else {
-                                return '<div class="msg-ticks" style="text-align:right;margin-top:3px;">' +
-                                    '<svg width="12" height="10" viewBox="0 0 12 10" fill="none">' +
+                                return '<svg width="12" height="10" viewBox="0 0 12 10" fill="none">' +
                                     '<path d="M1 5L4.5 8.5L11 1" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
-                                    '</svg></div>';
+                                    '</svg>';
                             }
                         }
 
@@ -385,6 +478,13 @@
                         // ── EMOJI PICKER ─────────────────────────────────────
                         var emojiBtn    = document.getElementById('emojiBtn');
                         var emojiPicker = document.getElementById('emojiPicker');
+
+                        window.showEmojiTab = function(tab, btn) {
+                            document.querySelectorAll('.emoji-grid').forEach(function(g) { g.classList.add('d-none'); });
+                            document.querySelectorAll('.emoji-tab').forEach(function(b) { b.classList.remove('active'); });
+                            document.getElementById('emoji-' + tab).classList.remove('d-none');
+                            btn.classList.add('active');
+                        };
 
                         window.insertEmoji = function(emoji) {
                             var pos = input.selectionStart;
@@ -459,6 +559,29 @@
                                 sendBtn.disabled = true;
                                 input.disabled   = true;
 
+                                // Optimistic UI — message foran dikhao, API call background mein
+                                var optimisticText = text;
+                                var optimisticBubble = buildBubble({
+                                    id: 'temp_' + Date.now(),
+                                    message_body: optimisticText,
+                                    sender_type: myType,
+                                    created_at: new Date().toISOString(),
+                                    is_mine: true
+                                });
+                                optimisticBubble.style.opacity = '0.6';
+                                var empty = body.querySelector('[data-empty]');
+                                if (empty) empty.remove();
+                                body.appendChild(optimisticBubble);
+                                input.value = '';
+                                sendBtn.disabled = false;
+                                input.disabled   = false;
+                                scrollBottom();
+
+                                var timeoutId = setTimeout(function() {
+                                    sendBtn.disabled = false;
+                                    input.disabled   = false;
+                                }, 8000);
+
                                 fetch(sendUrl, {
                                     method: 'POST',
                                     headers: {
@@ -467,26 +590,26 @@
                                         'X-Requested-With': 'XMLHttpRequest',
                                         'Accept': 'application/json'
                                     },
-                                    body: JSON.stringify({ message_body: text })
+                                    body: JSON.stringify({ message_body: optimisticText })
                                 })
                                 .then(function (r) { return r.json(); })
                                 .then(function (data) {
-                                    sendBtn.disabled = false;
-                                    input.disabled   = false;
+                                    clearTimeout(timeoutId);
                                     if (data.success) {
-                                        input.value = '';
-                                        // Remove "no messages" placeholder if present
-                                        var empty = body.querySelector('[data-empty]');
-                                        if (empty) empty.remove();
-
-                                        body.appendChild(buildBubble(data.message));
+                                        // Replace temp id with real id from server
+                                        optimisticBubble.setAttribute('data-id', data.message.id);
+                                        optimisticBubble.style.opacity = '1';
+                                        // Update tick element data-msg-id to real id
+                                        var tickEl = optimisticBubble.querySelector('.msg-ticks');
+                                        if (tickEl) tickEl.setAttribute('data-msg-id', data.message.id);
                                         lastId = data.message.id;
-                                        scrollBottom();
+                                    } else {
+                                        optimisticBubble.remove();
                                     }
                                 })
                                 .catch(function () {
-                                    sendBtn.disabled = false;
-                                    input.disabled   = false;
+                                    clearTimeout(timeoutId);
+                                    optimisticBubble.remove();
                                 });
                             });
 
@@ -500,6 +623,54 @@
                         }
 
                         // ── AJAX POLLING (every 3 seconds) ───────────────────────
+                        // ── SIDEBAR UNREAD BADGE UPDATE ──────────────────────
+                        @php
+                            $activeConvKey = isset($clientId) ? "{$clientId}-{$dealerId}-{$inventoryId}" : '';
+                        @endphp
+                        var activeConvKey = '{{ $activeConvKey }}';
+
+                        // Clear active conversation badge immediately
+                        if (activeConvKey) {
+                            var activeBadge = document.querySelector('.conv-unread-badge[data-conv="' + activeConvKey + '"]');
+                            if (activeBadge) activeBadge.style.display = 'none';
+                        }
+
+                        // Poll all conversation unread counts every 5 seconds
+                        function updateSidebarBadges() {
+                            fetch('/chat/conversations-unread', {
+                                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                            })
+                            .then(function(r) { return r.json(); })
+                            .then(function(data) {
+                                // Update per-conversation sidebar badges
+                                document.querySelectorAll('.conv-unread-badge').forEach(function(badge) {
+                                    var key = badge.getAttribute('data-conv');
+                                    var count = data[key] || 0;
+                                    // Don't show badge for active conversation
+                                    if (key === activeConvKey) count = 0;
+                                    if (count > 0) {
+                                        badge.textContent = count;
+                                        badge.style.display = 'flex';
+                                    } else {
+                                        badge.style.display = 'none';
+                                    }
+                                });
+
+                                // Update header + dropdown total badge
+                                var total = Object.values(data).reduce(function(a, b) { return a + b; }, 0);
+                                var hBadge = document.getElementById('chatUnreadBadge');
+                                var dBadge = document.getElementById('dropdownUnreadBadge');
+                                [hBadge, dBadge].forEach(function(b) {
+                                    if (!b) return;
+                                    if (total > 0) { b.textContent = total > 99 ? '99+' : total; b.style.display = 'inline-flex'; }
+                                    else { b.style.display = 'none'; }
+                                });
+                            })
+                            .catch(function() {});
+                        }
+                        updateSidebarBadges();
+                        setInterval(updateSidebarBadges, 5000);
+
                         if (pollUrl !== '#') {
                             setInterval(function () {
                                 fetch(pollUrl + '?after=' + lastId, {
@@ -522,34 +693,71 @@
                                         });
                                         lastId = data.messages[data.messages.length - 1].id;
                                         scrollBottom();
+                                        convertUtcTimes();
                                     }
                                 })
                                 .catch(function () { /* silent fail */ });
                             }, 3000);
 
-                            // ── TICK STATUS POLLING (every 5 seconds) ────────────
-                            var lowestUnreadId = 0;
-                            setInterval(function () {
-                                fetch(tickUrl + '?after=' + lowestUnreadId, {
+                            // ── TICK STATUS POLLING (every 3 seconds) ────────────
+                            function runTickPoll() {
+                                fetch(tickUrl + '?after=0', {
                                     headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
                                 })
                                 .then(function(r) { return r.json(); })
                                 .then(function(data) {
+                                    var seenSet = {};
+
                                     if (data.read_ids && data.read_ids.length > 0) {
                                         data.read_ids.forEach(function(id) {
-                                            var tickEl = body.querySelector('[data-msg-id="' + id + '"] .msg-ticks');
-                                            if (tickEl && !tickEl.classList.contains('seen-done')) {
-                                                tickEl.outerHTML = buildTickHtml('seen');
-                                                // Mark as done so we don't re-process
-                                                var newTick = body.querySelector('[data-msg-id="' + id + '"] .msg-ticks');
-                                                if (newTick) newTick.classList.add('seen-done');
-                                            }
+                                            seenSet[id] = true;
+                                            document.querySelectorAll('.msg-ticks[data-msg-id]').forEach(function(tickEl) {
+                                                if (String(tickEl.getAttribute('data-msg-id')) === String(id)) {
+                                                    if (tickEl.getAttribute('data-status') !== 'seen') {
+                                                        tickEl.innerHTML = buildTickHtml('seen');
+                                                        tickEl.setAttribute('data-status', 'seen');
+                                                    }
+                                                }
+                                            });
                                         });
-                                        lowestUnreadId = Math.max(lowestUnreadId, Math.max.apply(null, data.read_ids));
+                                    }
+
+                                    if (data.delivered_ids && data.delivered_ids.length > 0) {
+                                        data.delivered_ids.forEach(function(id) {
+                                            if (seenSet[id]) return;
+                                            document.querySelectorAll('.msg-ticks[data-msg-id]').forEach(function(tickEl) {
+                                                if (String(tickEl.getAttribute('data-msg-id')) === String(id)) {
+                                                    if (tickEl.getAttribute('data-status') !== 'seen' && tickEl.getAttribute('data-status') !== 'delivered') {
+                                                        tickEl.innerHTML = buildTickHtml('delivered');
+                                                        tickEl.setAttribute('data-status', 'delivered');
+                                                    }
+                                                }
+                                            });
+                                        });
+                                    }
+
+                                    // Diskloz: read_count/total_client_messages se buyer messages seen mark karo
+                                    if (typeof data.read_count !== 'undefined' && typeof data.total_client_messages !== 'undefined') {
+                                        var readCount  = parseInt(data.read_count, 10);
+                                        var totalCount = parseInt(data.total_client_messages, 10);
+
+                                        if (totalCount > 0 && readCount > 0) {
+                                            // Get all my (buyer/client) sent message ticks, ordered by DOM position
+                                            var myTicks = Array.from(document.querySelectorAll('.msg-ticks[data-msg-id]'));
+                                            var toMark  = (readCount >= totalCount) ? myTicks : myTicks.slice(0, readCount);
+                                            toMark.forEach(function(tickEl) {
+                                                if (tickEl.getAttribute('data-status') !== 'seen') {
+                                                    tickEl.innerHTML = buildTickHtml('seen');
+                                                    tickEl.setAttribute('data-status', 'seen');
+                                                }
+                                            });
+                                        }
                                     }
                                 })
                                 .catch(function() {});
-                            }, 5000);
+                            }
+                            runTickPoll();
+                            setInterval(runTickPoll, 3000);
                         }
                     })();
                     </script>
@@ -1035,7 +1243,7 @@
         }
 
         .message.sent .msg-content {
-            background: #3F8CFF;
+            background: #f58d02;
             padding: 12px 16px;
             border-radius: 20px 20px 4px 20px;
             color: white;
@@ -1191,22 +1399,24 @@
             background: #fff;
             border: 1px solid #E6EBF5;
             border-radius: 14px;
-            padding: 12px;
+            padding: 10px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.12);
             z-index: 100;
-            width: 260px;
+            width: 280px;
             max-width: calc(100vw - 40px);
         }
         .emoji-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 4px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2px;
+            max-height: 220px;
+            overflow-y: auto;
         }
         .emoji-item {
             font-size: 20px;
             cursor: pointer;
             text-align: center;
-            padding: 4px;
+            padding: 4px 2px;
             border-radius: 6px;
             transition: background 0.15s;
             line-height: 1.4;
@@ -1246,7 +1456,7 @@
         }
         /* Highlight @mention in messages */
         .mention-tag {
-            color: #F58D02;
+            color: #fff;
             font-weight: 700;
         }
 
@@ -1331,6 +1541,68 @@
             align-items: center;
         }
         .msg-ticks svg { display: block; }
+
+        /* Message menu (3 dots) */
+        .msg-menu-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-left: 6px;
+            flex-shrink: 0;
+            align-self: flex-start;
+            padding-top: 8px;
+        }
+        .msg-dots-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: rgba(255,255,255,0.7);
+            padding: 2px 6px;
+            border-radius: 50%;
+            line-height: 1;
+            display: block;
+        }
+        .msg-dots-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+        .msg-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 28px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+            min-width: 160px;
+            overflow: hidden;
+            z-index: 999;
+        }
+        .msg-dropdown.open { display: block; }
+        .msg-dropdown button {
+            display: block;
+            width: 100%;
+            padding: 14px 20px;
+            background: none;
+            border: none;
+            border-bottom: 1px solid #f0f0f0;
+            text-align: left;
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a1a1a;
+            cursor: pointer;
+        }
+        .msg-dropdown button:last-child { border-bottom: none; color: #e53e3e; }
+        .msg-dropdown button:hover { background: #f8f8f8; }
+        .msg-edit-input {
+            width: 100%;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 6px;
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 16px;
+            outline: none;
+        }
+        .msg-actions { display: none; }
 
         /* width */
         .chat-list::-webkit-scrollbar {
@@ -1905,36 +2177,31 @@
                 const isMobile = window.innerWidth <= 768;
                 if (isMobile) {
                     body.classList.add('mobile-mode');
+                    @if(!isset($clientId))
                     body.classList.remove('chat-active');
+                    @else
+                    body.classList.add('chat-active');
+                    @endif
                 } else {
                     body.classList.remove('mobile-mode', 'chat-active');
                 }
             }
             handleResponsive();
+            window.addEventListener('resize', handleResponsive);
+
+            // Global mobileBack function
+            window.mobileBack = function() {
+                document.body.classList.remove('chat-active');
+            };
 
             // Open chat on mobile when clicking a chat item
             document.querySelectorAll('.chat-item').forEach(item => {
                 item.addEventListener('click', function (e) {
                     if (document.body.classList.contains('mobile-mode')) {
                         document.body.classList.add('chat-active');
-                        document.querySelectorAll('.chat-item').forEach(i => i.classList.remove(
-                            'active'));
-                        this.classList.add('active');
                     }
                 });
             });
-
-            // VIP Back button on mobile
-            const vipBackBtn = document.querySelector('.vip-back-btn');
-            if (vipBackBtn) {
-                vipBackBtn.addEventListener('click', function () {
-                    if (document.body.classList.contains('mobile-mode')) {
-                        document.body.classList.remove('chat-active');
-                    }
-                });
-            }
-
-            window.addEventListener('resize', handleResponsive);
 
             // ---------- COLLAPSIBLE SECTIONS ----------
             window.toggleSection = function (sectionId) {
