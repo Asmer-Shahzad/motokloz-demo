@@ -58,7 +58,7 @@
                                     ])->filter()->implode(' ')) ?: ($convInv->model ?? 'Vehicle');
                                 }
                                 $preview = $conv['latest_message'] ? \Illuminate\Support\Str::limit($conv['latest_message']->message_body, 40) : 'No messages yet';
-                                $timeLabel = $conv['latest_at'] ? \Carbon\Carbon::parse($conv['latest_at'])->format('Y-m-d H:i:s') : '';
+                                $timeLabel = $conv['latest_at'] ? \Carbon\Carbon::parse($conv['latest_at'])->setTimezone('Asia/Karachi')->toIso8601String() : '';
                                 $op = $conv['other_party'];
                                 $dealerInfo = $conv['dealer_info'] ?? null;
                                 $opName = $dealerInfo?->legal_name
@@ -627,14 +627,30 @@
                         // ── SIDEBAR UNREAD BADGE UPDATE ──────────────────────
                         @php
                             $activeConvKey = isset($clientId) ? "{$clientId}-{$dealerId}-{$inventoryId}" : '';
+                            $markReadUrl   = isset($clientId) ? route('chat.read', [$clientId, $dealerId, $inventoryId]) : '';
                         @endphp
                         var activeConvKey = '{{ $activeConvKey }}';
 
-                        // Clear active conversation badge immediately
+                        // Clear active conversation badge immediately (DOM)
                         if (activeConvKey) {
                             var activeBadge = document.querySelector('.conv-unread-badge[data-conv="' + activeConvKey + '"]');
                             if (activeBadge) activeBadge.style.display = 'none';
                         }
+
+                        // Also fire mark-read API on page load to ensure DB is updated before badge polling
+                        @if($markReadUrl)
+                        fetch('{{ $markReadUrl }}', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': CSRF,
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'application/json'
+                            }
+                        }).then(function() {
+                            // After mark-read, update sidebar badges so count is fresh
+                            updateSidebarBadges();
+                        }).catch(function() {});
+                        @endif
 
                         // Poll all conversation unread counts every 5 seconds
                         function updateSidebarBadges() {
@@ -669,8 +685,11 @@
                             })
                             .catch(function() {});
                         }
+                        // Initial call: if no active conv, call immediately; otherwise called after mark-read above
+                        @if(!$markReadUrl)
                         updateSidebarBadges();
-                        setInterval(updateSidebarBadges, 5000);
+                        @endif
+                        setInterval(updateSidebarBadges, 30000);
 
                         if (pollUrl !== '#') {
                             setInterval(function () {
@@ -698,9 +717,9 @@
                                     }
                                 })
                                 .catch(function () { /* silent fail */ });
-                            }, 3000);
+                            }, 30000);
 
-                            // ── TICK STATUS POLLING (every 3 seconds) ────────────
+                            // ── TICK STATUS POLLING (every 9 seconds) ────────────
                             function runTickPoll() {
                                 fetch(tickUrl + '?after=0', {
                                     headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
@@ -758,7 +777,7 @@
                                 .catch(function() {});
                             }
                             runTickPoll();
-                            setInterval(runTickPoll, 3000);
+                            setInterval(runTickPoll, 30000);
                         }
                     })();
                     </script>
@@ -2172,6 +2191,26 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+
+            // ---------- SIDEBAR CHAT-TIME CONVERSION ----------
+            function formatChatTime(dateStr) {
+                if (!dateStr) return '';
+                var str = dateStr.replace(' ', 'T');
+                // If no timezone info, treat as UTC
+                if (!str.endsWith('Z') && !str.includes('+') && !/\d{2}-\d{2}:\d{2}$/.test(str)) str += 'Z';
+                var d = new Date(str);
+                if (isNaN(d)) return dateStr;
+                var h = d.getHours(), m = d.getMinutes();
+                var ampm = h >= 12 ? 'PM' : 'AM';
+                h = h % 12 || 12;
+                return h + ':' + (m < 10 ? '0' + m : m) + ' ' + ampm;
+            }
+
+            document.querySelectorAll('.chat-time[data-utc]').forEach(function(el) {
+                var utc = el.getAttribute('data-utc');
+                if (utc) el.textContent = formatChatTime(utc);
+            });
+
             // ---------- RESPONSIVE MODE (Mobile Toggle) ----------
             function handleResponsive() {
                 const body = document.body;

@@ -26,7 +26,7 @@ class DisklozChatService
                 $payload['buyer_profile_image'] = $buyerProfileImage;
             }
 
-            $response = Http::timeout(5)->post(
+            $response = $this->http()->post(
                 $this->baseUrl() . '/api/chat/forward',
                 $payload
             );
@@ -45,6 +45,21 @@ class DisklozChatService
     private function baseUrl(): string
     {
         return config('services.diskloz.base_url', env('DISKLOZ_BASE_URL', env('diskloz_base_url', '')));
+    }
+
+    private function apiKey(): string
+    {
+        return config('services.diskloz.api_key', env('DISKLOZ_API_KEY', ''));
+    }
+
+    private function http(): \Illuminate\Http\Client\PendingRequest
+    {
+        $key = $this->apiKey();
+        $req = Http::timeout(5);
+        if ($key) {
+            $req = $req->withHeaders(['X-Api-Key' => $key]);
+        }
+        return $req;
     }
 
     public function markRead(string $buyerEmail, int $inventoryId): void
