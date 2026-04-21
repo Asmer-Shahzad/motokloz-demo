@@ -13,6 +13,16 @@ use Illuminate\Support\Facades\Http;
 
 class ChatController extends Controller
 {
+    private function disklozHttp(int $timeout = 5): \Illuminate\Http\Client\PendingRequest
+    {
+        $key = config('services.diskloz.api_key', env('DISKLOZ_API_KEY', ''));
+        $req = Http::timeout($timeout);
+        if ($key) {
+            $req = $req->withHeaders(['X-Api-Key' => $key]);
+        }
+        return $req;
+    }
+
     private function disklozBaseUrl(): string
     {
         return config('services.diskloz.base_url', env('DISKLOZ_BASE_URL', env('diskloz_base_url', '')));
@@ -316,7 +326,14 @@ class ChatController extends Controller
                     $buyerAvatar = $av;
                 } elseif (str_starts_with($av, 'uploads/') || str_starts_with($av, 'avatars/')) {
                     $buyerAvatar = url('storage/' . $av);
+                } else {
+                    // Plain filename — assume it's in storage
+                    $buyerAvatar = url('storage/' . $av);
                 }
+            }
+            // Fallback: generate avatar from name if no image available
+            if (!$buyerAvatar) {
+                $buyerAvatar = 'https://ui-avatars.com/api/?name=' . urlencode($user->name ?? 'Buyer') . '&background=F58D02&color=fff&size=128';
             }
 
             // Store local copy FIRST — instant response ke liye
@@ -368,7 +385,7 @@ class ChatController extends Controller
                 'id'           => $chat->id,
                 'message_body' => $chat->message_body,
                 'sender_type'  => $chat->sender_type,
-                'created_at'   => $chat->created_at,
+                'created_at'   => \Carbon\Carbon::parse($chat->created_at)->setTimezone('Asia/Karachi')->toIso8601String(),
                 'is_mine'      => true,
             ],
         ]);
@@ -408,7 +425,7 @@ class ChatController extends Controller
             $afterDiskloz = (int) session($sessionKey, 0);
 
             try {
-                $resp = Http::timeout(5)->get(
+                $resp = $this->disklozHttp(5)->get(
                     $this->disklozBaseUrl() . '/api/chat/replies',
                     ['inventory_id' => $inventoryId, 'buyer_email' => $buyerEmail, 'after_id' => $afterDiskloz]
                 );
@@ -451,16 +468,7 @@ class ChatController extends Controller
                         }
                     }
 
-                    // Dealer ne reply kiya → buyer ke sent messages seen mark karo
-                    if ($hasNewReplies) {
-                        Chat::where('client_id', $clientId)
-                            ->where('user_id', $dealerId)
-                            ->where('inventory_id', $inventoryId)
-                            ->where('sender_type', 'client')
-                            ->where('is_read', 0)
-                            ->update(['is_read' => 1]);
-                    }
-
+                    // DO NOT mark buyer messages as read here — only tickStatus (read-status API) should do that
                     session([$sessionKey => $afterDiskloz]);
                 }
             } catch (\Exception $e) {
@@ -524,24 +532,37 @@ class ChatController extends Controller
         // Diskloz conversation: fetch read status from Diskloz API and update local records
         if ($conversationSource === 'diskloz' && $authId === $clientId) {
             try {
-                $resp = Http::timeout(5)->get(
+                $resp = $this->disklozHttp(5)->get(
                     $this->disklozBaseUrl() . '/api/chat/read-status',
                     ['inventory_id' => $inventoryId, 'buyer_email' => Auth::user()->email]
                 );
                 if ($resp->ok()) {
                     $data = $resp->json();
-                    // Only mark as read if read_count equals or exceeds total_client_messages
-                    // This means ALL client messages have been read by dealer
+                    // Mark as read based on read_count — partial support
                     $readCount  = (int) ($data['read_count'] ?? 0);
                     $totalCount = (int) ($data['total_client_messages'] ?? 0);
-                    if ($totalCount > 0 && $readCount >= $totalCount) {
-                        // Mark only unread buyer messages as read
-                        Chat::where('client_id', $clientId)
+                    if ($readCount > 0) {
+                        // Get oldest unread client messages up to readCount and mark them read
+                        $unreadIds = Chat::where('client_id', $clientId)
                             ->where('user_id', $dealerId)
                             ->where('inventory_id', $inventoryId)
                             ->where('sender_type', 'client')
                             ->where('is_read', 0)
-                            ->update(['is_read' => 1]);
+                            ->orderBy('id')
+                            ->limit($readCount)
+                            ->pluck('id');
+                        if ($unreadIds->isNotEmpty()) {
+                            Chat::whereIn('id', $unreadIds)->update(['is_read' => 1]);
+                        }
+                        // If all read, mark everything
+                        if ($totalCount > 0 && $readCount >= $totalCount) {
+                            Chat::where('client_id', $clientId)
+                                ->where('user_id', $dealerId)
+                                ->where('inventory_id', $inventoryId)
+                                ->where('sender_type', 'client')
+                                ->where('is_read', 0)
+                                ->update(['is_read' => 1]);
+                        }
                     }
                 }
             } catch (\Exception $e) {}
@@ -667,7 +688,7 @@ class ChatController extends Controller
             $afterDiskloz = (int) session($sessionKey, 0);
 
             try {
-                $resp = Http::timeout(3)->get(
+                $resp = $this->disklozHttp(3)->get(
                     $this->disklozBaseUrl() . '/api/chat/replies',
                     ['inventory_id' => $conv->inventory_id, 'buyer_email' => $buyerEmail, 'after_id' => $afterDiskloz]
                 );

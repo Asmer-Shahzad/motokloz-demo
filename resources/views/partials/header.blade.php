@@ -415,7 +415,10 @@
     }
 
     updateBadge();
-    setInterval(updateBadge, 5000);
+    // On chat page, this polling is redundant — chat.blade.php handles badges itself
+    if (!window.location.pathname.startsWith('/chat/')) {
+        setInterval(updateBadge, 30000);
+    }
 })();
 </script>
 
