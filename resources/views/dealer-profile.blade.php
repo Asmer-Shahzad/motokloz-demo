@@ -11,7 +11,7 @@
     $source     = request()->query('source', 'diskloz');
     $isMotokloz = $source === 'motokloz';
 @endphp
-
+@section('title', 'Motokloz | ' . $dealer->legal_name)
 @section('content')
 
     <!-- DEALER PROFILE BANNER — Google Maps Embed -->
@@ -84,6 +84,7 @@
                             </div>
 
                         </div>
+                        
 
                         <div class="mb-4">
                             @if(!empty($dealer->internal_notes))

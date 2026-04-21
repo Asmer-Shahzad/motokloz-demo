@@ -82,39 +82,50 @@
             @if(count($dealers) > 0)
                 <div class="row g-3">
                     @foreach($dealers as $dealer)
-                        <div class="col-12 col-sm-6 col-md-4" data-aos="fade-up" data-aos-delay="{{ ($loop->index % 3) * 100 }}" data-aos-duration="600">
-                            <a href="{{ route('dealer_inventory_details', $dealer['id']) }}" class="text-decoration-none">
-                                <div class="dealer-card">
-                                    <div class="d-flex align-items-start gap-3">
-                                        @php
-                                            $dealerLogo = isset($dealer['logo']) && $dealer['logo']
-                                                ? (Str::startsWith($dealer['logo'], 'http')
-                                                    ? $dealer['logo']
-                                                    : env('diskloz_base_url') . '/admin_assets/images/dealer_images/' . $dealer['logo'])
-                                                : asset('assets/images/defaultdealerlogo.png');
-                                        @endphp
-                                        <img src="{{ $dealerLogo }}"
-                                            class="me-4 dealerprofilelogo"
-                                            alt="Logo"
-                                            width="80"
-                                            onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultdealerlogo.png') }}';">
+                       @php
+                            // ✅ All array access
+                            $legalName = $dealer['legal_name'] ?? 'Dealer';
+                            $dealerId = $dealer['id'] ?? 0;
+                            
+                            // ✅ Small letters ke liye (strtolower, strtoupper nahi)
+                            $nameForUrl = strtolower(preg_replace('/[^a-z0-9]+/', '-', strtolower($legalName)));
+                            $nameForUrl = trim($nameForUrl, '-');
+                            
+                            $dealerLogo = isset($dealer['logo']) && $dealer['logo']
+                                ? (Str::startsWith($dealer['logo'], 'http')
+                                    ? $dealer['logo']
+                                    : env('diskloz_base_url') . '/admin_assets/images/dealer_images/' . $dealer['logo'])
+                                : asset('assets/images/defaultdealerlogo.png');
+                        @endphp
+                        
+                        @if($dealerId)
+                            <div class="col-12 col-sm-6 col-md-4" data-aos="fade-up" data-aos-delay="{{ ($loop->index % 3) * 100 }}" data-aos-duration="600">
+                                <a style="text-decoration:none;" href="{{ route('dealer_inventory_details', ['name' => $nameForUrl, 'id' => $dealerId]) }}">
+                                    <div class="dealer-card">
+                                        <div class="d-flex align-items-start gap-3">
+                                            <img src="{{ $dealerLogo }}"
+                                                class="me-4 dealerprofilelogo"
+                                                alt="Logo"
+                                                width="80"
+                                                onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultdealerlogo.png') }}';">
 
-                                        <div>
-                                            <h6 class="dealer-card-head">{{ ucwords(strtolower($dealer['legal_name'] ?? 'Name not available')) }}</h6>
-                                           <p class="dealer-address mb-2">
-    {{ collect([
-        $dealer['physical_address'] ?? null,
-        $dealer['city'] ?? null,
-        $dealer['province'] ?? null,
-        $dealer['postal_code'] ?? null
-    ])->filter()->implode(', ') ?: 'Address not available' }}
-</p>
-                                            <span class="vehicle-badge">{{ $dealer['inventory_count'] }} Vehicles</span>
+                                            <div>
+                                                <h6 class="dealer-card-head">{{ ucwords(strtolower($dealer['legal_name'] ?? 'Name not available')) }}</h6>
+                                                <p class="dealer-address mb-2">
+                                                    {{ collect([
+                                                        $dealer['physical_address'] ?? null,
+                                                        $dealer['city'] ?? null,
+                                                        $dealer['province'] ?? null,
+                                                        $dealer['postal_code'] ?? null
+                                                    ])->filter()->implode(', ') ?: 'Address not available' }}
+                                                </p>
+                                                <span class="vehicle-badge">{{ $dealer['inventory_count'] ?? 0 }} Vehicles</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </a>
-                        </div>
+                                </a>
+                            </div>
+                        @endif
                     @endforeach
                 </div>
                 
@@ -219,8 +230,7 @@
             </div>
         </div>
     </section> -->
-
-                            
+     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function(){
@@ -284,7 +294,7 @@
             });
 
         });
-        </script>
+    </script>
 
     <style>
         .dealer-search-wrap {

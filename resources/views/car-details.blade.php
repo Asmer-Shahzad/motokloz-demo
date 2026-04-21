@@ -1,4 +1,6 @@
 @extends('layouts.app')
+@section('title', $pageTitle ?? 'Motokloz | Car Details')
+
 @section('meta')
 @php
     $year = $searched_vehicle->year ?? '';
@@ -57,6 +59,7 @@
 <script>
     const BASE_URL = "{{ env('diskloz_base_url') }}";
 </script>
+
 @section('content')
 
 @php
@@ -75,11 +78,19 @@
             : env('diskloz_base_url') . '/admin_assets/images/dealer_images/' . $dealer->logo)
         : asset('assets/images/defaultdealerlogo.png');
 
+    // ✅ Create slug from dealer name
+    $dealerNameForUrl = $dealer->legal_name ?? $dealer->first_name ?? 'dealer';
+    $dealerSlug = preg_replace('/[^a-z0-9]+/', '-', strtolower($dealerNameForUrl));
+    $dealerSlug = trim($dealerSlug, '-');
+    $dealerId = $dealer->id ?? 0;
+
+    // ✅ Fix: Pass both 'name' and 'id' parameters
     $detailUrl = ($dealer && !empty($dealer->id))
-        ? route('dealer_inventory_details', ['id' => $dealer->id, 'source' => $source])
+        ? route('dealer_inventory_details', ['name' => $dealerSlug, 'id' => $dealer->id, 'source' => $source])
         : '#';
 
     $profileUrl   = $detailUrl;
+    
     $inventoryUrl = ($dealer && !empty($dealer->id))
         ? route('dealer_inventory', ['id' => $dealer->id, 'source' => $source])
         : '#';
@@ -233,13 +244,13 @@
 
         <div class="row mb-4 align-items-end" data-aos="fade-up" data-aos-duration="600">
             <div class="col-lg-8">
-                <h2 class="mto-top-headline fw-bold">
+                <h1 class="mto-top-headline fw-bold">
                     {{ $searched_vehicle->inventory_condition ?? '' }}
                     {{ $searched_vehicle->year ?? '' }}
                     {{ $searched_vehicle->mfg_auto ?? '' }}
                     {{ $searched_vehicle->model ?? '' }}
                     {{ $searched_vehicle->trim ?? '' }}
-                </h2>
+                </h1>
                 <div class="mto-meta-row d-flex flex-wrap gap-3 mt-3">
                     @if($dealerCity || $dealerProvince)
                         <span class="mto-meta-item">
@@ -393,7 +404,7 @@
                             <h6 class="fw-bold mb-3">Get Started</h6>
 
                             <button type="button" class="mto-btn-orange w-100 mb-3"
-                                data-bs-toggle="modal" data-bs-target="#testDriveModal">
+                                data-bs-toggle="modal" data-bs-target="#testDriveModals">
                                 Schedule Test Drive <i class="fa-solid fa-car ms-2"></i>
                             </button>
 
@@ -493,7 +504,7 @@
     </div>
 
     <!-- Test Drive Modal -->
-    <div class="modal fade" id="testDriveModal" tabindex="-1" aria-labelledby="testDriveModalLabel" aria-hidden="true">
+    <div class="modal fade" id="testDriveModals" tabindex="-1" aria-labelledby="testDriveModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -670,9 +681,92 @@
             </div>
         </div>
     </div>
+    @if(!empty($matchedVehicles) && count($matchedVehicles) > 0)
+        <div class="container row g-4 m-auto">
+            <div class="container mt-5">
+                <div class="dealer-top-section" data-aos="fade-up" data-aos-duration="600">
+                    <h4 class="dealer-top-title">Similar Vehicles</h4>
+                    <p class="dealer-top-subtitle">You might also like these similar vehicles</p>
+                </div>
+            </div>
+            <div class="row" id="relatedVehiclesContainer">
+                @foreach ($matchedVehicles as $relatedVehicle)
+                    <div class="col-lg-3 col-sm-6 dealer-vehicle-card">
+                        <div class="modern-car-card shadow-sm">
+                            <div class="car-card-top">
+                                @php
+                                    $relatedDetailUrl = route('inventory_product_details', $relatedVehicle->id);
+                                    
+                                    $defaultImage = asset('assets/images/defaultimage.jpg');
+                                    
+                                     $relatedImg = $relatedVehicle->primary_image
+                                        ? (Str::startsWith($relatedVehicle->primary_image, 'http')
+                                            ? $relatedVehicle->primary_image
+                                            : $disklozBaseUrl . '/admin_assets/images/inventory_images/' . $relatedVehicle->primary_image)
+                                        : $defaultImage;
+                                    
+                                    $relatedDealer = $relatedVehicle->dealer ?? null;
+                                    $relatedDealerName = $relatedDealer->legal_name ?? $relatedDealer->name ?? 'Dealer';
+                                @endphp
+                                
+                                <a href="{{ $relatedDetailUrl }}">
+                                    <img style="width:100%"
+                                        src="{{ $relatedImg }}"
+                                        alt="{{ $relatedVehicle->model }}"
+                                        class="img-box img-fluid"
+                                        onerror="this.onerror=null;this.src='{{ $defaultImage }}';">
+                                </a>
+                                <div class="badge-mileage">
+                                    <img src="/assets/images/mile1.png" alt="Mileage" class="me-2" style="width:20px; height:12px;"> 
+                                    {{ $relatedVehicle->mileage 
+                                        ? trim(str_ireplace('km', '', $relatedVehicle->mileage)) . ' km' 
+                                        : '0 km' 
+                                    }}
+                                </div>
+                            </div>
+                            <div class="car-card-bottom">
+                                <h5 class="car-main-title">
+                                    {{ $relatedVehicle->year }} {{ $relatedVehicle->mfg_auto }}
+                                    {{ $relatedVehicle->model }} {{ $relatedVehicle->trim }}
+                                </h5>
+                                
+                                @php
+                                    $dealerPostalCode = data_get($relatedVehicle, 'dealer.postal_code')
+                                        ?? $relatedVehicle->dealer_postal_code
+                                        ?? '';
+                                    $dealerCity = data_get($relatedVehicle, 'dealer.city')
+                                        ?? $relatedVehicle->dealer_city
+                                        ?? '';
+                                    $dealerProvince = data_get($relatedVehicle, 'dealer.province')
+                                        ?? $relatedVehicle->dealer_province
+                                        ?? '';
+                                    $dealerCountry = data_get($relatedVehicle, 'dealer.country')
+                                        ?? $relatedVehicle->dealer_country
+                                        ?? '';
+                                @endphp
+                                
+                                <p class="car-distance-away"
+                                    data-dealer-postal="{{ $dealerPostalCode }}"
+                                    data-dealer-city="{{ $dealerCity }}"
+                                    data-dealer-province="{{ $dealerProvince }}"
+                                    data-dealer-country="{{ $dealerCountry }}">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    <span class="distance-value">Loading...</span>
+                                </p>
 
+                                <div class="car-price-block text-end">
+                                    <h4 class="price-value">
+                                        ${{ number_format($relatedVehicle->disclosed_price ?? 0) }}
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
 </section>
-
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
 
@@ -842,7 +936,7 @@ $(document).ready(function () {
     var productId = {{ $searched_vehicle->id ?? 'null' }};
 
     // ===================== TEST DRIVE =====================
-    $('#testDriveModal form').on('submit', function (e) {
+    $('#testDriveModals form').on('submit', function (e) {
         e.preventDefault();
 
         var name     = $('#name1').val().trim();
@@ -886,8 +980,8 @@ $(document).ready(function () {
             }),
             success: function () {
                 showSnackbar('Test drive scheduled successfully!', 'success');
-                $('#testDriveModal').modal('hide');
-                $('#testDriveModal form')[0].reset();
+                $('#testDriveModals').modal('hide');
+                $('#testDriveModals form')[0].reset();
             },
             error: handleAjaxError,
             complete: function () { resetButton($btn); }
@@ -1124,6 +1218,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 <style>
+    .dealer-top-title {
+        font-weight: 600;
+        font-size: 40px;
+        color: var(--select-color);
+    }
+
     .listed-card-right { border-bottom: 1px solid #DDE1DE; padding-bottom: 14px; }
     .mto-contact-details div { display: flex; align-items: center; gap: 8px; }
     .contact-icon { width: 16px; height: 16px; }

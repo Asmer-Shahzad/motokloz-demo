@@ -155,6 +155,12 @@
     padding: 10px 0 25px 0;
 }
 
+.remember-row a {
+    text-decoration: none;
+    color: #555;
+    font-size: 14px;
+}
+
 /* Remember me */
 .remember-me {
     display: flex;
@@ -186,6 +192,7 @@
     text-decoration: underline;
     opacity: 0.85;
 }
+
 @media (max-width: 1200px) {
     .auth-form h2 {
         font-size: 30px;

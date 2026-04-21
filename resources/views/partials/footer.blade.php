@@ -34,7 +34,7 @@
                         <h6><a href="tel:+8773475569">877-347-5569</a></h6>
 
                         <!-- Customer Support Button -->
-                        <a href="#" class="btn-custom">
+                        <a href="javascript:void(0)" class="btn-custom" data-bs-toggle="modal" data-bs-target="#testDriveModal" data-title="Customer Support">
                             <i class="fa-solid fa-headset"></i> Customer Support
                         </a>
                     </div>
@@ -78,13 +78,27 @@
                 <div class="col-lg-2">
                     <h4>Support</h4>
                     <ul>
-                        <li><a href="/coming-soon">Forum support</a></li>
-                        <li><a href="/coming-soon">Help Center</a></li>
-                        <li><a href="/coming-soon">Live chat</a></li>
-                        <li><a href="/coming-soon">Ad Guideline</a></li>
-                        <li><a href="/coming-soon">Ad Support</a></li>
-                        <li><a href="/coming-soon">Faq’s</a></li>
-                        <li><a href="/coming-soon">Dealer Support</a></li>
+                        <li data-bs-toggle="modal" data-bs-target="#testDriveModal" data-title="Forum support">
+                            <a href="javascript:void(0)">Forum support</a>
+                        </li>
+                        <li data-bs-toggle="modal" data-bs-target="#testDriveModal" data-title="Help Center">
+                            <a href="javascript:void(0)">Help Center</a>
+                        </li>
+                        <li data-bs-toggle="modal" data-bs-target="#testDriveModal" data-title="Live chat">
+                            <a href="javascript:void(0)">Live chat</a>
+                        </li>
+                        <li data-bs-toggle="modal" data-bs-target="#testDriveModal" data-title="Ad Guideline">
+                            <a href="javascript:void(0)">Ad Guideline</a>
+                        </li>
+                        <li data-bs-toggle="modal" data-bs-target="#testDriveModal" data-title="Ad Support">
+                            <a href="javascript:void(0)">Ad Support</a>
+                        </li>
+                        <li data-bs-toggle="modal" data-bs-target="#testDriveModal" data-title="Faq's">
+                            <a href="javascript:void(0)">Faq's</a>
+                        </li>
+                        <li data-bs-toggle="modal" data-bs-target="#testDriveModal" data-title="Dealer Support">
+                            <a href="javascript:void(0)">Dealer Support</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -129,7 +143,9 @@
             </div>
         </div>
     </div>
+    @include('partials.support-modal')
 </footer>
+
 <style>
     .social-icons img {
         width: 22px;

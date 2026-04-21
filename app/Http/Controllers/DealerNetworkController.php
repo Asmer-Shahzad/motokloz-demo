@@ -165,4 +165,75 @@ class DealerNetworkController extends Controller
             ], 500);
         }
     }
+
+    public function support_submti(Request $request)
+    {
+        try {
+            // Log request
+            Log::info('Support form submission received', $request->except('_token'));
+            
+            // ✅ Log the source specifically
+            Log::info('Form Source: ' . $request->input('source'));
+            
+            // Validate (add source validation if needed)
+            $validated = $request->validate([
+                'dealership_name' => 'required|string|max:255',
+                'contact_name' => 'required|string|max:255',
+                'contact_email' => 'required|email|max:255',
+                'contact_phone' => 'required|string|max:20',
+                'notes' => 'nullable|string',
+                'source' => 'nullable|string|max:100',  // ✅ Add source validation
+            ]);
+
+            // Prepare email content with source
+            $emailContent = "==========================================\n";
+            $emailContent .= "      NEW SUPPORT REQUEST\n";
+            $emailContent .= "==========================================\n\n";
+            $emailContent .= "Source: " . ($validated['source'] ?? 'Not specified') . "\n";  // ✅ Add source
+            $emailContent .= "------------------------------------------\n\n";
+            $emailContent .= "Dealership Name: " . $validated['dealership_name'] . "\n";
+            $emailContent .= "Contact Name: " . $validated['contact_name'] . "\n";
+            $emailContent .= "Contact Email: " . $validated['contact_email'] . "\n";
+            $emailContent .= "Contact Phone: " . $validated['contact_phone'] . "\n";
+            $emailContent .= "Notes: " . ($validated['notes'] ?? 'No notes provided') . "\n";
+            $emailContent .= "Submitted At: " . now()->format('Y-m-d H:i:s') . "\n";
+            $emailContent .= "\n==========================================\n";
+
+            // Force mail configuration
+            config([
+                'mail.default' => 'smtp',
+                'mail.mailers.smtp.host' => 'smtp.zeptomail.com',
+                'mail.mailers.smtp.port' => 587,
+                'mail.mailers.smtp.username' => 'emailapikey',
+                'mail.mailers.smtp.password' => 'wSsVR61+rB/xCvx5nGD5Iug7mFVQA1mgR00o3gGk6nD+SP/KoMdvl0DLB1DyG6RNR2dqQjoVprJ6zhpW0zFcitR4m1EAWiiF9mqRe1U4J3x17qnvhDzIXW9bkRqLL48NxA9um2diG8Fu',
+                'mail.mailers.smtp.encryption' => 'tls',
+                'mail.from.address' => 'no-reply@diskloz.com',
+                'mail.from.name' => 'Diskloz'
+            ]);
+
+            // Send email
+            Mail::raw($emailContent, function ($message) use ($validated) {
+                $subject = 'New Support Request - ' . ($validated['source'] ?? 'General') . ' - ' . $validated['dealership_name'];
+                $message->to('huzaifatenmarch@gmail.com')
+                        ->subject($subject)
+                        ->from('no-reply@diskloz.com', 'Diskloz')
+                        ->replyTo($validated['contact_email'], $validated['contact_name']);
+            });
+
+            Log::info('Email sent successfully to huzaifatenmarch@gmail.com from source: ' . ($validated['source'] ?? 'unknown'));
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Request submitted successfully! We will contact you soon.'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Support form error: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

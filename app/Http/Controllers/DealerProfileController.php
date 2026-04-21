@@ -52,56 +52,53 @@ class DealerProfileController extends Controller
         return response()->json($json);
     }
 
-    public function dealer_inventory_details($id, Request $request)
-    {
-        $user     = Auth::user();
-        $userInfo = $user->information ?? new UserInformation();
+    public function dealer_inventory_details($name, $id, Request $request)
+{
+    // $name sirf URL ke liye (ignore karo)
+    // $id use karo database ke liye
+    
+    $user     = Auth::user();
+    $userInfo = $user->information ?? new UserInformation();
 
-        $isMotokloz = $request->query('source') === 'motokloz';
+    $isMotokloz = $request->query('source') === 'motokloz';
 
-        if ($isMotokloz) {
-            // ✅ Motokloz: local user + search_by_id API se inventory
-            $localUser = \App\Models\User::with('information')->where('id', $id)->first();
+    if ($isMotokloz) {
+        $localUser = \App\Models\User::with('information')->where('id', $id)->first();
 
-            if (!$localUser) {
-                abort(404, 'Dealer not found');
-            }
-
-            $dealer = $this->buildDealerFromLocalUser($localUser);
-
-            try {
-                $inventoryResponse = Http::get($this->disklozBaseUrl() . '/api/search_motokloz_inventory', [
-                    'client_id' => $id,
-                ]);
-
-                $inventoryData = $inventoryResponse->successful()
-                    ? ($inventoryResponse->json()['data'] ?? [])
-                    : [];
-
-                // dd($inventoryData);
-
-                    
-            } catch (\Exception $e) {
-                \Log::error('Motokloz inventory fetch error: ' . $e->getMessage());
-                $inventoryData = [];
-            }
-
-            return $this->buildDealerProfileView($user, $userInfo, $dealer, $inventoryData);
-        }
-
-        // ✅ Diskloz: dealer_by_id API se dealer + inventory
-        $response = Http::get($this->disklozBaseUrl() . '/api/dealer_by_id/' . $id);
-
-        if (!$response->successful() || !($response->json()['status'] ?? false)) {
+        if (!$localUser) {
             abort(404, 'Dealer not found');
         }
 
-        $data          = $response->json();
-        $dealer        = (object) $data['data'];
-        $inventoryData = $dealer->inventory ?? [];
+        $dealer = $this->buildDealerFromLocalUser($localUser);
+
+        try {
+            $inventoryResponse = Http::get($this->disklozBaseUrl() . '/api/search_motokloz_inventory', [
+                'client_id' => $id,
+            ]);
+
+            $inventoryData = $inventoryResponse->successful()
+                ? ($inventoryResponse->json()['data'] ?? [])
+                : [];
+        } catch (\Exception $e) {
+            \Log::error('Motokloz inventory fetch error: ' . $e->getMessage());
+            $inventoryData = [];
+        }
 
         return $this->buildDealerProfileView($user, $userInfo, $dealer, $inventoryData);
     }
+
+    $response = Http::get($this->disklozBaseUrl() . '/api/dealer_by_id/' . $id);
+
+    if (!$response->successful() || !($response->json()['status'] ?? false)) {
+        abort(404, 'Dealer not found');
+    }
+
+    $data          = $response->json();
+    $dealer        = (object) $data['data'];
+    $inventoryData = $dealer->inventory ?? [];
+
+    return $this->buildDealerProfileView($user, $userInfo, $dealer, $inventoryData);
+}
 
 
     // ✅ Helper — view build karo
@@ -141,6 +138,7 @@ class DealerProfileController extends Controller
             'searched_vehicle' => $searched_vehicle,
             'disklozBaseUrl'   => $this->disklozBaseUrl(),
             'mapAddress'       => $mapAddress,
+            'pageTitle' => $dealer->legal_name . ' | Motokloz'  //  Set page title
         ]);
     }
 

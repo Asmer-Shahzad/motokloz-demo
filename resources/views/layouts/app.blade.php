@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Motokloz</title>
+    <title>@yield('title', 'Motokloz')</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="apple-mobile-web-app-title" content="Motokloz" />
@@ -417,13 +417,16 @@
                 startCounter();
             });
 
-            // Link click pe bhi show karo
+            // ✅ FIXED: Link click pe bhi show karo (except tel:, mailto:, etc.)
             document.addEventListener('click', function (e) {
                 var anchor = e.target.closest('a');
                 if (!anchor) return;
                 var href = anchor.getAttribute('href');
                 if (!href || href === '#' || href.startsWith('#') ||
-                    href.startsWith('javascript') || anchor.target === '_blank') return;
+                    href.startsWith('javascript') || 
+                    href.startsWith('tel:') ||      // ✅ Added - Ignore phone links
+                    href.startsWith('mailto:') ||   // ✅ Added - Ignore email links
+                    anchor.target === '_blank') return;
                 loader.classList.add('active');
                 document.body.classList.add('loader-active');
                 startCounter();

@@ -16,12 +16,11 @@
             <div class="signup-form col-lg-6 col-12">
                 <div class="auth-form text-center">
 
-                    <span class="signup-badge">Sign In</span>
+                    <span class="signup-badge">Reset Password</span>
 
-                    <h2>Welcome back</h2>
-                    <p>Motokloz your one-stop-shop for all your car buying needs!</p>
+                    <h2>Create New Password</h2>
+                    <p>Please enter your new password below.</p>
 
-                    {{-- ✅ ERROR ALERT --}}
                     @if ($errors->any())
                         <div class="alert alert-danger rounded-3 py-2 px-3 text-start">
                             <ul class="mb-0">
@@ -32,41 +31,38 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('login.post') }}" method="POST" class="user-form">
+                    <form action="{{ route('password.update') }}" method="POST" class="user-form">
                         @csrf
+                        
+                        <input type="hidden" name="token" value="{{ $token }}">
+                        <input type="hidden" name="email" value="{{ $email ?? old('email') }}">
 
                         <div class="form-group">
-                            <img src="/assets/images/userlogin.png" alt="">
-                            <input type="text" name="email" 
-                                   class="form-control @error('email') is-invalid @enderror"
-                                   placeholder="Email / Username" 
-                                   value="{{ old('email') }}" required autocomplete="username">
+                            <img src="/assets/images/password.png" alt="">
+                            <input type="password" 
+                                   name="password" 
+                                   class="form-control @error('password') is-invalid @enderror"
+                                   placeholder="New Password" 
+                                   required>
                         </div>
 
                         <div class="form-group">
                             <img src="/assets/images/password.png" alt="">
-                            <input type="password" name="password"
-                                   class="form-control @error('password') is-invalid @enderror"
-                                   placeholder="Password" required autocomplete="current-password">
-                        </div>
-
-                        <div class="remember-row mb-3">
-                            <label class="remember-me">
-                                <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
-                                <span>Remember me</span>
-                            </label>
-                            <a href="{{ route('forgot') }}">Forgot Password?</a>
+                            <input type="password" 
+                                   name="password_confirmation" 
+                                   class="form-control"
+                                   placeholder="Confirm New Password" 
+                                   required>
                         </div>
 
                         <button type="submit" class="btn btn-auth d-flex align-items-center justify-content-center gap-2">
-                            Login
+                            Reset Password
                             <img src="/assets/images/bttnarrow.png" alt="arrow" width="18">
                         </button>
                     </form>
 
                     <div class="login-text mt-3">
-                        Don’t have an account?
-                        <a href="{{ route('signup') }}">Register Here!</a>
+                        <a href="{{ route('login') }}">Back to Login</a>
                     </div>
 
                 </div>

@@ -23,7 +23,13 @@ use App\Http\Controllers\ChatController;
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    // Forgot Password Routes
+    Route::get('/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot');
+    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
 
+    // Reset Password Routes
+    Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
     Route::get('/signup', [AuthController::class, 'showSignup'])->name('signup');
     Route::post('/signup', [AuthController::class, 'register'])->name('signup.post');
 });
@@ -42,9 +48,10 @@ Route::get('/', [HomeController::class, 'home'])->name('home');
 // Route::get('/car-listing', [InventoryController::class, 'inventory'])->name('car.listing');
 Route::get('/car-listing', [SearchController::class, 'search_inventory'])->name('search_inventory');
 Route::get('/car-details/{id}', [InventoryController::class, 'inventory_product_details'])->name('inventory_product_details');
-Route::get('/dealer-profile/{id}', [DealerProfileController::class, 'dealer_inventory_details'])->name('dealer_inventory_details');
+Route::get('/dealer-profile/{name}/{id}', [DealerProfileController::class, 'dealer_inventory_details'])->name('dealer_inventory_details');
 Route::get('/dealer-network', [DealerNetworkController::class, 'fetch_dealers'])->name('fetch_dealers');
 Route::post('/dealer-application/submit', [DealerNetworkController::class, 'dealer_application_submit'])->name('dealer.application.submit');
+Route::post('/support/submit', [DealerNetworkController::class, 'support_submti'])->name('support.application.submit');
 Route::get('/coming-soon', [HomeController::class, 'comingsoon'])->name('comingsoon');
 Route::get('/buy/step-1', [HomeController::class, 'buyFlowStep1'])->name('buy.step1');
 Route::get('/buy/step-2', [HomeController::class, 'buyFlowStep2'])->name('buy.step2');

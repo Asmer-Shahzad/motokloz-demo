@@ -339,7 +339,7 @@
                                     </li>
 
                                     <li>
-                                        <a class="dropdown-item" href="/coming-soon">
+                                        <a class="dropdown-item" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#testDriveModal" data-title="Support">
                                             <i class="fa fa-headset me-2"></i> Support
                                         </a>
                                     </li>
@@ -362,7 +362,7 @@
         </div>
     </div>
 </headerx>
-
+@include('partials.support-modal')
 @auth
 
 <script>

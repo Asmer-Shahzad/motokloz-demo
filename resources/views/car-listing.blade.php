@@ -358,10 +358,11 @@
                                                     @php $detailUrl = route('inventory_product_details', $recent_vehicle->id); @endphp
                                                     <a href="{{ $detailUrl }}">
                                                         <img style="width:100%" src="{{ $recent_vehicle->primary_image
-                                ? (Str::startsWith($recent_vehicle->primary_image, 'http')
-                                    ? $recent_vehicle->primary_image
-                                    : $disklozBaseUrl . '/admin_assets/images/inventory_images/' . $recent_vehicle->primary_image)
-                                : asset('assets/images/defaultimage.jpg') }}" alt="Vehicle Image"
+                                                            ? (Str::startsWith($recent_vehicle->primary_image, 'http')
+                                                                ? $recent_vehicle->primary_image
+                                                                : env('diskloz_base_url') . '/admin_assets/images/inventory_images/' . $recent_vehicle->primary_image)
+                                                            : asset('assets/images/defaultimage.jpg') }}" 
+                                                            alt="Vehicle Image"
                                                             class="img-box img-fluid"
                                                             onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
                                                     </a>

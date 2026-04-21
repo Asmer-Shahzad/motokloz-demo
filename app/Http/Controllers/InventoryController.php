@@ -123,28 +123,26 @@ class InventoryController extends Controller
 
         $videos = $searched_vehicle->videos ?? [];
 
-        // ✅ Source check karo — motokloz hai to local user dhundho
+        // ✅ Source check
         $isMotokloz = strtolower($searched_vehicle->source ?? '') === 'motokloz';
 
         $dealer = $searched_vehicle->dealer ?? null;
+        $dealerId = null;
 
         if ($isMotokloz && !empty($searched_vehicle->client_id)) {
-
-            // ✅ Seedha local user dhundho — diskloz API skip
-            $clientId  = $searched_vehicle->client_id;
+            $clientId = $searched_vehicle->client_id;
             $localUser = \App\Models\User::with('information')->where('id', $clientId)->first();
 
             if ($localUser) {
                 $dealer = $this->buildDealerFromLocalUser($localUser);
+                $dealerId = $clientId;
             }
-
         } elseif (!$dealer && !empty($searched_vehicle->client_id)) {
-
-            // ✅ Dealer null hai aur motokloz bhi nahi — diskloz API try karo
-            $clientId  = $searched_vehicle->client_id;
+            $clientId = $searched_vehicle->client_id;
             $localUser = \App\Models\User::with('information')->where('id', $clientId)->first();
 
             if ($localUser) {
+                $dealerId = $clientId;
                 try {
                     $dealerResponse = Http::get($this->baseUrl() . '/api/get_dealer_by_client_id', [
                         'client_id' => $clientId
@@ -152,22 +150,79 @@ class InventoryController extends Controller
 
                     if ($dealerResponse->successful()) {
                         $dealerData = json_decode($dealerResponse->body());
-
                         $dealer = (!empty($dealerData) && isset($dealerData->id))
                             ? $dealerData
                             : $this->buildDealerFromLocalUser($localUser);
                     } else {
                         $dealer = $this->buildDealerFromLocalUser($localUser);
                     }
-
                 } catch (\Exception $e) {
                     \Log::error('Dealer fetch error: ' . $e->getMessage());
                     $dealer = $this->buildDealerFromLocalUser($localUser);
                 }
             }
+        } elseif ($dealer && isset($dealer->id)) {
+            $dealerId = $dealer->id;
         }
 
         $contact = $dealer->phone_no ?? null;
+
+        // ✅ Page title
+        $carYear = $searched_vehicle->year ?? '';
+        $carMake = $searched_vehicle->mfg_auto ?? '';
+        $carModel = $searched_vehicle->model ?? '';
+        $carTrim = $searched_vehicle->trim ?? '';
+        
+        $carFullTitle = trim($carYear . ' ' . $carMake . ' ' . $carModel . ' ' . $carTrim);
+        
+        if (empty($carFullTitle)) {
+            $carFullTitle = 'Vehicle Details';
+        }
+        
+        $pageTitle = 'Motokloz | ' . $carFullTitle;
+
+        // ✅ Get matched vehicles (same make OR same model)
+        $matchedVehicles = [];
+        if (!empty($carModel) || !empty($carMake)) {
+            try {
+                $response_matched = Http::timeout(10)->get($this->baseUrl() . '/api/search_by_model', [
+                    'model' => $carModel,
+                    'make' => $carMake,
+                    'exclude_id' => $id,
+                    'limit' => 4
+                ]);
+
+                if ($response_matched->successful()) {
+                    $matchedData = json_decode($response_matched->body());
+                    $matchedVehicles = $matchedData->data ?? [];
+                }
+            } catch (\Exception $e) {
+                \Log::error('Matched vehicles fetch error: ' . $e->getMessage());
+                $matchedVehicles = [];
+            }
+        }
+
+        // ✅ FALLBACK: If no matched vehicles, get dealer's own inventory
+        if (empty($matchedVehicles) && !empty($dealerId)) {
+            try {
+                $response_dealer = Http::timeout(10)->get($this->baseUrl() . '/api/dealer_by_id/' . $dealerId);
+
+                if ($response_dealer->successful()) {
+                    $dealerData = json_decode($response_dealer->body());
+                    $dealerInventory = $dealerData->data->inventory ?? [];
+                    
+                    // Filter out current vehicle and take 4
+                    $matchedVehicles = collect($dealerInventory)
+                        ->where('id', '!=', $id)
+                        ->take(4)
+                        ->values()
+                        ->toArray();
+                }
+            } catch (\Exception $e) {
+                \Log::error('Dealer inventory fetch error: ' . $e->getMessage());
+                $matchedVehicles = [];
+            }
+        }
 
         return view('car-details', [
             'user'             => $user,
@@ -176,10 +231,11 @@ class InventoryController extends Controller
             'videos'           => $videos,
             'contact'          => $contact,
             'dealer'           => $dealer,
-            'pageTitle'        => $searched_vehicle->title ?? 'Car Details'
+            'pageTitle'        => $pageTitle,
+            'matchedVehicles'  => $matchedVehicles,
+            'disklozBaseUrl'   => $this->baseUrl(),
         ]);
     }
-
 
     // Controller mein private function
     private function buildDealerFromLocalUser($localUser): object

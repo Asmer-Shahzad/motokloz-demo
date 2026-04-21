@@ -28,7 +28,7 @@
 
                                         <div class="help">
                                             <i class="fa-solid fa-user"></i>
-                                            <span>Need help?</span>
+                                            <span><a href="tel:+8773475569">Need help?</a></span>
                                         </div>
                                     </div>
 

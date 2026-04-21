@@ -12,14 +12,22 @@ function formatPrice($price) {
     <section class="dealer-fleet-section container">
         <div class=" my-4">
             @php
-                $detailUrl = route('dealer_inventory_details', $dealer->id);
-
+                // Create slug from dealer name
+                $dealerName = $dealer->legal_name ?? $dealer->first_name ?? 'dealer';
+                $dealerSlug = preg_replace('/[^a-z0-9]+/', '-', strtolower($dealerName));
+                $dealerSlug = trim($dealerSlug, '-');
+                $dealerId = $dealer->id ?? 0;
+                
+                // ✅ Pass both name and id
+                $detailUrl = route('dealer_inventory_details', ['name' => $dealerSlug, 'id' => $dealerId]);
+                
                 $dealerLogo = $dealer->logo
                     ? (Str::startsWith($dealer->logo, 'http')
                         ? $dealer->logo
                         : env('diskloz_base_url') . '/admin_assets/images/dealer_images/' . $dealer->logo)
                     : asset('assets/images/defaultdealerlogo.png');
             @endphp
+
             <div class="top-back">
                 <a href="{{ $detailUrl }}" class="dashboard-back link-text-decoration">
                     <span class="back-icon">

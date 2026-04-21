@@ -81,12 +81,19 @@
                                 } else {
                                     $opAvatar = 'https://ui-avatars.com/api/?name=' . urlencode($opName) . '&background=F58D02&color=fff&size=48';
                                 }
-                                // Dealer profile URL
+                                
+                                // ✅ FIXED: Dealer profile URL with slug
                                 $otherPartyId = $conv['user_id']; // dealer is always user_id
                                 $isMotoklozDealer = !$dealerInfo && $op;
+                                
+                                // Create slug from dealer name
+                                $dealerSlug = preg_replace('/[^a-z0-9]+/', '-', strtolower($opName));
+                                $dealerSlug = trim($dealerSlug, '-');
+                                
                                 $dealerProfileUrl = $isMotoklozDealer
-                                    ? route('dealer_inventory_details', ['id' => $otherPartyId, 'source' => 'motokloz'])
-                                    : route('dealer_inventory_details', ['id' => $otherPartyId]);
+                                    ? route('dealer_inventory_details', ['name' => $dealerSlug, 'id' => $otherPartyId, 'source' => 'motokloz'])
+                                    : route('dealer_inventory_details', ['name' => $dealerSlug, 'id' => $otherPartyId]);
+                                
                                 // Inventory detail URL
                                 $invDetailUrl = route('inventory_product_details', $conv['inventory_id']);
                             @endphp
@@ -209,9 +216,10 @@
                         // Dealer profile & inventory URLs for header
                         $headerDealerId = $activeConversation['user_id'];
                         $headerIsMotokloz = !$dealerInfo && $op;
-                        $headerDealerUrl = $headerIsMotokloz
-                            ? route('dealer_inventory_details', ['id' => $headerDealerId, 'source' => 'motokloz'])
-                            : route('dealer_inventory_details', ['id' => $headerDealerId]);
+                        $headerDealerSlug = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($opName)), '-');
+    $headerDealerUrl = $headerIsMotokloz
+        ? route('dealer_inventory_details', ['name' => $headerDealerSlug, 'id' => $headerDealerId, 'source' => 'motokloz'])
+        : route('dealer_inventory_details', ['name' => $headerDealerSlug, 'id' => $headerDealerId]);
                         $headerInvUrl = route('inventory_product_details', $inventoryId);
                     @endphp
 

@@ -293,6 +293,11 @@ span.gt_float_switcher-arrow {
     gap: 8px;
 }
 
+.help a {
+    color: #aaa;
+    text-decoration: none;
+}
+
 /* Filter bar */
 .filter-bar {
     border: 1px solid var(--border-color);
