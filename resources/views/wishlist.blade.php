@@ -163,7 +163,7 @@
                                                     <!-- ✅ Motokloz Inventory Button -->
                                                     <button class="book-btn motokloz-book-btn" 
                                                             data-bs-toggle="modal" 
-                                                            data-bs-target="#motoklozTestDriveModal"
+                                                            data-bs-target="#motoklozBookNow"
                                                             data-vehicle-id="{{ $vehicleId }}"
                                                             data-dealer-email="{{ $dealerEmail }}">
                                                         Book Now
@@ -172,7 +172,7 @@
                                                     <!-- ✅ Regular Dealer Inventory Button -->
                                                     <button class="book-btn dealer-book-btn" 
                                                             data-bs-toggle="modal" 
-                                                            data-bs-target="#testDriveModal"
+                                                            data-bs-target="#testBookNow"
                                                             data-dealer-id="{{ $dealerId }}"
                                                             data-product-id="{{ $vehicleId }}">
                                                         Book Now
@@ -198,11 +198,11 @@
         </div>
     </div>
     <!-- Regular Test Drive Modal (API Call) -->
-    <div class="modal fade" id="testDriveModal" tabindex="-1" aria-labelledby="testDriveModalLabel" aria-hidden="true">
+    <div class="modal fade" id="testBookNow" tabindex="-1" aria-labelledby="testBookNowLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="testDriveModalLabel">Book Now</h5>
+                    <h5 class="modal-title" id="testBookNowLabel">Book Now</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 
@@ -240,11 +240,11 @@
     </div>
 
     <!-- Motokloz Test Drive Modal (Email to Dealer) -->
-    <div class="modal fade" id="motoklozTestDriveModal" tabindex="-1" aria-labelledby="motoklozTestDriveModalLabel" aria-hidden="true">
+    <div class="modal fade" id="motoklozBookNow" tabindex="-1" aria-labelledby="motoklozBookNowLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="motoklozTestDriveModalLabel">Book Now</h5>
+                    <h5 class="modal-title" id="motoklozBookNowLabel">Book Now</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 
@@ -860,7 +860,7 @@ $(document).ready(function(){
     }
 
     // ✅ Populate Motokloz Modal with vehicle and dealer info
-    $('#motoklozTestDriveModal').on('show.bs.modal', function(e) {
+    $('#motoklozBookNow').on('show.bs.modal', function(e) {
         var $button = $(e.relatedTarget);
         var vehicleId = $button.data('vehicle-id');
         var dealerEmail = $button.data('dealer-email');
@@ -949,7 +949,7 @@ $(document).ready(function(){
             success: function(res){
                 console.log('Success:', res);
                 showSnackbar('Booking submitted!', 'success');
-                $('#testDriveModal').modal('hide');
+                $('#testBookNow').modal('hide');
                 $('#regularTestDriveForm')[0].reset();
             },
             error: function(xhr, status, error) {
@@ -1016,7 +1016,7 @@ $(document).ready(function(){
             success: function(response) {
                 console.log('Email sent successfully:', response);
                 showSnackbar('Test drive request sent to dealer!', 'success');
-                $('#motoklozTestDriveModal').modal('hide');
+                $('#motoklozBookNow').modal('hide');
                 $('#motoklozTestDriveForm')[0].reset();
             },
             error: function(xhr) {
