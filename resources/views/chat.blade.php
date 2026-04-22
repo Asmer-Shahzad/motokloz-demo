@@ -134,32 +134,6 @@
                 @else
                     {{-- Active conversation --}}
                     @php
-                        function tickSvg(string $type): string {
-                            if ($type === 'seen') {
-                                // Double black tick (seen/read)
-                                return '<div class="msg-ticks-inner seen">
-                                    <svg width="18" height="11" viewBox="0 0 18 11" fill="none">
-                                        <path d="M1 5.5L5.5 10L12 1" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M6 5.5L10.5 10L17 1" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>';
-                            } elseif ($type === 'delivered') {
-                                // Double grey tick (delivered)
-                                return '<div class="msg-ticks-inner delivered">
-                                    <svg width="18" height="11" viewBox="0 0 18 11" fill="none">
-                                        <path d="M1 5.5L5.5 10L12 1" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M6 5.5L10.5 10L17 1" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>';
-                            } else {
-                                // Single grey tick (sent)
-                                return '<div class="msg-ticks-inner sent">
-                                    <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
-                                        <path d="M1 5L4.5 8.5L11 1" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>';
-                            }
-                        }
                         $inv = $activeConversation['inventory'];
                         $invTitle = 'Vehicle';
                         if ($inv) {
@@ -286,17 +260,6 @@
                                             <span class="msg-time" data-utc="{{ $timeStr }}"></span>
                                         </div>
                                         <div class="msg-text">{{ $msg->message_body }}</div>
-                                        @if($isMine)
-                                            <div class="msg-ticks" data-msg-id="{{ $msg->id }}" data-status="{{ $msg->is_read ? 'seen' : ($msg->is_delivered ? 'delivered' : 'sent') }}">
-                                                @if($msg->is_read)
-                                                    {!! tickSvg('seen') !!}
-                                                @elseif($msg->is_delivered)
-                                                    {!! tickSvg('delivered') !!}
-                                                @else
-                                                    {!! tickSvg('sent') !!}
-                                                @endif
-                                            </div>
-                                        @endif
                                     </div>
                                 </div>
                             @empty
@@ -354,38 +317,9 @@
                         var CSRF      = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                         var sendUrl   = "{{ isset($clientId) ? route('chat.send', [$clientId, $dealerId, $inventoryId]) : '#' }}";
                         var pollUrl   = "{{ isset($clientId) ? route('chat.poll', [$clientId, $dealerId, $inventoryId]) : '#' }}";
-                        var tickUrl   = "{{ isset($clientId) ? route('chat.tick', [$clientId, $dealerId, $inventoryId]) : '#' }}";
                         var myType    = "{{ $activeConversation['sender_type'] ?? '' }}";
                         var otherName = "{{ addslashes($opName) }}";
                         var otherAvatar = "{{ addslashes($opAvatar) }}";
-
-                        @php
-                            $convSrc = 'motokloz';
-                            if (isset($clientId, $dealerId, $inventoryId)) {
-                                $convSrc = session("chat_source_{$clientId}_{$dealerId}_{$inventoryId}");
-                                if (!$convSrc) {
-                                    $convSrc = \App\Models\Chat::where('client_id', $clientId)
-                                        ->where('user_id', $dealerId)
-                                        ->where('inventory_id', $inventoryId)
-                                        ->orderByDesc('id')->value('source') ?? 'motokloz';
-                                }
-                            }
-                        @endphp
-
-                        // Diskloz: jab buyer chat khole — Diskloz ko mark-read call karo (dealer messages seen)
-                        @if($convSrc === 'diskloz' && ($activeConversation['sender_type'] ?? '') === 'client')
-                        @php $disklozMarkReadUrl = rtrim(config('services.diskloz.base_url', env('DISKLOZ_BASE_URL', env('diskloz_base_url', ''))), '/') . '/api/chat/mark-read'; @endphp
-                        (function() {
-                            fetch('{{ $disklozMarkReadUrl }}', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    inventory_id: {{ $inventoryId }},
-                                    buyer_email: '{{ addslashes(Auth::user()->email) }}'
-                                })
-                            }).catch(function() {});
-                        })();
-                        @endif
 
                         // Last message id — start from last rendered message
                         var lastId = {{ $messages->isNotEmpty() ? $messages->last()->id : 0 }};
@@ -431,8 +365,6 @@
                             var avatarHtml = isMine ? '' :
                                 '<img src="' + otherAvatar + '" class="msg-avatar" alt="" onerror="this.src=\'https://ui-avatars.com/api/?name=' + encodeURIComponent(otherName) + '&background=F58D02&color=fff&size=36\'">';
 
-                            var readTick = isMine ? buildTickHtml('sent') : '';
-
                             var nameHtml = isMine ? '' :
                                 '<span class="msg-name">' + otherName + '</span>';
 
@@ -442,8 +374,7 @@
                                         '<span class="msg-time" data-utc="' + msg.created_at + '"></span>' +
                                     '</div>' +
                                     '<div class="msg-text">' + formatMessage(msg.message_body) + '</div>' +
-                                    (isMine ? '<div class="msg-ticks" data-msg-id="' + msg.id + '" data-status="sent">' + buildTickHtml('sent') + '</div>' : '') +
-                                '</div>';
+                                    '</div>';
                             return div;
                         }
 
@@ -451,24 +382,6 @@
                             return String(str)
                                 .replace(/&/g,'&amp;').replace(/</g,'&lt;')
                                 .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-                        }
-
-                        function buildTickHtml(status) {
-                            if (status === 'seen') {
-                                return '<svg width="18" height="11" viewBox="0 0 18 11" fill="none">' +
-                                    '<path d="M1 5.5L5.5 10L12 1" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
-                                    '<path d="M6 5.5L10.5 10L17 1" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
-                                    '</svg>';
-                            } else if (status === 'delivered') {
-                                return '<svg width="18" height="11" viewBox="0 0 18 11" fill="none">' +
-                                    '<path d="M1 5.5L5.5 10L12 1" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
-                                    '<path d="M6 5.5L10.5 10L17 1" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
-                                    '</svg>';
-                            } else {
-                                return '<svg width="12" height="10" viewBox="0 0 12 10" fill="none">' +
-                                    '<path d="M1 5L4.5 8.5L11 1" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
-                                    '</svg>';
-                            }
                         }
 
                         function formatMessage(str) {
@@ -599,9 +512,6 @@
                                         // Replace temp id with real id from server
                                         optimisticBubble.setAttribute('data-id', data.message.id);
                                         optimisticBubble.style.opacity = '1';
-                                        // Update tick element data-msg-id to real id
-                                        var tickEl = optimisticBubble.querySelector('.msg-ticks');
-                                        if (tickEl) tickEl.setAttribute('data-msg-id', data.message.id);
                                         lastId = data.message.id;
                                     } else {
                                         optimisticBubble.remove();
@@ -699,65 +609,6 @@
                                 .catch(function () { /* silent fail */ });
                             }, 3000);
 
-                            // ── TICK STATUS POLLING (every 3 seconds) ────────────
-                            function runTickPoll() {
-                                fetch(tickUrl + '?after=0', {
-                                    headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
-                                })
-                                .then(function(r) { return r.json(); })
-                                .then(function(data) {
-                                    var seenSet = {};
-
-                                    if (data.read_ids && data.read_ids.length > 0) {
-                                        data.read_ids.forEach(function(id) {
-                                            seenSet[id] = true;
-                                            document.querySelectorAll('.msg-ticks[data-msg-id]').forEach(function(tickEl) {
-                                                if (String(tickEl.getAttribute('data-msg-id')) === String(id)) {
-                                                    if (tickEl.getAttribute('data-status') !== 'seen') {
-                                                        tickEl.innerHTML = buildTickHtml('seen');
-                                                        tickEl.setAttribute('data-status', 'seen');
-                                                    }
-                                                }
-                                            });
-                                        });
-                                    }
-
-                                    if (data.delivered_ids && data.delivered_ids.length > 0) {
-                                        data.delivered_ids.forEach(function(id) {
-                                            if (seenSet[id]) return;
-                                            document.querySelectorAll('.msg-ticks[data-msg-id]').forEach(function(tickEl) {
-                                                if (String(tickEl.getAttribute('data-msg-id')) === String(id)) {
-                                                    if (tickEl.getAttribute('data-status') !== 'seen' && tickEl.getAttribute('data-status') !== 'delivered') {
-                                                        tickEl.innerHTML = buildTickHtml('delivered');
-                                                        tickEl.setAttribute('data-status', 'delivered');
-                                                    }
-                                                }
-                                            });
-                                        });
-                                    }
-
-                                    // Diskloz: read_count/total_client_messages se buyer messages seen mark karo
-                                    if (typeof data.read_count !== 'undefined' && typeof data.total_client_messages !== 'undefined') {
-                                        var readCount  = parseInt(data.read_count, 10);
-                                        var totalCount = parseInt(data.total_client_messages, 10);
-
-                                        if (totalCount > 0 && readCount > 0) {
-                                            // Get all my (buyer/client) sent message ticks, ordered by DOM position
-                                            var myTicks = Array.from(document.querySelectorAll('.msg-ticks[data-msg-id]'));
-                                            var toMark  = (readCount >= totalCount) ? myTicks : myTicks.slice(0, readCount);
-                                            toMark.forEach(function(tickEl) {
-                                                if (tickEl.getAttribute('data-status') !== 'seen') {
-                                                    tickEl.innerHTML = buildTickHtml('seen');
-                                                    tickEl.setAttribute('data-status', 'seen');
-                                                }
-                                            });
-                                        }
-                                    }
-                                })
-                                .catch(function() {});
-                            }
-                            runTickPoll();
-                            setInterval(runTickPoll, 3000);
                         }
                     })();
                     </script>
@@ -1530,17 +1381,6 @@
             background: #F58D02;
             color: #fff;
         }
-
-        /* WhatsApp-style ticks */
-        .msg-ticks {
-            text-align: right;
-            margin-top: 3px;
-            line-height: 1;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-        }
-        .msg-ticks svg { display: block; }
 
         /* Message menu (3 dots) */
         .msg-menu-wrap {

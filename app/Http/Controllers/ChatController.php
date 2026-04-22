@@ -190,21 +190,6 @@ class ChatController extends Controller
             ->where('sender_type', '!=', $senderType)
             ->update(['is_read' => 1]);
 
-        // Diskloz conversation: buyer ne kholwa — Diskloz ko mark-read call karo
-        // Taake dealer ke side per Motokloz buyer ka message seen show ho
-        $convSource = session("chat_source_{$clientId}_{$dealerId}_{$inventoryId}");
-        if (!$convSource) {
-            $convSource = Chat::where('client_id', $clientId)
-                ->where('user_id', $dealerId)
-                ->where('inventory_id', $inventoryId)
-                ->orderByDesc('id')->value('source') ?? 'motokloz';
-        }
-        if ($convSource === 'diskloz' && $authId === $clientId) {
-            try {
-                app(\App\Services\DisklozChatService::class)->markRead(Auth::user()->email, $inventoryId);
-            } catch (\Exception $e) {}
-        }
-
         // Left panel ke liye conversations
         $conversations = $this->buildConversations($authId);
 
@@ -400,7 +385,6 @@ class ChatController extends Controller
 
                 if ($resp->ok()) {
                     $data = $resp->json();
-                    $hasNewReplies = false;
                     foreach ($data['messages'] ?? [] as $reply) {
                         // Only process dealer messages — skip client messages
                         if (($reply['message_by'] ?? 'dealer') !== 'dealer') {
@@ -427,23 +411,12 @@ class ChatController extends Controller
                                 'diskloz_reply_id' => $reply['id'],
                                 'time'             => $reply['time'] ?? now(),
                             ]);
-                            $hasNewReplies = true;
                         }
 
                         // Update last synced ID
                         if ($reply['id'] > $afterDiskloz) {
                             $afterDiskloz = $reply['id'];
                         }
-                    }
-
-                    // Dealer ne reply kiya → buyer ke sent messages seen mark karo
-                    if ($hasNewReplies) {
-                        Chat::where('client_id', $clientId)
-                            ->where('user_id', $dealerId)
-                            ->where('inventory_id', $inventoryId)
-                            ->where('sender_type', 'client')
-                            ->where('is_read', 0)
-                            ->update(['is_read' => 1]);
                     }
 
                     session([$sessionKey => $afterDiskloz]);
@@ -482,89 +455,6 @@ class ChatController extends Controller
         return response()->json(['messages' => $formatted, 'unread_count' => 0]);
     }
 
-    /**
-     * GET /chat/{clientId}/{dealerId}/{inventoryId}/tick-status
-     * Sender ke messages ka latest is_read status return karo (for tick updates)
-     */
-    public function tickStatus(Request $request, int $clientId, int $dealerId, int $inventoryId)
-    {
-        $authId = Auth::id();
-        if ($authId !== $clientId && $authId !== $dealerId) {
-            abort(403);
-        }
-
-        $senderType = ($authId === $clientId) ? 'client' : 'dealer';
-        $after = (int) $request->query('after', 0);
-
-        // Check if this is a Diskloz conversation
-        $conversationSource = session("chat_source_{$clientId}_{$dealerId}_{$inventoryId}");
-        if (!$conversationSource) {
-            $latestMsg = Chat::where('client_id', $clientId)
-                ->where('user_id', $dealerId)
-                ->where('inventory_id', $inventoryId)
-                ->orderByDesc('id')->first();
-            $conversationSource = $latestMsg?->source ?? 'motokloz';
-        }
-
-        // Diskloz conversation: fetch read status from Diskloz API and update local records
-        if ($conversationSource === 'diskloz' && $authId === $clientId) {
-            try {
-                $resp = Http::timeout(5)->get(
-                    $this->disklozBaseUrl() . '/api/chat/read-status',
-                    ['inventory_id' => $inventoryId, 'buyer_email' => Auth::user()->email]
-                );
-                if ($resp->ok()) {
-                    $data = $resp->json();
-                    // Only mark as read if read_count equals or exceeds total_client_messages
-                    // This means ALL client messages have been read by dealer
-                    $readCount  = (int) ($data['read_count'] ?? 0);
-                    $totalCount = (int) ($data['total_client_messages'] ?? 0);
-                    if ($totalCount > 0 && $readCount >= $totalCount) {
-                        // Mark only unread buyer messages as read
-                        Chat::where('client_id', $clientId)
-                            ->where('user_id', $dealerId)
-                            ->where('inventory_id', $inventoryId)
-                            ->where('sender_type', 'client')
-                            ->where('is_read', 0)
-                            ->update(['is_read' => 1]);
-                    }
-                }
-            } catch (\Exception $e) {}
-        }
-
-        // Return read message IDs (same logic for both Motokloz and Diskloz)
-        $readIds = Chat::where('client_id', $clientId)
-            ->where('user_id', $dealerId)
-            ->where('inventory_id', $inventoryId)
-            ->where('sender_type', $senderType)
-            ->where('is_read', 1)
-            ->where('id', '>', $after)
-            ->pluck('id');
-
-        // For Diskloz conversations: return read_count/total from LOCAL DB (already synced)
-        $disklozReadCount    = null;
-        $totalClientMessages = null;
-        if ($conversationSource === 'diskloz') {
-            $totalClientMessages = Chat::where('client_id', $clientId)
-                ->where('user_id', $dealerId)
-                ->where('inventory_id', $inventoryId)
-                ->where('sender_type', 'client')
-                ->count();
-            $disklozReadCount = Chat::where('client_id', $clientId)
-                ->where('user_id', $dealerId)
-                ->where('inventory_id', $inventoryId)
-                ->where('sender_type', 'client')
-                ->where('is_read', 1)
-                ->count();
-        }
-
-        return response()->json([
-            'read_ids'              => $readIds,
-            'delivered_ids'         => $readIds,
-            'read_count'            => $disklozReadCount,
-            'total_client_messages' => $totalClientMessages,
-        ]);
-    }
     public function deleteMessage(int $id)
     {
         $authId = Auth::id();
