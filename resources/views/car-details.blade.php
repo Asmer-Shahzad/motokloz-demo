@@ -700,8 +700,13 @@
         <div class="container row g-4 m-auto">
             <div class="container mt-5">
                 <div class="dealer-top-section" data-aos="fade-up" data-aos-duration="600">
-                    <h4 class="dealer-top-title">Similar Vehicles</h4>
-                    <p class="dealer-top-subtitle">You might also like these similar vehicles</p>
+                    @if($isFromSameDealer && $dealerName)
+                        <h4 class="dealer-top-title">More From This Dealer</h4>
+                        <p class="dealer-top-subtitle">Check out other vehicles from the same dealer</p>
+                    @else
+                        <h4 class="dealer-top-title">Similar Vehicles</h4>
+                        <p class="dealer-top-subtitle">You might also like these similar vehicles</p>
+                    @endif
                 </div>
             </div>
             <div class="row" id="relatedVehiclesContainer">

@@ -12,12 +12,49 @@ use GuzzleHttp\Psr7\MultipartStream;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserInformation;
+use App\Http\Controllers\Concerns\EnrichesVehicleLocation;
 
 class InventoryController extends Controller
 {
+
+    use EnrichesVehicleLocation;
+
+
     private function baseUrl(): string
     {
         return config('services.diskloz.base_url', env('DISKLOZ_BASE_URL', env('diskloz_base_url', '')));
+    }
+
+    public function curl_get($url): JsonResponse
+    {
+        $json = ["status" => false, "message" => "", "data" => []];
+        // $url = "https://portaldesignunit.com/terminal/agents";
+        // for sending data as json type
+        $apiUrl = $this->disklozBaseUrl() . $url;
+        $ch = curl_init($apiUrl);
+        curl_setopt(
+            $ch,
+            CURLOPT_HTTPHEADER,
+            array(
+                'Content-Type: application/json', // if the content type is json
+            )
+        );
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        $result = curl_exec($ch);
+        $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if (curl_errno($ch)) {
+            $error_msg = curl_error($ch);
+        }
+        curl_close($ch);
+        if ($status_code > 199 && $status_code < 203) {
+            $json["status"] = true;
+        }
+        $json["data"] = json_decode($result);
+        return response()->json($json);
     }
 
     public function inventory(Request $request)
@@ -110,6 +147,273 @@ class InventoryController extends Controller
     //     return view('selling', ['array' => $array] );
     // }
     
+
+    // public function inventory_product_details(Request $request, $id)
+    // {
+    //     $user = Auth::user();
+    //     $userInfo = $user->information ?? new UserInformation();
+
+    //     $response_search = Http::get($this->baseUrl() . '/api/search_by_id', [
+    //         'id' => $id
+    //     ]);
+
+    //     $searched_vehicle = json_decode($response_search->body());
+
+    //     $videos = $searched_vehicle->videos ?? [];
+
+    //     // ✅ Source check
+    //     $isMotokloz = strtolower($searched_vehicle->source ?? '') === 'motokloz';
+
+    //     $dealer = $searched_vehicle->dealer ?? null;
+    //     $dealerId = null;
+
+    //     if ($isMotokloz && !empty($searched_vehicle->client_id)) {
+    //         $clientId = $searched_vehicle->client_id;
+    //         $localUser = \App\Models\User::with('information')->where('id', $clientId)->first();
+
+    //         if ($localUser) {
+    //             $dealer = $this->buildDealerFromLocalUser($localUser);
+    //             $dealerId = $clientId;
+    //         }
+    //     } elseif (!$dealer && !empty($searched_vehicle->client_id)) {
+    //         $clientId = $searched_vehicle->client_id;
+    //         $localUser = \App\Models\User::with('information')->where('id', $clientId)->first();
+
+    //         if ($localUser) {
+    //             $dealerId = $clientId;
+    //             try {
+    //                 $dealerResponse = Http::get($this->baseUrl() . '/api/get_dealer_by_client_id', [
+    //                     'client_id' => $clientId
+    //                 ]);
+
+    //                 if ($dealerResponse->successful()) {
+    //                     $dealerData = json_decode($dealerResponse->body());
+    //                     $dealer = (!empty($dealerData) && isset($dealerData->id))
+    //                         ? $dealerData
+    //                         : $this->buildDealerFromLocalUser($localUser);
+    //                 } else {
+    //                     $dealer = $this->buildDealerFromLocalUser($localUser);
+    //                 }
+    //             } catch (\Exception $e) {
+    //                 \Log::error('Dealer fetch error: ' . $e->getMessage());
+    //                 $dealer = $this->buildDealerFromLocalUser($localUser);
+    //             }
+    //         }
+    //     } elseif ($dealer && isset($dealer->id)) {
+    //         $dealerId = $dealer->id;
+    //     }
+
+    //     $contact = $dealer->phone_no ?? null;
+
+    //     // ✅ Page title
+    //     $carYear = $searched_vehicle->year ?? '';
+    //     $carMake = $searched_vehicle->mfg_auto ?? '';
+    //     $carModel = $searched_vehicle->model ?? '';
+    //     $carTrim = $searched_vehicle->trim ?? '';
+        
+    //     $carFullTitle = trim($carYear . ' ' . $carMake . ' ' . $carModel . ' ' . $carTrim);
+        
+    //     if (empty($carFullTitle)) {
+    //         $carFullTitle = 'Vehicle Details';
+    //     }
+        
+    //     $pageTitle = 'Motokloz | ' . $carFullTitle;
+
+    //     // ✅ Get matched vehicles (same make OR same model)
+    //     $matchedVehicles = [];
+    //     if (!empty($carModel) || !empty($carMake)) {
+    //         try {
+    //             $response_matched = Http::timeout(10)->get($this->baseUrl() . '/api/search_by_model', [
+    //                 'model' => $carModel,
+    //                 'make' => $carMake,
+    //                 'exclude_id' => $id,
+    //                 'limit' => 4
+    //             ]);
+
+    //             if ($response_matched->successful()) {
+    //                 $matchedData = json_decode($response_matched->body());
+    //                 $matchedVehicles = $matchedData->data ?? [];
+    //             }
+    //         } catch (\Exception $e) {
+    //             \Log::error('Matched vehicles fetch error: ' . $e->getMessage());
+    //             $matchedVehicles = [];
+    //         }
+    //     }
+
+    //     // ✅ FALLBACK: If no matched vehicles, get dealer's own inventory
+    //     if (empty($matchedVehicles) && !empty($dealerId)) {
+    //         try {
+    //             $response_dealer = Http::timeout(10)->get($this->baseUrl() . '/api/dealer_by_id/' . $dealerId);
+
+    //             if ($response_dealer->successful()) {
+    //                 $dealerData = json_decode($response_dealer->body());
+    //                 $dealerInventory = $dealerData->data->inventory ?? [];
+                    
+    //                 // Filter out current vehicle and take 4
+    //                 $matchedVehicles = collect($dealerInventory)
+    //                     ->where('id', '!=', $id)
+    //                     ->take(4)
+    //                     ->values()
+    //                     ->toArray();
+    //             }
+    //         } catch (\Exception $e) {
+    //             \Log::error('Dealer inventory fetch error: ' . $e->getMessage());
+    //             $matchedVehicles = [];
+    //         }
+    //     }
+
+    //     // ✅ ENRICH LOCATION DATA (just like search_inventory)
+    //     $dealerLocationMap = $this->dealerLocationMap();
+    //     $motoklozUserMap   = $this->motoklozUserLocationMap();
+
+    //     // Enrich the main searched vehicle
+    //     $searched_vehicle = $this->enrichVehicleLocation($searched_vehicle, $motoklozUserMap, $dealerLocationMap);
+
+    //     // Enrich matched vehicles
+    //     $matchedVehicles = collect($matchedVehicles)->map(function ($vehicle) use ($dealerLocationMap, $motoklozUserMap) {
+    //         return $this->enrichVehicleLocation($vehicle, $motoklozUserMap, $dealerLocationMap);
+    //     })->values()->toArray();
+
+    //     return view('car-details', [
+    //         'user'             => $user,
+    //         'userInfo'         => $userInfo,
+    //         'searched_vehicle' => $searched_vehicle,
+    //         'videos'           => $videos,
+    //         'contact'          => $contact,
+    //         'dealer'           => $dealer,
+    //         'pageTitle'        => $pageTitle,
+    //         'matchedVehicles'  => $matchedVehicles,
+    //         'disklozBaseUrl'   => $this->baseUrl(),
+    //     ]);
+    // }
+
+    // ----public function inventory_product_details(Request $request, $id)
+    // {
+    //     $user = Auth::user();
+    //     $userInfo = $user->information ?? new UserInformation();
+
+    //     $response_search = Http::get($this->baseUrl() . '/api/search_by_id', [
+    //         'id' => $id
+    //     ]);
+
+    //     $searched_vehicle = json_decode($response_search->body());
+
+    //     $videos = $searched_vehicle->videos ?? [];
+
+    //     // ✅ Source check
+    //     $isMotokloz = strtolower($searched_vehicle->source ?? '') === 'motokloz';
+
+    //     $dealer = $searched_vehicle->dealer ?? null;
+    //     $dealerId = null;
+
+    //     if ($isMotokloz && !empty($searched_vehicle->client_id)) {
+    //         $clientId = $searched_vehicle->client_id;
+    //         $localUser = \App\Models\User::with('information')->where('id', $clientId)->first();
+
+    //         if ($localUser) {
+    //             $dealer = $this->buildDealerFromLocalUser($localUser);
+    //             $dealerId = $clientId;
+    //         }
+    //     } elseif (!$dealer && !empty($searched_vehicle->client_id)) {
+    //         $clientId = $searched_vehicle->client_id;
+    //         $localUser = \App\Models\User::with('information')->where('id', $clientId)->first();
+
+    //         if ($localUser) {
+    //             $dealerId = $clientId;
+    //             try {
+    //                 $dealerResponse = Http::get($this->baseUrl() . '/api/get_dealer_by_client_id', [
+    //                     'client_id' => $clientId
+    //                 ]);
+
+    //                 if ($dealerResponse->successful()) {
+    //                     $dealerData = json_decode($dealerResponse->body());
+    //                     $dealer = (!empty($dealerData) && isset($dealerData->id))
+    //                         ? $dealerData
+    //                         : $this->buildDealerFromLocalUser($localUser);
+    //                 } else {
+    //                     $dealer = $this->buildDealerFromLocalUser($localUser);
+    //                 }
+    //             } catch (\Exception $e) {
+    //                 \Log::error('Dealer fetch error: ' . $e->getMessage());
+    //                 $dealer = $this->buildDealerFromLocalUser($localUser);
+    //             }
+    //         }
+    //     } elseif ($dealer && isset($dealer->id)) {
+    //         $dealerId = $dealer->id;
+    //     }
+
+    //     $contact = $dealer->phone_no ?? null;
+
+    //     // ✅ Page title
+    //     $carYear = $searched_vehicle->year ?? '';
+    //     $carMake = $searched_vehicle->mfg_auto ?? '';
+    //     $carModel = $searched_vehicle->model ?? '';
+    //     $carTrim = $searched_vehicle->trim ?? '';
+        
+    //     $carFullTitle = trim($carYear . ' ' . $carMake . ' ' . $carModel . ' ' . $carTrim);
+        
+    //     if (empty($carFullTitle)) {
+    //         $carFullTitle = 'Vehicle Details';
+    //     }
+        
+    //     $pageTitle = 'Motokloz | ' . $carFullTitle;
+
+    //     // ✅ Get matched vehicles (same make OR same model)
+    //     $matchedVehicles = [];
+    //     if (!empty($carModel) || !empty($carMake)) {
+    //         try {
+    //             $response_matched = Http::timeout(10)->get($this->baseUrl() . '/api/search_by_model', [
+    //                 'model' => $carModel,
+    //                 'make' => $carMake,
+    //                 'exclude_id' => $id,
+    //                 'limit' => 4
+    //             ]);
+
+    //             if ($response_matched->successful()) {
+    //                 $matchedData = json_decode($response_matched->body());
+    //                 $matchedVehicles = $matchedData->data ?? [];
+    //             }
+    //         } catch (\Exception $e) {
+    //             \Log::error('Matched vehicles fetch error: ' . $e->getMessage());
+    //             $matchedVehicles = [];
+    //         }
+    //     }
+
+    //     // ✅ FALLBACK: If no matched vehicles, get dealer's own inventory
+    //     if (empty($matchedVehicles) && !empty($dealerId)) {
+    //         try {
+    //             $response_dealer = Http::timeout(10)->get($this->baseUrl() . '/api/dealer_by_id/' . $dealerId);
+
+    //             if ($response_dealer->successful()) {
+    //                 $dealerData = json_decode($response_dealer->body());
+    //                 $dealerInventory = $dealerData->data->inventory ?? [];
+                    
+    //                 // Filter out current vehicle and take 4
+    //                 $matchedVehicles = collect($dealerInventory)
+    //                     ->where('id', '!=', $id)
+    //                     ->take(4)
+    //                     ->values()
+    //                     ->toArray();
+    //             }
+    //         } catch (\Exception $e) {
+    //             \Log::error('Dealer inventory fetch error: ' . $e->getMessage());
+    //             $matchedVehicles = [];
+    //         }
+    //     }
+
+    //     return view('car-details', [
+    //         'user'             => $user,
+    //         'userInfo'         => $userInfo,
+    //         'searched_vehicle' => $searched_vehicle,
+    //         'videos'           => $videos,
+    //         'contact'          => $contact,
+    //         'dealer'           => $dealer,
+    //         'pageTitle'        => $pageTitle,
+    //         'matchedVehicles'  => $matchedVehicles,
+    //         'disklozBaseUrl'   => $this->baseUrl(),
+    //     ]);
+    // }
+
     public function inventory_product_details(Request $request, $id)
     {
         $user = Auth::user();
@@ -203,6 +507,7 @@ class InventoryController extends Controller
         }
 
         // ✅ FALLBACK: If no matched vehicles, get dealer's own inventory
+        $isFromSameDealer = false;
         if (empty($matchedVehicles) && !empty($dealerId)) {
             try {
                 $response_dealer = Http::timeout(10)->get($this->baseUrl() . '/api/dealer_by_id/' . $dealerId);
@@ -217,12 +522,40 @@ class InventoryController extends Controller
                         ->take(4)
                         ->values()
                         ->toArray();
+                    
+                    $isFromSameDealer = true;
                 }
             } catch (\Exception $e) {
                 \Log::error('Dealer inventory fetch error: ' . $e->getMessage());
                 $matchedVehicles = [];
             }
+        } elseif (!empty($matchedVehicles)) {
+            // ✅ Check if matched vehicles are from the same dealer
+            $firstVehicleDealerId = $matchedVehicles[0]->dealer_id ?? $matchedVehicles[0]->client_id ?? null;
+            $currentVehicleDealerId = $dealerId ?? $searched_vehicle->client_id ?? null;
+            
+            if ($firstVehicleDealerId && $currentVehicleDealerId && $firstVehicleDealerId == $currentVehicleDealerId) {
+                $isFromSameDealer = true;
+            }
         }
+
+        // ✅ Get dealer name for "More from this dealer" heading
+        $dealerName = null;
+        if ($isFromSameDealer && $dealer) {
+            $dealerName = $dealer->legal_name ?? $dealer->name ?? 'This Dealer';
+        }
+
+        // ✅ ENRICH LOCATION DATA (just like search_inventory)
+        $dealerLocationMap = $this->dealerLocationMap();
+        $motoklozUserMap   = $this->motoklozUserLocationMap();
+
+        // Enrich the main searched vehicle
+        $searched_vehicle = $this->enrichVehicleLocation($searched_vehicle, $motoklozUserMap, $dealerLocationMap);
+
+        // Enrich matched vehicles
+        $matchedVehicles = collect($matchedVehicles)->map(function ($vehicle) use ($dealerLocationMap, $motoklozUserMap) {
+            return $this->enrichVehicleLocation($vehicle, $motoklozUserMap, $dealerLocationMap);
+        })->values()->toArray();
 
         return view('car-details', [
             'user'             => $user,
@@ -234,6 +567,8 @@ class InventoryController extends Controller
             'pageTitle'        => $pageTitle,
             'matchedVehicles'  => $matchedVehicles,
             'disklozBaseUrl'   => $this->baseUrl(),
+            'isFromSameDealer' => $isFromSameDealer,
+            'dealerName'       => $dealerName,
         ]);
     }
 

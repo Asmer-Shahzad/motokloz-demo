@@ -398,7 +398,7 @@ function formatPrice($price) {
                                 <path d="M8 0C4.686 0 2 2.686 2 6c0 4.5 6 14 6 14s6-9.5 6-14c0-3.314-2.686-6-6-6z" fill="#ff9d00"/>
                                 <circle cx="8" cy="6" r="2.5" fill="#fff"/>
                             </svg>
-                            {{ $dealer->physical_address }}
+                            {{ $dealer->physical_address ?? 'Location Not Available'}}
                         </p>
                     </div> 
                 </div>
