@@ -67,7 +67,7 @@
                     </button>
                     <h4 class="olx-modal-title">Login with Email</h4>
 
-                    <form id="chatLoginForm" novalidate>
+                    <form id="chatLoginForm" data-ajax="true" novalidate>
                         @csrf
                         <input type="hidden" name="intended_inventory_id" id="loginIntendedInventoryId">
                         <input type="hidden" name="intended_dealer_id" id="loginIntendedDealerId">

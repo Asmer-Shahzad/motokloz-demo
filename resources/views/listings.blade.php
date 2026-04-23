@@ -113,7 +113,7 @@
                                                 <div class="col-lg-4 col-sm-6 vehicle-card" 
                                                     data-id="{{ $listing->id }}"
                                                     data-name="{{ strtolower($listing->mfg_auto ?? '') }} {{ strtolower($listing->model ?? '') }}"
-                                                    data-price="{{ $listing->price_retail_date ?? 0 }}"
+                                                    data-price="{{ $listing->disclosed_price ?? 0 }}"
                                                     data-year="{{ $listing->year ?? 0 }}">
                                                     <div class="modern-car-card shadow-sm">
                                                         <div class="car-card-top">
@@ -155,17 +155,17 @@
                                                                 <span class="distance-value">Loading...</span>
                                                             </p>
 
-                                                            <div class="car-circle-icons-group">
+                                                            <!-- <div class="car-circle-icons-group">
                                                                 <img src="/assets/images/no-accidents.png" alt="">
                                                                 <img src="/assets/images/low-mileage.png" alt="">
                                                                 <img src="/assets/images/service-plan.png" alt="">
                                                                 <img src="/assets/images/powertrain-warranty.png" alt="">
                                                                 <span class="extra-icons-count">12+</span>
-                                                            </div>
+                                                            </div> -->
 
                                                             <div class="car-price-block text-end">
                                                                 <h4 class="price-value">
-                                                                    ${{ number_format((float)($listing->price_retail_date ?? 0)) }}
+                                                                    ${{ number_format((float)($listing->disclosed_price ?? 0)) }}
                                                                 </h4>
                                                             </div>
                                                         </div>

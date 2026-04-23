@@ -254,6 +254,16 @@
     .next-btn {
         right: -50px;
     }
+    @media screen and (max-width: 767px) {
+       .prev-btn {
+        left: -10px;
+    }
+
+    /* RIGHT */
+    .next-btn {
+        right: -10px;
+    } 
+    }
 </style>
 
 
@@ -351,17 +361,17 @@
                                         <span class="distance-value">Loading...</span>
                                     </p>
 
-                                    <div class="car-circle-icons-group">
+                                    <!-- <div class="car-circle-icons-group">
                                         <img src="/assets/images/no-accidents.png" alt="">
                                         <img src="/assets/images/low-mileage.png" alt="">
                                         <img src="/assets/images/service-plan.png" alt="">
                                         <img src="/assets/images/powertrain-warranty.png" alt="">
                                         <span class="extra-icons-count">12+</span>
-                                    </div>
+                                    </div> -->
 
                                     <div class="car-price-block text-end">
                                         <h4 class="price-value">
-                                            ${{ formatPrice($recent_vehicle->price_retail_date ?? 0) }}
+                                            ${{ formatPrice($recent_vehicle->disclosed_price ?? 0) }}
                                         </h4>
                                         <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                     </div>

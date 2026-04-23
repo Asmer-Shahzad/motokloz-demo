@@ -376,3 +376,378 @@
         }
     </script>
 </div>
+
+<!-- FEATURES - RV TRAILER -->
+<h4 class="mt-4 mb-3 fw-bold">Features</h4>
+<div class="row">
+    <div class="col-md-6">
+        <!-- Slides -->
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="No Slide">
+            <label class="form-check-label">No Slide</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="1 Slide">
+            <label class="form-check-label">1 Slide</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="2 Slides">
+            <label class="form-check-label">2 Slides</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="3 Slides">
+            <label class="form-check-label">3 Slides</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="4 Slides">
+            <label class="form-check-label">4 Slides</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="5 Slides">
+            <label class="form-check-label">5 Slides</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="6 Slides">
+            <label class="form-check-label">6 Slides</label>
+        </div>
+        
+        <!-- Kitchen -->
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Kitchen">
+            <label class="form-check-label">Kitchen</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Outdoor Kitchen">
+            <label class="form-check-label">Outdoor Kitchen</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Fridge">
+            <label class="form-check-label">Fridge</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Stove">
+            <label class="form-check-label">Stove</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Microwave">
+            <label class="form-check-label">Microwave</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Dishwasher">
+            <label class="form-check-label">Dishwasher</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Drawer Dishwasher">
+            <label class="form-check-label">Drawer Dishwasher</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Wine fridge">
+            <label class="form-check-label">Wine fridge</label>
+        </div>
+        
+        <!-- Bathroom -->
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="1 Bathroom">
+            <label class="form-check-label">1 Bathroom</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Tub">
+            <label class="form-check-label">Tub</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Shower">
+            <label class="form-check-label">Shower</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Double Sinks">
+            <label class="form-check-label">Double Sinks</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Outdoor Shower">
+            <label class="form-check-label">Outdoor Shower</label>
+        </div>
+        
+        <!-- Bedrooms -->
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="1 Bedroom">
+            <label class="form-check-label">1 Bedroom</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="2 Bedrooms">
+            <label class="form-check-label">2 Bedrooms</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Walk In Closet">
+            <label class="form-check-label">Walk In Closet</label>
+        </div>
+        
+        <!-- Living Area -->
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Living Area">
+            <label class="form-check-label">Living Area</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Sofa">
+            <label class="form-check-label">Sofa</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="U Shaped Dinette">
+            <label class="form-check-label">U Shaped Dinette</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Table W/Chairs">
+            <label class="form-check-label">Table W/Chairs</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Fireplace">
+            <label class="form-check-label">Fireplace</label>
+        </div>
+        
+        <!-- Awnings -->
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="1 Awning">
+            <label class="form-check-label">1 Awning</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="2 Awnings">
+            <label class="form-check-label">2 Awnings</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="3 Awnings">
+            <label class="form-check-label">3 Awnings</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="4 Awnings">
+            <label class="form-check-label">4 Awnings</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Manual Awnings">
+            <label class="form-check-label">Manual Awnings</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Power Awnings">
+            <label class="form-check-label">Power Awnings</label>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <!-- Appliances -->
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Washer">
+            <label class="form-check-label">Washer</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Dryer">
+            <label class="form-check-label">Dryer</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Washer Dryer Prep">
+            <label class="form-check-label">Washer Dryer Prep</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Central Vaccum">
+            <label class="form-check-label">Central Vaccum</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Air Conditioning">
+            <label class="form-check-label">Air Conditioning</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Roof Vents">
+            <label class="form-check-label">Roof Vents</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Massage Seating">
+            <label class="form-check-label">Massage Seating</label>
+        </div>
+        
+        <!-- Entertainment -->
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="1 TV">
+            <label class="form-check-label">1 TV</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="2 TV">
+            <label class="form-check-label">2 TV</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="3 TV">
+            <label class="form-check-label">3 TV</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="4 TV">
+            <label class="form-check-label">4 TV</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="CD Player">
+            <label class="form-check-label">CD Player</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="GPS/Navigation">
+            <label class="form-check-label">GPS/Navigation</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Satellite Dish">
+            <label class="form-check-label">Satellite Dish</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="WiFi">
+            <label class="form-check-label">WiFi</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Outdoor Speakers">
+            <label class="form-check-label">Outdoor Speakers</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Outdoor TV">
+            <label class="form-check-label">Outdoor TV</label>
+        </div>
+        
+        <!-- Power & Electrical -->
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Gen Prep">
+            <label class="form-check-label">Gen Prep</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="1 Generator">
+            <label class="form-check-label">1 Generator</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="2 Generators">
+            <label class="form-check-label">2 Generators</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="1 Battery">
+            <label class="form-check-label">1 Battery</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="2 Batteries">
+            <label class="form-check-label">2 Batteries</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Solar Inverter Prep">
+            <label class="form-check-label">Solar Inverter Prep</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Solar Inverter">
+            <label class="form-check-label">Solar Inverter</label>
+        </div>
+        
+        <!-- Exterior -->
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Rear View Camera">
+            <label class="form-check-label">Rear View Camera</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Roof Ladder">
+            <label class="form-check-label">Roof Ladder</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Outdoor Grill">
+            <label class="form-check-label">Outdoor Grill</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Outdoor Fridge">
+            <label class="form-check-label">Outdoor Fridge</label>
+        </div>
+        
+        <!-- Axle -->
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Single Axle">
+            <label class="form-check-label">Single Axle</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Tandem Axle">
+            <label class="form-check-label">Tandem Axle</label>
+        </div>
+        <div class="form-check feature-checkbox">
+            <input class="form-check-input" type="checkbox" name="features[]" value="Triple Axle">
+            <label class="form-check-label">Triple Axle</label>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Features Section -->
+<div class="row mt-3">
+    <div class="col-12">
+        <label class="form-label fw-bold">Custom Features</label>
+        <div id="custom-features-container">
+            <!-- Dynamic custom features will appear here -->
+        </div>
+        <button type="button" class="btn btn-orange btn-sm mt-2" id="add-custom-feature-btn">
+            <i class="fas fa-plus"></i> Add Custom Feature
+        </button>
+    </div>
+</div>
+
+<!-- Custom Feature Modal -->
+<div class="modal fade" id="customFeatureModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Custom Feature</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form data-ajax="true" id="customFeatureForm">
+                    <div class="mb-3">
+                        <label class="form-label">Feature Name</label>
+                        <input type="text" class="form-control" id="custom-feature-name" placeholder="Enter feature name" required>
+                    </div>
+                    <button type="submit" class="btn btn-orange w-100">Add Feature</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+
+            // Open modal on button click
+            $('#add-custom-feature-btn').on('click', function () {
+                $('#customFeatureModal').modal('show');
+            });
+
+        // Add custom feature
+        $('#customFeatureForm').on('submit', function(e) {
+            e.preventDefault();
+
+        var featureName = $('#custom-feature-name').val().trim();
+
+        if (!featureName) {
+            alert('Please enter a feature name');
+        return;
+            }
+
+        // Create new custom feature checkbox
+        var newFeature = `
+        <div class="form-check feature-checkbox custom-feature-item">
+            <input class="form-check-input" type="checkbox" name="features[]" value="${featureName}" checked>
+                <label class="form-check-label">${featureName}</label>
+                <button type="button" class="btn btn-sm text-danger remove-feature ms-2" style="border: none; background: none;">
+                    <i class="fas fa-times"></i>
+                </button>
+        </div>
+        `;
+
+        // Add to container
+        $('#custom-features-container').append(newFeature);
+
+        // Close modal and reset form
+        $('#customFeatureModal').modal('hide');
+        $('#custom-feature-name').val('');
+        });
+
+        // Remove custom feature
+        $(document).on('click', '.remove-feature', function() {
+            $(this).closest('.custom-feature-item').remove();
+        });
+
+        // Clear modal on close
+        $('#customFeatureModal').on('hidden.bs.modal', function() {
+            $('#custom-feature-name').val('');
+        });
+        
+    });
+</script>

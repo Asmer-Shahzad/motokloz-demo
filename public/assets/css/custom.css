@@ -2284,13 +2284,7 @@ span.mto-rating-badge {
     border-radius: 24px;
 }
 
-.listing-page
-    .listing-bottom
-    .listing-main
-    .listing-head
-    .search-form
-    form
-    input {
+.listing-page .listing-bottom .listing-main .listing-head .search-form form input {
     background-color: transparent !important;
     border: 0;
     flex: 1;
@@ -2302,13 +2296,7 @@ span.mto-rating-badge {
     margin-top: 25px;
 }
 
-.listing-page
-    .listing-bottom
-    .listing-main
-    .listing-head
-    .search-form
-    form
-    button {
+.listing-page .listing-bottom .listing-main .listing-head .search-form form button {
     border: 0;
     background-color: transparent;
     padding: 0;
@@ -2319,13 +2307,7 @@ span.mto-rating-badge {
     align-items: center;
 }
 
-.listing-page
-    .listing-bottom
-    .listing-main
-    .listing-head
-    .search-form
-    form
-    input:focus-visible {
+.listing-page .listing-bottom .listing-main .listing-head .search-form form input:focus-visible {
     outline: 0;
 }
 
@@ -2598,8 +2580,7 @@ section.agent-header {
     color: var(--select-color);
 }
 
-ul.list-unstyled.service-list {
-}
+ul.list-unstyled.service-list {}
 
 ul.list-unstyled.service-list li {
     color: var(--select-color);
@@ -2609,15 +2590,13 @@ ul.list-unstyled.service-list li {
     color: var(--select-color);
 }
 
-.col-md-4.text-center.border-end {
-}
+.col-md-4.text-center.border-end {}
 
 .col-md-4.text-center.border-end p.mb-1 {
     color: var(--select-color);
 }
 
-.d-flex.align-items-center.mb-2 {
-}
+.d-flex.align-items-center.mb-2 {}
 
 .d-flex.align-items-center.mb-2 span.small {
     color: var(--select-color);
@@ -2817,11 +2796,10 @@ ul.list-unstyled.service-list li {
     color: #000;
 }
 
-h2.section-title {
-}
+h2.section-title {}
 
 .card-container input.form-control {
-    background-color: #f1f3f5;
+    /* background-color: #f1f3f5; */
     border: 1px solid #e9ecef;
 }
 
@@ -2838,20 +2816,16 @@ h2.section-title {
     /* Zaroori hai */
 
     /* Ye edges par blur/fade effect banayega */
-    -webkit-mask-image: linear-gradient(
-        to right,
-        transparent 0%,
-        black 15%,
-        black 85%,
-        transparent 100%
-    );
-    mask-image: linear-gradient(
-        to right,
-        transparent 0%,
-        black 15%,
-        black 85%,
-        transparent 100%
-    );
+    -webkit-mask-image: linear-gradient(to right,
+            transparent 0%,
+            black 15%,
+            black 85%,
+            transparent 100%);
+    mask-image: linear-gradient(to right,
+            transparent 0%,
+            black 15%,
+            black 85%,
+            transparent 100%);
 }
 
 /* Card ka size control karne ke liye */

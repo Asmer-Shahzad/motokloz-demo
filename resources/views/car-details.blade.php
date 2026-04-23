@@ -1,8 +1,62 @@
 @extends('layouts.app')
+@section('meta')
+@php
+    $year = $searched_vehicle->year ?? '';
+    $make = $searched_vehicle->mfg_auto ?? '';
+    $model = $searched_vehicle->model ?? '';
+    $trim = $searched_vehicle->trim ?? '';
+    $condition = $searched_vehicle->inventory_condition ?? '';
+    
+    // ✅ Add dots (.) between variables
+    $vehicleTitle = trim($year . ' ' . $make . ' ' . $model);
+    if (empty($vehicleTitle)) {
+        $vehicleTitle = "Vehicle for Sale | Motokloz";
+    }
+    
+    // ✅ Add dots (.) between variables
+    $vehicleDescription = trim($condition . ' ' . $year . ' ' . $make . ' ' . $model . ' ' . $trim);
+    if (empty($vehicleDescription)) {
+        $vehicleDescription = "Check out this vehicle at Motokloz. Contact us for more details and pricing.";
+    }
+    
+    $primaryImage = $searched_vehicle->primary_image ?? '';
+    $defaultImage = 'https://motokloz.com/assets/images/defaultimage.jpg';
+    $imageUrl = $defaultImage;
+    
+    if (!empty($primaryImage)) {
+        // ✅ Fix: Remove spaces from filename
+        $cleanImage = str_replace(' ', '%20', $primaryImage);
+        
+        if (str_starts_with($primaryImage, 'http')) {
+            $imageUrl = $primaryImage;
+        } else {
+            $imageUrl = 'https://diskloz.ca/admin_assets/images/inventory_images/' . $cleanImage;
+        }
+    }
+@endphp
+
+{{-- CRITICAL META TAGS --}}
+@section('title', $vehicleTitle)
+<meta name="title" content="{{ $vehicleTitle }}">
+<meta name="description" content="{{ $vehicleDescription }}">
+
+<meta property="og:url" content="{{ url()->current() }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ $vehicleTitle }}">
+<meta property="og:description" content="{{ $vehicleDescription }}">
+<meta property="og:image" content="{{ $imageUrl }}">
+<meta property="og:site_name" content="Motokloz">
+
+{{-- Twitter Card --}}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ $vehicleTitle }}">
+<meta name="twitter:description" content="{{ $vehicleDescription }}">
+<meta name="twitter:image" content="{{ $imageUrl }}">
+
+@endsection
 <script>
     const BASE_URL = "{{ env('diskloz_base_url') }}";
 </script>
-
 @section('content')
 
 @php
@@ -177,7 +231,8 @@
 <section class="mto-main-wrapper py-5">
     <div class="container">
 
-        <div class="row mb-4 align-items-end" data-aos="fade-up" data-aos-duration="600">
+        <div style="    z-index: 1;
+    position: relative;" class="row mb-4 align-items-end " data-aos="fade-up" data-aos-duration="600">
             <div class="col-lg-8">
                 <h2 class="mto-top-headline fw-bold">
                     {{ $searched_vehicle->inventory_condition ?? '' }}
@@ -208,9 +263,23 @@
                         <img src="/assets/images/Printer.png" class="me-1" alt=""> Print Details
                     </button>
 
-                    <button class="mto-pill-btn">
-                        <img src="/assets/images/SVG.png" class="me-1" alt=""> Share
-                    </button>
+                    @php
+                        $shareTitle = urlencode(trim(($searched_vehicle->year ?? '') . ' ' . ($searched_vehicle->mfg_auto ?? '') . ' ' . ($searched_vehicle->model ?? '')));
+                        $shareUrl   = urlencode(url()->current());
+                    @endphp
+                    <div style="position:relative; display:flex;">
+                        <button class="mto-pill-btn" onclick="document.getElementById('sm').classList.toggle('d-none');event.stopPropagation()">
+                            <img src="/assets/images/SVG.png" class="me-1" alt=""> Share
+                        </button>
+                        <div id="sm" class="d-none" style="position:absolute;top:calc(100% + 8px);left:0;background:#fff;border:1px solid #eee;border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,.13);z-index:200;padding:8px;display:flex;gap:8px;white-space:nowrap;">
+                            <a href="https://wa.me/?text={{ $shareTitle }}%20{{ $shareUrl }}" target="_blank" title="WhatsApp" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#25D366;color:#fff;text-decoration:none;font-size:18px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ $shareUrl }}" target="_blank" title="Facebook" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#1877F2;color:#fff;text-decoration:none;font-size:18px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+                            <a href="https://twitter.com/intent/tweet?text={{ $shareTitle }}&url={{ $shareUrl }}" target="_blank" title="Twitter/X" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#000;color:#fff;text-decoration:none;font-size:18px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                            <a href="https://www.instagram.com/" target="_blank" title="Instagram" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;text-decoration:none;font-size:18px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+                            <button onclick="navigator.clipboard.writeText(window.location.href);document.getElementById('sm').classList.add('d-none')" title="Copy Link" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#6c757d;color:#fff;border:none;cursor:pointer;font-size:18px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+                        </div>
+                    </div>
+                    <script>document.addEventListener('click',function(){var m=document.getElementById('sm');if(m)m.classList.add('d-none')});</script>
 
                     <button class="mto-pill-btn"
                         id="wishlist-btn-{{ $searched_vehicle->id }}"
@@ -314,18 +383,41 @@
             <div class="col-lg-4" data-aos="fade-left" data-aos-duration="700" data-aos-delay="100">
                 <div class="mto-sticky-side">
 
-                    <!-- Get Started -->
-                    <div class="mto-card-unit mb-4 p-4 shadow-sm">
-                        <h6 class="fw-bold mb-3">Get Started</h6>
-                        <button type="button" class="mto-btn-orange w-100 mb-3"
-                            data-bs-toggle="modal" data-bs-target="#testDriveModal">
-                            Schedule Test Drive <i class="fa-solid fa-arrow-right ms-2"></i>
-                        </button>
-                        <button type="button" class="mto-btn-black w-100"
-                            data-bs-toggle="modal" data-bs-target="#offerModal">
-                            Make An Offer Price <i class="fa-solid fa-arrow-right ms-2"></i>
-                        </button>
-                    </div>
+                    
+                    @if(strtolower($source ?? '') === 'motokloz')
+                        <div class="mto-card-unit mb-4 p-4 shadow-sm">
+
+                            <h6 class="fw-bold mb-3">Get Started</h6>
+
+                            <!-- NEW Test Drive Button -->
+                            <button type="button" class="mto-btn-orange w-100 mb-3"
+                                data-bs-toggle="modal" data-bs-target="#motoklozTestDriveModal">
+                                Schedule Test Drive <i class="fa-solid fa-car ms-2"></i>
+                            </button>
+
+                            <!-- NEW Offer Button -->
+                            <button type="button" class="mto-btn-black w-100"
+                                data-bs-toggle="modal" data-bs-target="#motoklozOfferModal">
+                                Make An Offer Price <i class="fa-solid fa-hand-holding-dollar ms-2"></i>
+                            </button>
+
+                        </div>
+                    @else
+                        <!-- Get Started -->
+                        <div class="mto-card-unit mb-4 p-4 shadow-sm">
+                            <h6 class="fw-bold mb-3">Get Started</h6>
+
+                            <button type="button" class="mto-btn-orange w-100 mb-3"
+                                data-bs-toggle="modal" data-bs-target="#testDriveModal">
+                                Schedule Test Drive <i class="fa-solid fa-car ms-2"></i>
+                            </button>
+
+                            <button type="button" class="mto-btn-black w-100"
+                                data-bs-toggle="modal" data-bs-target="#offerModal">
+                                Make An Offer Price <i class="fa-solid fa-hand-holding-dollar ms-2"></i>
+                            </button>
+                        </div>
+                    @endif
 
                     <!-- Dealer Card -->
                     <div class="mto-card-unit p-4 shadow-sm">
@@ -390,7 +482,7 @@
                                             <i class="fa-regular fa-comment me-2"></i> Chat with Dealer
                                         </button>
                                     </form>
-                                @endif
+                            @endif
                             @else
                                 <button type="button" class="mto-btn-black w-100 mt-4 mb-3 py-2"
                                     onclick="openChatLoginModal({{ $localInventoryId }}, {{ $localDealerId }}, '{{ route('chat.start') }}')">
@@ -400,7 +492,7 @@
                         @endif
 
                         {{-- Dealer Inventory Button --}}
-                        @if($dealer && !empty($dealer->id))
+                        @if($dealer && !empty($dealer->id) && $source !== 'motokloz')
                             <a href="{{ $inventoryUrl }}">
                                 <button class="mto-btn-orange w-100 py-2">
                                     Dealer's Inventory
@@ -485,6 +577,86 @@
         </div>
     </div>
 
+    <!-- Motokloz Test Drive Modal -->
+    <div class="modal fade" id="motoklozTestDriveModal" tabindex="-1" aria-labelledby="motoklozTestDriveModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="motoklozTestDriveModalLabel">Schedule Test Drive</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="motoklozTestDriveForm" data-ajax="true">
+                        @csrf
+                        <input type="hidden" name="source" value="motokloz">
+                        <input type="hidden" name="vehicle_id" value="{{ $searched_vehicle->id ?? '' }}">
+                        <input type="hidden" name="dealer_email" value="{{ $dealerEmail }}">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" name="name" id="m_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" id="m_email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" name="phone" id="m_phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Preferred Date</label>
+                            <input type="date" class="form-control" name="date" id="m_date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Message</label>
+                            <textarea class="form-control" name="message" id="m_message" rows="3" placeholder="Any additional notes..."></textarea>
+                        </div>
+                        <button type="submit" class="mto-btn-orange w-100 mb-3">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Motokloz Offer Modal -->
+    <div class="modal fade" id="motoklozOfferModal" tabindex="-1" aria-labelledby="motoklozOfferModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="motoklozOfferModalLabel">Make An Offer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="motoklozOfferForm" data-ajax="true">
+                        @csrf
+                        <input type="hidden" name="source" value="motokloz">
+                        <input type="hidden" name="vehicle_id" value="{{ $searched_vehicle->id ?? '' }}">
+                        <input type="hidden" name="dealer_email" value="{{ $dealerEmail }}">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" name="name" id="m_offer_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" id="m_offer_email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" name="phone" id="m_offer_phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Offer Price</label>
+                            <input type="number" class="form-control" name="offer_price" id="m_offer_price" required>
+                        </div>
+                        <button type="submit" class="mto-btn-orange w-100 mb-3">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Video Modal -->
     <div class="modal fade" id="videoModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -522,6 +694,13 @@
 
 // ===================== GLOBAL ERROR HANDLER =====================
 function handleAjaxError(xhr) {
+    console.error('AJAX Error Details:', {
+        status: xhr.status,
+        statusText: xhr.statusText,
+        responseText: xhr.responseText,
+        responseJSON: xhr.responseJSON
+    });
+    
     if (xhr.status === 422 && xhr.responseJSON?.errors) {
         const msgs = Object.values(xhr.responseJSON.errors).flat();
         showSnackbar(msgs.join(' | '), 'error');
@@ -545,6 +724,7 @@ function setButtonLoading($btn) {
         .data('original-html', $btn.html())
         .html('<i class="fas fa-spinner fa-spin"></i> Please wait...');
 }
+
 function resetButton($btn) {
     $btn.prop('disabled', false).html($btn.data('original-html'));
 }
@@ -555,7 +735,123 @@ $.ajaxSetup({
 });
 
 $(document).ready(function () {
+    
+    // CSRF Setup
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    
+    // Test Drive Form Submit
+    $('#motoklozTestDriveForm').on('submit', function (e) {
+        e.preventDefault();
+        
+        var $form = $(this);
+        var $btn = $form.find('button[type="submit"]');
+        
+        // Get form data
+        var formData = {
+            name: $('#m_name').val().trim(),
+            email: $('#m_email').val().trim(),
+            phone: $('#m_phone').val().trim(),
+            date: $('#m_date').val().trim(),
+            message: $('#m_message').val(),
+            source: $form.find('input[name="source"]').val(),
+            vehicle_id: $form.find('input[name="vehicle_id"]').val(),
+            dealer_email: $form.find('input[name="dealer_email"]').val()
+        };
 
+        // Validation
+        if (!formData.name || !formData.email || !formData.phone || !formData.date) {
+            showSnackbar('Please fill all required fields!', 'warning');
+            return;
+        }
+
+        // Disable button
+        var $btn = $(this).find('button[type="submit"]');
+        setButtonLoading($btn);
+
+        // Send AJAX
+        $.ajax({
+            url: "/test-drive-mail",
+            method: "POST",
+            data: formData,
+            success: function (response) {
+                showSnackbar('Test drive request sent successfully!');
+                $('#motoklozTestDriveModal').modal('hide');
+                $form[0].reset();
+            },
+            error: function (xhr) {
+                if (xhr.status === 419) {
+                    showSnackbar('Session expired. Refreshing page...', 'error');
+                    location.reload();
+                } else {
+                    showSnackbar('Error: ' + (xhr.responseJSON?.message || 'Something went wrong'), 'error');
+                }
+            },
+            complete: function () {
+                $btn.prop('disabled', false).text('Submit');
+            }
+        });
+    });
+
+    // Offer Form Submit
+    $('#motoklozOfferForm').on('submit', function (e) {
+        e.preventDefault();
+        
+        var $form = $(this);
+        var $btn = $form.find('button[type="submit"]');
+        
+        // Get form data
+        var formData = {
+            name: $('#m_offer_name').val().trim(),
+            email: $('#m_offer_email').val().trim(),
+            phone: $('#m_offer_phone').val().trim(),
+            offer_price: $('#m_offer_price').val(),
+            source: $form.find('input[name="source"]').val(),
+            vehicle_id: $form.find('input[name="vehicle_id"]').val(),
+            dealer_email: $form.find('input[name="dealer_email"]').val()
+        };
+
+        // Validation
+        if (!formData.name || !formData.email || !formData.phone || !formData.offer_price) {
+            showSnackbar('Please fill all required fields!', 'warning');
+            return;
+        }
+
+        // Disable button
+        var $btn = $(this).find('button[type="submit"]');
+        setButtonLoading($btn);
+
+        // Send AJAX
+        $.ajax({
+            url: "/offer-mail",
+            method: "POST",
+            data: formData,
+            success: function (response) {
+                showSnackbar('Offer sent successfully!');
+                $('#motoklozOfferModal').modal('hide');
+                $form[0].reset();
+            },
+            error: function (xhr) {
+                if (xhr.status === 419) {
+                    showSnackbar('Session expired. Refreshing page...', 'error');
+                    location.reload();
+                } else {
+                    showSnackbar('Error: ' + (xhr.responseJSON?.message || 'Something went wrong'), 'error');
+                }
+            },
+            complete: function () {
+                $btn.prop('disabled', false).text('Submit');
+            }
+        });
+    });
+
+});
+
+
+$(document).ready(function () {
     // ✅ dealer id — PHP se ek baar set karo
     var dealerId = {{ ($dealer && !empty($dealer->id)) ? $dealer->id : 'null' }};
     var productId = {{ $searched_vehicle->id ?? 'null' }};

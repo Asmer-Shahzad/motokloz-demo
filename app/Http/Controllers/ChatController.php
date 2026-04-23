@@ -8,10 +8,21 @@ use App\Models\User;
 use App\Services\DisklozChatService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\UserInformation;
 use Illuminate\Support\Facades\Http;
 
 class ChatController extends Controller
 {
+    private function disklozHttp(int $timeout = 5): \Illuminate\Http\Client\PendingRequest
+    {
+        $key = config('services.diskloz.api_key', env('DISKLOZ_API_KEY', ''));
+        $req = Http::timeout($timeout);
+        if ($key) {
+            $req = $req->withHeaders(['X-Api-Key' => $key]);
+        }
+        return $req;
+    }
+
     private function disklozBaseUrl(): string
     {
         return config('services.diskloz.base_url', env('DISKLOZ_BASE_URL', env('diskloz_base_url', '')));
@@ -108,12 +119,18 @@ class ChatController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
+        $userInfo = $user->information ?? new UserInformation();
+    
         $authId = Auth::id();
         $conversations = $this->buildConversations($authId);
+        
 
         return view('chat', [
             'conversations'      => $conversations,
             'activeConversation' => null,
+            'user'               => $user,
+            'userInfo'           => $userInfo,
         ]);
     }
 
@@ -123,6 +140,9 @@ class ChatController extends Controller
      */
     public function startOrGet(Request $request)
     {
+        $user = Auth::user();
+        $userInfo = $user->information ?? new UserInformation();
+
         $request->validate([
             'inventory_id' => 'required|integer',
             'dealer_id'    => 'required|integer',
@@ -145,7 +165,8 @@ class ChatController extends Controller
         // Store source in session for sendMessage to use
         session(["chat_source_{$authId}_{$dealerId}_{$inventoryId}" => $source]);
 
-        return redirect()->route('chat.show', [$authId, $dealerId, $inventoryId]);
+        // Exist kare ya na kare — sirf redirect karo (pehla message user bhejega)
+        return redirect()->route('chat.show', [$authId, $dealerId, $inventoryId,$user,$userInfo]);
     }     
 
     /**
@@ -154,6 +175,8 @@ class ChatController extends Controller
      */
     public function show(int $clientId, int $dealerId, int $inventoryId)
     {
+        $user = Auth::user();
+        $userInfo = $user->information ?? new UserInformation();
         $authId = Auth::id();
 
         // Authorization check
@@ -211,6 +234,8 @@ class ChatController extends Controller
             'clientId'           => $clientId,
             'dealerId'           => $dealerId,
             'inventoryId'        => $inventoryId,
+            'user'               => $user,
+            'userInfo'           => $userInfo,
         ]);
     }
 
@@ -286,7 +311,14 @@ class ChatController extends Controller
                     $buyerAvatar = $av;
                 } elseif (str_starts_with($av, 'uploads/') || str_starts_with($av, 'avatars/')) {
                     $buyerAvatar = url('storage/' . $av);
+                } else {
+                    // Plain filename — assume it's in storage
+                    $buyerAvatar = url('storage/' . $av);
                 }
+            }
+            // Fallback: generate avatar from name if no image available
+            if (!$buyerAvatar) {
+                $buyerAvatar = 'https://ui-avatars.com/api/?name=' . urlencode($user->name ?? 'Buyer') . '&background=F58D02&color=fff&size=128';
             }
 
             // Store local copy FIRST — instant response ke liye
@@ -338,7 +370,7 @@ class ChatController extends Controller
                 'id'           => $chat->id,
                 'message_body' => $chat->message_body,
                 'sender_type'  => $chat->sender_type,
-                'created_at'   => $chat->created_at,
+                'created_at'   => \Carbon\Carbon::parse($chat->created_at)->setTimezone('Asia/Karachi')->toIso8601String(),
                 'is_mine'      => true,
             ],
         ]);
@@ -378,7 +410,7 @@ class ChatController extends Controller
             $afterDiskloz = (int) session($sessionKey, 0);
 
             try {
-                $resp = Http::timeout(5)->get(
+                $resp = $this->disklozHttp(5)->get(
                     $this->disklozBaseUrl() . '/api/chat/replies',
                     ['inventory_id' => $inventoryId, 'buyer_email' => $buyerEmail, 'after_id' => $afterDiskloz]
                 );
@@ -542,7 +574,7 @@ class ChatController extends Controller
             $afterDiskloz = (int) session($sessionKey, 0);
 
             try {
-                $resp = Http::timeout(3)->get(
+                $resp = $this->disklozHttp(3)->get(
                     $this->disklozBaseUrl() . '/api/chat/replies',
                     ['inventory_id' => $conv->inventory_id, 'buyer_email' => $buyerEmail, 'after_id' => $afterDiskloz]
                 );

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Motokloz</title>
+    <title>@yield('title', 'Motokloz')</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="apple-mobile-web-app-title" content="Motokloz" />
@@ -31,7 +31,7 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/favicon.png') }}">
-
+     @yield('meta')
 
 </head>
 

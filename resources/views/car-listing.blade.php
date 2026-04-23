@@ -335,10 +335,6 @@
                         <div class="toolbar-right d-flex gap-2 mb-4">
                             <button type="button" class="btn-clear-filters">Clear Filters</button>
                             <select class="form-select form-select-sm tool-select" id="sortSelect">
-                                <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Name (A-Z)
-                                </option>
-                                <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Name (Z-A)
-                                </option>
                                 <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price: Low to
                                     High</option>
                                 <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Price: High
@@ -355,7 +351,7 @@
                             @foreach ($search_inventory_result as $recent_vehicle)
                                         <div class="col-lg-4 col-sm-6 vehicle-card" data-id="{{ $recent_vehicle->id }}"
                                             data-name="{{ strtolower($recent_vehicle->mfg_auto ?? '') }} {{ strtolower($recent_vehicle->model ?? '') }}"
-                                            data-price="{{ $recent_vehicle->price_retail_date ?? 0 }}"
+                                            data-price="{{ $recent_vehicle->disclosed_price ?? 0 }}"
                                             data-year="{{ $recent_vehicle->year ?? 0 }}">
                                             <div class="modern-car-card shadow-sm">
                                                 <div class="car-card-top">
@@ -405,17 +401,17 @@
                                                         <span class="distance-value">Loading...</span>
                                                     </p>
 
-                                                    <div class="car-circle-icons-group">
+                                                    <!-- <div class="car-circle-icons-group">
                                                         <img src="/assets/images/no-accidents.png" alt="">
                                                         <img src="/assets/images/low-mileage.png" alt="">
                                                         <img src="/assets/images/service-plan.png" alt="">
                                                         <img src="/assets/images/powertrain-warranty.png" alt="">
                                                         <span class="extra-icons-count">12+</span>
-                                                    </div>
+                                                    </div> -->
 
                                                     <div class="car-price-block text-end">
                                                         <h4 class="price-value">
-                                                            ${{ formatPrice($recent_vehicle->price_retail_date ?? '0') }}</h4>
+                                                            ${{ formatPrice($recent_vehicle->disclosed_price ?? '0') }}</h4>
                                                     </div>
                                                 </div>
                                             </div>

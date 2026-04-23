@@ -86,119 +86,103 @@
                     <!-- Wishlist Items -->
                     <div class="wishlist-items">
                         @foreach($favorites as $favorite)
-                        <!-- Dynamic Item -->
-                        <div class="wishlist-card mb-4" data-aos="fade-up" data-aos-duration="600">
-                            <div class="row g-0">
-                                <div class="col-md-5">
-                                    @php $detailUrl = route('inventory_product_details', $favorite->inventory->id); @endphp
-                                    <a href="{{ $detailUrl }}">
-                                        <img style="width:100%" src="{{ $favorite->inventory->primary_image 
-                                            ? (Str::startsWith($favorite->inventory->primary_image,'http') 
-                                                ? $favorite->inventory->primary_image 
-                                                : $disklozBaseUrl.'/admin_assets/images/inventory_images/'.$favorite->inventory->primary_image)
-                                            : asset('assets/images/defaultimage.jpg') }}"
-                                            alt="Vehicle Image"
-                                            class="img-fluid rounded-start wishlist-img"
-                                            onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
-                                    </a>
-                                </div>
-                                <div class="col-md-7 cards-wish-all">
-                                    <div class="card-body p-3">
-                                        <div class="d-flex justify-content-between align-items-start mb-2 badge-main">
-                                            @if(isset($favorite->inventory->discount) && $favorite->inventory->discount > 0)
-                                            <span class="discount-badge">-{{ $favorite->inventory->discount ?? '500' }}%</span>
-                                            @else
-                                            <span class="discount-badge">-{{ $favorite->inventory->discount ?? '0' }}%</span>
-                                            @endif
-                                        </div>
-                                        
-                                        <div class="rating-all d-flex align-items-center gap-2 mb-2">
-                                            <img src="/assets/images/Vector (12).png" alt="rating" width="16">
-                                            <p class="rating-all-p mb-0">
-                                                <strong>{{ $favorite->inventory->rating ?? '4.96' }}</strong> 
-                                                ({{ $favorite->inventory->reviews ?? '672' }} reviews)
-                                            </p>
-                                        </div>
-
-                                        <h5 class="card-title fw-bold mb-2">{{ $favorite->inventory->year }} {{ $favorite->inventory->mfg_auto }}
-                                        {{ $favorite->inventory->model }} {{ $favorite->inventory->trim }}</h5>
-
-                                        @php
-                                            // Location data ko sahi jagah se access karo
-                                            $dealerPostalCode = $favorite->inventory->dealer_postal_code 
-                                                ?? $favorite->dealer_postal_code 
-                                                ?? $favorite->inventory->postal_code 
-                                                ?? '';
-                                            
-                                            $dealerCity = $favorite->inventory->dealer_city 
-                                                ?? $favorite->dealer_city 
-                                                ?? $favorite->inventory->city 
-                                                ?? '';
-                                            
-                                            $dealerProvince = $favorite->inventory->dealer_province 
-                                                ?? $favorite->dealer_province 
-                                                ?? $favorite->inventory->province 
-                                                ?? '';
-                                            
-                                            $dealerCountry = $favorite->inventory->dealer_country 
-                                                ?? $favorite->dealer_country 
-                                                ?? $favorite->inventory->country 
-                                                ?? '';
-                                        @endphp
-
-                                        <p class="car-distance-away"
-                                            data-dealer-postal="{{ $dealerPostalCode }}"
-                                            data-dealer-city="{{ $dealerCity }}"
-                                            data-dealer-province="{{ $dealerProvince }}"
-                                            data-dealer-country="{{ $dealerCountry }}">
-                                            <i class="fa-solid fa-location-dot"></i>
-                                            <span class="distance-value">Loading...</span>
-                                        </p>
-
-                                        {{-- <div class="features d-flex flex-wrap gap-2 mb-3">
-                                            <span class="feature">
-                                                <img src="/assets/images/icon01.png" class="icon light-dark">
-                                                {{ $favorite->inventory->mileage ?? '0' }}
-                                            </span>
-
-                                            <span class="feature">
-                                                <img src="/assets/images/icon03.png" class="icon light-dark">
-                                                {{ $favorite->inventory->transmission ?? '' }}
-                                            </span>
-
-                                            <span class="feature">
-                                                <img src="/assets/images/drivetrains.png" alt="" class="icon light-dark"> 
-                                                {{ isset($favorite->inventory->drivetrain) ? $favorite->inventory->drivetrain : '' }}
-                                            </span>
-
-                                            <span class="feature">
-                                                <img src="/assets/images/icon02.png" class="icon light-dark">
-                                                {{ isset($favorite->inventory->power_type) ? $favorite->inventory->power_type : '' }}
-                                            </span>
-
-                                            <span class="feature">
-                                                <img src="/assets/images/icon06.png" width="20" alt="" class="icon light-dark"> 
-                                                {{ isset($favorite->inventory->body_style) ? $favorite->inventory->body_style : '' }}
-                                            </span>
-
-                                            <span class="feature suv-badge">
-                                                <img src="/assets/images/icon08.png" alt="" class="icon light-dark"> 
-                                                {{ isset($favorite->inventory->engine) ? $favorite->inventory->engine : '' }}
-                                            </span>
-                                        </div> --}}
-
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="price-wrap">
-                                                <span class="text-span">From</span>
-                                                <span class="price-span">${{ number_format((float)($favorite->inventory->price_retail_date ?? 0), 2) }}</span>
-                                                <span class="text-span">/ USD</span>
+                            @php
+                                $inventory = $favorite->inventory ?? null;
+                                
+                                // ✅ Check if this is Motokloz inventory
+                                $isMotoklozInventory = isset($inventory->source) && $inventory->source === 'Motokloz';
+                                
+                                // ✅ Get required data for modals
+                                $vehicleId = $inventory->id ?? '';
+                                $dealerId = $inventory->user_id ?? '';
+                                $dealerEmail = $inventory->dealer_email ?? '';
+                            @endphp
+                            
+                            <!-- Dynamic Item -->
+                            <div class="wishlist-card mb-4" data-aos="fade-up" data-aos-duration="600">
+                                <div class="row g-0">
+                                    <div class="col-md-5">
+                                        @php $detailUrl = route('inventory_product_details', $inventory->id); @endphp
+                                        <a href="{{ $detailUrl }}">
+                                            <img style="width:100%" src="{{ $inventory->primary_image 
+                                                ? (Str::startsWith($inventory->primary_image,'http') 
+                                                    ? $inventory->primary_image 
+                                                    : $disklozBaseUrl.'/admin_assets/images/inventory_images/'.$inventory->primary_image)
+                                                : asset('assets/images/defaultimage.jpg') }}"
+                                                alt="Vehicle Image"
+                                                class="img-fluid rounded-start wishlist-img"
+                                                onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
+                                        </a>
+                                    </div>
+                                    <div class="col-md-7 cards-wish-all">
+                                        <div class="card-body p-3">
+                                            <div class="d-flex justify-content-between align-items-start mb-2 badge-main">
+                                                @if(isset($inventory->discount) && $inventory->discount > 0)
+                                                <span class="discount-badge">-{{ $inventory->discount }}%</span>
+                                                @else
+                                                <span class="discount-badge">-{{ $inventory->discount ?? '0' }}%</span>
+                                                @endif
                                             </div>
-                                            <button class="book-btn" data-bs-toggle="modal" data-bs-target="#testDriveModal">Book Now</button>
+                                            
+                                            <div class="rating-all d-flex align-items-center gap-2 mb-2">
+                                                <img src="/assets/images/Vector (12).png" alt="rating" width="16">
+                                                <p class="rating-all-p mb-0">
+                                                    <strong>{{ $inventory->rating ?? '4.96' }}</strong> 
+                                                    ({{ $inventory->reviews ?? '672' }} reviews)
+                                                </p>
+                                            </div>
+
+                                            <h5 class="card-title fw-bold mb-2">
+                                                {{ $inventory->year }} {{ $inventory->mfg_auto }} {{ $inventory->model }} {{ $inventory->trim }}
+                                            </h5>
+
+                                            @php
+                                                $dealerPostalCode = $inventory->dealer_postal_code ?? $favorite->dealer_postal_code ?? $inventory->postal_code ?? '';
+                                                $dealerCity = $inventory->dealer_city ?? $favorite->dealer_city ?? $inventory->city ?? '';
+                                                $dealerProvince = $inventory->dealer_province ?? $favorite->dealer_province ?? $inventory->province ?? '';
+                                                $dealerCountry = $inventory->dealer_country ?? $favorite->dealer_country ?? $inventory->country ?? '';
+                                            @endphp
+
+                                            <p class="car-distance-away"
+                                                data-dealer-postal="{{ $dealerPostalCode }}"
+                                                data-dealer-city="{{ $dealerCity }}"
+                                                data-dealer-province="{{ $dealerProvince }}"
+                                                data-dealer-country="{{ $dealerCountry }}">
+                                                <i class="fa-solid fa-location-dot"></i>
+                                                <span class="distance-value">Loading...</span>
+                                            </p>
+
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="price-wrap">
+                                                    <span class="text-span">From</span>
+                                                    <span class="price-span">${{ number_format((float)($inventory->disclosed_price ?? 0), 2) }}</span>
+                                                    <span class="text-span">/ USD</span>
+                                                </div>
+                                                
+                                                @if($isMotoklozInventory)
+                                                    <!-- ✅ Motokloz Inventory Button -->
+                                                    <button class="book-btn motokloz-book-btn" 
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#motoklozTestDriveModal"
+                                                            data-vehicle-id="{{ $vehicleId }}"
+                                                            data-dealer-email="{{ $dealerEmail }}">
+                                                        Book Now
+                                                    </button>
+                                                @else
+                                                    <!-- ✅ Regular Dealer Inventory Button -->
+                                                    <button class="book-btn dealer-book-btn" 
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#testDriveModal"
+                                                            data-dealer-id="{{ $dealerId }}"
+                                                            data-product-id="{{ $vehicleId }}">
+                                                        Book Now
+                                                    </button>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         @endforeach
                     </div>
                     <div class="pagination-section mt-56">
@@ -213,7 +197,7 @@
 
         </div>
     </div>
-    <!-- Test Drive Modal -->
+    <!-- Regular Test Drive Modal (API Call) -->
     <div class="modal fade" id="testDriveModal" tabindex="-1" aria-labelledby="testDriveModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -223,31 +207,79 @@
                 </div>
                 
                 <div class="modal-body">
-                    <form data-ajax="true" id="testDriveForm">
-                        {{-- Preserve u parameter --}}
+                    <form data-ajax="true" id="regularTestDriveForm">
                         @if(request()->has('u'))
-                        <input type="hidden" name="u" value="{{ request()->get('u') }}" id="uParam">
+                        <input type="hidden" name="u" value="{{ request()->get('u') }}" id="regularUParam">
                         @endif
                         
                         <div class="mb-3">
-                            <label for="name1" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name1" name="name" required>
+                            <label for="regular_name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="regular_name" name="name" required>
                         </div>
                         <div class="mb-3">
-                            <label for="email1" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email1" name="email" required>
+                            <label for="regular_email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="regular_email" name="email" required>
                         </div>
                         <div class="mb-3">
-                            <label for="phone1" class="form-label">Phone</label>
-                            <input type="tel" class="form-control" id="phone1" name="phone" required>
+                            <label for="regular_phone" class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="regular_phone" name="phone" required>
                         </div>
                         <div class="mb-3">
-                            <label for="date1" class="form-label">Preferred Date</label>
-                            <input type="date" class="form-control" id="date1" name="book_date" required>
+                            <label for="regular_date" class="form-label">Preferred Date</label>
+                            <input type="date" class="form-control" id="regular_date" name="book_date" required>
                         </div>
                         <div class="mb-3">
-                            <label for="message1" class="form-label">Message</label>
-                            <textarea class="form-control" id="message1" name="message" rows="3" placeholder="Any additional notes..."></textarea>
+                            <label for="regular_message" class="form-label">Message</label>
+                            <textarea class="form-control" id="regular_message" name="message" rows="3" placeholder="Any additional notes..."></textarea>
+                        </div>
+                        <button type="submit" class="mto-btn-orange w-100 mb-3">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Motokloz Test Drive Modal (Email to Dealer) -->
+    <div class="modal fade" id="motoklozTestDriveModal" tabindex="-1" aria-labelledby="motoklozTestDriveModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="motoklozTestDriveModalLabel">Book Now</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body">
+                    <form data-ajax="true" id="motoklozTestDriveForm">
+                        @csrf
+                        
+                        {{-- Hidden fields for Motokloz --}}
+                        <input type="hidden" name="source" value="motokloz">
+                        <input type="hidden" name="vehicle_id" id="motokloz_vehicle_id" value="">
+                        <input type="hidden" name="dealer_email" id="motokloz_dealer_email" value="">
+                        
+                        @if(request()->has('u'))
+                        <input type="hidden" name="u" value="{{ request()->get('u') }}" id="motoklozUParam">
+                        @endif
+                        
+                        <div class="mb-3">
+                            <label for="motokloz_name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="motokloz_name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="motokloz_email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="motokloz_email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="motokloz_phone" class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="motokloz_phone" name="phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="motokloz_date" class="form-label">Preferred Date</label>
+                            <input type="date" class="form-control" id="motokloz_date" name="date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="motokloz_message" class="form-label">Message</label>
+                            <textarea class="form-control" id="motokloz_message" name="message" rows="3" placeholder="Any additional notes..."></textarea>
                         </div>
                         <button type="submit" class="mto-btn-orange w-100 mb-3">Submit</button>
                     </form>
@@ -803,6 +835,13 @@
 <script>
 $(document).ready(function(){
 
+    // CSRF Setup
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
     function handleErrors(xhr){
         if (xhr.status === 422 && xhr.responseJSON?.errors) {
             let msgs = [];
@@ -810,6 +849,9 @@ $(document).ready(function(){
                 msgs.push(messages.join(', '));
             });
             showSnackbar(msgs.join(' | '), 'error');
+        } else if (xhr.status === 419) {
+            showSnackbar('Session expired. Refreshing...', 'warning');
+            setTimeout(() => location.reload(), 1500);
         } else if (xhr.status === 500) {
             showSnackbar('Server error. Please try again later.', 'error');
         } else {
@@ -817,13 +859,24 @@ $(document).ready(function(){
         }
     }
 
-    // ================= TEST DRIVE =================
-    $('#testDriveModal form').on('submit', function(e){
+    // ✅ Populate Motokloz Modal with vehicle and dealer info
+    $('#motoklozTestDriveModal').on('show.bs.modal', function(e) {
+        var $button = $(e.relatedTarget);
+        var vehicleId = $button.data('vehicle-id');
+        var dealerEmail = $button.data('dealer-email');
+        
+        console.log('Motokloz Modal - Vehicle ID:', vehicleId, 'Dealer Email:', dealerEmail);
+        
+        $(this).find('#motokloz_vehicle_id').val(vehicleId);
+        $(this).find('#motokloz_dealer_email').val(dealerEmail);
+    });
+
+    // ================= REGULAR TEST DRIVE (API Call) =================
+    $('#regularTestDriveForm').on('submit', function(e){
         e.preventDefault();
         
-        console.log('Form submitted');
+        console.log('Regular Form submitted');
 
-        // ✅ FIX: Use $firstFavorite instead of $favorite
         @php
             $dealerId = $firstFavorite->inventory->user_id 
                 ?? $firstFavorite->inventory->dealer_id 
@@ -842,16 +895,15 @@ $(document).ready(function(){
 
         if (!dealerId || dealerId === 'null' || !productId || productId === 'null') {
             showSnackbar('Dealer or vehicle info missing. Refresh page.', 'error');
-            console.error('Missing dealer or product ID');
             return;
         }
 
         var formData = {
-            name: $('#name1').val(),
-            email: $('#email1').val(),
-            phone: $('#phone1').val(),
-            book_date: $('#date1').val(),
-            message: $('#message1').val(),
+            name: $('#regular_name').val().trim(),
+            email: $('#regular_email').val().trim(),
+            phone: $('#regular_phone').val().trim(),
+            book_date: $('#regular_date').val(),
+            message: $('#regular_message').val(),
             reason: 'Book Now',
             type: 'WEBLEAD',
             source: 'Motokloz',
@@ -862,10 +914,7 @@ $(document).ready(function(){
             lead_type: 'Test Drive'
         };
 
-        console.log('Form Data:', formData);
-
-        // Add u parameter if exists
-        var uParam = $('#uParam').val();
+        var uParam = $('#regularUParam').val();
         if (uParam) {
             formData.u = uParam;
         }
@@ -881,22 +930,14 @@ $(document).ready(function(){
             return;
         }
 
-        // UI STATE
         var $btn = $(this).find('button[type="submit"]');
         var originalText = $btn.html();
+        $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin ms-2"></i> Sending...');
 
-        $btn.prop('disabled', true)
-            .html('<i class="fas fa-spinner fa-spin ms-2"></i>');
-
-        $('#loadingSpinner').show();
-
-        // Build URL with client_id parameter
         var apiUrl = "{{ env('diskloz_base_url') }}/api/leads";
         if (uParam) {
             apiUrl += '?client_id=' + encodeURIComponent(uParam);
         }
-        
-        console.log('API URL:', apiUrl);
 
         $.ajax({
             url: apiUrl,
@@ -905,25 +946,89 @@ $(document).ready(function(){
             contentType: 'application/json',
             dataType: 'json',
             crossDomain: true,
-
             success: function(res){
                 console.log('Success:', res);
                 showSnackbar('Booking submitted!', 'success');
                 $('#testDriveModal').modal('hide');
-                $('#testDriveModal form')[0].reset();
+                $('#regularTestDriveForm')[0].reset();
             },
-
             error: function(xhr, status, error) {
                 console.error('Error:', xhr, status, error);
                 handleErrors(xhr);
             },
-
             complete: function(){
-                $btn.prop('disabled', false).text('Submit');
-                $('#loadingSpinner').hide();
+                $btn.prop('disabled', false).html('Submit');
             }
         });
     });
+
+    // ================= MOTOKLOZ TEST DRIVE (Email to Dealer) =================
+    $('#motoklozTestDriveForm').on('submit', function(e){
+        e.preventDefault();
+        
+        console.log('Motokloz Form submitted - Sending email to dealer');
+
+        var formData = {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            name: $('#motokloz_name').val().trim(),
+            email: $('#motokloz_email').val().trim(),
+            phone: $('#motokloz_phone').val().trim(),
+            date: $('#motokloz_date').val(),
+            message: $('#motokloz_message').val(),
+            source: 'motokloz',
+            vehicle_id: $('#motokloz_vehicle_id').val(),
+            dealer_email: $('#motokloz_dealer_email').val()
+        };
+
+        var uParam = $('#motoklozUParam').val();
+        if (uParam) {
+            formData.u = uParam;
+        }
+
+        console.log('Motokloz Form Data:', formData);
+
+        // Validation
+        if (!formData.name || !formData.email || !formData.phone || !formData.date) {
+            showSnackbar('All fields are required', 'warning');
+            return;
+        }
+
+        var emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            showSnackbar('Invalid email address', 'warning');
+            return;
+        }
+
+        if (!formData.dealer_email) {
+            showSnackbar('Dealer email is missing', 'error');
+            return;
+        }
+
+        var $btn = $(this).find('button[type="submit"]');
+        var originalText = $btn.html();
+        $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin ms-2"></i> Sending...');
+
+        // Send email via local route
+        $.ajax({
+            url: "/motokloz-test-drive-mail",
+            method: "POST",
+            data: formData,
+            success: function(response) {
+                console.log('Email sent successfully:', response);
+                showSnackbar('Test drive request sent to dealer!', 'success');
+                $('#motoklozTestDriveModal').modal('hide');
+                $('#motoklozTestDriveForm')[0].reset();
+            },
+            error: function(xhr) {
+                console.error('Email error:', xhr);
+                handleErrors(xhr);
+            },
+            complete: function() {
+                $btn.prop('disabled', false).html('Submit');
+            }
+        });
+    });
+
 });
 </script>
 <script>
