@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\UserInformation;
 use App\Models\User;
 use App\Http\Controllers\Concerns\EnrichesVehicleLocation;
+use App\Services\DistanceCalculation\FsaCentroidGeocoder;
 
 
 class SearchController extends Controller
@@ -76,6 +77,12 @@ class SearchController extends Controller
             'WATERSPORT'
         ];
 
+        $selectedDistance = $request->input('selected_distance', '');
+        $userLat          = $request->input('user_lat');
+        $userLng          = $request->input('user_lng');
+        $hasGps = is_numeric($userLat) && is_numeric($userLng);
+        $distanceFilterActive = $hasGps && $selectedDistance !== '' && $selectedDistance !== 'national';
+
         $apiData = [
             'selected_make' => $request->selected_make,
             'selected_year' => $request->selected_year,
@@ -91,8 +98,10 @@ class SearchController extends Controller
             'selected_seller' => $request->selected_seller, // ✅ ADD THIS
             'keywords' => $request->keywords,
             'client_id' => auth()->check() ? auth()->id() : '',
-            'page' => $request->page ?? 1,
-            'per_page' => 9,
+            // If distance filter active, fetch ALL records (page 1, huge per_page) to filter across full dataset
+            // Otherwise use normal pagination
+            'page'     => $distanceFilterActive ? 1 : (int) ($request->page ?? 1),
+            'per_page' => $distanceFilterActive ? 9999 : 9,
         ];
 
         $makeTypes = [];
@@ -102,12 +111,12 @@ class SearchController extends Controller
             'selected_asset' => $selectedAsset,
             'per_page' => 1,
         ]);
-        
+
         if ($res->successful()) {
             $inv = json_decode($res->body());
 
             /** ---------------- MAKES ---------------- */
-            switch($selectedAsset) {
+            switch ($selectedAsset) {
                 case 'AUTO':
                     $makes = $inv->filters->MfgAuto ?? [];
                     $bodyStyles = $inv->filters->BodyStyle ?? [];
@@ -173,7 +182,6 @@ class SearchController extends Controller
                     'name' => $b->name
                 ])->sortBy('name')->values()
                 : collect();
-
         } else {
             $makeTypes[$selectedAsset] = collect();
             $bodyStyleTypes[$selectedAsset] = collect();
@@ -230,15 +238,85 @@ class SearchController extends Controller
         // ✅ INDEX RESET (IMPORTANT)
         $inventoryData = $inventoryData->values();
 
+        // ─────────────────────────────────────────────
+        // DISTANCE FILTERING (GPS-based)
+        // ─────────────────────────────────────────────
+        if ($distanceFilterActive) {
+
+            $geocoder   = new FsaCentroidGeocoder();
+            $userCoords = [(float) $userLat, (float) $userLng];
+
+            if ($selectedDistance === 'provincial') {
+                // Resolve user province from GPS
+                $userProvince = $geocoder->reverseGeocodeProvince((float) $userLat, (float) $userLng);
+
+                if ($userProvince) {
+                    $inventoryData = $inventoryData->filter(function ($vehicle) use ($userProvince) {
+                        $dealerProvince = strtoupper(trim($vehicle->dealer_province ?? ''));
+                        return $dealerProvince === '' || strcasecmp($dealerProvince, $userProvince) === 0;
+                    })->values();
+                } else {
+                    Log::warning('Distance filter: could not resolve province from GPS', [
+                        'lat' => $userLat, 'lng' => $userLng,
+                    ]);
+                }
+            } else {
+                $kmLimit = (int) $selectedDistance;
+
+                if ($kmLimit > 0) {
+                    $inventoryData = $inventoryData->filter(function ($vehicle) use (
+                        $geocoder, $userCoords, $kmLimit
+                    ) {
+                        $dealerCoords = null;
+
+                        if (!empty($vehicle->dealer_postal_code)) {
+                            $dealerCoords = $geocoder->geocodePostalCode($vehicle->dealer_postal_code);
+                        }
+
+                        if ($dealerCoords === null && !empty($vehicle->dealer_city) && !empty($vehicle->dealer_province)) {
+                            $dealerCoords = $geocoder->geocodeCityProvince(
+                                $vehicle->dealer_city,
+                                $vehicle->dealer_province
+                            );
+                        }
+
+                        if ($dealerCoords === null) {
+                            return true;
+                        }
+
+                        $dist = $this->haversineDistance($userCoords, $dealerCoords);
+
+                        return $dist === null || $dist <= $kmLimit;
+                    })->values();
+                }
+            }
+        }
+
         /** ---------------- FINAL DATA ---------------- */
+
+        // When distance filter is active, we fetched all records and filtered them.
+        // Now manually paginate the filtered results.
+        $displayPerPage = 9;
+        if ($distanceFilterActive) {
+            $currentPage    = max(1, (int) ($request->page ?? 1));
+            $totalFiltered  = $inventoryData->count();
+            $pagedData      = $inventoryData->slice(($currentPage - 1) * $displayPerPage, $displayPerPage)->values();
+            $lastPage       = max(1, (int) ceil($totalFiltered / $displayPerPage));
+        } else {
+            $currentPage   = $inventory->current_page ?? 1;
+            $lastPage      = $inventory->last_page ?? 1;
+            $totalFiltered = $inventory->total ?? 0;
+            $pagedData     = $inventoryData;
+        }
+
         $data = [
             'user' => $user,
             'userInfo' => $userInfo,
-            'search_inventory_result' => $inventoryData,
-            'current_page' => $inventory->current_page ?? 1,
-            'last_page' => $inventory->last_page ?? 1,
-            'total_inventory' => $inventory->total ?? 0,
-            'per_page' => $inventory->per_page ?? 9,
+            'search_inventory_result' => $pagedData,
+            'current_page' => $currentPage,
+            'last_page' => $lastPage,
+            'total_inventory' => $totalFiltered,
+            'per_page' => $displayPerPage,
 
             'assets' => $assets,
             'makeTypes' => $makeTypes,
@@ -253,6 +331,11 @@ class SearchController extends Controller
 
             'selected_body_style' => $request->selected_body_style,
             'disklozBaseUrl' => $this->disklozBaseUrl(),
+
+            // Distance filter state passed to view
+            'selected_distance' => $selectedDistance,
+            'user_lat'          => $hasGps ? (float) $userLat : null,
+            'user_lng'          => $hasGps ? (float) $userLng : null,
         ];
 
 
@@ -265,7 +348,7 @@ class SearchController extends Controller
         try {
             // Log request
             Log::info('Test drive request received', $request->except('_token'));
-            
+
             // Validate
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
@@ -293,8 +376,8 @@ class SearchController extends Controller
             // Send email - .env se config automatically lega
             Mail::raw($emailBody, function ($message) use ($dealerEmail, $validated) {
                 $message->to($dealerEmail)
-                        ->subject('New Test Drive Request - ' . $validated['name'])
-                        ->replyTo($validated['email'], $validated['name']);
+                    ->subject('New Test Drive Request - ' . $validated['name'])
+                    ->replyTo($validated['email'], $validated['name']);
             });
 
             Log::info('Test drive email sent to: ' . $dealerEmail);
@@ -303,10 +386,9 @@ class SearchController extends Controller
                 'success' => true,
                 'message' => 'Test drive request sent successfully!'
             ]);
-
         } catch (\Exception $e) {
             Log::error('Test Drive Email Error: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to send. Please try again.'
@@ -319,7 +401,7 @@ class SearchController extends Controller
         try {
             // Log request
             Log::info('Offer request received', $request->except('_token'));
-            
+
             // Validate
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
@@ -346,8 +428,8 @@ class SearchController extends Controller
             // Send email - .env se config automatically lega
             Mail::raw($emailBody, function ($message) use ($dealerEmail, $validated) {
                 $message->to($dealerEmail)
-                        ->subject('New Offer Request - $' . number_format($validated['offer_price'], 2))
-                        ->replyTo($validated['email'], $validated['name']);
+                    ->subject('New Offer Request - $' . number_format($validated['offer_price'], 2))
+                    ->replyTo($validated['email'], $validated['name']);
             });
 
             Log::info('Offer email sent to: ' . $dealerEmail);
@@ -356,10 +438,9 @@ class SearchController extends Controller
                 'success' => true,
                 'message' => 'Offer sent successfully!'
             ]);
-
         } catch (\Exception $e) {
             Log::error('Offer Email Error: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to send. Please try again.'
@@ -370,10 +451,10 @@ class SearchController extends Controller
     public function contactMail(Request $request)
     {
         try {
-            
+
             // Log request
             Log::info('Contact form request received', $request->except('_token'));
-            
+
             // Validate
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
@@ -384,7 +465,7 @@ class SearchController extends Controller
             ]);
 
             $dealerEmail = $validated['dealer_email'];
-            
+
             Log::info('Sending contact email to: ' . $dealerEmail);
 
             // Prepare email content
@@ -404,8 +485,8 @@ class SearchController extends Controller
             // Send email
             Mail::raw($emailBody, function ($message) use ($dealerEmail, $validated) {
                 $message->to($dealerEmail)
-                        ->subject('New Contact Message - ' . $validated['name'])
-                        ->replyTo($validated['email'], $validated['name']);
+                    ->subject('New Contact Message - ' . $validated['name'])
+                    ->replyTo($validated['email'], $validated['name']);
             });
 
             Log::info('Contact email sent to: ' . $dealerEmail);
@@ -414,10 +495,9 @@ class SearchController extends Controller
                 'success' => true,
                 'message' => 'Message sent successfully!'
             ]);
-
         } catch (\Exception $e) {
             Log::error('Contact Email Error: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to send message. Error: ' . $e->getMessage()
@@ -426,15 +506,33 @@ class SearchController extends Controller
     }
 
     /**
+     * Haversine distance in km between two [lat, lng] pairs.
+     */
+    private function haversineDistance(?array $from, ?array $to): ?float
+    {
+        if ($from === null || $to === null) {
+            return null;
+        }
+        [$lat1, $lng1] = $from;
+        [$lat2, $lng2] = $to;
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLng = deg2rad($lng2 - $lng1);
+        $a = sin($dLat / 2) ** 2
+            + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLng / 2) ** 2;
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        return 6371 * $c;
+    }
+
+    /**
      * Send test drive request email to dealer
-    */
+     */
     public function MotokloztestDriveMail(Request $request)
     {
         try {
-            
+
             // Log request
             Log::info('Test Drive Request Received', $request->except('_token'));
-            
+
             // Validate
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
@@ -448,7 +546,7 @@ class SearchController extends Controller
             ]);
 
             $dealerEmail = $validated['dealer_email'];
-            
+
             Log::info('Sending test drive email to dealer: ' . $dealerEmail);
 
             // Prepare email content
@@ -461,19 +559,19 @@ class SearchController extends Controller
             $emailBody .= "Email: " . $validated['email'] . "\n";
             $emailBody .= "Phone: " . $validated['phone'] . "\n";
             $emailBody .= "Preferred Date: " . $validated['date'] . "\n\n";
-            
+
             if (!empty($validated['vehicle_id'])) {
                 $emailBody .= "Vehicle Information:\n";
                 $emailBody .= "-------------------\n";
                 $emailBody .= "Vehicle ID: " . $validated['vehicle_id'] . "\n\n";
             }
-            
+
             if (!empty($validated['message'])) {
                 $emailBody .= "Customer Message:\n";
                 $emailBody .= "-------------------\n";
                 $emailBody .= $validated['message'] . "\n\n";
             }
-            
+
             $emailBody .= "Additional Information:\n";
             $emailBody .= "-------------------\n";
             $emailBody .= "Source: " . ($validated['source'] ?? 'Motokloz Website') . "\n";
@@ -487,9 +585,9 @@ class SearchController extends Controller
             // Send email
             Mail::raw($emailBody, function ($message) use ($dealerEmail, $validated) {
                 $message->to($dealerEmail)
-                        ->subject('New Test Drive Request - ' . $validated['name'])
-                        ->from('no-reply@diskloz.com', 'Motokloz')
-                        ->replyTo($validated['email'], $validated['name']);
+                    ->subject('New Test Drive Request - ' . $validated['name'])
+                    ->from('no-reply@diskloz.com', 'Motokloz')
+                    ->replyTo($validated['email'], $validated['name']);
             });
 
             Log::info('Test drive email sent successfully to: ' . $dealerEmail);
@@ -498,27 +596,22 @@ class SearchController extends Controller
                 'success' => true,
                 'message' => 'Test drive request sent to dealer successfully!'
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('Test Drive Validation Error: ' . json_encode($e->errors()));
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
                 'errors' => $e->errors()
             ], 422);
-            
         } catch (\Exception $e) {
             Log::error('Test Drive Email Error: ' . $e->getMessage());
             Log::error('Stack trace: ' . $e->getTraceAsString());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to send email. Please try again.'
             ], 500);
         }
     }
-
-
-
 }

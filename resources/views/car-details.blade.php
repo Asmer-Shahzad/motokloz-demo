@@ -296,7 +296,7 @@
                         id="wishlist-btn-{{ $searched_vehicle->id }}"
                         onclick="toggleLike({{ $searched_vehicle->id }}, this, {{ auth()->id() ?? 'null' }})">
                         <i class="fa fa-spinner fa-spin me-1" id="wishlist-spinner-{{ $searched_vehicle->id }}"></i>
-                        <i class="far fa-heart me-1 d-none" id="wishlist-icon-{{ $searched_vehicle->id }}"></i>
+                        <i class="far fa-star me-1 d-none" id="wishlist-icon-{{ $searched_vehicle->id }}"></i>
                         Wishlist
                     </button>
                 </div>
@@ -458,15 +458,23 @@
                             <div class="mto-contact-details small fw-semibold">
                                 <div class="mb-2">
                                     <img src="/assets/images/Background (8).png" alt="phone" class="contact-icon light-dark">
-                                    Mobile: {{ $dealerPhone }}
+                                    @if($dealerPhone !== 'N/A')
+                                        Mobile: <a href="tel:{{ $dealerPhone }}" class="dealer-contact-link">{{ $dealerPhone }}</a>
+                                    @else
+                                        Mobile: N/A
+                                    @endif
                                 </div>
                                 <div class="mb-2">
                                     <img src="/assets/images/Background (10).png" alt="email" class="contact-icon light-dark">
                                     Email: {{ $dealerEmail }}
                                 </div>
                                 <div class="mb-2">
-                                    <i class="fa-brands fa-whatsapp fs-5"></i>
-                                    WhatsApp: {{ $dealerPhone }}
+                                    <img src="/assets/images/Background (11).png" alt="whatsapp" class="contact-icon light-dark">
+                                    @if($dealerPhone !== 'N/A')
+                                        WhatsApp: <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $dealerPhone) }}" target="_blank" class="dealer-contact-link">{{ $dealerPhone }}</a>
+                                    @else
+                                        WhatsApp: N/A
+                                    @endif
                                 </div>
                                 @if($searched_vehicle->dealer && $searched_vehicle->dealer->subaccount && $dealer->subaccount->twilio_phone_number)
                                     <div class="mb-2">
@@ -750,6 +758,13 @@
                                         class="img-box img-fluid"
                                         onerror="this.onerror=null;this.src='{{ $defaultImage }}';">
                                 </a>
+                                <button class="card-wishlist-btn"
+                                    id="wishlist-btn-{{ $relatedVehicle->id }}"
+                                    onclick="event.stopPropagation(); toggleLike({{ $relatedVehicle->id }}, this, {{ auth()->id() ?? 'null' }})"
+                                    title="Add to Wishlist">
+                                    <i class="fa fa-spinner fa-spin d-none" id="wishlist-spinner-{{ $relatedVehicle->id }}"></i>
+                                    <i class="far fa-star" id="wishlist-icon-{{ $relatedVehicle->id }}"></i>
+                                </button>
                                 <div class="badge-mileage">
                                     <img src="/assets/images/mile1.png" alt="Mileage" class="me-2" style="width:20px; height:12px;"> 
                                     {{ $relatedVehicle->mileage 
@@ -789,9 +804,30 @@
                                 </p>
 
                                 <div class="car-price-block text-end">
-                                    <h4 class="price-value">
-                                        ${{ number_format($relatedVehicle->disclosed_price ?? 0) }}
-                                    </h4>
+                                    @php $displayPrice = round($relatedVehicle->disclosed_price ?? 0); @endphp
+                                    @if($displayPrice > 0)
+                                        <h4 class="price-value">${{ number_format($displayPrice) }}</h4>
+                                    @else
+                                        @php
+                                            $cardPhone = null;
+                                            if (!empty($relatedVehicle->dealer->phone_no)) {
+                                                $cardPhone = $relatedVehicle->dealer->phone_no;
+                                            } elseif (!empty($relatedVehicle->dealer_phone_no)) {
+                                                $cardPhone = $relatedVehicle->dealer_phone_no;
+                                            } elseif (!empty($dealer) && !empty($dealer->phone_no)) {
+                                                $cardPhone = $dealer->phone_no;
+                                            }
+                                        @endphp
+                                        @if($cardPhone)
+                                            <a href="tel:{{ $cardPhone }}" class="price-value call-seller d-block text-decoration-none" onclick="event.stopPropagation();">
+                                                <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                            </a>
+                                        @else
+                                            <h4 class="price-value call-seller">
+                                                <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                            </h4>
+                                        @endif
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -1091,10 +1127,10 @@ $(document).ready(function () {
                     $spinner.addClass('d-none');
                     $icon.removeClass('d-none');
                     if (likedIds.has(id)) {
-                        $icon.removeClass('far').addClass('fas');
+                        $icon.removeClass('far').addClass('fas').css('color', '#f0a500');
                         $(this).addClass('active');
                     } else {
-                        $icon.removeClass('fas').addClass('far');
+                        $icon.removeClass('fas').addClass('far').css('color', '');
                         $(this).removeClass('active');
                     }
                 });
@@ -1135,11 +1171,11 @@ function toggleLike(vehicleId, element, authId) {
             if (res.success) {
                 if (isLiked) {
                     $btn.removeClass('active');
-                    $icon.removeClass('fas').addClass('far');
+                    $icon.removeClass('fas').addClass('far').css('color', '');
                     showSnackbar('Removed from wishlist.', 'info');
                 } else {
                     $btn.addClass('active');
-                    $icon.removeClass('far').addClass('fas');
+                    $icon.removeClass('far').addClass('fas').css('color', '#f0a500');
                     showSnackbar('Added to wishlist!', 'success');
                 }
             } else {

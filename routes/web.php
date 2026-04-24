@@ -86,7 +86,6 @@ Route::get('/sell', function () {
     Route::post('/chat/{clientId}/{dealerId}/{inventoryId}/send', [ChatController::class, 'sendMessage'])->name('chat.send');
     Route::get('/chat/{clientId}/{dealerId}/{inventoryId}/poll', [ChatController::class, 'pollMessages'])->name('chat.poll');
     Route::post('/chat/{clientId}/{dealerId}/{inventoryId}/read', [ChatController::class, 'markRead'])->name('chat.read');
-    Route::get('/chat/{clientId}/{dealerId}/{inventoryId}/tick-status', [ChatController::class, 'tickStatus'])->name('chat.tick');
     Route::get('/chat/{clientId}/{dealerId}/{inventoryId}/data', [ChatController::class, 'showJson'])->name('chat.show.json');
     Route::get('/agent-settings', [HomeController::class, 'agentsettings'])->name('agent.settings');
     Route::get('/agent-dashboard', [HomeController::class, 'agentdashboard'])->name('agent.dashboard');
