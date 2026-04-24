@@ -306,7 +306,7 @@ span.gt_float_switcher-arrow {
     display: flex;
     align-items: center;
     padding: 20px;
-    gap: 25px;
+    gap: 20px;
 }
 
 .filter {
@@ -351,7 +351,7 @@ select {
     outline: none;
     line-height: 22px !important;
     font-weight: 700;
-    width: 200px;
+    width: 150px;
 }
 
 /* Divider */
@@ -360,7 +360,9 @@ select {
     height: 45px;
     background: #444;
 }
-
+input.form-control {
+    color: var(--select-color) !important;
+}
 /* Price */
 .price input {
     width: 160px;
@@ -388,6 +390,7 @@ select {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex: 0 0 auto;
 }
 
 .banner-bg {
@@ -1556,12 +1559,14 @@ section.banner-car-listing {
     border-radius: 50%;
     transform: translateX(-50%);
     cursor: grab;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .15);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
     display: flex;
     align-items: center;
     justify-content: center;
     touch-action: none;
-    transition: transform .1s, box-shadow .1s;
+    transition:
+        transform 0.1s,
+        box-shadow 0.1s;
 }
 
 .pr-handle:active {
@@ -1599,7 +1604,6 @@ section.banner-car-listing {
     outline: none;
     font-size: 11px !important;
 }
-
 
 .car-distance-away {
     font-size: 14px;
