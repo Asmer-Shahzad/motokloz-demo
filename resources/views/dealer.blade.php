@@ -2,18 +2,19 @@
 
 @section('content')
 @php
-function formatPrice($price) {
-    $cleaned = str_replace(['$', ','], '', $price);
-    $number = is_numeric($cleaned) ? (float)$cleaned : 0;
-    return number_format(round($number), 0, '.', ',');
-}
+    function formatPrice($price)
+    {
+        $cleaned = str_replace(['$', ','], '', $price);
+        $number = is_numeric($cleaned) ? (float) $cleaned : 0;
+        return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
+    }
 @endphp
 
     <section class="dealer-fleet-section container">
         <div class=" my-4">
             @php
                 // Create slug from dealer name
-                $dealerName = $dealer->legal_name ?? $dealer->first_name ?? 'dealer';
+                $dealerName = $dealer->dba ?? $dealer->first_name ?? 'dealer';
                 $dealerSlug = preg_replace('/[^a-z0-9]+/', '-', strtolower($dealerName));
                 $dealerSlug = trim($dealerSlug, '-');
                 $dealerId = $dealer->id ?? 0;
@@ -48,7 +49,7 @@ function formatPrice($price) {
                             alt="Dealer"
                             onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultdealerlogo.png') }}';">
                         <div>
-                            <h3 class="mb-0 fw-bold">{{ $dealer->legal_name }}</h3>
+                            <h3 class="mb-0 fw-bold">{{ $dealer->dba }}</h3>
                             <p class="mb-3">
                                 <i class="fas fa-map-marker-alt text-warning me-1"></i>
 
@@ -90,7 +91,7 @@ function formatPrice($price) {
 
                                     <div class="help">
                                         <i class="fa-solid fa-user"></i>
-                                        <span>Need help?</span>
+                                        <span><a href="tel:+8773475569">Need help?</a></span>
                                     </div>
                                 </div>
 
@@ -176,17 +177,27 @@ function formatPrice($price) {
                                     <!-- Price Range -->
                                     <div class="price-box filter">
                                         <label>Price Range</label>
-                                        <div class="range-container">
-                                            <div class="slider-track" id="track"></div>
-                                            <input class="filter-all" type="range" min="0" max="1000000" step="10000"
-                                                value="{{ request('selected_lowest_price', 0) }}" id="slider-1" name="selected_lowest_price">
-                                            <input class="filter-all" type="range" min="0" max="1000000" step="10000"
-                                                value="{{ request('selected_highest_price', 1000000) }}" id="slider-2" name="selected_highest_price">
+
+                                        <div class="pr-track-wrap" id="prTrack">
+                                            <div class="pr-track"></div>
+                                            <div class="pr-fill" id="prFill"></div>
+                                            <div class="pr-handle" id="prHandleMin" tabindex="0" role="slider" aria-label="Minimum price">
+                                                <div class="pr-handle-inner"></div>
+                                            </div>
+                                            <div class="pr-handle" id="prHandleMax" tabindex="0" role="slider" aria-label="Maximum price">
+                                                <div class="pr-handle-inner"></div>
+                                            </div>
                                         </div>
 
-                                        <div class="values">
-                                            $ <span id="min-value"></span> - $ <span id="max-value"></span>
+                                        <div class="pr-values values">
+                                            <div class="pr-input-wrap"><input class="pr-input filter-all" id="prMinInput" type="text" inputmode="numeric"></div>
+                                            <span class="pr-sep">—</span>
+                                            <div class="pr-input-wrap"><input class="pr-input filter-all" id="prMaxInput" type="text" inputmode="numeric"></div>
                                         </div>
+
+                                        {{-- Hidden inputs for form submission --}}
+                                        <input type="hidden" id="hiddenMin" name="selected_lowest_price" value="{{ request('selected_lowest_price', 0) }}">
+                                        <input type="hidden" id="hiddenMax" name="selected_highest_price" value="{{ request('selected_highest_price', 1000000) }}">
                                     </div>
 
                                     <div class="divider"></div>
@@ -512,8 +523,13 @@ function formatPrice($price) {
                                 data-year="{{ $recent_vehicle->year ?? 0 }}">
                                 <div class="modern-car-card shadow-sm">
                                     <div class="car-card-top">
-                                        @php
-                                            $detailUrl = route('inventory_product_details', $recent_vehicle->id);
+                                        @php 
+                                            // Create a URL-friendly slug from the vehicle title
+                                            $vehicleName = $recent_vehicle->year . ' ' . 
+                                                        ($recent_vehicle->mfg_auto ?? '') . ' ' . 
+                                                        ($recent_vehicle->model ?? '');
+                                            $slug = Str::slug($vehicleName, '-');
+                                            $detailUrl = route('inventory_product_details', ['name' => $slug, 'id' => $recent_vehicle->id]);
                                         @endphp
                                         <a href="{{ $detailUrl }}">
                                             <img style="width:100%"

@@ -61,7 +61,7 @@
                                 $timeLabel = $conv['latest_at'] ? \Carbon\Carbon::parse($conv['latest_at'])->setTimezone('Asia/Karachi')->toIso8601String() : '';
                                 $op = $conv['other_party'];
                                 $dealerInfo = $conv['dealer_info'] ?? null;
-                                $opName = $dealerInfo?->legal_name
+                                $opName = $dealerInfo?->dba
                                     ?: $op?->information?->full_name
                                     ?: $op?->name
                                     ?: 'Unknown';
@@ -82,7 +82,7 @@
                                     $opAvatar = 'https://ui-avatars.com/api/?name=' . urlencode($opName) . '&background=F58D02&color=fff&size=48';
                                 }
                                 
-                                // ✅ FIXED: Dealer profile URL with slug
+                                // FIXED: Dealer profile URL with slug
                                 $otherPartyId = $conv['user_id']; // dealer is always user_id
                                 $isMotoklozDealer = !$dealerInfo && $op;
                                 
@@ -95,7 +95,8 @@
                                     : route('dealer_inventory_details', ['name' => $dealerSlug, 'id' => $otherPartyId]);
                                 
                                 // Inventory detail URL
-                                $invDetailUrl = route('inventory_product_details', $conv['inventory_id']);
+                                $invSlug = \Illuminate\Support\Str::slug($convTitle);
+                                $invDetailUrl = route('inventory_product_details', ['name' => $invSlug, 'id' => $conv['inventory_id']]);
                             @endphp
                             <a href="{{ route('chat.show', [$conv['client_id'], $conv['user_id'], $conv['inventory_id']]) }}"
                                class="chat-item {{ $isActive ? 'active' : '' }}"
@@ -166,7 +167,7 @@
                         }
                         $op = $activeConversation['other_party'];
                         $dealerInfo = $activeConversation['dealer_info'] ?? null;
-                        $opName = $dealerInfo?->legal_name
+                        $opName = $dealerInfo?->dba
                             ?: $op?->information?->full_name
                             ?: $op?->name
                             ?: 'Unknown';
@@ -191,10 +192,11 @@
                         $headerDealerId = $activeConversation['user_id'];
                         $headerIsMotokloz = !$dealerInfo && $op;
                         $headerDealerSlug = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($opName)), '-');
-    $headerDealerUrl = $headerIsMotokloz
-        ? route('dealer_inventory_details', ['name' => $headerDealerSlug, 'id' => $headerDealerId, 'source' => 'motokloz'])
-        : route('dealer_inventory_details', ['name' => $headerDealerSlug, 'id' => $headerDealerId]);
-                        $headerInvUrl = route('inventory_product_details', $inventoryId);
+                        $headerDealerUrl = $headerIsMotokloz
+                            ? route('dealer_inventory_details', ['name' => $headerDealerSlug, 'id' => $headerDealerId, 'source' => 'motokloz'])
+                            : route('dealer_inventory_details', ['name' => $headerDealerSlug, 'id' => $headerDealerId]);
+                        $headerInvSlug = \Illuminate\Support\Str::slug($invTitle);
+                        $headerInvUrl = route('inventory_product_details', ['name' => $headerInvSlug, 'id' => $inventoryId]);
                     @endphp
 
                     <!-- TOP BAR -->
@@ -227,7 +229,7 @@
 
                     <!-- INVENTORY CONTEXT BAR -->
                     <div class="inv-context-bar">
-                        <a href="{{ route('inventory_product_details', $inventoryId) }}" class="inv-context-link">
+                        <a href="{{ route('inventory_product_details', ['name' => \Illuminate\Support\Str::slug($invTitle), 'id' => $inventoryId]) }}" class="inv-context-link">
                             <div class="inv-context-img-wrap">
                                 <img src="{{ $invImg }}" alt="{{ $invTitle }}"
                                      onerror="this.src='{{ asset('assets/images/defaultimage.jpg') }}'">
@@ -242,7 +244,7 @@
                                 @endif
                             </div>
                         </a>
-                        <a href="{{ route('inventory_product_details', $inventoryId) }}" class="inv-context-view-btn">
+                        <a href="{{ route('inventory_product_details', ['name' => \Illuminate\Support\Str::slug($invTitle), 'id' => $inventoryId]) }}" class="inv-context-view-btn">
                             View Listing →
                         </a>
                     </div>

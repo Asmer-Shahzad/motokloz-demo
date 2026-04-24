@@ -53,53 +53,52 @@ class DealerProfileController extends Controller
     }
 
     public function dealer_inventory_details($name, $id, Request $request)
-{
-    // $name sirf URL ke liye (ignore karo)
-    // $id use karo database ke liye
-    
-    $user     = Auth::user();
-    $userInfo = $user->information ?? new UserInformation();
+    {
+        // $name sirf URL ke liye (ignore karo)
+        // $id use karo database ke liye
+        
+        $user     = Auth::user();
+        $userInfo = $user->information ?? new UserInformation();
 
-    $isMotokloz = $request->query('source') === 'motokloz';
+        $isMotokloz = $request->query('source') === 'motokloz';
 
-    if ($isMotokloz) {
-        $localUser = \App\Models\User::with('information')->where('id', $id)->first();
+        if ($isMotokloz) {
+            $localUser = \App\Models\User::with('information')->where('id', $id)->first();
 
-        if (!$localUser) {
+            if (!$localUser) {
+                abort(404, 'Dealer not found');
+            }
+
+            $dealer = $this->buildDealerFromLocalUser($localUser);
+
+            try {
+                $inventoryResponse = Http::get($this->disklozBaseUrl() . '/api/search_motokloz_inventory', [
+                    'client_id' => $id,
+                ]);
+
+                $inventoryData = $inventoryResponse->successful()
+                    ? ($inventoryResponse->json()['data'] ?? [])
+                    : [];
+            } catch (\Exception $e) {
+                \Log::error('Motokloz inventory fetch error: ' . $e->getMessage());
+                $inventoryData = [];
+            }
+
+            return $this->buildDealerProfileView($user, $userInfo, $dealer, $inventoryData);
+        }
+
+        $response = Http::get($this->disklozBaseUrl() . '/api/dealer_by_id/' . $id);
+
+        if (!$response->successful() || !($response->json()['status'] ?? false)) {
             abort(404, 'Dealer not found');
         }
 
-        $dealer = $this->buildDealerFromLocalUser($localUser);
-
-        try {
-            $inventoryResponse = Http::get($this->disklozBaseUrl() . '/api/search_motokloz_inventory', [
-                'client_id' => $id,
-            ]);
-
-            $inventoryData = $inventoryResponse->successful()
-                ? ($inventoryResponse->json()['data'] ?? [])
-                : [];
-        } catch (\Exception $e) {
-            \Log::error('Motokloz inventory fetch error: ' . $e->getMessage());
-            $inventoryData = [];
-        }
+        $data          = $response->json();
+        $dealer        = (object) $data['data'];
+        $inventoryData = $dealer->inventory ?? [];
 
         return $this->buildDealerProfileView($user, $userInfo, $dealer, $inventoryData);
     }
-
-    $response = Http::get($this->disklozBaseUrl() . '/api/dealer_by_id/' . $id);
-
-    if (!$response->successful() || !($response->json()['status'] ?? false)) {
-        abort(404, 'Dealer not found');
-    }
-
-    $data          = $response->json();
-    $dealer        = (object) $data['data'];
-    $inventoryData = $dealer->inventory ?? [];
-
-    return $this->buildDealerProfileView($user, $userInfo, $dealer, $inventoryData);
-}
-
 
     // ✅ Helper — view build karo
     private function buildDealerProfileView($user, $userInfo, $dealer, $inventoryData): \Illuminate\View\View
@@ -138,7 +137,7 @@ class DealerProfileController extends Controller
             'searched_vehicle' => $searched_vehicle,
             'disklozBaseUrl'   => $this->disklozBaseUrl(),
             'mapAddress'       => $mapAddress,
-            'pageTitle' => $dealer->legal_name . ' | Motokloz'  //  Set page title
+            'pageTitle' => $dealer->dba . ' | Motokloz'  //  Set page title
         ]);
     }
 
@@ -158,7 +157,7 @@ class DealerProfileController extends Controller
 
         return (object) [
             'id'               => $localUser->id,
-            'legal_name'       => $info->full_name        ?? $localUser->name ?? 'N/A',
+            'dba'       => $info->full_name        ?? $localUser->name ?? 'N/A',
             'first_name'       => $info->full_name        ?? $localUser->name ?? '',
             'last_name'        => '',
             'email'            => $localUser->email       ?? 'N/A',

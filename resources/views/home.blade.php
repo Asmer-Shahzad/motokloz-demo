@@ -87,7 +87,7 @@
                                         <div class="divider"></div>
 
                                         <!-- Price Range -->
-                                        <div class="price-box filter">
+                                        <!-- <div class="price-box filter">
                                             <label>Price Range</label>
                                             <div class="range-container">
                                                 <div class="slider-track" id="track"></div>
@@ -102,6 +102,31 @@
                                             <div class="values">
                                                 $ <span id="min-value"></span> - $ <span id="max-value"></span>
                                             </div>
+                                        </div> -->
+                                        <!-- Price Range -->
+                                        <div class="price-box filter">
+                                            <label>Price Range</label>
+
+                                            <div class="pr-track-wrap" id="prTrack">
+                                                <div class="pr-track"></div>
+                                                <div class="pr-fill" id="prFill"></div>
+                                                <div class="pr-handle" id="prHandleMin" tabindex="0" role="slider" aria-label="Minimum price">
+                                                    <div class="pr-handle-inner"></div>
+                                                </div>
+                                                <div class="pr-handle" id="prHandleMax" tabindex="0" role="slider" aria-label="Maximum price">
+                                                    <div class="pr-handle-inner"></div>
+                                                </div>
+                                            </div>
+
+                                            <div class="pr-values values">
+                                                <div class="pr-input-wrap"><input class="pr-input filter-all" id="prMinInput" type="text" inputmode="numeric"></div>
+                                                <span class="pr-sep">—</span>
+                                                <div class="pr-input-wrap"><input class="pr-input filter-all" id="prMaxInput" type="text" inputmode="numeric"></div>
+                                            </div>
+
+                                            {{-- Hidden inputs for form submission --}}
+                                            <input type="hidden" id="hiddenMin" name="selected_lowest_price" value="{{ request('selected_lowest_price', 0) }}">
+                                            <input type="hidden" id="hiddenMax" name="selected_highest_price" value="{{ request('selected_highest_price', 1000000) }}">
                                         </div>
 
                                         <div class="divider"></div>
@@ -143,9 +168,9 @@
                         </div>
 
 
-                        <div class="browse-slider">
-                            <h2>Browse By Type</h2>
-                            <p>Find The Perfect Ride For Any Occasion</p>
+                <div class="browse-slider">
+                    <h2>Start Your Best Online Search Here</h2>
+                    <p>Find The Perfect Ride For Any Occasion</p>
 
                             <div class="slider-wrapper">
 
@@ -349,28 +374,41 @@
                             <div class="modern-car-card shadow-sm">
                                 <div class="car-card-top">
                                     @php
-                                        $detailUrl = route('inventory_product_details', $recent_vehicle->id);
+                                        // Create a URL-friendly slug from the vehicle title
+                                        $vehicleName = $recent_vehicle->year . ' ' . 
+                                                    ($recent_vehicle->mfg_auto ?? '') . ' ' . 
+                                                    ($recent_vehicle->model ?? '');
+                                        $slug = Str::slug($vehicleName, '-');
+                                        $detailUrl = route('inventory_product_details', ['name' => $slug, 'id' => $recent_vehicle->id]);
                                     @endphp
 
                                     <a href="{{ $detailUrl }}">
                                         <img style="width:100%" src="{{ $recent_vehicle->primary_image
-                    ? (Str::startsWith($recent_vehicle->primary_image, 'http')
-                        ? $recent_vehicle->primary_image
-                        : $disklozBaseUrl . '/admin_assets/images/inventory_images/' . $recent_vehicle->primary_image)
-                    : asset('assets/images/defaultimage.jpg') }}" alt="Vehicle Image" class="img-box img-fluid"
+                                            ? (Str::startsWith($recent_vehicle->primary_image, 'http')
+                                                ? $recent_vehicle->primary_image
+                                                : $disklozBaseUrl . '/admin_assets/images/inventory_images/' . $recent_vehicle->primary_image)
+                                            : asset('assets/images/defaultimage.jpg') }}" alt="Vehicle Image" class="img-box img-fluid"
                                             onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
                                     </a>
-                                    <button class="card-wishlist-btn"
-                                        id="wishlist-btn-{{ $recent_vehicle->id }}"
-                                        onclick="event.stopPropagation(); toggleLike({{ $recent_vehicle->id }}, this, {{ auth()->id() ?? 'null' }})"
-                                        title="Add to Wishlist">
-                                        <i class="fa fa-spinner fa-spin d-none" id="wishlist-spinner-{{ $recent_vehicle->id }}"></i>
-                                        <i class="far fa-star" id="wishlist-icon-{{ $recent_vehicle->id }}"></i>
-                                    </button>
+                                    @if(auth()->id() !== $recent_vehicle->client_id)
+                                        {{-- ★ Wishlist Star Button --}}
+                                        <button class="card-wishlist-btn" id="wishlist-btn-{{ $recent_vehicle->id }}"
+                                            onclick="event.stopPropagation(); toggleLike({{ $recent_vehicle->id }}, this, {{ auth()->id() ?? 'null' }})"
+                                            title="Add to Wishlist">
+                                            
+                                            <i class="fa-spin fa-spinner fa d-none"
+                                                id="wishlist-spinner-{{ $recent_vehicle->id }}"></i>
+                                            
+                                            <i class="far fa-star" id="wishlist-icon-{{ $recent_vehicle->id }}"></i>
+                                        </button>
+                                    @endif
                                     <div class="badge-mileage d-flex align-items-center">
                                         <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
                                             style="width:20px; height:12px;">
-                                        {{ $recent_vehicle->mileage ? $recent_vehicle->mileage . ' km' : '0 km' }}
+                                        {{ $recent_vehicle->mileage 
+                                            ? number_format((float) trim(str_ireplace('km', '', $recent_vehicle->mileage))) . ' km'
+                                            : '0 km'
+                                        }}
                                     </div>
                                 </div>
                                 <div class="car-card-bottom">
@@ -408,29 +446,55 @@
                                                                                                             </div> -->
 
                                     <div class="car-price-block text-end">
-                                        @php $displayPrice = round($recent_vehicle->disclosed_price ?? 0); @endphp
-                                        @if($displayPrice > 0)
-                                            <h4 class="price-value">${{ formatPrice($displayPrice) }}</h4>
+
+                                        @php 
+                                            $displayPrice = $recent_vehicle->disclosed_price ?? 0; 
+                                        @endphp
+
+                                        {{-- ✅ OWNER: sirf price --}}
+                                        @if(auth()->id() === $recent_vehicle->client_id)
+
+                                            <h4 class="price-value">
+                                                ${{ formatPrice($displayPrice) }}
+                                            </h4>
+
+                                        {{-- 👥 OTHER USERS --}}
                                         @else
-                                            @php
-                                                $cardPhone = null;
-                                                if (!empty($recent_vehicle->dealer->phone_no)) {
-                                                    $cardPhone = $recent_vehicle->dealer->phone_no;
-                                                } elseif (!empty($recent_vehicle->dealer_phone_no)) {
-                                                    $cardPhone = $recent_vehicle->dealer_phone_no;
-                                                }
-                                            @endphp
-                                            @if($cardPhone)
-                                                <a href="tel:{{ $cardPhone }}" class="price-value call-seller d-block text-decoration-none" onclick="event.stopPropagation();">
-                                                    <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
-                                                </a>
-                                            @else
-                                                <h4 class="price-value call-seller">
-                                                    <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+
+                                            @if($displayPrice > 0)
+                                                <h4 class="price-value">
+                                                    ${{ formatPrice($displayPrice) }}
                                                 </h4>
+                                            @else
+
+                                                @php
+                                                    $cardPhone = null;
+
+                                                    if (!empty($recent_vehicle->dealer) && !empty($recent_vehicle->dealer->phone_no)) {
+                                                        $cardPhone = $recent_vehicle->dealer->phone_no;
+                                                    } elseif (!empty($recent_vehicle->dealer_phone_no)) {
+                                                        $cardPhone = $recent_vehicle->dealer_phone_no;
+                                                    } elseif (!empty($recent_vehicle->phone_no)) {
+                                                        $cardPhone = $recent_vehicle->phone_no;
+                                                    }
+                                                @endphp
+
+                                                @if($cardPhone)
+                                                    <a href="tel:{{ $cardPhone }}"
+                                                        class="price-value call-seller d-block text-decoration-none"
+                                                        onclick="event.stopPropagation();">
+                                                        <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                                    </a>
+                                                @else
+                                                    <h4 class="price-value call-seller">
+                                                        <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                                    </h4>
+                                                @endif
+
                                             @endif
+
                                         @endif
-                                        <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
+
                                     </div>
                                 </div>
                             </div>

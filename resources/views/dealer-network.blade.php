@@ -84,7 +84,7 @@
                     @foreach($dealers as $dealer)
                        @php
                             // ✅ All array access
-                            $legalName = $dealer['legal_name'] ?? 'Dealer';
+                            $legalName = $dealer['dba'] ?? 'Dealer';
                             $dealerId = $dealer['id'] ?? 0;
                             
                             // ✅ Small letters ke liye (strtolower, strtoupper nahi)
@@ -110,7 +110,7 @@
                                                 onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultdealerlogo.png') }}';">
 
                                             <div>
-                                                <h6 class="dealer-card-head">{{ ucwords(strtolower($dealer['legal_name'] ?? 'Name not available')) }}</h6>
+                                                <h6 class="dealer-card-head">{{ ucwords(strtolower($dealer['dba'] ?? 'Name not available')) }}</h6>
                                                 <p class="dealer-address mb-2">
                                                     {{ collect([
                                                         $dealer['physical_address'] ?? null,
