@@ -146,9 +146,10 @@
                                                     <div class="badge-mileage d-flex align-items-center">
                                                         <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
                                                             style="width:20px; height:12px;">
-                                                        {{ $listing->mileage
-                                                        ? trim(str_ireplace('km', '', $listing->mileage)) . ' km'
-                                                        : '0 km' }}
+                                                        {{ $listing->mileage 
+                                                            ? number_format((float) trim(str_ireplace('km', '', $listing->mileage))) . ' km'
+                                                            : '0 km'
+                                                        }}
                                                     </div>
                                                 </div>
                                                 <div class="car-card-bottom">

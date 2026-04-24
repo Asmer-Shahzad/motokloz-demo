@@ -2,11 +2,12 @@
 
 @section('content')
 @php
-function formatPrice($price) {
-    $cleaned = str_replace(['$', ','], '', $price);
-    $number = is_numeric($cleaned) ? (float)$cleaned : 0;
-    return number_format(round($number), 0, '.', ',');
-}
+    function formatPrice($price)
+    {
+        $cleaned = str_replace(['$', ','], '', $price);
+        $number = is_numeric($cleaned) ? (float) $cleaned : 0;
+        return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
+    }
 @endphp
 
     <section class="dealer-fleet-section container">
@@ -90,7 +91,7 @@ function formatPrice($price) {
 
                                     <div class="help">
                                         <i class="fa-solid fa-user"></i>
-                                        <span>Need help?</span>
+                                        <span><a href="tel:+8773475569">Need help?</a></span>
                                     </div>
                                 </div>
 

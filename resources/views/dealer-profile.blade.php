@@ -635,7 +635,7 @@ function formatPrice($price) {
                         <i class="fa-brands fa-whatsapp me-2 fs-5"></i>
                         <strong>WhatsApp:</strong> {{ $dealer->phone_no ?? 'N/A' }}
                     </p>
-                    @if($dealer && $dealer->subaccount && $dealer->subaccount['twilio_phone_number'])
+                    @if(!empty($dealer?->subaccount['twilio_phone_number']))
                         <p class="mb-2">
                             <img src="/assets/images/Background (11).png" width="20" alt="whatsapp" class="contact-icon light-dark me-2"> 
                             <strong>SMS:</strong> {{ $dealer->subaccount['twilio_phone_number'] }}
@@ -731,17 +731,22 @@ function formatPrice($price) {
                                             onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
                                         >
                                     </a>
-                                    <button class="card-wishlist-btn"
-                                        id="wishlist-btn-{{ $recent_vehicle->id }}"
-                                        onclick="event.stopPropagation(); toggleLike({{ $recent_vehicle->id }}, this, {{ auth()->id() ?? 'null' }})"
-                                        title="Add to Wishlist">
-                                        <i class="fa fa-spinner fa-spin d-none" id="wishlist-spinner-{{ $recent_vehicle->id }}"></i>
-                                        <i class="far fa-star" id="wishlist-icon-{{ $recent_vehicle->id }}"></i>
-                                    </button>
+                                    @if(auth()->id() !== $recent_vehicle->client_id)
+                                        {{-- ★ Wishlist Star Button --}}
+                                        <button class="card-wishlist-btn" id="wishlist-btn-{{ $recent_vehicle->id }}"
+                                            onclick="event.stopPropagation(); toggleLike({{ $recent_vehicle->id }}, this, {{ auth()->id() ?? 'null' }})"
+                                            title="Add to Wishlist">
+                                            
+                                            <i class="fa-spin fa-spinner fa d-none"
+                                                id="wishlist-spinner-{{ $recent_vehicle->id }}"></i>
+                                            
+                                            <i class="far fa-star" id="wishlist-icon-{{ $recent_vehicle->id }}"></i>
+                                        </button>
+                                    @endif
                                     <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2" style="width:20px; height:12px;"> 
                                         {{ $recent_vehicle->mileage 
-                                            ? trim(str_ireplace('km', '', $recent_vehicle->mileage)) . ' km' 
-                                            : '0 km' 
+                                            ? number_format((float) trim(str_ireplace('km', '', $recent_vehicle->mileage))) . ' km'
+                                            : '0 km'
                                         }}
                                     </div>
                                 </div>
@@ -782,29 +787,55 @@ function formatPrice($price) {
                                     </div> -->
 
                                     <div class="car-price-block text-end">
-                                        @php $displayPrice = round($recent_vehicle->disclosed_price ?? 0); @endphp
-                                        @if($displayPrice > 0)
-                                            <h4 class="price-value">${{ formatPrice($displayPrice) }}</h4>
+
+                                        @php 
+                                            $displayPrice = $recent_vehicle->disclosed_price ?? 0; 
+                                        @endphp
+
+                                        {{-- ✅ OWNER: sirf price --}}
+                                        @if(auth()->id() === $recent_vehicle->client_id)
+
+                                            <h4 class="price-value">
+                                                ${{ formatPrice($displayPrice) }}
+                                            </h4>
+
+                                        {{-- 👥 OTHER USERS --}}
                                         @else
-                                            @php
-                                                $cardPhone = null;
-                                                if (!empty($dealer) && !empty($dealer->phone_no)) {
-                                                    $cardPhone = $dealer->phone_no;
-                                                } elseif (!empty($recent_vehicle->dealer_phone_no)) {
-                                                    $cardPhone = $recent_vehicle->dealer_phone_no;
-                                                }
-                                            @endphp
-                                            @if($cardPhone)
-                                                <a href="tel:{{ $cardPhone }}" class="price-value call-seller d-block text-decoration-none" onclick="event.stopPropagation();">
-                                                    <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
-                                                </a>
-                                            @else
-                                                <h4 class="price-value call-seller">
-                                                    <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+
+                                            @if($displayPrice > 0)
+                                                <h4 class="price-value">
+                                                    ${{ formatPrice($displayPrice) }}
                                                 </h4>
+                                            @else
+
+                                                @php
+                                                    $cardPhone = null;
+
+                                                    if (!empty($recent_vehicle->dealer) && !empty($recent_vehicle->dealer->phone_no)) {
+                                                        $cardPhone = $recent_vehicle->dealer->phone_no;
+                                                    } elseif (!empty($recent_vehicle->dealer_phone_no)) {
+                                                        $cardPhone = $recent_vehicle->dealer_phone_no;
+                                                    } elseif (!empty($recent_vehicle->phone_no)) {
+                                                        $cardPhone = $recent_vehicle->phone_no;
+                                                    }
+                                                @endphp
+
+                                                @if($cardPhone)
+                                                    <a href="tel:{{ $cardPhone }}"
+                                                        class="price-value call-seller d-block text-decoration-none"
+                                                        onclick="event.stopPropagation();">
+                                                        <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                                    </a>
+                                                @else
+                                                    <h4 class="price-value call-seller">
+                                                        <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                                    </h4>
+                                                @endif
+
                                             @endif
+
                                         @endif
-                                        <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
+
                                     </div>
                                 </div>
                             </div>

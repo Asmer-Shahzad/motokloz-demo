@@ -491,9 +491,9 @@ return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
                                 <div class="badge-mileage d-flex align-items-center">
                                     <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
                                         style="width:20px; height:12px;">
-                                    {{ $recent_vehicle->mileage
-                                    ? trim(str_ireplace('km', '', $recent_vehicle->mileage)) . ' km'
-                                    : '0 km'
+                                    {{ $recent_vehicle->mileage 
+                                        ? number_format((float) trim(str_ireplace('km', '', $recent_vehicle->mileage))) . ' km'
+                                        : '0 km'
                                     }}
                                 </div>
                             </div>
