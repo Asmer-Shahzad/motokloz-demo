@@ -2741,7 +2741,7 @@ ul.list-unstyled.service-list li {
 /* Form Styling */
 .form-control,
 .form-select {
-    background-color: #f1f3f5;
+    background-color: var(--banner-bg-color) !important;
     border: 1px solid #e9ecef;
     padding: 12px;
 }
@@ -2776,9 +2776,12 @@ ul.list-unstyled.service-list li {
     border-color: #ff9800 !important;
     padding: 12px;
 }
+input.form-control::placeholder {
+    color: var(--select-color);
+}
 
 .modal-body .form-control::placeholder {
-    color: var(--select-color);
+    /* color: var(--select-color); */
 }
 
 .modal-header {
