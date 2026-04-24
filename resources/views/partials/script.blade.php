@@ -473,7 +473,7 @@ var swiper = new Swiper(".mySwiper", {
 
 
 
-<script>
+<!-- <script>
     // Wait for DOM to fully load
     document.addEventListener('DOMContentLoaded', function() {
         // Get DOM elements
@@ -551,6 +551,253 @@ var swiper = new Swiper(".mySwiper", {
         updateValues();
         fillColor();
     });
+</script> -->
+
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const MIN = 0, MAX = 1000000, STEP = 100;
+        let minVal = parseInt(document.getElementById('hiddenMin').value) || 0;
+        let maxVal = parseInt(document.getElementById('hiddenMax').value) || MAX;
+
+        const track   = document.getElementById('prTrack');
+        const fill    = document.getElementById('prFill');
+        const hMin    = document.getElementById('prHandleMin');
+        const hMax    = document.getElementById('prHandleMax');
+        const minInp  = document.getElementById('prMinInput');
+        const maxInp  = document.getElementById('prMaxInput');
+        const hidMin  = document.getElementById('hiddenMin');
+        const hidMax  = document.getElementById('hiddenMax');
+
+        const fmt     = n => new Intl.NumberFormat('en-US').format(n);
+        const unformat = s => parseInt(s.replace(/,/g, '')) || 0;
+        const snap    = v => Math.round(v / STEP) * STEP;
+        const clamp   = (v, a, b) => Math.max(a, Math.min(b, v));
+        const pct     = v => ((v - MIN) / (MAX - MIN)) * 100;
+
+        function render() {
+            hMin.style.left = pct(minVal) + '%';
+            hMax.style.left = pct(maxVal) + '%';
+            fill.style.left  = pct(minVal) + '%';
+            fill.style.width = (pct(maxVal) - pct(minVal)) + '%';
+            // ✅ ye 2 lines add karo
+            hMin.style.zIndex = minVal >= maxVal - STEP ? 3 : 1;
+            hMax.style.zIndex = minVal >= maxVal - STEP ? 1 : 3;
+            minInp.value = fmt(minVal);
+            maxInp.value = fmt(maxVal);
+            hidMin.value = minVal;
+            hidMax.value = maxVal;
+        }
+
+        function getValFromPx(clientX) {
+            const r = track.getBoundingClientRect();
+            return snap(MIN + clamp((clientX - r.left) / r.width, 0, 1) * (MAX - MIN));
+        }
+
+        function makeDraggable(handle, isMin) {
+            let active = false;
+            const start = e => { active = true; handle.style.zIndex = 10; bind(); e.preventDefault(); };
+            const move  = e => {
+                if (!active) return;
+                const cx = e.touches ? e.touches[0].clientX : e.clientX;
+                const v  = getValFromPx(cx);
+                isMin ? (minVal = clamp(v, MIN, maxVal - STEP)) : (maxVal = clamp(v, minVal + STEP, MAX));
+                render(); e.preventDefault();
+            };
+            const stop = () => { active = false; handle.style.zIndex = ''; unbind(); render(); }; // ✅ render() add kiya
+            const bind  = () => { document.addEventListener('mousemove', move); document.addEventListener('mouseup', stop); document.addEventListener('touchmove', move, { passive: false }); document.addEventListener('touchend', stop); };
+            const unbind= () => { document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', stop); document.removeEventListener('touchmove', move); document.removeEventListener('touchend', stop); };
+
+            handle.addEventListener('mousedown',  start);
+            handle.addEventListener('touchstart', start, { passive: false });
+            handle.addEventListener('keydown', e => {
+                const d = e.shiftKey ? STEP * 5 : STEP;
+                if (e.key === 'ArrowLeft')  { isMin ? (minVal = clamp(minVal - d, MIN, maxVal - STEP)) : (maxVal = clamp(maxVal - d, minVal + STEP, MAX)); render(); e.preventDefault(); }
+                if (e.key === 'ArrowRight') { isMin ? (minVal = clamp(minVal + d, MIN, maxVal - STEP)) : (maxVal = clamp(maxVal + d, minVal + STEP, MAX)); render(); e.preventDefault(); }
+            });
+        }
+
+        // Click on track to move nearest handle
+        track.addEventListener('click', e => {
+            if (e.target === hMin || e.target === hMax || e.target.parentElement === hMin || e.target.parentElement === hMax) return;
+            const v = getValFromPx(e.clientX);
+            Math.abs(v - minVal) <= Math.abs(v - maxVal)
+                ? (minVal = clamp(v, MIN, maxVal - STEP))
+                : (maxVal = clamp(v, minVal + STEP, MAX));
+            render();
+        });
+
+        // Manual text input
+        const onBlur = isMin => () => {
+            const v = snap(clamp(unformat(isMin ? minInp.value : maxInp.value), MIN, MAX));
+            isMin ? (minVal = Math.min(v, maxVal - STEP)) : (maxVal = Math.max(v, minVal + STEP));
+            render();
+        };
+        minInp.addEventListener('input', () => {
+            let v = unformat(minInp.value);
+            if (isNaN(v)) return;
+
+            minVal = clamp(v, MIN, maxVal - STEP);
+            render(true); // 👈 no formatting while typing
+        });
+
+        maxInp.addEventListener('input', () => {
+            let v = unformat(maxInp.value);
+            if (isNaN(v)) return;
+
+            maxVal = clamp(v, minVal + STEP, MAX);
+            render(true);
+        });
+        [minInp, maxInp].forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') i.blur(); }));
+
+        makeDraggable(hMin, true);
+        makeDraggable(hMax, false);
+        render();
+    });
+</script> -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const MIN = 0, MAX = 1000000, STEP = 1;
+
+    let minVal = parseInt(document.getElementById('hiddenMin').value);
+    let maxVal = parseInt(document.getElementById('hiddenMax').value);
+
+    if (isNaN(minVal)) minVal = MIN;
+    if (isNaN(maxVal)) maxVal = MAX;
+
+    const track   = document.getElementById('prTrack');
+    const fill    = document.getElementById('prFill');
+    const hMin    = document.getElementById('prHandleMin');
+    const hMax    = document.getElementById('prHandleMax');
+    const minInp  = document.getElementById('prMinInput');
+    const maxInp  = document.getElementById('prMaxInput');
+    const hidMin  = document.getElementById('hiddenMin');
+    const hidMax  = document.getElementById('hiddenMax');
+
+    const fmt = n => new Intl.NumberFormat('en-US').format(n);
+
+    const parseSafe = (val) => {
+        if (!val) return null;
+        let num = parseFloat(val.toString().replace(/,/g, ''));
+        return isNaN(num) ? null : num;
+    };
+
+    const clamp = (v,a,b) => Math.max(a, Math.min(b,v));
+    const pct = v => ((v - MIN) / (MAX - MIN)) * 100;
+
+    function render(skipFormat = false) {
+
+        hMin.style.left = pct(minVal) + '%';
+        hMax.style.left = pct(maxVal) + '%';
+
+        fill.style.left  = pct(minVal) + '%';
+        fill.style.width = (pct(maxVal) - pct(minVal)) + '%';
+
+        // overlap fix
+        if (minVal >= maxVal - STEP) {
+            hMin.style.zIndex = 3;
+            hMax.style.zIndex = 2;
+        } else {
+            hMin.style.zIndex = 2;
+            hMax.style.zIndex = 3;
+        }
+
+        if (!skipFormat) {
+            minInp.value = fmt(minVal);
+            maxInp.value = fmt(maxVal);
+        }
+
+        hidMin.value = minVal;
+        hidMax.value = maxVal;
+    }
+
+    function getValFromPx(clientX) {
+        const r = track.getBoundingClientRect();
+        return MIN + Math.max(0, Math.min(1, (clientX - r.left) / r.width)) * (MAX - MIN);
+    }
+
+    function makeDraggable(handle, isMin) {
+        let active = false;
+
+        const start = e => {
+            active = true;
+            document.addEventListener('mousemove', move);
+            document.addEventListener('mouseup', stop);
+            document.addEventListener('touchmove', move, { passive: false });
+            document.addEventListener('touchend', stop);
+            e.preventDefault();
+        };
+
+        const move = e => {
+            if (!active) return;
+
+            const cx = e.touches ? e.touches[0].clientX : e.clientX;
+            let v = getValFromPx(cx);
+
+            if (isMin) {
+                minVal = clamp(v, MIN, maxVal - STEP);
+            } else {
+                maxVal = clamp(v, minVal + STEP, MAX);
+            }
+
+            render(false);
+        };
+
+        const stop = () => {
+            active = false;
+            render();
+            document.removeEventListener('mousemove', move);
+            document.removeEventListener('mouseup', stop);
+            document.removeEventListener('touchmove', move);
+            document.removeEventListener('touchend', stop);
+        };
+
+        handle.addEventListener('mousedown', start);
+        handle.addEventListener('touchstart', start, { passive: false });
+    }
+
+    makeDraggable(hMin, true);
+    makeDraggable(hMax, false);
+
+    // click on track
+    track.addEventListener('click', e => {
+        const v = getValFromPx(e.clientX);
+
+        if (Math.abs(v - minVal) < Math.abs(v - maxVal)) {
+            minVal = clamp(v, MIN, maxVal - STEP);
+        } else {
+            maxVal = clamp(v, minVal + STEP, MAX);
+        }
+
+        render();
+    });
+
+    // 🔥 LIVE INPUT FIX (SMOOTH)
+    minInp.addEventListener('input', () => {
+        let v = parseSafe(minInp.value);
+
+        if (v === null) return; // allow typing
+
+        minVal = clamp(v, MIN, maxVal - STEP);
+        render(true);
+    });
+
+    maxInp.addEventListener('input', () => {
+        let v = parseSafe(maxInp.value);
+
+        if (v === null) return;
+
+        maxVal = clamp(v, minVal + STEP, MAX);
+        render(true);
+    });
+
+    // blur → format nicely
+    minInp.addEventListener('blur', () => render());
+    maxInp.addEventListener('blur', () => render());
+
+    render(); // initial load
+});
 </script>
 
 <script>

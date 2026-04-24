@@ -109,7 +109,17 @@
                                             data-year="{{ $listing->year ?? 0 }}">
                                             <div class="modern-car-card shadow-sm">
                                                 <div class="car-card-top" style="position: relative;">
-                                                    <a href="{{ route('inventory_product_details', $listing->id) }}">
+                                                    @php
+                                                        // Create a URL-friendly slug from the vehicle title    
+                                                        $vehicleName = trim(
+                                                            ($listing->year ?? '') . ' ' . 
+                                                            ($listing->mfg_auto ?? '') . ' ' . 
+                                                            ($listing->model ?? '')
+                                                        );
+                                                        $slug = $vehicleName ? Str::slug($vehicleName, '-') : 'vehicle';
+                                                        $detailUrl = route('inventory_product_details', ['name' => $slug, 'id' => $listing->id]);
+                                                    @endphp
+                                                    <a href="{{ $detailUrl }}">
                                                         <img style="width:100%" src="{{ $listing->primary_image
                                                                 ? (Str::startsWith($listing->primary_image, 'http')
                                                                     ? $listing->primary_image

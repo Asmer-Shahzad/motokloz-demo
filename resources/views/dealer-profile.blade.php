@@ -11,7 +11,7 @@
     $source     = request()->query('source', 'diskloz');
     $isMotokloz = $source === 'motokloz';
 @endphp
-@section('title', 'Motokloz | ' . $dealer->legal_name)
+@section('title', 'Motokloz | ' . $dealer->dba)
 @section('content')
 
     <!-- DEALER PROFILE BANNER — Google Maps Embed -->
@@ -63,7 +63,7 @@
 
                             <div>
                                 <h3 class="mb-3 fw-bold">
-                                    {{$dealer->legal_name}}
+                                    {{$dealer->dba}}
                                     <!--{{ $dealer->first_name }} {{ $dealer->last_name }}-->
                                 </h3>
                                 <p class="mb-3">
@@ -632,9 +632,15 @@
                         <strong>Email:</strong> {{ $dealer->email ?? 'N/A' }}
                     </p>
                     <p class="mb-2">
-                        <img src="/assets/images/Background (11).png" width="20" alt="whatsapp" class="contact-icon light-dark me-2"> 
+                        <i class="fa-brands fa-whatsapp me-2 fs-5"></i>
                         <strong>WhatsApp:</strong> {{ $dealer->phone_no ?? 'N/A' }}
                     </p>
+                    @if($dealer && $dealer->subaccount && $dealer->subaccount['twilio_phone_number'])
+                        <p class="mb-2">
+                            <img src="/assets/images/Background (11).png" width="20" alt="whatsapp" class="contact-icon light-dark me-2"> 
+                            <strong>SMS:</strong> {{ $dealer->subaccount['twilio_phone_number'] }}
+                        </p>
+                    @endif
                     {{-- <p class="mb-2">
                         <img src="/assets/images/Background (12).png" width="20" alt="fax" class="contact-icon light-dark me-2">
                         <strong>Fax:</strong> {{ $dealer->phone_no ?? 'N/A' }}
@@ -701,8 +707,12 @@
                                     }
                                     @endphp --}}
                                     @php
-                                        $detailUrl = route('inventory_product_details', $recent_vehicle->id);
-
+                                        // Create a URL-friendly slug from the vehicle title
+                                        $vehicleName = $recent_vehicle->year . ' ' . 
+                                                    ($recent_vehicle->mfg_auto ?? '') . ' ' . 
+                                                    ($recent_vehicle->model ?? '');
+                                        $slug = Str::slug($vehicleName, '-');
+                                        $detailUrl = route('inventory_product_details', ['name' => $slug, 'id' => $recent_vehicle->id]);
                                         $defaultImage = asset('assets/images/defaultimage.jpg');
 
                                         $img = $recent_vehicle->primary_image

@@ -39,7 +39,8 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-lg-2">
+                <!-- Hide Footer Right Side -->
+                <!-- <div class="col-lg-2">
                     <h4>Company</h4>
                     <ul>
                         <li><a href="/coming-soon">About Us</a></li>
@@ -52,7 +53,7 @@
                     </ul>
                 </div>
 
-                <!--<div class="col-lg-2">
+                <div class="col-lg-2">
                         <h4>Our Partners</h4>
                     <ul>
                         <li><a href="/coming-soon">Affiliates</a></li>
@@ -63,7 +64,7 @@
                         <li><a href="/coming-soon">Work with us</a></li>
                         <li><a href="/coming-soon">Advertise with us</a></li>
                     </ul>
-                </div> -->
+                </div>
                 <div class="col-lg-2">
                     <h4>Our Services</h4>
                     <ul>
@@ -100,7 +101,7 @@
                             <a href="javascript:void(0)">Dealer Support</a>
                         </li>
                     </ul>
-                </div>
+                </div> -->
 
             </div>
         </div>

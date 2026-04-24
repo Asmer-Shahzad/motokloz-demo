@@ -102,7 +102,14 @@
                             <div class="wishlist-card mb-4" data-aos="fade-up" data-aos-duration="600">
                                 <div class="row g-0">
                                     <div class="col-md-5">
-                                        @php $detailUrl = route('inventory_product_details', $inventory->id); @endphp
+                                        @php
+                                            // Create a URL-friendly slug from the vehicle title
+                                            $vehicleName = $inventory->year . ' ' . 
+                                                        ($inventory->mfg_auto ?? '') . ' ' . 
+                                                        ($inventory->model ?? '');
+                                            $slug = Str::slug($vehicleName, '-');
+                                            $detailUrl = route('inventory_product_details', ['name' => $slug, 'id' => $inventory->id]);
+                                        @endphp
                                         <a href="{{ $detailUrl }}">
                                             <img style="width:100%" src="{{ $inventory->primary_image 
                                                 ? (Str::startsWith($inventory->primary_image,'http') 

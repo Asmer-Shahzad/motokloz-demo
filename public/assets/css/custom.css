@@ -1516,6 +1516,90 @@ section.banner-car-listing {
     color: #f58d02;
 }
 
+.pr-track-wrap {
+    position: relative;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    /* margin-bottom: 1rem; */
+}
+
+.price-box.filter {
+    max-width: 160px;
+}
+
+.pr-track {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #d9d9d9;
+    border-radius: 2px;
+}
+
+.pr-fill {
+    position: absolute;
+    height: 4px;
+    background: #f7941d;
+    border-radius: 2px;
+}
+
+.pr-handle {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: #f7941d;
+    border: 2px solid #f7941d;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    cursor: grab;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+    transition: transform .1s, box-shadow .1s;
+}
+
+.pr-handle:active {
+    cursor: grabbing;
+    transform: translateX(-50%) scale(1.2);
+}
+
+.pr-handle-inner {
+    width: 7px;
+    height: 7px;
+    background: #f7941d;
+    border-radius: 50%;
+}
+
+.pr-values {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pr-input-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    /* gap: 4px; */
+    /* border: 1px solid #ddd; */
+    border-radius: 6px;
+    padding: 6px 3px;
+}
+
+.pr-input {
+    border: none;
+    background: transparent;
+    width: 100%;
+    outline: none;
+    font-size: 11px !important;
+}
+
+
 .car-distance-away {
     font-size: 14px;
     margin-bottom: 22px;
@@ -2910,11 +2994,11 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .values {
-    margin-top: 10px;
+    /* margin-top: 10px; */
     font-weight: 600;
-    background: var(--bg-value-color);
+    background: #d9d9d975;
     /* color: #fff; */
-    padding: 3px 5px;
+    /* padding: 3px 5px; */
     border-radius: 6px;
 }
 

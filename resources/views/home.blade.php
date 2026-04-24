@@ -86,7 +86,7 @@
                                         <div class="divider"></div>
 
                                         <!-- Price Range -->
-                                        <div class="price-box filter">
+                                        <!-- <div class="price-box filter">
                                             <label>Price Range</label>
                                             <div class="range-container">
                                                 <div class="slider-track" id="track"></div>
@@ -101,6 +101,31 @@
                                             <div class="values">
                                                 $ <span id="min-value"></span> - $ <span id="max-value"></span>
                                             </div>
+                                        </div> -->
+                                        <!-- Price Range -->
+                                        <div class="price-box filter">
+                                            <label>Price Range</label>
+
+                                            <div class="pr-track-wrap" id="prTrack">
+                                                <div class="pr-track"></div>
+                                                <div class="pr-fill" id="prFill"></div>
+                                                <div class="pr-handle" id="prHandleMin" tabindex="0" role="slider" aria-label="Minimum price">
+                                                    <div class="pr-handle-inner"></div>
+                                                </div>
+                                                <div class="pr-handle" id="prHandleMax" tabindex="0" role="slider" aria-label="Maximum price">
+                                                    <div class="pr-handle-inner"></div>
+                                                </div>
+                                            </div>
+
+                                            <div class="pr-values values">
+                                                <div class="pr-input-wrap"><input class="pr-input filter-all" id="prMinInput" type="text" inputmode="numeric"></div>
+                                                <span class="pr-sep">—</span>
+                                                <div class="pr-input-wrap"><input class="pr-input filter-all" id="prMaxInput" type="text" inputmode="numeric"></div>
+                                            </div>
+
+                                            {{-- Hidden inputs for form submission --}}
+                                            <input type="hidden" id="hiddenMin" name="selected_lowest_price" value="{{ request('selected_lowest_price', 0) }}">
+                                            <input type="hidden" id="hiddenMax" name="selected_highest_price" value="{{ request('selected_highest_price', 1000000) }}">
                                         </div>
 
                                         <button type="submit" class="search-btn">
@@ -117,7 +142,7 @@
 
 
                 <div class="browse-slider">
-                    <h2>Browse By Type</h2>
+                    <h2>Start Your Best Online Search Here</h2>
                     <p>Find The Perfect Ride For Any Occasion</p>
 
                     <div class="slider-wrapper">
@@ -318,15 +343,20 @@
                             <div class="modern-car-card shadow-sm">
                                 <div class="car-card-top">
                                     @php
-                                        $detailUrl = route('inventory_product_details', $recent_vehicle->id);
+                                        // Create a URL-friendly slug from the vehicle title
+                                        $vehicleName = $recent_vehicle->year . ' ' . 
+                                                    ($recent_vehicle->mfg_auto ?? '') . ' ' . 
+                                                    ($recent_vehicle->model ?? '');
+                                        $slug = Str::slug($vehicleName, '-');
+                                        $detailUrl = route('inventory_product_details', ['name' => $slug, 'id' => $recent_vehicle->id]);
                                     @endphp
 
                                     <a href="{{ $detailUrl }}">
                                         <img style="width:100%" src="{{ $recent_vehicle->primary_image
-                    ? (Str::startsWith($recent_vehicle->primary_image, 'http')
-                        ? $recent_vehicle->primary_image
-                        : $disklozBaseUrl . '/admin_assets/images/inventory_images/' . $recent_vehicle->primary_image)
-                    : asset('assets/images/defaultimage.jpg') }}" alt="Vehicle Image" class="img-box img-fluid"
+                                            ? (Str::startsWith($recent_vehicle->primary_image, 'http')
+                                                ? $recent_vehicle->primary_image
+                                                : $disklozBaseUrl . '/admin_assets/images/inventory_images/' . $recent_vehicle->primary_image)
+                                            : asset('assets/images/defaultimage.jpg') }}" alt="Vehicle Image" class="img-box img-fluid"
                                             onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
                                     </a>
                                     <div class="badge-mileage d-flex align-items-center">

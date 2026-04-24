@@ -414,7 +414,7 @@ class InventoryController extends Controller
     //     ]);
     // }
 
-    public function inventory_product_details(Request $request, $id)
+    public function inventory_product_details($name, $id, Request $request)
     {
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
@@ -542,7 +542,7 @@ class InventoryController extends Controller
         // ✅ Get dealer name for "More from this dealer" heading
         $dealerName = null;
         if ($isFromSameDealer && $dealer) {
-            $dealerName = $dealer->legal_name ?? $dealer->name ?? 'This Dealer';
+            $dealerName = $dealer->dba ?? $dealer->name ?? 'This Dealer';
         }
 
         // ✅ ENRICH LOCATION DATA (just like search_inventory)
@@ -579,7 +579,7 @@ class InventoryController extends Controller
 
         return (object) [
             'id'               => $localUser->id,
-            'legal_name'       => $info->full_name       ?? $localUser->name ?? 'N/A',
+            'dba'       => $info->full_name       ?? $localUser->name ?? 'N/A',
             'first_name'       => $info->full_name       ?? $localUser->name ?? '',
             'last_name'        => '',
             'email'            => $localUser->email      ?? 'N/A',

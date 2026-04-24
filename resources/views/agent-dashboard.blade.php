@@ -58,8 +58,16 @@
                                         data-date="{{ $listing->created_at }}">
                                         <td class="id">#{{ $listing->id }}</td>
                                         <td>
+                                            @php
+                                                // Create a URL-friendly slug from the vehicle title    
+                                                $vehicleName = $listing->year . ' ' . 
+                                                            ($listing->mfg_auto ?? '') . ' ' . 
+                                                            ($listing->model ?? '');
+                                                $slug = Str::slug($vehicleName, '-');
+                                                $detailUrl = route('inventory_product_details', ['name' => $slug, 'id' => $listing->id]);
+                                            @endphp
                                             <div class="d-flex align-items-center gap-2">
-                                                <a href="{{ route('inventory_product_details', $listing->id) }}">
+                                                <a href="{{ $detailUrl }}">
                                                     <img style="width: 60px; height: 50px; object-fit: cover; border-radius: 8px;" src="{{ $listing->primary_image
                                                     ? (Str::startsWith($listing->primary_image, 'http')
                                                         ? $listing->primary_image

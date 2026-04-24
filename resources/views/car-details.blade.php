@@ -79,7 +79,7 @@
         : asset('assets/images/defaultdealerlogo.png');
 
     // ✅ Create slug from dealer name
-    $dealerNameForUrl = $dealer->legal_name ?? $dealer->first_name ?? 'dealer';
+    $dealerNameForUrl = $dealer->dba ?? $dealer->first_name ?? 'dealer';
     $dealerSlug = preg_replace('/[^a-z0-9]+/', '-', strtolower($dealerNameForUrl));
     $dealerSlug = trim($dealerSlug, '-');
     $dealerId = $dealer->id ?? 0;
@@ -97,7 +97,7 @@
 
     $dealerCity     = $dealer->city          ?? null;
     $dealerProvince = $dealer->province      ?? null;
-    $dealerName     = $dealer->legal_name    ?? $dealer->first_name ?? 'N/A';
+    $dealerName     = $dealer->dba    ?? $dealer->first_name ?? 'N/A';
     $dealerPhone    = $dealer->phone_no      ?? 'N/A';
     $dealerEmail    = $dealer->email         ?? 'N/A';
     $dealerAddress  = $dealer ? collect([
@@ -465,9 +465,15 @@
                                     Email: {{ $dealerEmail }}
                                 </div>
                                 <div class="mb-2">
-                                    <img src="/assets/images/Background (11).png" alt="whatsapp" class="contact-icon light-dark">
+                                    <i class="fa-brands fa-whatsapp fs-5"></i>
                                     WhatsApp: {{ $dealerPhone }}
                                 </div>
+                                @if($searched_vehicle->dealer && $searched_vehicle->dealer->subaccount && $dealer->subaccount->twilio_phone_number)
+                                    <div class="mb-2">
+                                        <img src="/assets/images/Background (11).png" width="20" alt="whatsapp" class="contact-icon light-dark"> 
+                                        SMS: {{ $searched_vehicle->dealer->subaccount->twilio_phone_number }}
+                                    </div>
+                                @endif
                             </div>
                         @else
                             <p class="text-muted small">Dealer info not available.</p>
@@ -715,18 +721,26 @@
                         <div class="modern-car-card shadow-sm">
                             <div class="car-card-top">
                                 @php
-                                    $relatedDetailUrl = route('inventory_product_details', $relatedVehicle->id);
+                                    // Generate slug for the related vehicle
+                                    $relatedVehicleName = trim(
+                                        ($relatedVehicle->year ?? '') . ' ' . 
+                                        ($relatedVehicle->make ?? '') . ' ' . 
+                                        ($relatedVehicle->model ?? '') . ' ' . 
+                                        ($relatedVehicle->trim ?? '')
+                                    );
+                                    $relatedSlug = $relatedVehicleName ? Str::slug($relatedVehicleName) : 'vehicle';
+                                    $relatedDetailUrl = route('inventory_product_details', ['name' => $relatedSlug, 'id' => $relatedVehicle->id]);
                                     
                                     $defaultImage = asset('assets/images/defaultimage.jpg');
                                     
-                                     $relatedImg = $relatedVehicle->primary_image
+                                    $relatedImg = $relatedVehicle->primary_image
                                         ? (Str::startsWith($relatedVehicle->primary_image, 'http')
                                             ? $relatedVehicle->primary_image
                                             : $disklozBaseUrl . '/admin_assets/images/inventory_images/' . $relatedVehicle->primary_image)
                                         : $defaultImage;
                                     
                                     $relatedDealer = $relatedVehicle->dealer ?? null;
-                                    $relatedDealerName = $relatedDealer->legal_name ?? $relatedDealer->name ?? 'Dealer';
+                                    $relatedDealerName = $relatedDealer->dba ?? $relatedDealer->name ?? 'Dealer';
                                 @endphp
                                 
                                 <a href="{{ $relatedDetailUrl }}">

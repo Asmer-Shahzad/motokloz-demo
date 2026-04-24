@@ -88,6 +88,7 @@ class SearchController extends Controller
             'selected_asset' => $request->selected_asset,
             'selected_power' => $request->selected_power_type,
             'selected_fuel' => $request->selected_fuel_type,
+            'selected_seller' => $request->selected_seller, // ✅ ADD THIS
             'keywords' => $request->keywords,
             'client_id' => auth()->check() ? auth()->id() : '',
             'page' => $request->page ?? 1,

@@ -48,7 +48,7 @@ class DealerNetworkController extends Controller
                     $matches = true;
                     
                     if (!empty($dealerName)) {
-                        $legalName = strtolower($dealer['legal_name'] ?? '');
+                        $legalName = strtolower($dealer['dba'] ?? '');
                         $searchTerm = strtolower(trim($dealerName));
                         if (strpos($legalName, $searchTerm) === false) {
                             $matches = false;

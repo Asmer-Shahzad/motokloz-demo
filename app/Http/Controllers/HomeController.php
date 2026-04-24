@@ -23,6 +23,7 @@ class HomeController extends Controller
     {
         return config('services.diskloz.base_url', env('DISKLOZ_BASE_URL', env('diskloz_base_url', '')));
     }
+    
     public function home()
     {
         $user = Auth::user();
@@ -88,9 +89,16 @@ class HomeController extends Controller
 
         // Get latest 4 vehicles overall
         $latestVehicles = $allVehicles
-            ->sortByDesc('created_at')
-            ->take(4)
-            ->values();
+        ->filter(function ($vehicle) {
+            $img = $vehicle->primary_image ?? null;
+
+            return !empty($img)
+                && $img !== 'defaultimage.jpg'
+                && !str_contains($img, 'defaultimage.jpg');
+        })
+        ->sortByDesc('created_at')
+        ->take(4)
+        ->values();
 
         return view('home', [
             'user' => $user,
