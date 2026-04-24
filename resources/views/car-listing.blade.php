@@ -5,11 +5,12 @@
 @endphp
 
 @php
-  function formatPrice($price) {
-    $cleaned = str_replace(['$', ','], '', $price);
-    $number = is_numeric($cleaned) ? (float)$cleaned : 0;
-    return number_format($number, 2, '.', ',');
-}
+    function formatPrice($price)
+    {
+        $cleaned = str_replace(['$', ','], '', $price);
+        $number = is_numeric($cleaned) ? (float) $cleaned : 0;
+        return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
+    }
 @endphp
 
 @extends('layouts.app')
@@ -24,9 +25,9 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="car-listing-cont">
-                                <h4>Find for sale and for rent near you</h4>
-                                <h2>Find Your Perfect {{ $assetWord }}</h2>
-                                <p>Search and find your best to buy with easy way</p>
+                                <h4>'CANADA'S PREMIERE AUTOMOTIVE, LEISURE, AND HEAVY EQUIPMENT MARKETPLACE'</h4>
+                                {{-- <h2>Find Your Perfect {{ $assetWord }}</h2>
+                                <p>Search and find your best to buy with easy way</p> --}}
                             </div>
                             <div class="search-wrapper">
                                 <form action="{{ route('search_inventory') }}" method="GET" class="search-wrapper">
@@ -121,6 +122,37 @@
                                             </div>
                                         </div>
 
+                                        <div class="divider"></div>
+
+                                        <!-- Distance to Seller (Top Bar) -->
+                                        <div class="filter distance-filter-wrap" id="topbar-distance-wrap">
+                                            <label>Distance</label>
+                                            <div class="select distance-dropdown-container" id="topbar-distance-container">
+                                                <i class="fa-solid fa-location-dot"></i>
+                                                <!-- Rendered by JS based on localStorage state -->
+                                                <select name="selected_distance" id="topbar-distance-select" class="filter-options" style="display:none;">
+                                                    <option value="">Any Distance</option>
+                                                    <option value="50"       {{ ($selected_distance ?? '') == '50'         ? 'selected' : '' }}>Under 50 km</option>
+                                                    <option value="100"      {{ ($selected_distance ?? '') == '100'        ? 'selected' : '' }}>Under 100 km</option>
+                                                    <option value="250"      {{ ($selected_distance ?? '') == '250'        ? 'selected' : '' }}>Under 250 km</option>
+                                                    <option value="500"      {{ ($selected_distance ?? '') == '500'        ? 'selected' : '' }}>Under 500 km</option>
+                                                    <option value="1000"     {{ ($selected_distance ?? '') == '1000'       ? 'selected' : '' }}>Under 1000 km</option>
+                                                    <option value="provincial" {{ ($selected_distance ?? '') == 'provincial' ? 'selected' : '' }}>Provincial</option>
+                                                    <option value="national"   {{ ($selected_distance ?? '') == 'national'   ? 'selected' : '' }}>National</option>
+                                                </select>
+                                                <!-- Allow location button shown when GPS not granted -->
+                                                <button type="button" class="btn-allow-location" id="topbar-allow-location" style="display:none;">
+                                                    <i class="fa-solid fa-location-crosshairs me-1"></i> Allow Location
+                                                </button>
+                                                <span class="location-not-supported" id="topbar-location-unsupported" style="display:none; font-size:12px; color:#aaa;">
+                                                    Location not supported
+                                                </span>
+                                            </div>
+                                            <!-- Hidden GPS coordinate inputs for top bar form -->
+                                            <input type="hidden" name="user_lat" id="topbar-user-lat" value="{{ $user_lat ?? '' }}">
+                                            <input type="hidden" name="user_lng" id="topbar-user-lng" value="{{ $user_lng ?? '' }}">
+                                        </div>
+
                                         <button type="submit" class="search-btn">
                                             <i class="fa-solid fa-magnifying-glass"></i>
                                             Find a Vehicle
@@ -142,7 +174,7 @@
             <div class="row fleet-top">
                 <div class="col-12">
                     <h2 class="main-title">Filter Your Search</h2>
-                    <p class="main-subtitle">Turning dreams into reality with versatile vehicles.</p>
+                    {{-- <p class="main-subtitle">Turning dreams into reality with versatile vehicles.</p> --}}
                 </div>
             </div>
             <div class="row g-4">
@@ -288,21 +320,50 @@
                                 <select name="selected_seller" id="seller-select" class="form-select sidebar-input">
                                     <option value="">Select Any</option>
                                     <!-- <option value="DEALER" {{ request('selected_seller')=='DEALER' ? 'selected' : '' }}>Dealer</option>
-                                        <option value="PRIVATE" {{ request('selected_seller')=='PRIVATE' ? 'selected' : '' }}>Private Seller</option>
-                                        <option value="AUCTION" {{ request('selected_seller')=='AUCTION' ? 'selected' : '' }}>Auction</option>
-                                        <option value="RENTAL" {{ request('selected_seller')=='RENTAL' ? 'selected' : '' }}>Rental Company</option>
-                                        <option value="FLEET" {{ request('selected_seller')=='FLEET' ? 'selected' : '' }}>Fleet</option> -->
+                                                                            <option value="PRIVATE" {{ request('selected_seller')=='PRIVATE' ? 'selected' : '' }}>Private Seller</option>
+                                                                            <option value="AUCTION" {{ request('selected_seller')=='AUCTION' ? 'selected' : '' }}>Auction</option>
+                                                                            <option value="RENTAL" {{ request('selected_seller')=='RENTAL' ? 'selected' : '' }}>Rental Company</option>
+                                                                            <option value="FLEET" {{ request('selected_seller')=='FLEET' ? 'selected' : '' }}>Fleet</option> -->
                                 </select>
+                            </div>
+
+                            <!-- Distance to Seller (Sidebar) -->
+                            <div class="filter-group" id="sidebar-distance-group">
+                                <label class="sidebar-label">
+                                    <i class="fa-solid fa-location-dot me-1"></i> Distance to Seller
+                                </label>
+                                <!-- Select shown when GPS is granted -->
+                                <select name="selected_distance" id="sidebar-distance-select"
+                                    class="form-select sidebar-input" style="display:none;">
+                                    <option value="">Any Distance</option>
+                                    <option value="50"         {{ ($selected_distance ?? '') == '50'         ? 'selected' : '' }}>Under 50 km</option>
+                                    <option value="100"        {{ ($selected_distance ?? '') == '100'        ? 'selected' : '' }}>Under 100 km</option>
+                                    <option value="250"        {{ ($selected_distance ?? '') == '250'        ? 'selected' : '' }}>Under 250 km</option>
+                                    <option value="500"        {{ ($selected_distance ?? '') == '500'        ? 'selected' : '' }}>Under 500 km</option>
+                                    <option value="1000"       {{ ($selected_distance ?? '') == '1000'       ? 'selected' : '' }}>Under 1000 km</option>
+                                    <option value="provincial" {{ ($selected_distance ?? '') == 'provincial' ? 'selected' : '' }}>Provincial</option>
+                                    <option value="national"   {{ ($selected_distance ?? '') == 'national'   ? 'selected' : '' }}>National</option>
+                                </select>
+                                <!-- Allow location button shown when GPS not granted -->
+                                <button type="button" class="btn-allow-location w-100" id="sidebar-allow-location" style="display:none;">
+                                    <i class="fa-solid fa-location-crosshairs me-1"></i> Allow Location
+                                </button>
+                                <span class="location-not-supported" id="sidebar-location-unsupported" style="display:none; font-size:12px; color:#aaa;">
+                                    Location not supported by your browser
+                                </span>
+                                <!-- Hidden GPS coordinate inputs for sidebar form -->
+                                <input type="hidden" name="user_lat" id="sidebar-user-lat" value="{{ $user_lat ?? '' }}">
+                                <input type="hidden" name="user_lng" id="sidebar-user-lng" value="{{ $user_lng ?? '' }}">
                             </div>
                         </aside>
                     </form>
                     <!-- <div class="sidebar-map-box mt-4 complete-sidebar">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="map-label">Show on map</span>
-                                <i class="fa-solid fa-chevron-down map-toggle-icon"></i>
-                            </div>
-                            <img src="/assets/images/map.png" class="img-fluid rounded-3" alt="Map">
-                        </div> -->
+                                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                    <span class="map-label">Show on map</span>
+                                                                    <i class="fa-solid fa-chevron-down map-toggle-icon"></i>
+                                                                </div>
+                                                                <img src="/assets/images/map.png" class="img-fluid rounded-3" alt="Map">
+                                                            </div> -->
                 </div>
                 <div class="col-lg-9 col-md-8">
                     <div style="border-bottom: 1px solid #DDE1DE;     padding-bottom: 10px;"
@@ -348,78 +409,107 @@
                     </div>
                     <div class="row g-4" id="vehicleContainer">
                         @if ($search_inventory_result != null && count($search_inventory_result) > 0)
-                            @foreach ($search_inventory_result as $recent_vehicle)
-                                        <div class="col-lg-4 col-sm-6 vehicle-card" data-id="{{ $recent_vehicle->id }}"
-                                            data-name="{{ strtolower($recent_vehicle->mfg_auto ?? '') }} {{ strtolower($recent_vehicle->model ?? '') }}"
-                                            data-price="{{ $recent_vehicle->disclosed_price ?? 0 }}"
-                                            data-year="{{ $recent_vehicle->year ?? 0 }}">
-                                            <div class="modern-car-card shadow-sm">
-                                                <div class="car-card-top">
-                                                    @php $detailUrl = route('inventory_product_details', $recent_vehicle->id); @endphp
-                                                    <a href="{{ $detailUrl }}">
-                                                        <img style="width:100%" src="{{ $recent_vehicle->primary_image
-                                                            ? (Str::startsWith($recent_vehicle->primary_image, 'http')
-                                                                ? $recent_vehicle->primary_image
-                                                                : env('diskloz_base_url') . '/admin_assets/images/inventory_images/' . $recent_vehicle->primary_image)
-                                                            : asset('assets/images/defaultimage.jpg') }}" 
-                                                            alt="Vehicle Image"
-                                                            class="img-box img-fluid"
-                                                            onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
-                                                    </a>
-                                                    <div class="badge-mileage d-flex align-items-center">
-                                                        <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
-                                                            style="width:20px; height:12px;">
-                                                        {{ $recent_vehicle->mileage
-                                ? trim(str_ireplace('km', '', $recent_vehicle->mileage)) . ' km'
-                                : '0 km' 
-                                                                            }}
+                                @foreach ($search_inventory_result as $recent_vehicle)
+                                            <div class="col-lg-4 col-sm-6 vehicle-card" data-id="{{ $recent_vehicle->id }}"
+                                                data-name="{{ strtolower($recent_vehicle->mfg_auto ?? '') }} {{ strtolower($recent_vehicle->model ?? '') }}"
+                                                data-price="{{ $recent_vehicle->disclosed_price ?? 0 }}"
+                                                data-year="{{ $recent_vehicle->year ?? 0 }}">
+                                                <div class="modern-car-card shadow-sm">
+                                                    <div class="car-card-top">
+                                                        @php $detailUrl = route('inventory_product_details', $recent_vehicle->id); @endphp
+                                                        <a href="{{ $detailUrl }}">
+                                                            <img style="width:100%" src="{{ $recent_vehicle->primary_image
+                                    ? (Str::startsWith($recent_vehicle->primary_image, 'http')
+                                        ? $recent_vehicle->primary_image
+                                        : env('diskloz_base_url') . '/admin_assets/images/inventory_images/' . $recent_vehicle->primary_image)
+                                    : asset('assets/images/defaultimage.jpg') }}" alt="Vehicle Image"
+                                                                class="img-box img-fluid"
+                                                                onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
+                                                        </a>
+                                                        {{-- ★ Wishlist Star Button --}}
+                                                        <button class="card-wishlist-btn"
+                                                            id="wishlist-btn-{{ $recent_vehicle->id }}"
+                                                            onclick="event.stopPropagation(); toggleLike({{ $recent_vehicle->id }}, this, {{ auth()->id() ?? 'null' }})"
+                                                            title="Add to Wishlist">
+                                                            <i class="fa-spin fa-spinner fa d-none" id="wishlist-spinner-{{ $recent_vehicle->id }}"></i>
+                                                            <i class="far fa-star" id="wishlist-icon-{{ $recent_vehicle->id }}"></i>
+                                                        </button>
+                                                        <div class="badge-mileage d-flex align-items-center">
+                                                            <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
+                                                                style="width:20px; height:12px;">
+                                                            {{ $recent_vehicle->mileage
+                                    ? trim(str_ireplace('km', '', $recent_vehicle->mileage)) . ' km'
+                                    : '0 km' 
+                                                                                                                                                                                                                                                                                                    }}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="car-card-bottom">
-                                                    <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
-                                                        {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}
-                                                    </h5>
+                                                    <div class="car-card-bottom">
+                                                        <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
+                                                            {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}
+                                                        </h5>
 
-                                                    @php
-                                                        $dealerPostalCode = data_get($recent_vehicle, 'dealer.postal_code')
-                                                            ?? $recent_vehicle->dealer_postal_code
-                                                            ?? $recent_vehicle->postal_code
-                                                            ?? '';
-                                                        $dealerCity = data_get($recent_vehicle, 'dealer.city')
-                                                            ?? $recent_vehicle->dealer_city
-                                                            ?? '';
-                                                        $dealerProvince = data_get($recent_vehicle, 'dealer.province')
-                                                            ?? $recent_vehicle->dealer_province
-                                                            ?? '';
-                                                        $dealerCountry = data_get($recent_vehicle, 'dealer.country')
-                                                            ?? $recent_vehicle->dealer_country
-                                                            ?? '';
-                                                    @endphp
-                                                    <p class="car-distance-away" data-dealer-postal="{{ $dealerPostalCode }}"
-                                                        data-dealer-city="{{ $dealerCity }}" data-dealer-province="{{ $dealerProvince }}"
-                                                        data-dealer-country="{{ $dealerCountry }}">
-                                                        <i class="fa-solid fa-location-dot"></i>
-                                                        <span class="distance-value">Loading...</span>
-                                                    </p>
+                                                        @php
+                                                            $dealerPostalCode = data_get($recent_vehicle, 'dealer.postal_code')
+                                                                ?? $recent_vehicle->dealer_postal_code
+                                                                ?? $recent_vehicle->postal_code
+                                                                ?? '';
+                                                            $dealerCity = data_get($recent_vehicle, 'dealer.city')
+                                                                ?? $recent_vehicle->dealer_city
+                                                                ?? '';
+                                                            $dealerProvince = data_get($recent_vehicle, 'dealer.province')
+                                                                ?? $recent_vehicle->dealer_province
+                                                                ?? '';
+                                                            $dealerCountry = data_get($recent_vehicle, 'dealer.country')
+                                                                ?? $recent_vehicle->dealer_country
+                                                                ?? '';
+                                                        @endphp
+                                                        <p class="car-distance-away" data-dealer-postal="{{ $dealerPostalCode }}"
+                                                            data-dealer-city="{{ $dealerCity }}" data-dealer-province="{{ $dealerProvince }}"
+                                                            data-dealer-country="{{ $dealerCountry }}">
+                                                            <i class="fa-solid fa-location-dot"></i>
+                                                            <span class="distance-value">Loading...</span>
+                                                        </p>
 
-                                                    <!-- <div class="car-circle-icons-group">
-                                                        <img src="/assets/images/no-accidents.png" alt="">
-                                                        <img src="/assets/images/low-mileage.png" alt="">
-                                                        <img src="/assets/images/service-plan.png" alt="">
-                                                        <img src="/assets/images/powertrain-warranty.png" alt="">
-                                                        <span class="extra-icons-count">12+</span>
-                                                    </div> -->
+                                                        <!-- <div class="car-circle-icons-group">
+                                                                                                                                                                                                                                                                                <img src="/assets/images/no-accidents.png" alt="">
+                                                                                                                                                                                                                                                                                <img src="/assets/images/low-mileage.png" alt="">
+                                                                                                                                                                                                                                                                                <img src="/assets/images/service-plan.png" alt="">
+                                                                                                                                                                                                                                                                                <img src="/assets/images/powertrain-warranty.png" alt="">
+                                                                                                                                                                                                                                                                                <span class="extra-icons-count">12+</span>
+                                                                                                                                                                                                                                                                            </div> -->
 
-                                                    <div class="car-price-block text-end">
-                                                        <h4 class="price-value">
-                                                            ${{ formatPrice($recent_vehicle->disclosed_price ?? '0') }}</h4>
+                                                        <div class="car-price-block text-end">
+                                                            @php $displayPrice = round($recent_vehicle->disclosed_price ?? 0); @endphp
+                                                            @if($displayPrice > 0)
+                                                                <h4 class="price-value">${{ formatPrice($displayPrice) }}</h4>
+                                                            @else
+                                                                @php
+                                                                    $cardPhone = null;
+                                                                    if (!empty($recent_vehicle->dealer) && !empty($recent_vehicle->dealer->phone_no)) {
+                                                                        $cardPhone = $recent_vehicle->dealer->phone_no;
+                                                                    } elseif (!empty($recent_vehicle->dealer_phone_no)) {
+                                                                        $cardPhone = $recent_vehicle->dealer_phone_no;
+                                                                    } elseif (!empty($recent_vehicle->phone_no)) {
+                                                                        $cardPhone = $recent_vehicle->phone_no;
+                                                                    }
+                                                                @endphp
+                                                                @if($cardPhone)
+                                                                    <a href="tel:{{ $cardPhone }}" class="price-value call-seller d-block text-decoration-none" onclick="event.stopPropagation();">
+                                                                        <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                                                    </a>
+                                                                @else
+                                                                    <h4 class="price-value call-seller">
+                                                                        <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                                                    </h4>
+                                                                @endif
+                                                            @endif
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                            @endforeach
-                    </div>
-                    @else
+                                @endforeach
+                            </div>
+                        @else
                         <div class="col-12 text-center my-5">
                             <i class="fas fa-car fa-3x text-muted mb-3"></i>
                             <p class="text-center">No vehicles found matching your criteria.</p>
@@ -463,6 +553,14 @@
 
                     const url = new URL(window.location.href);
                     url.searchParams.set('sort', value);
+
+                    // Preserve distance params
+                    const storedLat = localStorage.getItem('motokloz_user_lat');
+                    const storedLng = localStorage.getItem('motokloz_user_lng');
+                    if (storedLat && storedLng) {
+                        if (!url.searchParams.get('user_lat')) url.searchParams.set('user_lat', storedLat);
+                        if (!url.searchParams.get('user_lng')) url.searchParams.set('user_lng', storedLng);
+                    }
 
                     localStorage.setItem('snackbar', `Sorted by: ${text}`);
 
@@ -876,4 +974,236 @@
 
         });
     </script>
+
+    <script>
+    // ===================== WISHLIST (CAR LISTING CARDS) =====================
+    var DISKLOZ_BASE = "{{ env('diskloz_base_url') }}";
+
+    $(document).ready(function () {
+        @auth
+        var authId = {{ auth()->id() }};
+        fetch(DISKLOZ_BASE + '/api/favorites?client_id=' + authId)
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                var likedIds = new Set((data || []).map(function(item) { return item.inventory_id; }));
+                $('button[id^="wishlist-btn-"]').each(function () {
+                    var id = parseInt(this.id.replace('wishlist-btn-', ''));
+                    if (likedIds.has(id)) {
+                        $(this).addClass('active');
+                        var $icon = $('#wishlist-icon-' + id);
+                        $icon.removeClass('far').addClass('fas');
+                        $icon.css('color', '#f0a500');
+                    }
+                });
+            })
+            .catch(function() {});
+        @endauth
+    });
+
+    function toggleLike(vehicleId, element, authId) {
+        if (!authId || authId === 'null') { window.location.href = '/login'; return; }
+
+        var $btn  = $(element);
+        var $icon = $('#wishlist-icon-' + vehicleId);
+        var isLiked = $btn.hasClass('active');
+
+        $btn.prop('disabled', true);
+        $('#wishlist-spinner-' + vehicleId).removeClass('d-none');
+        $icon.addClass('d-none');
+
+        var formData = new FormData();
+        formData.append('client_id', authId);
+        formData.append('vehicle_id', vehicleId);
+
+        $.ajax({
+            url: isLiked ? '/remove_like' : '/add_like',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            success: function (res) {
+                if (res.success) {
+                    if (isLiked) {
+                        $btn.removeClass('active');
+                        $icon.removeClass('fas').addClass('far');
+                        $icon.css('color', '#aaa');
+                    } else {
+                        $btn.addClass('active');
+                        $icon.removeClass('far').addClass('fas');
+                        $icon.css('color', '#f0a500');
+                    }
+                }
+            },
+            complete: function () {
+                $('#wishlist-spinner-' + vehicleId).addClass('d-none');
+                $icon.removeClass('d-none');
+                $btn.prop('disabled', false);
+            }
+        });
+    }
+    </script>
+
+    {{-- ============================================================
+         DISTANCE FILTER — Geolocation + localStorage
+    ============================================================ --}}
+    <script>
+    (function () {
+        var LAT_KEY = 'motokloz_user_lat';
+        var LNG_KEY = 'motokloz_user_lng';
+
+        function storedLat() { return localStorage.getItem(LAT_KEY); }
+        function storedLng() { return localStorage.getItem(LNG_KEY); }
+        function hasStoredCoords() { return storedLat() !== null && storedLng() !== null; }
+
+        function saveCoords(lat, lng) {
+            localStorage.setItem(LAT_KEY, lat);
+            localStorage.setItem(LNG_KEY, lng);
+        }
+
+        function populateHiddenInputs(lat, lng) {
+            ['topbar-user-lat', 'sidebar-user-lat'].forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) el.value = lat;
+            });
+            ['topbar-user-lng', 'sidebar-user-lng'].forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) el.value = lng;
+            });
+        }
+
+        function showGrantedState() {
+            var topSelect  = document.getElementById('topbar-distance-select');
+            var topAllow   = document.getElementById('topbar-allow-location');
+            var topUnsup   = document.getElementById('topbar-location-unsupported');
+            if (topSelect)  topSelect.style.display  = '';
+            if (topAllow)   topAllow.style.display    = 'none';
+            if (topUnsup)   topUnsup.style.display    = 'none';
+
+            var sideSelect = document.getElementById('sidebar-distance-select');
+            var sideAllow  = document.getElementById('sidebar-allow-location');
+            var sideUnsup  = document.getElementById('sidebar-location-unsupported');
+            if (sideSelect) sideSelect.style.display = '';
+            if (sideAllow)  sideAllow.style.display   = 'none';
+            if (sideUnsup)  sideUnsup.style.display   = 'none';
+        }
+
+        function showAllowState() {
+            var topSelect  = document.getElementById('topbar-distance-select');
+            var topAllow   = document.getElementById('topbar-allow-location');
+            if (topSelect)  topSelect.style.display  = 'none';
+            if (topAllow)   topAllow.style.display    = '';
+
+            var sideSelect = document.getElementById('sidebar-distance-select');
+            var sideAllow  = document.getElementById('sidebar-allow-location');
+            if (sideSelect) sideSelect.style.display = 'none';
+            if (sideAllow)  sideAllow.style.display   = '';
+        }
+
+        function showUnsupportedState() {
+            ['topbar-distance-select', 'sidebar-distance-select'].forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+            ['topbar-allow-location', 'sidebar-allow-location'].forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+            ['topbar-location-unsupported', 'sidebar-location-unsupported'].forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) el.style.display = '';
+            });
+        }
+
+        function requestLocation() {
+            if (!navigator.geolocation) {
+                showUnsupportedState();
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(
+                function (pos) {
+                    var lat = pos.coords.latitude;
+                    var lng = pos.coords.longitude;
+                    saveCoords(lat, lng);
+                    populateHiddenInputs(lat, lng);
+                    showGrantedState();
+                },
+                function () {
+                    // Denied — keep showing allow button, do not save coords
+                    showAllowState();
+                },
+                { timeout: 10000, maximumAge: 300000 }
+            );
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            if (!navigator.geolocation) {
+                showUnsupportedState();
+                return;
+            }
+
+            if (hasStoredCoords()) {
+                populateHiddenInputs(storedLat(), storedLng());
+                showGrantedState();
+            } else {
+                showAllowState();
+            }
+
+            // Bind both allow-location buttons
+            ['topbar-allow-location', 'sidebar-allow-location'].forEach(function (btnId) {
+                var btn = document.getElementById(btnId);
+                if (!btn) return;
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    requestLocation();
+                });
+            });
+
+            // Sidebar distance select — ensure coords in hidden inputs before submit
+            var sideSelect = document.getElementById('sidebar-distance-select');
+            if (sideSelect) {
+                sideSelect.addEventListener('change', function () {
+                    if (hasStoredCoords()) {
+                        populateHiddenInputs(storedLat(), storedLng());
+                    }
+                });
+            }
+
+            // Top bar distance select — ensure coords in hidden inputs before submit
+            var topSelect = document.getElementById('topbar-distance-select');
+            if (topSelect) {
+                topSelect.addEventListener('change', function () {
+                    if (hasStoredCoords()) {
+                        populateHiddenInputs(storedLat(), storedLng());
+                    }
+                });
+            }
+
+            // Top bar form submit — ensure coords are populated
+            var topbarForm = document.querySelector('form.search-wrapper');
+            if (topbarForm) {
+                topbarForm.addEventListener('submit', function () {
+                    if (hasStoredCoords()) {
+                        populateHiddenInputs(storedLat(), storedLng());
+                    }
+                });
+            }
+
+            // Sidebar form submit — ensure coords are populated
+            var sidebarForm = document.getElementById('sidebarFilterForm');
+            if (sidebarForm) {
+                sidebarForm.addEventListener('submit', function () {
+                    if (hasStoredCoords()) {
+                        populateHiddenInputs(storedLat(), storedLng());
+                    }
+                });
+            }        });
+
+    })();
+    </script>
+
 @endsection
+

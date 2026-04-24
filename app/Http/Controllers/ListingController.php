@@ -21,10 +21,10 @@ use App\Http\Controllers\Concerns\EnrichesVehicleLocation;
 class ListingController extends Controller
 {
     use EnrichesVehicleLocation;
-    
-    public function curl_get($url):JsonResponse
+
+    public function curl_get($url): JsonResponse
     {
-        $json = ["status"=>false, "message" => "", "data"=>[]];
+        $json = ["status" => false, "message" => "", "data" => []];
         // $url = "https://portaldesignunit.com/terminal/agents";
         // for sending data as json type
         $apiUrl = $this->disklozBaseUrl() . $url;
@@ -34,7 +34,7 @@ class ListingController extends Controller
             CURLOPT_HTTPHEADER,
             array(
                 'Content-Type: application/json', // if the content type is json
-                )
+            )
         );
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -47,7 +47,7 @@ class ListingController extends Controller
             $error_msg = curl_error($ch);
         }
         curl_close($ch);
-        if ($status_code > 199 && $status_code < 203){
+        if ($status_code > 199 && $status_code < 203) {
             $json["status"] = true;
         }
         $json["data"] = json_decode($result);
@@ -58,7 +58,7 @@ class ListingController extends Controller
     {
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
-        
+
         $userLocation = [];
         if (auth()->check()) {
             $info = auth()->user()->information;
@@ -81,7 +81,6 @@ class ListingController extends Controller
             $allListings = $inventoryResponse->successful()
                 ? collect($inventoryResponse->json()['data'] ?? [])
                 : collect();
-
         } catch (\Exception $e) {
             \Log::error('Motokloz listings fetch error: ' . $e->getMessage());
             $allListings = collect();
@@ -107,7 +106,7 @@ class ListingController extends Controller
         // ✅ Sorting
         $sort = $request->get('sort', 'newest');
 
-        $allListings = match($sort) {
+        $allListings = match ($sort) {
             'price_asc'  => $allListings->sortBy('price')->values(),
             'price_desc' => $allListings->sortByDesc('price')->values(),
             'oldest'     => $allListings->sortBy('created_at')->values(),
@@ -121,14 +120,14 @@ class ListingController extends Controller
             $item->dealer_city             = $userLocation['city']             ?? null;
             $item->dealer_country          = $userLocation['country']          ?? null;
             $item->dealer_complete_address = $userLocation['complete_address'] ?? null;
-            
+
             // ✅ features null na ho
             $item->features  = $item->features  ?? null;
             $item->title     = $item->title     ?? '';
             $item->mileage   = $item->mileage   ?? null;
             $item->price     = $item->price     ?? 0;
             $item->primary_image = $item->primary_image ?? null;
-            
+
             return $item;
         });
 
@@ -153,7 +152,7 @@ class ListingController extends Controller
         $currentSort  = $request->get('sort', 'newest');
         $searchTerm   = $request->get('search', '');
 
-       return view('listings', compact(
+        return view('listings', compact(
             'user',
             'userInfo',
             'listings',
@@ -180,7 +179,7 @@ class ListingController extends Controller
             abort(404);
         }
 
-        return view('listing-car-details', compact('searched_vehicle' , 'user', 'userInfo'));
+        return view('listing-car-details', compact('searched_vehicle', 'user', 'userInfo'));
     }
 
     public function loadAssetForm(Request $request)
@@ -202,7 +201,7 @@ class ListingController extends Controller
         $view = $partialMap[$asset] ?? 'listings-form.default';
 
         // -------- FILTERS API --------
-        $res = Http::get($this->disklozBaseUrl().'/api/search_inventory', [
+        $res = Http::get($this->disklozBaseUrl() . '/api/search_inventory', [
             'selected_asset' => $asset,
             'per_page' => 1,
         ]);
@@ -230,13 +229,13 @@ class ListingController extends Controller
         $bodyStyles = $key ? ($inv->filters->{$key['body']} ?? []) : [];
 
         // -------- FORM API --------
-        $formRes = Http::get($this->disklozBaseUrl().'/api/inventory-form');
+        $formRes = Http::get($this->disklozBaseUrl() . '/api/inventory-form');
         $formData = json_decode($formRes->body());
 
-        $year = $formData->Year ?? []; 
-        $engine = $formData->Engine ?? []; 
-        $condition = $formData->condition ?? []; 
-        $transmission = $formData->Transmission ?? []; 
+        $year = $formData->Year ?? [];
+        $engine = $formData->Engine ?? [];
+        $condition = $formData->condition ?? [];
+        $transmission = $formData->Transmission ?? [];
         $driveTrain = $formData->Drivetrain ?? [];
 
         return response()->json([
@@ -278,7 +277,7 @@ class ListingController extends Controller
             ])->values(),
         ]);
     }
-    
+
     public function addlistings()
     {
         $assets = [
@@ -310,7 +309,7 @@ class ListingController extends Controller
 
         foreach ($assets as $asset) {
 
-            $res = Http::get($this->disklozBaseUrl().'/api/inventory-form', [
+            $res = Http::get($this->disklozBaseUrl() . '/api/inventory-form', [
                 'selected_asset' => $asset,
                 'per_page' => 1,
             ]);
@@ -319,7 +318,7 @@ class ListingController extends Controller
 
                 $inv = json_decode($res->body());
 
-                switch($asset) {
+                switch ($asset) {
                     case 'AUTO':
                         $makes = $inv->filters->MfgAuto ?? [];
                         $bodyStyles = $inv->filters->BodyStyle ?? [];
@@ -385,7 +384,6 @@ class ListingController extends Controller
                         'name' => $b->name
                     ])->sortBy('name')->values()
                     : collect();
-
             } else {
                 $makeTypes[$asset] = collect();
                 $bodyStyleTypes[$asset] = collect();
@@ -397,7 +395,7 @@ class ListingController extends Controller
          INVENTORY FORM DATA
         =========================================
         */
-        $response = Http::get($this->disklozBaseUrl().'/api/inventory-form');
+        $response = Http::get($this->disklozBaseUrl() . '/api/inventory-form');
         $data = json_decode($response->body());
 
         $array = [];
@@ -406,7 +404,7 @@ class ListingController extends Controller
         }
 
         // dd($array);
-        
+
         $year = $array['Year'] ?? [];
         $engine = $array['Engine'] ?? [];
         $transmission = $array['Transmission'] ?? [];
@@ -531,8 +529,8 @@ class ListingController extends Controller
     {
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
-        
-        $response = Http::get($this->disklozBaseUrl().'/api/favorites?client_id='.$request->u);
+
+        $response = Http::get($this->disklozBaseUrl() . '/api/favorites?client_id=' . $request->u);
         $data['favorites'] = json_decode($response->body());
 
         // Location map
@@ -547,7 +545,7 @@ class ListingController extends Controller
                     $motoklozLocationMap,
                     $dealerLocationMap
                 );
-                
+
                 // ✅ Ensure source is set
                 if (!isset($favorite->inventory->source)) {
                     $favorite->inventory->source = $favorite->inventory->source ?? 'other';
@@ -573,49 +571,46 @@ class ListingController extends Controller
                 if (!isset($favorite->inventory)) {
                     return false;
                 }
-                
+
                 $inventory = $favorite->inventory;
-                $searchLower = strtolower($search);
-                
-                return str_contains(strtolower($inventory->mfg_auto ?? ''), $searchLower) ||
-                    str_contains(strtolower($inventory->model ?? ''), $searchLower) ||
-                    str_contains(strtolower($inventory->year ?? ''), $searchLower) ||
-                    str_contains(strtolower($inventory->trim ?? ''), $searchLower) ||
-                    str_contains(strtolower($inventory->mileage ?? ''), $searchLower) ||
-                    str_contains(strtolower($inventory->body_style ?? ''), $searchLower) ||
-                    str_contains(strtolower($inventory->transmission ?? ''), $searchLower) ||
-                    str_contains(strtolower($inventory->engine ?? ''), $searchLower);
+                $searchLower = strtolower(trim($search));
+
+                // Convert entire inventory to JSON string and search in it
+                // This catches any field name regardless of API changes
+                $inventoryJson = strtolower(json_encode($inventory));
+
+                return str_contains($inventoryJson, $searchLower);
             })->values();
         }
-        
+
         // Apply sorting
         $sort = $request->get('sort', 'newest');
-        
+
         switch ($sort) {
             case 'price_asc':
                 $favoritesCollection = $favoritesCollection->sortBy(function ($favorite) {
                     return $favorite->inventory->disclosed_price ?? 0;
                 })->values();
                 break;
-                
+
             case 'price_desc':
                 $favoritesCollection = $favoritesCollection->sortByDesc(function ($favorite) {
                     return $favorite->inventory->disclosed_price ?? 0;
                 })->values();
                 break;
-                
+
             case 'newest':
                 $favoritesCollection = $favoritesCollection->sortByDesc(function ($favorite) {
                     return $favorite->inventory->id ?? 0;
                 })->values();
                 break;
-                
+
             case 'popularity':
                 $favoritesCollection = $favoritesCollection->sortByDesc(function ($favorite) {
                     return $favorite->inventory->rating ?? 0;
                 })->values();
                 break;
-                
+
             default:
                 $favoritesCollection = $favoritesCollection->sortByDesc(function ($favorite) {
                     return $favorite->inventory->id ?? 0;
@@ -644,24 +639,24 @@ class ListingController extends Controller
         $searchTerm = $request->get('search', '');
 
         // ✅ FIX: Use ORIGINAL collection, not filtered one
-        $searched_vehicle = $originalCollection->isNotEmpty() 
-            ? $originalCollection->first()->inventory ?? null 
+        $searched_vehicle = $originalCollection->isNotEmpty()
+            ? $originalCollection->first()->inventory ?? null
             : null;
-        
+
         // ✅ FIX: Get first vehicle's dealer and product IDs for the modal
         $firstFavorite = $originalCollection->isNotEmpty() ? $originalCollection->first() : null;
-        
+
         $pageTitle = 'My Wishlist';
         $disklozBaseUrl = $this->disklozBaseUrl();
-        
+
         return view('wishlist', compact(
-            'user', 
-            'userInfo', 
-            'favorites', 
-            'total_favorites', 
+            'user',
+            'userInfo',
+            'favorites',
+            'total_favorites',
             'searched_vehicle',
             'firstFavorite',
-            'pageTitle', 
+            'pageTitle',
             'disklozBaseUrl',
             'last_page',
             'current_page',
@@ -669,5 +664,4 @@ class ListingController extends Controller
             'searchTerm'
         ));
     }
-    
 }

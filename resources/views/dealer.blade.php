@@ -5,7 +5,7 @@
 function formatPrice($price) {
     $cleaned = str_replace(['$', ','], '', $price);
     $number = is_numeric($cleaned) ? (float)$cleaned : 0;
-    return number_format($number, 2, '.', ',');
+    return number_format(round($number), 0, '.', ',');
 }
 @endphp
 
@@ -189,6 +189,32 @@ function formatPrice($price) {
                                         </div>
                                     </div>
 
+                                    <div class="divider"></div>
+
+                                    <!-- Distance to Seller (Top Bar) -->
+                                    <div class="filter distance-filter-wrap">
+                                        <label>Distance</label>
+                                        <div class="select distance-dropdown-container">
+                                            <i class="fa-solid fa-location-dot"></i>
+                                            <select name="selected_distance" id="dealer-topbar-distance-select" class="filter-options" style="display:none;">
+                                                <option value="">Any Distance</option>
+                                                <option value="50"         {{ request('selected_distance')=='50'         ? 'selected':'' }}>Under 50 km</option>
+                                                <option value="100"        {{ request('selected_distance')=='100'        ? 'selected':'' }}>Under 100 km</option>
+                                                <option value="250"        {{ request('selected_distance')=='250'        ? 'selected':'' }}>Under 250 km</option>
+                                                <option value="500"        {{ request('selected_distance')=='500'        ? 'selected':'' }}>Under 500 km</option>
+                                                <option value="1000"       {{ request('selected_distance')=='1000'       ? 'selected':'' }}>Under 1000 km</option>
+                                                <option value="provincial" {{ request('selected_distance')=='provincial' ? 'selected':'' }}>Provincial</option>
+                                                <option value="national"   {{ request('selected_distance')=='national'   ? 'selected':'' }}>National</option>
+                                            </select>
+                                            <button type="button" class="btn-allow-location" id="dealer-topbar-allow-location" style="display:none;">
+                                                <i class="fa-solid fa-location-crosshairs me-1"></i> Allow Location
+                                            </button>
+                                            <span id="dealer-topbar-location-unsupported" style="display:none; font-size:12px; color:#aaa;">Location not supported</span>
+                                        </div>
+                                        <input type="hidden" name="user_lat" id="dealer-topbar-user-lat" value="{{ request('user_lat') }}">
+                                        <input type="hidden" name="user_lng" id="dealer-topbar-user-lng" value="{{ request('user_lng') }}">
+                                    </div>
+
                                     <button type="submit" class="search-btn">
                                         <i class="fa-solid fa-magnifying-glass"></i>
                                         Find a Vehicle
@@ -368,6 +394,29 @@ function formatPrice($price) {
                                     <!-- Add seller options as needed -->
                                 </select>
                             </div>
+
+                            <!-- Distance to Seller (Sidebar) -->
+                            <div class="filter-group">
+                                <label class="sidebar-label">
+                                    <i class="fa-solid fa-location-dot me-1"></i> Distance to Seller
+                                </label>
+                                <select name="selected_distance" id="dealer-sidebar-distance-select" class="form-select sidebar-input" style="display:none;">
+                                    <option value="">Any Distance</option>
+                                    <option value="50"         {{ request('selected_distance')=='50'         ? 'selected':'' }}>Under 50 km</option>
+                                    <option value="100"        {{ request('selected_distance')=='100'        ? 'selected':'' }}>Under 100 km</option>
+                                    <option value="250"        {{ request('selected_distance')=='250'        ? 'selected':'' }}>Under 250 km</option>
+                                    <option value="500"        {{ request('selected_distance')=='500'        ? 'selected':'' }}>Under 500 km</option>
+                                    <option value="1000"       {{ request('selected_distance')=='1000'       ? 'selected':'' }}>Under 1000 km</option>
+                                    <option value="provincial" {{ request('selected_distance')=='provincial' ? 'selected':'' }}>Provincial</option>
+                                    <option value="national"   {{ request('selected_distance')=='national'   ? 'selected':'' }}>National</option>
+                                </select>
+                                <button type="button" class="btn-allow-location w-100" id="dealer-sidebar-allow-location" style="display:none;">
+                                    <i class="fa-solid fa-location-crosshairs me-1"></i> Allow Location
+                                </button>
+                                <span id="dealer-sidebar-location-unsupported" style="display:none; font-size:12px; color:#aaa;">Location not supported</span>
+                                <input type="hidden" name="user_lat" id="dealer-sidebar-user-lat" value="{{ request('user_lat') }}">
+                                <input type="hidden" name="user_lng" id="dealer-sidebar-user-lng" value="{{ request('user_lng') }}">
+                            </div>
                         </aside>
                     </form>
                 <div class="sidebar-map-box mt-4 complete-sidebar" data-aos="fade-right" data-aos-delay="100" data-aos-duration="700">
@@ -477,6 +526,13 @@ function formatPrice($price) {
                                                 class="img-box img-fluid"
                                                 onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
                                         </a>
+                                        <button class="card-wishlist-btn"
+                                            id="wishlist-btn-{{ $recent_vehicle->id }}"
+                                            onclick="event.stopPropagation(); toggleLike({{ $recent_vehicle->id }}, this, {{ auth()->id() ?? 'null' }})"
+                                            title="Add to Wishlist">
+                                            <i class="fa fa-spinner fa-spin d-none" id="wishlist-spinner-{{ $recent_vehicle->id }}"></i>
+                                            <i class="far fa-star" id="wishlist-icon-{{ $recent_vehicle->id }}"></i>
+                                        </button>
                                         <div class="badge-mileage d-flex align-items-center">
                                             <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
                                                 style="width:20px; height:12px;">
@@ -523,9 +579,30 @@ function formatPrice($price) {
                                         </div> -->
 
                                         <div class="car-price-block text-end">
-                                            <h4 class="price-value">
-                                                ${{ formatPrice($recent_vehicle->disclosed_price ?? 0) }}
-                                            </h4>
+                                            @php $displayPrice = round($recent_vehicle->disclosed_price ?? 0); @endphp
+                                            @if($displayPrice > 0)
+                                                <h4 class="price-value">${{ formatPrice($displayPrice) }}</h4>
+                                            @else
+                                                @php
+                                                    $cardPhone = null;
+                                                    if (!empty($dealer) && !empty($dealer->phone_no)) {
+                                                        $cardPhone = $dealer->phone_no;
+                                                    } elseif (!empty($recent_vehicle->dealer_phone_no)) {
+                                                        $cardPhone = $recent_vehicle->dealer_phone_no;
+                                                    } elseif (!empty($recent_vehicle->dealer->phone_no)) {
+                                                        $cardPhone = $recent_vehicle->dealer->phone_no;
+                                                    }
+                                                @endphp
+                                                @if($cardPhone)
+                                                    <a href="tel:{{ $cardPhone }}" class="price-value call-seller d-block text-decoration-none" onclick="event.stopPropagation();">
+                                                        <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                                    </a>
+                                                @else
+                                                    <h4 class="price-value call-seller">
+                                                        <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                                    </h4>
+                                                @endif
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -943,4 +1020,126 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 </script>
+
+<script>
+var DISKLOZ_BASE_DEALER = "{{ env('diskloz_base_url') }}";
+$(document).ready(function () {
+    @auth
+    var authId = {{ auth()->id() }};
+    fetch(DISKLOZ_BASE_DEALER + '/api/favorites?client_id=' + authId)
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            var likedIds = new Set((data || []).map(function(item) { return item.inventory_id; }));
+            $('button[id^="wishlist-btn-"]').each(function () {
+                var id = parseInt(this.id.replace('wishlist-btn-', ''));
+                if (likedIds.has(id)) {
+                    $(this).addClass('active');
+                    $('#wishlist-icon-' + id).removeClass('far').addClass('fas').css('color', '#f0a500');
+                }
+            });
+        }).catch(function() {});
+    @endauth
+});
+
+function toggleLike(vehicleId, element, authId) {
+    if (!authId || authId === 'null') { window.location.href = '/login'; return; }
+    var $btn = $(element), $icon = $('#wishlist-icon-' + vehicleId);
+    var isLiked = $btn.hasClass('active');
+    $btn.prop('disabled', true);
+    $('#wishlist-spinner-' + vehicleId).removeClass('d-none');
+    $icon.addClass('d-none');
+    var fd = new FormData();
+    fd.append('client_id', authId);
+    fd.append('vehicle_id', vehicleId);
+    $.ajax({
+        url: isLiked ? '/remove_like' : '/add_like', type: 'POST',
+        data: fd, processData: false, contentType: false, dataType: 'json',
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        success: function(res) {
+            if (res.success) {
+                if (isLiked) { $btn.removeClass('active'); $icon.removeClass('fas').addClass('far').css('color', '#aaa'); }
+                else { $btn.addClass('active'); $icon.removeClass('far').addClass('fas').css('color', '#f0a500'); }
+            }
+        },
+        complete: function() { $('#wishlist-spinner-' + vehicleId).addClass('d-none'); $icon.removeClass('d-none'); $btn.prop('disabled', false); }
+    });
+}
+</script>
+
+{{-- Distance Filter GPS JS --}}
+<script>
+(function () {
+    var LAT_KEY = 'motokloz_user_lat';
+    var LNG_KEY = 'motokloz_user_lng';
+    function storedLat() { return localStorage.getItem(LAT_KEY); }
+    function storedLng() { return localStorage.getItem(LNG_KEY); }
+    function hasStoredCoords() { return storedLat() !== null && storedLng() !== null; }
+    function saveCoords(lat, lng) { localStorage.setItem(LAT_KEY, lat); localStorage.setItem(LNG_KEY, lng); }
+
+    function populateInputs(lat, lng) {
+        ['dealer-topbar-user-lat', 'dealer-sidebar-user-lat'].forEach(function(id) {
+            var el = document.getElementById(id); if (el) el.value = lat;
+        });
+        ['dealer-topbar-user-lng', 'dealer-sidebar-user-lng'].forEach(function(id) {
+            var el = document.getElementById(id); if (el) el.value = lng;
+        });
+    }
+
+    function showGranted() {
+        ['dealer-topbar-distance-select', 'dealer-sidebar-distance-select'].forEach(function(id) {
+            var el = document.getElementById(id); if (el) el.style.display = '';
+        });
+        ['dealer-topbar-allow-location', 'dealer-sidebar-allow-location'].forEach(function(id) {
+            var el = document.getElementById(id); if (el) el.style.display = 'none';
+        });
+    }
+
+    function showAllow() {
+        ['dealer-topbar-distance-select', 'dealer-sidebar-distance-select'].forEach(function(id) {
+            var el = document.getElementById(id); if (el) el.style.display = 'none';
+        });
+        ['dealer-topbar-allow-location', 'dealer-sidebar-allow-location'].forEach(function(id) {
+            var el = document.getElementById(id); if (el) el.style.display = '';
+        });
+    }
+
+    function requestLocation() {
+        if (!navigator.geolocation) { return; }
+        navigator.geolocation.getCurrentPosition(
+            function(pos) {
+                saveCoords(pos.coords.latitude, pos.coords.longitude);
+                populateInputs(pos.coords.latitude, pos.coords.longitude);
+                showGranted();
+            },
+            function() { showAllow(); },
+            { timeout: 10000, maximumAge: 300000 }
+        );
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (!navigator.geolocation) { return; }
+
+        if (hasStoredCoords()) {
+            populateInputs(storedLat(), storedLng());
+            showGranted();
+        } else {
+            showAllow();
+        }
+
+        // Bind allow buttons
+        ['dealer-topbar-allow-location', 'dealer-sidebar-allow-location'].forEach(function(btnId) {
+            var btn = document.getElementById(btnId);
+            if (btn) btn.addEventListener('click', function(e) { e.preventDefault(); requestLocation(); });
+        });
+
+        // Populate coords on form submit
+        document.querySelectorAll('form').forEach(function(form) {
+            form.addEventListener('submit', function() {
+                if (hasStoredCoords()) populateInputs(storedLat(), storedLng());
+            });
+        });
+    });
+})();
+</script>
+
 @endsection

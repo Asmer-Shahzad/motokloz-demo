@@ -369,7 +369,7 @@ select {
 
 .price-value {
     margin-top: 6px;
-    color: var(--select-color);
+    color: #f0a500;
     font-size: 14px;
     line-height: 22px !important;
     font-weight: 700;
@@ -1222,7 +1222,8 @@ footer ul li a:hover::after {
     text-align: center;
     padding: 5px 20px;
     color: #f58d02;
-    font-size: 14px;
+    margin-bottom: 20px;
+    font-size: 16px;
     background: rgba(255, 225, 185, 0.2);
     backdrop-filter: blur(7px);
 }
@@ -1428,7 +1429,7 @@ section.banner-car-listing {
     color: #737373;
     font-weight: 500;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    color: var();
+    font-size: 13px;
     z-index: 99996;
 }
 
@@ -1560,6 +1561,17 @@ section.banner-car-listing {
     font-weight: 800;
     margin-bottom: 0;
     color: var(--select-color);
+}
+
+.car-price-block .price-value.call-seller {
+    font-size: 14px;
+    font-weight: 600;
+    color: #f0a500;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
 }
 
 .price-sub-text {
@@ -2293,7 +2305,13 @@ span.mto-rating-badge {
     border-radius: 24px;
 }
 
-.listing-page .listing-bottom .listing-main .listing-head .search-form form input {
+.listing-page
+    .listing-bottom
+    .listing-main
+    .listing-head
+    .search-form
+    form
+    input {
     background-color: transparent !important;
     border: 0;
     flex: 1;
@@ -2305,7 +2323,13 @@ span.mto-rating-badge {
     margin-top: 25px;
 }
 
-.listing-page .listing-bottom .listing-main .listing-head .search-form form button {
+.listing-page
+    .listing-bottom
+    .listing-main
+    .listing-head
+    .search-form
+    form
+    button {
     border: 0;
     background-color: transparent;
     padding: 0;
@@ -2316,7 +2340,13 @@ span.mto-rating-badge {
     align-items: center;
 }
 
-.listing-page .listing-bottom .listing-main .listing-head .search-form form input:focus-visible {
+.listing-page
+    .listing-bottom
+    .listing-main
+    .listing-head
+    .search-form
+    form
+    input:focus-visible {
     outline: 0;
 }
 
@@ -2589,7 +2619,8 @@ section.agent-header {
     color: var(--select-color);
 }
 
-ul.list-unstyled.service-list {}
+ul.list-unstyled.service-list {
+}
 
 ul.list-unstyled.service-list li {
     color: var(--select-color);
@@ -2599,13 +2630,15 @@ ul.list-unstyled.service-list li {
     color: var(--select-color);
 }
 
-.col-md-4.text-center.border-end {}
+.col-md-4.text-center.border-end {
+}
 
 .col-md-4.text-center.border-end p.mb-1 {
     color: var(--select-color);
 }
 
-.d-flex.align-items-center.mb-2 {}
+.d-flex.align-items-center.mb-2 {
+}
 
 .d-flex.align-items-center.mb-2 span.small {
     color: var(--select-color);
@@ -2805,7 +2838,8 @@ ul.list-unstyled.service-list li {
     color: #000;
 }
 
-h2.section-title {}
+h2.section-title {
+}
 
 .card-container input.form-control {
     /* background-color: #f1f3f5; */
@@ -2825,16 +2859,20 @@ h2.section-title {}
     /* Zaroori hai */
 
     /* Ye edges par blur/fade effect banayega */
-    -webkit-mask-image: linear-gradient(to right,
-            transparent 0%,
-            black 15%,
-            black 85%,
-            transparent 100%);
-    mask-image: linear-gradient(to right,
-            transparent 0%,
-            black 15%,
-            black 85%,
-            transparent 100%);
+    -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 15%,
+        black 85%,
+        transparent 100%
+    );
+    mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 15%,
+        black 85%,
+        transparent 100%
+    );
 }
 
 /* Card ka size control karne ke liye */
@@ -2948,4 +2986,86 @@ input[type="range"]::-moz-range-thumb {
 * {
     scrollbar-width: thin;
     scrollbar-color: #ff9d00 #111;
+}
+
+.dealer-contact-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.dealer-contact-link:hover {
+    color: #f0a500;
+    text-decoration: underline;
+}
+
+/* ===== Card Wishlist Star Button ===== */
+.card-wishlist-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.92);
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition:
+        transform 0.2s,
+        background 0.2s;
+}
+
+.card-wishlist-btn:hover {
+    transform: scale(1.15);
+    background: #fff;
+}
+
+.card-wishlist-btn i {
+    font-size: 15px;
+    color: #aaa;
+    transition: color 0.2s;
+}
+
+.card-wishlist-btn.active i,
+.card-wishlist-btn:hover i {
+    color: #f0a500;
+}
+
+.card-wishlist-btn.active i.fas {
+    color: #f0a500;
+}
+
+/* ===== Distance Filter — Allow Location Button ===== */
+.btn-allow-location {
+    background: none;
+    border: none;
+    color: #ff9d00;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 22px;
+}
+
+.btn-allow-location:hover {
+    color: #e07b00;
+    text-decoration: underline;
+}
+
+.distance-filter-wrap .select {
+    min-height: 22px;
+}
+
+.distance-dropdown-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }

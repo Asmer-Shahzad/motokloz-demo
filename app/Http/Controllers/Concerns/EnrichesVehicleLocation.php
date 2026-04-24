@@ -14,9 +14,12 @@ trait EnrichesVehicleLocation
 
     private function motoklozUserLocationMap(): array
     {
-        return UserInformation::whereNotNull('postalCode')
-            ->orWhereNotNull('city')
-            ->get(['user_id', 'postalCode', 'city', 'country', 'complete_address'])
+        return UserInformation::where(function($q) {
+                $q->whereNotNull('postalCode')
+                  ->orWhereNotNull('city')
+                  ->orWhereNotNull('contact_number');
+            })
+            ->get(['user_id', 'postalCode', 'city', 'country', 'complete_address', 'contact_number'])
             ->keyBy(fn($info) => (string) $info->user_id)
             ->map(fn($info) => [
                 'postal_code'      => $info->postalCode       ?? null,
@@ -24,6 +27,7 @@ trait EnrichesVehicleLocation
                 'country'          => $info->country          ?? null,
                 'province'         => null,
                 'complete_address' => $info->complete_address ?? null,
+                'phone_no'         => $info->contact_number   ?? null,
             ])
             ->toArray();
     }
@@ -42,6 +46,7 @@ trait EnrichesVehicleLocation
                 'city'        => $dealer['city']        ?? null,
                 'province'    => $dealer['province']    ?? null,
                 'country'     => $dealer['country']     ?? null,
+                'phone_no'    => $dealer['phone_no']    ?? $dealer['phone'] ?? null,
             ];
 
             if (!$payload['postal_code'] && !$payload['city']) {
@@ -81,6 +86,7 @@ trait EnrichesVehicleLocation
         $vehicle->dealer_province         = $location['province']         ?? null;
         $vehicle->dealer_country          = $location['country']          ?? null;
         $vehicle->dealer_complete_address = $location['complete_address'] ?? null;
+        $vehicle->dealer_phone_no         = $location['phone_no']         ?? null;
 
         return $vehicle;
     }

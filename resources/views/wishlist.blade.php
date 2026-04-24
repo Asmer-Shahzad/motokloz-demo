@@ -99,7 +99,8 @@
                             @endphp
                             
                             <!-- Dynamic Item -->
-                            <div class="wishlist-card mb-4" data-aos="fade-up" data-aos-duration="600">
+                            <div class="wishlist-card mb-4" data-aos="fade-up" data-aos-duration="600"
+                                data-search="{{ strtolower(($inventory->year ?? '') . ' ' . ($inventory->mfg_auto ?? '') . ' ' . ($inventory->model ?? '') . ' ' . ($inventory->trim ?? '') . ' ' . ($inventory->body_style ?? '') . ' ' . ($inventory->transmission ?? '')) }}">
                                 <div class="row g-0">
                                     <div class="col-md-5">
                                         @php $detailUrl = route('inventory_product_details', $inventory->id); @endphp
@@ -153,11 +154,32 @@
                                             </p>
 
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <div class="price-wrap">
-                                                    <span class="text-span">From</span>
-                                                    <span class="price-span">${{ number_format((float)($inventory->disclosed_price ?? 0), 2) }}</span>
-                                                    <span class="text-span">/ USD</span>
-                                                </div>
+                                                @php $displayPrice = round($inventory->disclosed_price ?? 0); @endphp
+                                                @if($displayPrice > 0)
+                                                    <div class="price-wrap">
+                                                        <span class="text-span">From</span>
+                                                        <span class="price-span">${{ number_format($displayPrice, 2) }}</span>
+                                                        <span class="text-span">/ USD</span>
+                                                    </div>
+                                                @else
+                                                    @php
+                                                        $cardPhone = null;
+                                                        if (!empty($inventory->dealer->phone_no)) {
+                                                            $cardPhone = $inventory->dealer->phone_no;
+                                                        } elseif (!empty($inventory->dealer_phone_no)) {
+                                                            $cardPhone = $inventory->dealer_phone_no;
+                                                        }
+                                                    @endphp
+                                                    @if($cardPhone)
+                                                        <a href="tel:{{ $cardPhone }}" class="price-value call-seller text-decoration-none">
+                                                            <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                                        </a>
+                                                    @else
+                                                        <span class="price-value call-seller">
+                                                            <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                                        </span>
+                                                    @endif
+                                                @endif
                                                 
                                                 @if($isMotoklozInventory)
                                                     <!-- ✅ Motokloz Inventory Button -->
@@ -184,6 +206,11 @@
                                 </div>
                             </div>
                         @endforeach
+
+                        <div id="wishlist-no-results" class="text-center py-5" style="display:none;">
+                            <i class="fas fa-search fa-2x text-muted mb-3"></i>
+                            <p class="text-muted">No results found for your search.</p>
+                        </div>
                     </div>
                     <div class="pagination-section mt-56">
                         @include('partials.pagination')
@@ -1068,6 +1095,44 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.removeItem('snackbar');
     }
 
+});
+</script>
+
+<script>
+// ===== WISHLIST LIVE SEARCH (SERVER-SIDE, NO HARD REFRESH) =====
+$(document).ready(function () {
+    var $input = $('#searchForm input[name="search"]');
+    var searchTimer;
+
+    // Prevent default form submit
+    $('#searchForm').on('submit', function (e) {
+        e.preventDefault();
+    });
+
+    $input.on('input', function () {
+        clearTimeout(searchTimer);
+        var term = $(this).val();
+
+        searchTimer = setTimeout(function () {
+            var url = new URL(window.location.href);
+
+            if (term.trim() === '') {
+                url.searchParams.delete('search');
+            } else {
+                url.searchParams.set('search', term);
+            }
+
+            // Always reset to page 1 on new search
+            url.searchParams.set('page', 1);
+
+            // Preserve u param (user id)
+            @if(request()->has('u'))
+            url.searchParams.set('u', '{{ request()->get('u') }}');
+            @endif
+
+            window.location.href = url.toString();
+        }, 500);
+    });
 });
 </script>
 

@@ -142,8 +142,18 @@ class DealerProfileController extends Controller
         ]);
     }
 
-    private function buildDealerFromLocalUser($localUser): object
+    private function haversineDistance(?array $from, ?array $to): ?float
     {
+        if ($from === null || $to === null) return null;
+        [$lat1, $lng1] = $from;
+        [$lat2, $lng2] = $to;
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLng = deg2rad($lng2 - $lng1);
+        $a = sin($dLat / 2) ** 2 + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLng / 2) ** 2;
+        return 6371 * 2 * atan2(sqrt($a), sqrt(1 - $a));
+    }
+
+    private function buildDealerFromLocalUser($localUser): object    {
         $info = $localUser->information;
 
         return (object) [
@@ -206,6 +216,19 @@ class DealerProfileController extends Controller
         ];
 
         $apiData = array_filter($apiData, fn($value) => $value !== null && $value !== '' && $value !== []);
+
+        // ─── Distance filter setup ───────────────────────────────────
+        $selectedDistance    = $request->input('selected_distance', '');
+        $userLat             = $request->input('user_lat');
+        $userLng             = $request->input('user_lng');
+        $hasGps              = is_numeric($userLat) && is_numeric($userLng);
+        $distanceFilterActive = $hasGps && $selectedDistance !== '' && $selectedDistance !== 'national';
+
+        // If distance filter active, fetch ALL records so we can filter across full dataset
+        if ($distanceFilterActive) {
+            $apiData['per_page'] = 9999;
+            $apiData['page']     = 1;
+        }
 
         $makeTypes = [];
         $bodyStyleTypes = [];
@@ -407,6 +430,38 @@ class DealerProfileController extends Controller
             // ✅ IMPORTANT: reset indexes
             $inventoryData = $inventoryData->values();
 
+            // ─── Distance filtering ──────────────────────────────────
+            if ($distanceFilterActive) {
+                $geocoder   = new \App\Services\DistanceCalculation\FsaCentroidGeocoder();
+                $userCoords = [(float) $userLat, (float) $userLng];
+
+                if ($selectedDistance === 'provincial') {
+                    $userProvince = $geocoder->reverseGeocodeProvince((float) $userLat, (float) $userLng);
+                    if ($userProvince) {
+                        $inventoryData = $inventoryData->filter(function ($vehicle) use ($userProvince) {
+                            $dealerProvince = strtoupper(trim($vehicle->dealer_province ?? ''));
+                            return $dealerProvince === '' || strcasecmp($dealerProvince, $userProvince) === 0;
+                        })->values();
+                    }
+                } else {
+                    $kmLimit = (int) $selectedDistance;
+                    if ($kmLimit > 0) {
+                        $inventoryData = $inventoryData->filter(function ($vehicle) use ($geocoder, $userCoords, $kmLimit) {
+                            $dealerCoords = null;
+                            if (!empty($vehicle->dealer_postal_code)) {
+                                $dealerCoords = $geocoder->geocodePostalCode($vehicle->dealer_postal_code);
+                            }
+                            if ($dealerCoords === null && !empty($vehicle->dealer_city) && !empty($vehicle->dealer_province)) {
+                                $dealerCoords = $geocoder->geocodeCityProvince($vehicle->dealer_city, $vehicle->dealer_province);
+                            }
+                            if ($dealerCoords === null) return true;
+                            $dist = $this->haversineDistance($userCoords, $dealerCoords);
+                            return $dist === null || $dist <= $kmLimit;
+                        })->values();
+                    }
+                }
+            }
+
 
             // ✅ PAGINATION (BAAD ME)
             $perPage = 9;
@@ -476,6 +531,9 @@ class DealerProfileController extends Controller
                 'selected_highest_price' => $request->selected_highest_price,
                 'selected_asset' => $request->selected_asset,
                 'keywords' => $request->keywords,
+                'selected_distance' => $selectedDistance,
+                'user_lat'          => $hasGps ? (float) $userLat : null,
+                'user_lng'          => $hasGps ? (float) $userLng : null,
             ];
 
             return view('dealer', $data);
