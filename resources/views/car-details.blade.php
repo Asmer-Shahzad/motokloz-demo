@@ -431,9 +431,9 @@ function formatPrice($price)
                                 <div class="mb-2">
                                     <img src="/assets/images/Background (8).png" alt="phone" class="contact-icon light-dark">
                                     @if($dealerPhone !== 'N/A')
-                                        Mobile: <a href="tel:{{ $dealerPhone }}" class="dealer-contact-link">{{ $dealerPhone }}</a>
+                                        Phone: <a href="tel:{{ $dealerPhone }}" class="dealer-contact-link">{{ $dealerPhone }}</a>
                                     @else
-                                        Mobile: N/A
+                                        Phone: N/A
                                     @endif
                                 </div>
                                 <div class="mb-2">
@@ -770,7 +770,7 @@ function formatPrice($price)
                 </div>
             </div>
             <div class="row" id="relatedVehiclesContainer">
-                @foreach ($matchedVehicles as $relatedVehicle)
+                 @foreach ($matchedVehicles as $relatedVehicle)
                     <div class="col-lg-3 col-sm-6 dealer-vehicle-card">
                         <div class="modern-car-card shadow-sm">
                             <div class="car-card-top">
@@ -804,22 +804,17 @@ function formatPrice($price)
                                         class="img-box img-fluid"
                                         onerror="this.onerror=null;this.src='{{ $defaultImage }}';">
                                 </a>
-                                @if(auth()->id() !== $relatedVehicle->client_id)
-                                    {{-- ★ Wishlist Star Button --}}
-                                    <button class="card-wishlist-btn" id="wishlist-btn-{{ $relatedVehicle->id }}"
-                                        onclick="event.stopPropagation(); toggleLike({{ $relatedVehicle->id }}, this, {{ auth()->id() ?? 'null' }})"
-                                        title="Add to Wishlist">
-                                        
-                                        <i class="fa-spin fa-spinner fa d-none"
-                                            id="wishlist-spinner-{{ $relatedVehicle->id }}"></i>
-                                        
-                                        <i class="far fa-star" id="wishlist-icon-{{ $relatedVehicle->id }}"></i>
-                                    </button>
-                                @endif
+                                <button class="card-wishlist-btn"
+                                    id="wishlist-btn-{{ $relatedVehicle->id }}"
+                                    onclick="event.stopPropagation(); toggleLike({{ $relatedVehicle->id }}, this, {{ auth()->id() ?? 'null' }})"
+                                    title="Add to Wishlist">
+                                    <i class="fa fa-spinner fa-spin d-none" id="wishlist-spinner-{{ $relatedVehicle->id }}"></i>
+                                    <i class="far fa-star" id="wishlist-icon-{{ $relatedVehicle->id }}"></i>
+                                </button>
                                 <div class="badge-mileage">
                                     <img src="/assets/images/mile1.png" alt="Mileage" class="me-2" style="width:20px; height:12px;"> 
                                     {{ $relatedVehicle->mileage 
-                                        ? number_format((float) trim(str_ireplace('km', '', $relatedVehicle->mileage))) . ' km' 
+                                        ? trim(str_ireplace('km', '', $relatedVehicle->mileage)) . ' km' 
                                         : '0 km' 
                                     }}
                                 </div>
@@ -855,55 +850,30 @@ function formatPrice($price)
                                 </p>
 
                                 <div class="car-price-block text-end">
-
-                                    @php 
-                                        $displayPrice = $relatedVehicle->disclosed_price ?? 0; 
-                                    @endphp
-
-                                    {{-- ✅ OWNER: sirf price --}}
-                                    @if(auth()->id() === $relatedVehicle->client_id)
-
-                                        <h4 class="price-value">
-                                            ${{ formatPrice($displayPrice) }}
-                                        </h4>
-
-                                    {{-- 👥 OTHER USERS --}}
+                                    @php $displayPrice = round($relatedVehicle->disclosed_price ?? 0); @endphp
+                                    @if($displayPrice > 0)
+                                        <h4 class="price-value">${{ number_format($displayPrice) }}</h4>
                                     @else
-
-                                        @if($displayPrice > 0)
-                                            <h4 class="price-value">
-                                                ${{ formatPrice($displayPrice) }}
-                                            </h4>
+                                        @php
+                                            $cardPhone = null;
+                                            if (!empty($relatedVehicle->dealer->phone_no)) {
+                                                $cardPhone = $relatedVehicle->dealer->phone_no;
+                                            } elseif (!empty($relatedVehicle->dealer_phone_no)) {
+                                                $cardPhone = $relatedVehicle->dealer_phone_no;
+                                            } elseif (!empty($dealer) && !empty($dealer->phone_no)) {
+                                                $cardPhone = $dealer->phone_no;
+                                            }
+                                        @endphp
+                                        @if($cardPhone)
+                                            <a href="tel:{{ $cardPhone }}" class="price-value call-seller d-block text-decoration-none" onclick="event.stopPropagation();">
+                                                <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                            </a>
                                         @else
-
-                                            @php
-                                                $cardPhone = null;
-
-                                                if (!empty($relatedVehicle->dealer) && !empty($relatedVehicle->dealer->phone_no)) {
-                                                    $cardPhone = $relatedVehicle->dealer->phone_no;
-                                                } elseif (!empty($relatedVehicle->dealer_phone_no)) {
-                                                    $cardPhone = $relatedVehicle->dealer_phone_no;
-                                                } elseif (!empty($relatedVehicle->phone_no)) {
-                                                    $cardPhone = $relatedVehicle->phone_no;
-                                                }
-                                            @endphp
-
-                                            @if($cardPhone)
-                                                <a href="tel:{{ $cardPhone }}"
-                                                    class="price-value call-seller d-block text-decoration-none"
-                                                    onclick="event.stopPropagation();">
-                                                    <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
-                                                </a>
-                                            @else
-                                                <h4 class="price-value call-seller">
-                                                    <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
-                                                </h4>
-                                            @endif
-
+                                            <h4 class="price-value call-seller">
+                                                <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                            </h4>
                                         @endif
-
                                     @endif
-
                                 </div>
                             </div>
                         </div>

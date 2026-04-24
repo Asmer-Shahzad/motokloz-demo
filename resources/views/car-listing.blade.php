@@ -476,18 +476,16 @@ return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
                                         class="img-box img-fluid"
                                         onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
                                 </a>
-                                @if(auth()->id() !== $recent_vehicle->client_id)
-                                    {{-- ★ Wishlist Star Button --}}
-                                    <button class="card-wishlist-btn" id="wishlist-btn-{{ $recent_vehicle->id }}"
-                                        onclick="event.stopPropagation(); toggleLike({{ $recent_vehicle->id }}, this, {{ auth()->id() ?? 'null' }})"
-                                        title="Add to Wishlist">
-                                        
-                                        <i class="fa-spin fa-spinner fa d-none"
-                                            id="wishlist-spinner-{{ $recent_vehicle->id }}"></i>
-                                        
-                                        <i class="far fa-star" id="wishlist-icon-{{ $recent_vehicle->id }}"></i>
-                                    </button>
-                                @endif
+                                {{-- ★ Wishlist Star Button --}}
+                                <button class="card-wishlist-btn" id="wishlist-btn-{{ $recent_vehicle->id }}"
+                                    onclick="event.stopPropagation(); toggleLike({{ $recent_vehicle->id }}, this, {{ auth()->id() ?? 'null' }})"
+                                    title="Add to Wishlist">
+                                    
+                                    <i class="fa-spin fa-spinner fa d-none"
+                                        id="wishlist-spinner-{{ $recent_vehicle->id }}"></i>
+                                    
+                                    <i class="far fa-star" id="wishlist-icon-{{ $recent_vehicle->id }}"></i>
+                                </button>
                                 <div class="badge-mileage d-flex align-items-center">
                                     <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
                                         style="width:20px; height:12px;">
@@ -533,55 +531,32 @@ return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
                                                                                                                                                                                                                                                                             </div> -->
 
                                 <div class="car-price-block text-end">
-
-                                    @php 
-                                        $displayPrice = $recent_vehicle->disclosed_price ?? 0; 
-                                    @endphp
-
-                                    {{-- ✅ OWNER: sirf price --}}
-                                    @if(auth()->id() === $recent_vehicle->client_id)
-
-                                        <h4 class="price-value">
-                                            ${{ formatPrice($displayPrice) }}
-                                        </h4>
-
-                                    {{-- 👥 OTHER USERS --}}
+                                    @php $displayPrice = round($recent_vehicle->disclosed_price ?? 0); @endphp
+                                    @if($displayPrice > 0)
+                                    <h4 class="price-value">${{ formatPrice($displayPrice) }}</h4>
                                     @else
-
-                                        @if($displayPrice > 0)
-                                            <h4 class="price-value">
-                                                ${{ formatPrice($displayPrice) }}
-                                            </h4>
-                                        @else
-
-                                            @php
-                                                $cardPhone = null;
-
-                                                if (!empty($recent_vehicle->dealer) && !empty($recent_vehicle->dealer->phone_no)) {
-                                                    $cardPhone = $recent_vehicle->dealer->phone_no;
-                                                } elseif (!empty($recent_vehicle->dealer_phone_no)) {
-                                                    $cardPhone = $recent_vehicle->dealer_phone_no;
-                                                } elseif (!empty($recent_vehicle->phone_no)) {
-                                                    $cardPhone = $recent_vehicle->phone_no;
-                                                }
-                                            @endphp
-
-                                            @if($cardPhone)
-                                                <a href="tel:{{ $cardPhone }}"
-                                                    class="price-value call-seller d-block text-decoration-none"
-                                                    onclick="event.stopPropagation();">
-                                                    <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
-                                                </a>
-                                            @else
-                                                <h4 class="price-value call-seller">
-                                                    <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
-                                                </h4>
-                                            @endif
-
-                                        @endif
-
+                                    @php
+                                    $cardPhone = null;
+                                    if (!empty($recent_vehicle->dealer) && !empty($recent_vehicle->dealer->phone_no)) {
+                                    $cardPhone = $recent_vehicle->dealer->phone_no;
+                                    } elseif (!empty($recent_vehicle->dealer_phone_no)) {
+                                    $cardPhone = $recent_vehicle->dealer_phone_no;
+                                    } elseif (!empty($recent_vehicle->phone_no)) {
+                                    $cardPhone = $recent_vehicle->phone_no;
+                                    }
+                                    @endphp
+                                    @if($cardPhone)
+                                    <a href="tel:{{ $cardPhone }}"
+                                        class="price-value call-seller d-block text-decoration-none"
+                                        onclick="event.stopPropagation();">
+                                        <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                    </a>
+                                    @else
+                                    <h4 class="price-value call-seller">
+                                        <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                    </h4>
                                     @endif
-
+                                    @endif
                                 </div>
                             </div>
                         </div>
