@@ -740,9 +740,9 @@ function formatPrice($price) {
                                     </button>
                                     <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2" style="width:20px; height:12px;"> 
                                         {{ $recent_vehicle->mileage 
-                                            ? trim(str_ireplace('km', '', $recent_vehicle->mileage)) . ' km' 
-                                            : '0 km' 
-                                        }}
+                                        ? number_format((float) trim(str_ireplace('km', '', $recent_vehicle->mileage))) . ' km'
+                                        : '0 km'
+                                    }}
                                     </div>
                                 </div>
                                 <div class="car-card-bottom">
