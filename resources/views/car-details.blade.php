@@ -251,6 +251,7 @@
                     {{ $searched_vehicle->mfg_auto ?? '' }}
                     {{ $searched_vehicle->model ?? '' }}
                     {{ $searched_vehicle->trim ?? '' }}
+                    {{ $searched_vehicle->stock_number ?? '' }}
                 </h1>
                 <div class="mto-meta-row d-flex flex-wrap gap-3 mt-3">
                     @if($dealerCity || $dealerProvince)
@@ -393,51 +394,14 @@
 
             <div class="col-lg-4" data-aos="fade-left" data-aos-duration="700" data-aos-delay="100">
                 <div class="mto-sticky-side">
-
-                    
-                    @if(strtolower($source ?? '') === 'motokloz')
-                        <div class="mto-card-unit mb-4 p-4 shadow-sm">
-
-                            <h6 class="fw-bold mb-3">Get Started</h6>
-
-                            <!-- NEW Test Drive Button -->
-                            <button type="button" class="mto-btn-orange w-100 mb-3"
-                                data-bs-toggle="modal" data-bs-target="#motoklozTestDriveModal">
-                                Schedule Test Drive <i class="fa-solid fa-car ms-2"></i>
-                            </button>
-
-                            <!-- NEW Offer Button -->
-                            <button type="button" class="mto-btn-black w-100"
-                                data-bs-toggle="modal" data-bs-target="#motoklozOfferModal">
-                                Make An Offer Price <i class="fa-solid fa-hand-holding-dollar ms-2"></i>
-                            </button>
-
-                        </div>
-                    @else
-                        <!-- Get Started -->
-                        <div class="mto-card-unit mb-4 p-4 shadow-sm">
-                            <h6 class="fw-bold mb-3">Get Started</h6>
-
-                            <button type="button" class="mto-btn-orange w-100 mb-3"
-                                data-bs-toggle="modal" data-bs-target="#testDriveModals">
-                                Schedule Test Drive <i class="fa-solid fa-car ms-2"></i>
-                            </button>
-
-                            <button type="button" class="mto-btn-black w-100"
-                                data-bs-toggle="modal" data-bs-target="#offerModal">
-                                Make An Offer Price <i class="fa-solid fa-hand-holding-dollar ms-2"></i>
-                            </button>
-                        </div>
-                    @endif
-
                     <!-- Dealer Card -->
-                    <div class="mto-card-unit p-4 shadow-sm">
+                    <div class="mto-card-unit p-4 mb-4 shadow-sm">
                         <div class="d-flex justify-content-between mb-4 listed-card-right">
                             <span class="fw-bold">Listed by</span>
-                            <span class="mto-rating-badge">
+                            <!-- <span class="mto-rating-badge">
                                 <i class="fa-solid fa-star me-1"></i> 4.96
                                 <span class="fw-normal text-muted ms-1">(672 reviews)</span>
-                            </span>
+                            </span> -->
                         </div>
 
                         @if($dealer)
@@ -458,7 +422,7 @@
                             <div class="mto-contact-details small fw-semibold">
                                 <div class="mb-2">
                                     <img src="/assets/images/Background (8).png" alt="phone" class="contact-icon light-dark">
-                                    Mobile: {{ $dealerPhone }}
+                                    Phone: {{ $dealerPhone }}
                                 </div>
                                 <div class="mb-2">
                                     <img src="/assets/images/Background (10).png" alt="email" class="contact-icon light-dark">
@@ -479,46 +443,120 @@
                             <p class="text-muted small">Dealer info not available.</p>
                         @endif
 
-                        {{-- Chat with Dealer --}}
-                        @if($localInventoryId && $localDealerId)
-                            @auth
-                                @if(auth()->id() == $localDealerId)
-                                    {{-- Owner: go to messages page --}}
-                                    <a href="{{ route('chat.index') }}" class="mb-3 mt-4 d-block">
-                                        <button type="button" class="mto-btn-black w-100 py-2">
-                                            <i class="fa-regular fa-comment me-2"></i> My Messages
-                                        </button>
-                                    </a>
-                                @else
-                                    <form method="POST" action="{{ route('chat.start') }}" class="mb-3 mt-4">
-                                        @csrf
-                                        <input type="hidden" name="inventory_id" value="{{ $localInventoryId }}">
-                                        <input type="hidden" name="dealer_id"    value="{{ $localDealerId }}">
-                                        <input type="hidden" name="source"       value="{{ $source }}">
-                                        <button type="submit" class="mto-btn-black w-100 py-2">
-                                            <i class="fa-regular fa-comment me-2"></i> Chat with Dealer
-                                        </button>
-                                    </form>
-                            @endif
-                            @else
-                                <button type="button" class="mto-btn-black w-100 mt-4 mb-3 py-2"
-                                    onclick="openChatLoginModal({{ $localInventoryId }}, {{ $localDealerId }}, '{{ route('chat.start') }}')">
-                                    <i class="fa-regular fa-comment me-2"></i> Chat with Dealer
-                                </button>
-                            @endauth
-                        @endif
-
                         {{-- Dealer Inventory Button --}}
                         @if($dealer && !empty($dealer->id) && $source !== 'motokloz')
                             <a href="{{ $inventoryUrl }}">
-                                <button class="mto-btn-orange w-100 py-2">
+                                <button class="mto-btn-orange mt-2 w-100 py-2">
                                     Dealer's Inventory
                                     <i class="fa-solid fa-arrow-right ms-2"></i>
                                 </button>
                             </a>
                         @endif
                     </div>
+                    @if(strtolower($source ?? '') === 'motokloz')
+                        <div class="mto-card-unit mb-4 p-4 shadow-sm">
 
+                            <h6 class="fw-bold mb-3">Get Started</h6>
+
+                            <!-- NEW Test Drive Button -->
+                            <button type="button" class="mto-btn-orange w-100 mb-3"
+                                data-bs-toggle="modal" data-bs-target="#motoklozTestDriveModal">
+                                Schedule Test Drive <i class="fa-solid fa-car ms-2"></i>
+                            </button>
+
+                            <!-- NEW Offer Button -->
+                            <button type="button" class="mto-btn-black w-100 mb-3"
+                                data-bs-toggle="modal" data-bs-target="#motoklozOfferModal">
+                                Make An Offer <i class="fa-solid fa-hand-holding-dollar ms-2"></i>
+                            </button>
+
+                            <!-- NEW Chat Button -->
+                            <button type="button"
+                                class="mto-btn-black w-100 mb-3"
+                                onclick="window.location.href='sms:{{ $dealerPhone }}'">
+                                <i class="fa-solid fa-message me-2"></i> SMS
+                            </button>
+
+                            {{-- Chat with Dealer --}}
+                            @if($localInventoryId && $localDealerId)
+                                @auth
+                                    @if(auth()->id() == $localDealerId)
+                                        {{-- Owner: go to messages page --}}
+                                        <a href="{{ route('chat.index') }}" class="mb-3 d-block">
+                                            <button type="button" class="mto-btn-black w-100">
+                                                <i class="fa-regular fa-comment me-2"></i> My Messages
+                                            </button>
+                                        </a>
+                                    @else
+                                        <form method="POST" action="{{ route('chat.start') }}">
+                                            @csrf
+                                            <input type="hidden" name="inventory_id" value="{{ $localInventoryId }}">
+                                            <input type="hidden" name="dealer_id"    value="{{ $localDealerId }}">
+                                            <input type="hidden" name="source"       value="{{ $source }}">
+                                            <button type="submit" class="mto-btn-black w-100">
+                                                <i class="fa-regular fa-comment me-2"></i> Chat with Dealer
+                                            </button>
+                                        </form>
+                                @endif
+                                @else
+                                    <button type="button" class="mto-btn-black w-100"
+                                        onclick="openChatLoginModal({{ $localInventoryId }}, {{ $localDealerId }}, '{{ route('chat.start') }}')">
+                                        <i class="fa-regular fa-comment me-2"></i> Chat with Dealer
+                                    </button>
+                                @endauth
+                            @endif
+                        </div>
+                    @else
+                        <!-- Get Started -->
+                        <div class="mto-card-unit mb-4 p-4 shadow-sm">
+                            <h6 class="fw-bold mb-3">Get Started</h6>
+
+                            <button type="button" class="mto-btn-orange w-100 mb-3"
+                                data-bs-toggle="modal" data-bs-target="#testDriveModals">
+                                Schedule Test Drive <i class="fa-solid fa-car ms-2"></i>
+                            </button>
+
+                            <button type="button" class="mto-btn-black w-100 mb-3"
+                                data-bs-toggle="modal" data-bs-target="#offerModal">
+                                Make An Offer <i class="fa-solid fa-hand-holding-dollar ms-2"></i>
+                            </button>
+
+                            <button type="button"
+                                class="mto-btn-black w-100 mb-3"
+                                onclick="window.location.href='sms:{{ $dealerPhone }}'">
+                                <i class="fa-solid fa-message me-2"></i> SMS
+                            </button>
+
+                            {{-- Chat with Dealer --}}
+                            @if($localInventoryId && $localDealerId)
+                                @auth
+                                    @if(auth()->id() == $localDealerId)
+                                        {{-- Owner: go to messages page --}}
+                                        <a href="{{ route('chat.index') }}" class="mb-3 mt-4 d-block">
+                                            <button type="button" class="mto-btn-black w-100">
+                                                <i class="fa-regular fa-comment me-2"></i> My Messages
+                                            </button>
+                                        </a>
+                                    @else
+                                        <form method="POST" action="{{ route('chat.start') }}">
+                                            @csrf
+                                            <input type="hidden" name="inventory_id" value="{{ $localInventoryId }}">
+                                            <input type="hidden" name="dealer_id"    value="{{ $localDealerId }}">
+                                            <input type="hidden" name="source"       value="{{ $source }}">
+                                            <button type="submit" class="mto-btn-black w-100">
+                                                <i class="fa-regular fa-comment me-2"></i> Chat with Dealer
+                                            </button>
+                                        </form>
+                                @endif
+                                @else
+                                    <button type="button" class="mto-btn-black w-100"
+                                        onclick="openChatLoginModal({{ $localInventoryId }}, {{ $localDealerId }}, '{{ route('chat.start') }}')">
+                                        <i class="fa-regular fa-comment me-2"></i> Chat with Dealer
+                                    </button>
+                                @endauth
+                            @endif
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
