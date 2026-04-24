@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="listing-page mt-5">
-        <div class="container">
-            <div class="page-content">
+<div class="listing-page mt-5">
+    <div class="container">
+        <div class="page-content">
             <!-- Page Top -->
             <div class="page-top">
                 @include('partials.user-account-breadcrumbs')
@@ -110,14 +110,15 @@
                                             <div class="modern-car-card shadow-sm">
                                                 <div class="car-card-top" style="position: relative;">
                                                     @php
-                                                        // Create a URL-friendly slug from the vehicle title    
-                                                        $vehicleName = trim(
-                                                            ($listing->year ?? '') . ' ' . 
-                                                            ($listing->mfg_auto ?? '') . ' ' . 
-                                                            ($listing->model ?? '')
-                                                        );
-                                                        $slug = $vehicleName ? Str::slug($vehicleName, '-') : 'vehicle';
-                                                        $detailUrl = route('inventory_product_details', ['name' => $slug, 'id' => $listing->id]);
+                                                    // Create a URL-friendly slug from the vehicle title
+                                                    $vehicleName = trim(
+                                                    ($listing->year ?? '') . ' ' .
+                                                    ($listing->mfg_auto ?? '') . ' ' .
+                                                    ($listing->model ?? '')
+                                                    );
+                                                    $slug = $vehicleName ? Str::slug($vehicleName, '-') : 'vehicle';
+                                                    $detailUrl = route('inventory_product_details', ['name' => $slug,
+                                                    'id' => $listing->id]);
                                                     @endphp
                                                     <a href="{{ $detailUrl }}">
                                                         <img style="width:100%" src="{{ $listing->primary_image
@@ -128,6 +129,8 @@
                                                             alt="Vehicle Image" class="img-box img-fluid"
                                                             onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
                                                     </a>
+
+                                                    {{-- Wishlist button removed --}}
 
                                                     <!-- ✅ Eye Icon Button with Text - Top Left -->
                                                     <button class="eye-toggle-btn" data-id="{{ $listing->id }}"
@@ -143,9 +146,10 @@
                                                     <div class="badge-mileage d-flex align-items-center">
                                                         <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
                                                             style="width:20px; height:12px;">
-                                                        {{ $listing->mileage
-                                                        ? trim(str_ireplace('km', '', $listing->mileage)) . ' km'
-                                                        : '0 km' }}
+                                                        {{ $listing->mileage 
+                                                            ? number_format((float) trim(str_ireplace('km', '', $listing->mileage))) . ' km'
+                                                            : '0 km'
+                                                        }}
                                                     </div>
                                                 </div>
                                                 <div class="car-card-bottom">
@@ -171,16 +175,16 @@
                                                     </p>
 
                                                     <!-- <div class="car-circle-icons-group">
-                                                                <img src="/assets/images/no-accidents.png" alt="">
-                                                                <img src="/assets/images/low-mileage.png" alt="">
-                                                                <img src="/assets/images/service-plan.png" alt="">
-                                                                <img src="/assets/images/powertrain-warranty.png" alt="">
-                                                                <span class="extra-icons-count">12+</span>
-                                                            </div> -->
+                                                                                                        <img src="/assets/images/no-accidents.png" alt="">
+                                                                                                        <img src="/assets/images/low-mileage.png" alt="">
+                                                                                                        <img src="/assets/images/service-plan.png" alt="">
+                                                                                                        <img src="/assets/images/powertrain-warranty.png" alt="">
+                                                                                                        <span class="extra-icons-count">12+</span>
+                                                                                                    </div> -->
 
                                                     <div class="car-price-block text-end">
                                                         <h4 class="price-value">
-                                                            ${{ number_format((float)($listing->disclosed_price ?? 0))
+                                                            ${{ number_format((float) ($listing->disclosed_price ?? 0))
                                                             }}
                                                         </h4>
                                                     </div>
@@ -208,138 +212,197 @@
             </div>
         </div>
     </div>
-@endsection
 
-<style>
-    .car-card-top {
-        position: relative;
-        overflow: hidden;
-        border-radius: 12px 12px 0 0;
-    }
-
-    /* Eye Toggle Button - Top Left Position */
-    .eye-toggle-btn {
-        position: absolute;
-        top: 12px;
-        left: 12px;
-        z-index: 10;
-        background: {
-                {
-                $listing->share_indicators ? '#28a745': '#dc3545'
-            }
-        };
-        border: none;
-        border-radius: 20px;
-        padding: 6px 12px;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        color: white;
-        font-size: 12px;
-        font-weight: 500;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .eye-toggle-btn i {
-        font-size: 14px;
-    }
-
-    .eye-toggle-btn .btn-text {
-        font-size: 11px;
-    }
-
-    .eye-toggle-btn:hover {
-        transform: scale(1.05);
-        background: #f58d02 !important;
-    }
-
-    .eye-toggle-btn[data-active="true"] {
-        background: var(--banner-bg-color);
-        color:var(--select-color)
-        border: 1px solid var(--border-color);
-    }
-
-    .eye-toggle-btn[data-active="true"]:hover {
-        background: #f58d02;
-        color: white;
-        border-color: #f58d02;
-    }
-
-    /* Inactive State (Eye slash - Share indicators inactive) */
-    .eye-toggle-btn[data-active="false"] {
-        background: #f58d02;
-        color: white;
-    }
-
-    .eye-toggle-btn[data-active="false"]:hover {
-        background: #f58d02;
-        color: white;
-        transform: scale(1.1);
-    }
-
-    .eye-toggle-btn i {
-        font-size: 18px;
-    }
-
-    .eye-toggle-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        transform: none;
-    }
-
-    .filter-btn {
-        background: #f3f4f6;
-        border: none;
-        padding: 9px 20px;
-        font-size: 14px;
-        font-weight: 500;
-        border-radius: 50px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        color: #333;
-    }
-</style>
-<script>
-    function toggleMotoklozStatus(inventoryId) {
-        var $btn = $('.eye-toggle-btn[data-id="' + inventoryId + '"]');
-
-        // Current state from button's data attribute
-        var isActive = $btn.attr('data-active') === 'true';
-
-        // Show loading
-        $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> <span class="btn-text">Loading...</span>');
-
-        // Determine action
-        var action = isActive ? 'deactivate' : 'activate';
-        var apiUrl = '{{ env('diskloz_base_url') }}/api/inventory-' + action + '-share-indicators/' + inventoryId;
-
-        $.ajax({
-            url: apiUrl,
-            method: 'POST',
-            data: {
-                _token: $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function (response) {
-                if (response.status) {
-                    showSnackbar(response.message, 'success');
-
-                    // Update button based on action
-                    if (action === 'deactivate') {
-                        // Change to inactive
-                        $btn.attr('data-active', 'false');
-                        $btn.html('<i class="fa-solid fa-eye-slash"></i> <span class="btn-text">Inactive</span>');
-                    } else {
-                        // Change to active
-                        $btn.attr('data-active', 'true');
-                        $btn.html('<i class="fa-solid fa-eye"></i> <span class="btn-text">Active</span>');
+    <script>
+        var DISKLOZ_BASE_LISTINGS = "{{ env('diskloz_base_url') }}";
+        $(document).ready(function () {
+            @auth
+            var authId = {{ auth() -> id()
+        }};
+        fetch(DISKLOZ_BASE_LISTINGS + '/api/favorites?client_id=' + authId)
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                var likedIds = new Set((data || []).map(function (item) { return item.inventory_id; }));
+                $('button[id^="wishlist-btn-"]').each(function () {
+                    var id = parseInt(this.id.replace('wishlist-btn-', ''));
+                    if (likedIds.has(id)) {
+                        $(this).addClass('active');
+                        $('#wishlist-icon-' + id).removeClass('far').addClass('fas').css('color', '#f0a500');
                     }
-                    $btn.prop('disabled', false);
-                } else {
-                    showSnackbar(response.message, 'error');
-                    // Revert to original state
+                });
+            }).catch(function () { });
+        @endauth
+    });
+
+        function toggleLike(vehicleId, element, authId) {
+            if (!authId || authId === 'null') { window.location.href = '/login'; return; }
+            var $btn = $(element), $icon = $('#wishlist-icon-' + vehicleId);
+            var isLiked = $btn.hasClass('active');
+            $btn.prop('disabled', true);
+            $('#wishlist-spinner-' + vehicleId).removeClass('d-none');
+            $icon.addClass('d-none');
+            var fd = new FormData();
+            fd.append('client_id', authId);
+            fd.append('vehicle_id', vehicleId);
+            $.ajax({
+                url: isLiked ? '/remove_like' : '/add_like', type: 'POST',
+                data: fd, processData: false, contentType: false, dataType: 'json',
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                success: function (res) {
+                    if (res.success) {
+                        if (isLiked) { $btn.removeClass('active'); $icon.removeClass('fas').addClass('far').css('color', '#aaa'); }
+                        else { $btn.addClass('active'); $icon.removeClass('far').addClass('fas').css('color', '#f0a500'); }
+                    }
+                },
+                complete: function () { $('#wishlist-spinner-' + vehicleId).addClass('d-none'); $icon.removeClass('d-none'); $btn.prop('disabled', false); }
+            });
+        }
+    </script>
+
+    @endsection
+
+    <style>
+        .car-card-top {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px 12px 0 0;
+        }
+
+        /* Eye Toggle Button - Top Left Position */
+        .eye-toggle-btn {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 10;
+
+            background: {
+                    {
+                    $listing->share_indicators ? '#28a745': '#dc3545'
+                }
+            }
+
+            ;
+            border: none;
+            border-radius: 20px;
+            padding: 6px 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .eye-toggle-btn i {
+            font-size: 14px;
+        }
+
+        .eye-toggle-btn .btn-text {
+            font-size: 11px;
+        }
+
+        .eye-toggle-btn:hover {
+            transform: scale(1.05);
+            background: #f58d02 !important;
+        }
+
+        .eye-toggle-btn[data-active="true"] {
+            background: var(--banner-bg-color);
+            color: var(--select-color) border: 1px solid var(--border-color);
+        }
+
+        .eye-toggle-btn[data-active="true"]:hover {
+            background: #f58d02;
+            color: white;
+            border-color: #f58d02;
+        }
+
+        /* Inactive State (Eye slash - Share indicators inactive) */
+        .eye-toggle-btn[data-active="false"] {
+            background: #f58d02;
+            color: white;
+        }
+
+        .eye-toggle-btn[data-active="false"]:hover {
+            background: #f58d02;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .eye-toggle-btn i {
+            font-size: 18px;
+        }
+
+        .eye-toggle-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .filter-btn {
+            background: #f3f4f6;
+            border: none;
+            padding: 9px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #333;
+        }
+    </style>
+    <script>
+        function toggleMotoklozStatus(inventoryId) {
+            var $btn = $('.eye-toggle-btn[data-id="' + inventoryId + '"]');
+
+            // Current state from button's data attribute
+            var isActive = $btn.attr('data-active') === 'true';
+
+            // Show loading
+            $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> <span class="btn-text">Loading...</span>');
+
+            // Determine action
+            var action = isActive ? 'deactivate' : 'activate';
+            var apiUrl = '{{ env('diskloz_base_url') }}/api/inventory-' + action + '-share-indicators/' + inventoryId;
+
+            $.ajax({
+                url: apiUrl,
+                method: 'POST',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (response) {
+                    if (response.status) {
+                        showSnackbar(response.message, 'success');
+
+                        // Update button based on action
+                        if (action === 'deactivate') {
+                            // Change to inactive
+                            $btn.attr('data-active', 'false');
+                            $btn.html('<i class="fa-solid fa-eye-slash"></i> <span class="btn-text">Inactive</span>');
+                        } else {
+                            // Change to active
+                            $btn.attr('data-active', 'true');
+                            $btn.html('<i class="fa-solid fa-eye"></i> <span class="btn-text">Active</span>');
+                        }
+                        $btn.prop('disabled', false);
+                    } else {
+                        showSnackbar(response.message, 'error');
+                        // Revert to original state
+                        if (isActive) {
+                            $btn.html('<i class="fa-solid fa-eye"></i> <span class="btn-text">Active</span>');
+                        } else {
+                            $btn.html('<i class="fa-solid fa-eye-slash"></i> <span class="btn-text">Inactive</span>');
+                        }
+                        $btn.prop('disabled', false);
+                    }
+                },
+                error: function () {
+                    showSnackbar('Error!', 'error');
                     if (isActive) {
                         $btn.html('<i class="fa-solid fa-eye"></i> <span class="btn-text">Active</span>');
                     } else {
@@ -347,70 +410,60 @@
                     }
                     $btn.prop('disabled', false);
                 }
-            },
-            error: function () {
-                showSnackbar('Error!', 'error');
-                if (isActive) {
-                    $btn.html('<i class="fa-solid fa-eye"></i> <span class="btn-text">Active</span>');
-                } else {
-                    $btn.html('<i class="fa-solid fa-eye-slash"></i> <span class="btn-text">Inactive</span>');
-                }
-                $btn.prop('disabled', false);
-            }
-        });
-    }
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-
-        // ✅ Snackbar function
-        function showSnackbar(message, type = 'success', duration = 3000) {
-            let snackbar = document.getElementById('snackbar');
-            if (!snackbar) {
-                snackbar = document.createElement('div');
-                snackbar.id = 'snackbar';
-                document.body.appendChild(snackbar);
-            }
-
-            snackbar.textContent = message;
-            snackbar.className = 'show ' + type;
-
-            setTimeout(() => {
-                snackbar.classList.remove('show');
-            }, duration);
-        }
-
-        // ✅ Attach click to all dropdown sort links
-        const sortDropdownLinks = document.querySelectorAll('.dropdown-item');
-        sortDropdownLinks.forEach(link => {
-            link.addEventListener('click', function (e) {
-                const text = this.textContent.trim();
-                // store snackbar message
-                localStorage.setItem('snackbar', `Sorted by: ${text}`);
-            });
-        });
-
-        // ✅ Show snackbar if stored in localStorage
-        const message = localStorage.getItem('snackbar');
-        if (message) {
-            showSnackbar(message, 'info', 2000);
-            localStorage.removeItem('snackbar');
-        }
-
-    });
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const closeIcon = document.querySelector('.warning-div svg:last-child');
-        if (closeIcon) {
-            closeIcon.addEventListener('click', function () {
-                const listingTop = this.closest('.listing-top');
-                if (listingTop) {
-                    listingTop.style.transition = 'opacity 0.3s ease';
-                    listingTop.style.opacity = '0';
-                    setTimeout(() => listingTop.remove(), 300);
-                }
             });
         }
-    });
-</script>
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // ✅ Snackbar function
+            function showSnackbar(message, type = 'success', duration = 3000) {
+                let snackbar = document.getElementById('snackbar');
+                if (!snackbar) {
+                    snackbar = document.createElement('div');
+                    snackbar.id = 'snackbar';
+                    document.body.appendChild(snackbar);
+                }
+
+                snackbar.textContent = message;
+                snackbar.className = 'show ' + type;
+
+                setTimeout(() => {
+                    snackbar.classList.remove('show');
+                }, duration);
+            }
+
+            // ✅ Attach click to all dropdown sort links
+            const sortDropdownLinks = document.querySelectorAll('.dropdown-item');
+            sortDropdownLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    const text = this.textContent.trim();
+                    // store snackbar message
+                    localStorage.setItem('snackbar', `Sorted by: ${text}`);
+                });
+            });
+
+            // ✅ Show snackbar if stored in localStorage
+            const message = localStorage.getItem('snackbar');
+            if (message) {
+                showSnackbar(message, 'info', 2000);
+                localStorage.removeItem('snackbar');
+            }
+
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const closeIcon = document.querySelector('.warning-div svg:last-child');
+            if (closeIcon) {
+                closeIcon.addEventListener('click', function () {
+                    const listingTop = this.closest('.listing-top');
+                    if (listingTop) {
+                        listingTop.style.transition = 'opacity 0.3s ease';
+                        listingTop.style.opacity = '0';
+                        setTimeout(() => listingTop.remove(), 300);
+                    }
+                });
+            }
+        });
+    </script>

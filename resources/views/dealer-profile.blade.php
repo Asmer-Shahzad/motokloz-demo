@@ -1,10 +1,10 @@
     @extends('layouts.app')
 
 @php
-  function formatPrice($price) {
+function formatPrice($price) {
     $cleaned = str_replace(['$', ','], '', $price);
     $number = is_numeric($cleaned) ? (float)$cleaned : 0;
-    return number_format($number, 2, '.', ',');
+    return number_format(round($number), 0, '.', ','); // 👈 yahan fix
 }
 @endphp
 @php
@@ -635,7 +635,7 @@
                         <i class="fa-brands fa-whatsapp me-2 fs-5"></i>
                         <strong>WhatsApp:</strong> {{ $dealer->phone_no ?? 'N/A' }}
                     </p>
-                    @if($dealer && $dealer->subaccount && $dealer->subaccount['twilio_phone_number'])
+                    @if(!empty($dealer?->subaccount['twilio_phone_number']))
                         <p class="mb-2">
                             <img src="/assets/images/Background (11).png" width="20" alt="whatsapp" class="contact-icon light-dark me-2"> 
                             <strong>SMS:</strong> {{ $dealer->subaccount['twilio_phone_number'] }}
@@ -731,10 +731,22 @@
                                             onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
                                         >
                                     </a>
+                                    @if(auth()->id() !== $recent_vehicle->client_id)
+                                        {{-- ★ Wishlist Star Button --}}
+                                        <button class="card-wishlist-btn" id="wishlist-btn-{{ $recent_vehicle->id }}"
+                                            onclick="event.stopPropagation(); toggleLike({{ $recent_vehicle->id }}, this, {{ auth()->id() ?? 'null' }})"
+                                            title="Add to Wishlist">
+                                            
+                                            <i class="fa-spin fa-spinner fa d-none"
+                                                id="wishlist-spinner-{{ $recent_vehicle->id }}"></i>
+                                            
+                                            <i class="far fa-star" id="wishlist-icon-{{ $recent_vehicle->id }}"></i>
+                                        </button>
+                                    @endif
                                     <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2" style="width:20px; height:12px;"> 
                                         {{ $recent_vehicle->mileage 
-                                            ? trim(str_ireplace('km', '', $recent_vehicle->mileage)) . ' km' 
-                                            : '0 km' 
+                                            ? number_format((float) trim(str_ireplace('km', '', $recent_vehicle->mileage))) . ' km'
+                                            : '0 km'
                                         }}
                                     </div>
                                 </div>
@@ -775,10 +787,55 @@
                                     </div> -->
 
                                     <div class="car-price-block text-end">
-                                        <h4 class="price-value">
-                                            ${{ formatPrice($recent_vehicle->disclosed_price ?? 0) }}
-                                        </h4>
-                                        <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
+
+                                        @php 
+                                            $displayPrice = $recent_vehicle->disclosed_price ?? 0; 
+                                        @endphp
+
+                                        {{-- ✅ OWNER: sirf price --}}
+                                        @if(auth()->id() === $recent_vehicle->client_id)
+
+                                            <h4 class="price-value">
+                                                ${{ formatPrice($displayPrice) }}
+                                            </h4>
+
+                                        {{-- 👥 OTHER USERS --}}
+                                        @else
+
+                                            @if($displayPrice > 0)
+                                                <h4 class="price-value">
+                                                    ${{ formatPrice($displayPrice) }}
+                                                </h4>
+                                            @else
+
+                                                @php
+                                                    $cardPhone = null;
+
+                                                    if (!empty($recent_vehicle->dealer) && !empty($recent_vehicle->dealer->phone_no)) {
+                                                        $cardPhone = $recent_vehicle->dealer->phone_no;
+                                                    } elseif (!empty($recent_vehicle->dealer_phone_no)) {
+                                                        $cardPhone = $recent_vehicle->dealer_phone_no;
+                                                    } elseif (!empty($recent_vehicle->phone_no)) {
+                                                        $cardPhone = $recent_vehicle->phone_no;
+                                                    }
+                                                @endphp
+
+                                                @if($cardPhone)
+                                                    <a href="tel:{{ $cardPhone }}"
+                                                        class="price-value call-seller d-block text-decoration-none"
+                                                        onclick="event.stopPropagation();">
+                                                        <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                                    </a>
+                                                @else
+                                                    <h4 class="price-value call-seller">
+                                                        <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                                    </h4>
+                                                @endif
+
+                                            @endif
+
+                                        @endif
+
                                     </div>
                                 </div>
                             </div>
@@ -1069,5 +1126,50 @@
             pointer-events: none;
         }
     </style>
+
+<script>
+var DISKLOZ_BASE_DP = "{{ env('diskloz_base_url') }}";
+$(document).ready(function () {
+    @auth
+    var authId = {{ auth()->id() }};
+    fetch(DISKLOZ_BASE_DP + '/api/favorites?client_id=' + authId)
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            var likedIds = new Set((data || []).map(function(item) { return item.inventory_id; }));
+            $('button[id^="wishlist-btn-"]').each(function () {
+                var id = parseInt(this.id.replace('wishlist-btn-', ''));
+                if (likedIds.has(id)) {
+                    $(this).addClass('active');
+                    $('#wishlist-icon-' + id).removeClass('far').addClass('fas').css('color', '#f0a500');
+                }
+            });
+        }).catch(function() {});
+    @endauth
+});
+
+function toggleLike(vehicleId, element, authId) {
+    if (!authId || authId === 'null') { window.location.href = '/login'; return; }
+    var $btn = $(element), $icon = $('#wishlist-icon-' + vehicleId);
+    var isLiked = $btn.hasClass('active');
+    $btn.prop('disabled', true);
+    $('#wishlist-spinner-' + vehicleId).removeClass('d-none');
+    $icon.addClass('d-none');
+    var fd = new FormData();
+    fd.append('client_id', authId);
+    fd.append('vehicle_id', vehicleId);
+    $.ajax({
+        url: isLiked ? '/remove_like' : '/add_like', type: 'POST',
+        data: fd, processData: false, contentType: false, dataType: 'json',
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        success: function(res) {
+            if (res.success) {
+                if (isLiked) { $btn.removeClass('active'); $icon.removeClass('fas').addClass('far').css('color', '#aaa'); }
+                else { $btn.addClass('active'); $icon.removeClass('far').addClass('fas').css('color', '#f0a500'); }
+            }
+        },
+        complete: function() { $('#wishlist-spinner-' + vehicleId).addClass('d-none'); $icon.removeClass('d-none'); $btn.prop('disabled', false); }
+    });
+}
+</script>
 
 @endsection

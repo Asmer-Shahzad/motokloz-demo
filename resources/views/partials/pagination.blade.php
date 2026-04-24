@@ -1,6 +1,13 @@
 @if(isset($last_page) && $last_page > 1)
     @php
         $queryParams = request()->except('page');
+        // Ensure GPS coords are preserved in pagination links
+        if (empty($queryParams['user_lat']) && isset($user_lat) && $user_lat) {
+            $queryParams['user_lat'] = $user_lat;
+        }
+        if (empty($queryParams['user_lng']) && isset($user_lng) && $user_lng) {
+            $queryParams['user_lng'] = $user_lng;
+        }
         $half = 1; // show one page on each side of current
         $start = max(1, $current_page - $half);
         $end = min($last_page, $current_page + $half);
