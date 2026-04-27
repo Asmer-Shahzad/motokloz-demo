@@ -38,7 +38,7 @@
                         <input type="hidden" name="email" value="{{ $email ?? old('email') }}">
 
                         <div class="form-group">
-                            <img src="/assets/images/password.png" alt="">
+                            <img src="/assets/images/password.png" class="light-dark" alt="">
                             <input type="password" 
                                    name="password" 
                                    class="form-control @error('password') is-invalid @enderror"
@@ -47,7 +47,7 @@
                         </div>
 
                         <div class="form-group">
-                            <img src="/assets/images/password.png" alt="">
+                            <img src="/assets/images/password.png" class="light-dark" alt="">
                             <input type="password" 
                                    name="password_confirmation" 
                                    class="form-control"

@@ -43,7 +43,7 @@
                         @csrf
 
                         <div class="form-group">
-                            <img src="/assets/images/userlogin.png" alt="">
+                            <img src="/assets/images/userlogin.png" class="light-dark" alt="">
                             <input type="text" name="name" 
                                    class="form-control @error('name') is-invalid @enderror"
                                    placeholder="Username" 
@@ -51,7 +51,7 @@
                         </div>
 
                         <div class="form-group">
-                            <img src="/assets/images/Vector.png" alt="">
+                            <img src="/assets/images/Vector.png" class="light-dark" alt="">
                             <input type="email" name="email" 
                                    class="form-control @error('email') is-invalid @enderror"
                                    placeholder="Email" 
@@ -59,14 +59,14 @@
                         </div>
 
                         <div class="form-group">
-                            <img src="/assets/images/password.png" alt="">
+                            <img src="/assets/images/password.png" class="light-dark" alt="">
                             <input type="password" name="password" 
                                    class="form-control @error('password') is-invalid @enderror"
                                    placeholder="Password" required autocomplete="new-password">
                         </div>
 
                         <div class="form-group">
-                            <img src="/assets/images/password.png" alt="">
+                            <img src="/assets/images/password.png" class="light-dark" alt="">
                             <input type="password" name="password_confirmation" 
                                    class="form-control"
                                    placeholder="Confirm Password" required>

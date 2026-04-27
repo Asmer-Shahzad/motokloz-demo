@@ -86,6 +86,7 @@
 
 .form-group {
     position: relative;
+    background-color: var(--banner-bg-color);
 }
 
 .signup-form {
@@ -95,10 +96,19 @@
 }
 
 .auth-section .form-control:focus {
-    background-color: unset !important;
-    border-color: unset !important;
-    outline: unset !important;
-    box-shadow: unset !important;
+    background-color: var(--banner-bg-color);
+    color: var(--select-color);
+}
+
+/* Autofill color override */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px var(--banner-bg-color) inset !important;
+    -webkit-text-fill-color: var(--select-color) !important;
+    caret-color: var(--select-color);
+    transition: background-color 9999s ease-in-out 0s;
 }
 
 .btn-auth {
@@ -116,8 +126,8 @@
 }
 
 .auth-section input.form-control {
-    background: none;
     border: none;
+    background-color: var(--banner-bg-color);
 }
 
 .login-text {
@@ -132,6 +142,8 @@
 .user-form .form-group {
     display: flex;
     align-items: center;
+    background-color: var(--banner-bg-color);
+    color: var(--select-color);
 }
 
 .form-group img {
