@@ -949,9 +949,10 @@
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            object-fit: cover;
+            object-fit: contain !important;
             border: 2px solid #fff;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            padding:2px;
         }
 
         .chat-item .chat-heading {
@@ -1030,6 +1031,8 @@
             border-radius: 50%;
             border: 2px solid #fff;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            object-fit: contain;
+            padding: 2px;
         }
 
         .chat-user-heading {

@@ -43,7 +43,7 @@
                         @csrf
 
                         <div class="form-group">
-                            <img src="/assets/images/userlogin.png" alt="">
+                            <img src="/assets/images/userlogin.png" class="light-dark" alt="">
                             <input type="email" 
                                    name="email" 
                                    class="form-control @error('email') is-invalid @enderror"

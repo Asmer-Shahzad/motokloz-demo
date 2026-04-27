@@ -61,7 +61,7 @@ class InventoryController extends Controller
     {
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
-        
+
         $page = $request->input('page', 1);
         $perPage = 9;
 
@@ -146,7 +146,7 @@ class InventoryController extends Controller
     //     }
     //     return view('selling', ['array' => $array] );
     // }
-    
+
 
     // public function inventory_product_details(Request $request, $id)
     // {
@@ -210,13 +210,13 @@ class InventoryController extends Controller
     //     $carMake = $searched_vehicle->mfg_auto ?? '';
     //     $carModel = $searched_vehicle->model ?? '';
     //     $carTrim = $searched_vehicle->trim ?? '';
-        
+
     //     $carFullTitle = trim($carYear . ' ' . $carMake . ' ' . $carModel . ' ' . $carTrim);
-        
+
     //     if (empty($carFullTitle)) {
     //         $carFullTitle = 'Vehicle Details';
     //     }
-        
+
     //     $pageTitle = 'Motokloz | ' . $carFullTitle;
 
     //     // ✅ Get matched vehicles (same make OR same model)
@@ -248,7 +248,7 @@ class InventoryController extends Controller
     //             if ($response_dealer->successful()) {
     //                 $dealerData = json_decode($response_dealer->body());
     //                 $dealerInventory = $dealerData->data->inventory ?? [];
-                    
+
     //                 // Filter out current vehicle and take 4
     //                 $matchedVehicles = collect($dealerInventory)
     //                     ->where('id', '!=', $id)
@@ -349,13 +349,13 @@ class InventoryController extends Controller
     //     $carMake = $searched_vehicle->mfg_auto ?? '';
     //     $carModel = $searched_vehicle->model ?? '';
     //     $carTrim = $searched_vehicle->trim ?? '';
-        
+
     //     $carFullTitle = trim($carYear . ' ' . $carMake . ' ' . $carModel . ' ' . $carTrim);
-        
+
     //     if (empty($carFullTitle)) {
     //         $carFullTitle = 'Vehicle Details';
     //     }
-        
+
     //     $pageTitle = 'Motokloz | ' . $carFullTitle;
 
     //     // ✅ Get matched vehicles (same make OR same model)
@@ -387,7 +387,7 @@ class InventoryController extends Controller
     //             if ($response_dealer->successful()) {
     //                 $dealerData = json_decode($response_dealer->body());
     //                 $dealerInventory = $dealerData->data->inventory ?? [];
-                    
+
     //                 // Filter out current vehicle and take 4
     //                 $matchedVehicles = collect($dealerInventory)
     //                     ->where('id', '!=', $id)
@@ -414,7 +414,8 @@ class InventoryController extends Controller
     //     ]);
     // }
 
-    public function inventory_product_details($name, $id, Request $request)
+
+    public function inventory_product_details(Request $request, $name, $id)
     {
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
@@ -476,13 +477,13 @@ class InventoryController extends Controller
         $carMake = $searched_vehicle->mfg_auto ?? '';
         $carModel = $searched_vehicle->model ?? '';
         $carTrim = $searched_vehicle->trim ?? '';
-        
+
         $carFullTitle = trim($carYear . ' ' . $carMake . ' ' . $carModel . ' ' . $carTrim);
-        
+
         if (empty($carFullTitle)) {
             $carFullTitle = 'Vehicle Details';
         }
-        
+
         $pageTitle = 'Motokloz | ' . $carFullTitle;
 
         // ✅ Get matched vehicles (same make OR same model)
@@ -515,14 +516,14 @@ class InventoryController extends Controller
                 if ($response_dealer->successful()) {
                     $dealerData = json_decode($response_dealer->body());
                     $dealerInventory = $dealerData->data->inventory ?? [];
-                    
+
                     // Filter out current vehicle and take 4
                     $matchedVehicles = collect($dealerInventory)
                         ->where('id', '!=', $id)
                         ->take(4)
                         ->values()
                         ->toArray();
-                    
+
                     $isFromSameDealer = true;
                 }
             } catch (\Exception $e) {
@@ -533,7 +534,7 @@ class InventoryController extends Controller
             // ✅ Check if matched vehicles are from the same dealer
             $firstVehicleDealerId = $matchedVehicles[0]->dealer_id ?? $matchedVehicles[0]->client_id ?? null;
             $currentVehicleDealerId = $dealerId ?? $searched_vehicle->client_id ?? null;
-            
+
             if ($firstVehicleDealerId && $currentVehicleDealerId && $firstVehicleDealerId == $currentVehicleDealerId) {
                 $isFromSameDealer = true;
             }
@@ -569,10 +570,18 @@ class InventoryController extends Controller
             'disklozBaseUrl'   => $this->baseUrl(),
             'isFromSameDealer' => $isFromSameDealer,
             'dealerName'       => $dealerName,
+            // Hide wishlist if logged-in user owns this Motokloz vehicle
+            'isOwnVehicle'     => auth()->check()
+                && $isMotokloz
+                && !empty($searched_vehicle->client_id)
+                && (int) $searched_vehicle->client_id === auth()->id(),
         ]);
     }
 
     // Controller mein private function
+
+
+
     private function buildDealerFromLocalUser($localUser): object
     {
         $info = $localUser->information;
@@ -604,33 +613,34 @@ class InventoryController extends Controller
     //     return redirect()->route('selling')->with('info',$data->message);
     // }
 
-    public function edit_inventory(Request $request, $id){
+    public function edit_inventory(Request $request, $id)
+    {
         $payload = $request->all();
         $payload['user_id'] = auth()->user()->id;
-        $response = Http::post($this->baseUrl().'/api/inventory-form-edit/'.$id, $payload);
+        $response = Http::post($this->baseUrl() . '/api/inventory-form-edit/' . $id, $payload);
         $data = json_decode($response->body());
-        return redirect()->route('seller-list')->with('info',$data->message);
+        return redirect()->route('seller-list')->with('info', $data->message);
     }
 
     public function sentMessage(Request $request)
     {
-        $data_response = Http::post($this->baseUrl().'/api/chat', [
+        $data_response = Http::post($this->baseUrl() . '/api/chat', [
             'message' => $request['message'],
             'client_id' => $request['client_id'],
-            'dealer_id'=> $request['dealer_id'],
-            'inventory_id'=>$request['inventory_id']
+            'dealer_id' => $request['dealer_id'],
+            'inventory_id' => $request['inventory_id']
         ]);
         $getchat = $data_response['getChat'];
         $data = ['getchat' => $getchat];
-        return view('showChat',$data);
+        return view('showChat', $data);
     }
 
     public function GetRecentMessagesInfo(Request $request)
     {
-        $data_response = Http::get($this->baseUrl().'/api/getMessages', [
+        $data_response = Http::get($this->baseUrl() . '/api/getMessages', [
             'client_id' => $request->has('client_id') ? $request->client_id : '',
-            'dealer_id'=> $request->has('dealer_id') ? $request->dealer_id : '',
-            'inventory_id'=> $request->has('inventory_id') ? $request->inventory_id : ''
+            'dealer_id' => $request->has('dealer_id') ? $request->dealer_id : '',
+            'inventory_id' => $request->has('inventory_id') ? $request->inventory_id : ''
         ]);
 
         $searched_vehicle = json_decode($data_response['data']);
@@ -654,20 +664,20 @@ class InventoryController extends Controller
 
     public function redirectToChat(Request $request)
     {
-        if($request->session()->has('myData')) {
+        if ($request->session()->has('myData')) {
             $yourData = $request->session()->get('myData');
-            return view('recentMessages',$yourData);
+            return view('recentMessages', $yourData);
         } else {
-           return redirect('/login');
+            return redirect('/login');
         }
     }
 
     public function getUpdatedMessages(Request $request)
     {
-        $data_response = Http::get($this->baseUrl().'/api/getMessages', [
+        $data_response = Http::get($this->baseUrl() . '/api/getMessages', [
             'client_id' => $request->client_id,
-            'dealer_id'=> $request->dealer_id,
-            'inventory_id'=>$request->inventory_id
+            'dealer_id' => $request->dealer_id,
+            'inventory_id' => $request->inventory_id
         ]);
         $searched_vehicle = json_decode($data_response['data']);
         $getClientChats = $data_response['getClientChats'];
@@ -682,7 +692,7 @@ class InventoryController extends Controller
 
     public function inventoryDisklozer1(Request $request, $id)
     {
-        $response = Http::get($this->baseUrl().'/api/pdf/disklozer/'.$id);
+        $response = Http::get($this->baseUrl() . '/api/pdf/disklozer/' . $id);
         if ($response->successful()) {
             return response($response->body(), 200, [
                 'Content-Type' => 'application/pdf',
@@ -694,15 +704,15 @@ class InventoryController extends Controller
 
     public function seller_list()
     {
-        $response = Http::get($this->baseUrl().'/api/seller_list/'.auth()->user()->id);
+        $response = Http::get($this->baseUrl() . '/api/seller_list/' . auth()->user()->id);
         $data['seller_list'] = json_decode($response->body());
         return view('seller_list', ['seller_list' => $data['seller_list']]);
     }
 
     public function editList($id)
     {
-        $response = Http::get($this->baseUrl().'/api/search_by_id', ['id' => $id]);
-        $form = Http::get($this->baseUrl().'/api/inventory-form');
+        $response = Http::get($this->baseUrl() . '/api/search_by_id', ['id' => $id]);
+        $form = Http::get($this->baseUrl() . '/api/inventory-form');
         $data = json_decode($form->body());
         $array = [];
         foreach ($data as $key => $value) {
@@ -713,17 +723,17 @@ class InventoryController extends Controller
 
     public function search_keyword(Request $request)
     {
-        $response = Http::get($this->baseUrl().'/api/search_keyword',[
+        $response = Http::get($this->baseUrl() . '/api/search_keyword', [
             'keyword' => $request->keyword,
             'client_id' => $request->client_id,
         ]);
         $data['searched_vehicle'] = json_decode($response->body());
-        return response()->json(['searched_vehicle'=> $data['searched_vehicle']]);
+        return response()->json(['searched_vehicle' => $data['searched_vehicle']]);
     }
 
     public function search_filter(Request $request)
     {
-        $fullUrl = Http::get($this->baseUrl().'/api/search_filter?',[
+        $fullUrl = Http::get($this->baseUrl() . '/api/search_filter?', [
             'client_id' => $request->client_id ?? '',
             'condition' => $request->condition ?? '',
             'asset' => $request->asset ?? '',
@@ -740,7 +750,7 @@ class InventoryController extends Controller
             'keyword' => $request->keyword ?? '',
         ]);
         $data['searched_vehicle'] = json_decode($fullUrl->body());
-        return response()->json(['searched_vehicle'=> $data['searched_vehicle']]);
+        return response()->json(['searched_vehicle' => $data['searched_vehicle']]);
     }
 
     // Local frontend controller
@@ -768,11 +778,11 @@ class InventoryController extends Controller
         try {
             // Log incoming request
             Log::info('Add like request received:', $request->all());
-            
+
             // Get data (support both JSON and form data)
             $clientId = $request->input('client_id');
             $vehicleId = $request->input('vehicle_id');
-            
+
             // If not found in input, try JSON
             if (!$clientId) {
                 $clientId = $request->json('client_id');
@@ -780,7 +790,7 @@ class InventoryController extends Controller
             if (!$vehicleId) {
                 $vehicleId = $request->json('vehicle_id');
             }
-            
+
             // Validate data
             if (!$clientId || !$vehicleId) {
                 return response()->json([
@@ -789,13 +799,13 @@ class InventoryController extends Controller
                     'received' => $request->all()
                 ], 400);
             }
-            
+
             // Prepare data for external API
             $data = [
                 'client_id' => $clientId,
                 'inventory_id' => $vehicleId
             ];
-            
+
             // Get base URL
             $baseUrl = $this->baseUrl();
             if (!$baseUrl) {
@@ -804,7 +814,7 @@ class InventoryController extends Controller
                     'message' => 'DISKLOZ_BASE_URL not configured in .env file'
                 ], 500);
             }
-            
+
             // Call external API
             $response = Http::timeout(30)
                 ->withHeaders([
@@ -812,7 +822,7 @@ class InventoryController extends Controller
                     'Content-Type' => 'application/json'
                 ])
                 ->post($baseUrl . '/api/update_like_status', $data);
-            
+
             if ($response->successful()) {
                 return response()->json($response->json());
             } else {
@@ -820,20 +830,19 @@ class InventoryController extends Controller
                     'status' => $response->status(),
                     'body' => $response->body()
                 ]);
-                
+
                 return response()->json([
                     'success' => false,
                     'message' => 'Failed to add like',
                     'details' => $response->body()
                 ], $response->status());
             }
-            
         } catch (\Exception $e) {
             Log::error('Add like exception:', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Server error: ' . $e->getMessage(),
@@ -873,7 +882,7 @@ class InventoryController extends Controller
 
     public function favorites(Request $request)
     {
-        $response = Http::get($this->baseUrl().'/api/favorites?client_id='.$request->u);
+        $response = Http::get($this->baseUrl() . '/api/favorites?client_id=' . $request->u);
         $data['favorites'] = json_decode($response->body());
         return view('favorites', ['favorites' => $data['favorites']]);
     }

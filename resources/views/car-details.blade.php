@@ -301,6 +301,7 @@ function formatPrice($price)
                     </div>
                     <script>document.addEventListener('click',function(){var m=document.getElementById('sm');if(m)m.classList.add('d-none')});</script>
 
+                    @if(!($isOwnVehicle ?? false))
                     <button class="mto-pill-btn"
                         id="wishlist-btn-{{ $searched_vehicle->id }}"
                         onclick="toggleLike({{ $searched_vehicle->id }}, this, {{ auth()->id() ?? 'null' }})">
@@ -308,6 +309,7 @@ function formatPrice($price)
                         <i class="far fa-star me-1 d-none" id="wishlist-icon-{{ $searched_vehicle->id }}"></i>
                         Wishlist
                     </button>
+                    @endif
                 </div>
             </div>
         </div>
@@ -804,6 +806,13 @@ function formatPrice($price)
                                         class="img-box img-fluid"
                                         onerror="this.onerror=null;this.src='{{ $defaultImage }}';">
                                 </a>
+                                @php
+                                    $relatedIsOwn = auth()->check()
+                                        && strtolower($relatedVehicle->source ?? '') === 'motokloz'
+                                        && !empty($relatedVehicle->client_id)
+                                        && (int) $relatedVehicle->client_id === auth()->id();
+                                @endphp
+                                @if(!$relatedIsOwn)
                                 <button class="card-wishlist-btn"
                                     id="wishlist-btn-{{ $relatedVehicle->id }}"
                                     onclick="event.stopPropagation(); toggleLike({{ $relatedVehicle->id }}, this, {{ auth()->id() ?? 'null' }})"
@@ -811,6 +820,7 @@ function formatPrice($price)
                                     <i class="fa fa-spinner fa-spin d-none" id="wishlist-spinner-{{ $relatedVehicle->id }}"></i>
                                     <i class="far fa-star" id="wishlist-icon-{{ $relatedVehicle->id }}"></i>
                                 </button>
+                                @endif
                                 <div class="badge-mileage">
                                     <img src="/assets/images/mile1.png" alt="Mileage" class="me-2" style="width:20px; height:12px;"> 
                                     {{ $relatedVehicle->mileage 
@@ -856,6 +866,8 @@ function formatPrice($price)
                                 @endphp
                                     @if($displayPrice > 0)
                                         <h4 class="price-value">${{ number_format($displayPrice) }}</h4>
+                                    @elseif($relatedIsOwn)
+                                        <h4 class="price-value">$0</h4>
                                     @else
                                         @php
                                             $cardPhone = null;

@@ -33,7 +33,7 @@
                                     value="{{ $searchTerm ?? '' }}">
 
                                 <span class="position-absolute top-50 start-0 translate-middle-y ps-3">
-                                    <img src="/assets/images/Vector (13).png" alt="search" width="16" height="16">
+                                    <img src="/assets/images/Vector (13).png" alt="search" width="16" height="16" class="light-dark">
                                 </span>
                                 
                                 {{-- Preserve u parameter --}}
