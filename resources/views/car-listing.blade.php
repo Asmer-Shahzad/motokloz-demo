@@ -543,7 +543,10 @@
                                                                                                                                                                                                                                                                                                                                                     </div> -->
 
                                                         <div class="car-price-block text-end">
-                                                            @php $displayPrice = round($recent_vehicle->disclosed_price ?? 0); @endphp
+                                                            @php 
+                                $cleanedPrice = preg_replace('/[^0-9.]/', '', $recent_vehicle->disclosed_price ?? '0');
+                                $displayPrice = round((float) $cleanedPrice); 
+                                @endphp
                                                             @if($displayPrice > 0)
                                                                 <h4 class="price-value">${{ formatPrice($displayPrice) }}</h4>
                                                             @elseif($isOwnCard)
