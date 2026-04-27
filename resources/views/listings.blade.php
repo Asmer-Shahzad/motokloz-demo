@@ -183,8 +183,12 @@
                                                                                                     </div> -->
 
                                                     <div class="car-price-block text-end">
+                                                        @php 
+                                            $cleanedPrice = preg_replace('/[^0-9.]/', '', $listing->disclosed_price ?? '0');
+                                            $displayPrice = round((float) $cleanedPrice); 
+                                            @endphp
                                                         <h4 class="price-value">
-                                                            ${{ number_format((float) ($listing->disclosed_price ?? 0))
+                                                            ${{ number_format((float) ($displayPrice))
                                                             }}
                                                         </h4>
                                                     </div>

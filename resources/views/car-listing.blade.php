@@ -25,7 +25,8 @@ return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="car-listing-cont">
-                            <h4>'CANADA'S PREMIERE AUTOMOTIVE, LEISURE, AND HEAVY EQUIPMENT MARKETPLACE'</h4>
+                            
+                            <h4>Canada's Premiere Automotive, Leisure and Heavy Equipment Marketplace</h4>
                             {{-- <h2>Find Your Perfect {{ $assetWord }}</h2>
                             <p>Search and find your best to buy with easy way</p> --}}
                         </div>
@@ -531,7 +532,10 @@ return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
                                                                                                                                                                                                                                                                             </div> -->
 
                                 <div class="car-price-block text-end">
-                                    @php $displayPrice = round($recent_vehicle->disclosed_price ?? 0); @endphp
+                                @php 
+                                $cleanedPrice = preg_replace('/[^0-9.]/', '', $recent_vehicle->disclosed_price ?? '0');
+                                $displayPrice = round((float) $cleanedPrice); 
+                                @endphp
                                     @if($displayPrice > 0)
                                     <h4 class="price-value">${{ formatPrice($displayPrice) }}</h4>
                                     @else
