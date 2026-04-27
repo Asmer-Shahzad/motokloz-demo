@@ -390,6 +390,13 @@
                                             : asset('assets/images/defaultimage.jpg') }}" alt="Vehicle Image" class="img-box img-fluid"
                                             onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultimage.jpg') }}';">
                                     </a>
+                                    @php
+                                        $isOwnCard = auth()->check()
+                                            && strtolower($recent_vehicle->source ?? '') === 'motokloz'
+                                            && !empty($recent_vehicle->client_id)
+                                            && (int) $recent_vehicle->client_id === auth()->id();
+                                    @endphp
+                                    @if(!$isOwnCard)
                                     <button class="card-wishlist-btn"
                                         id="wishlist-btn-{{ $recent_vehicle->id }}"
                                         onclick="event.stopPropagation(); toggleLike({{ $recent_vehicle->id }}, this, {{ auth()->id() ?? 'null' }})"
@@ -397,6 +404,7 @@
                                         <i class="fa fa-spinner fa-spin d-none" id="wishlist-spinner-{{ $recent_vehicle->id }}"></i>
                                         <i class="far fa-star" id="wishlist-icon-{{ $recent_vehicle->id }}"></i>
                                     </button>
+                                    @endif
                                     <div class="badge-mileage d-flex align-items-center">
                                         <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
                                             style="width:20px; height:12px;">
@@ -444,6 +452,8 @@
                                         @php $displayPrice = round($recent_vehicle->disclosed_price ?? 0); @endphp
                                         @if($displayPrice > 0)
                                             <h4 class="price-value">${{ formatPrice($displayPrice) }}</h4>
+                                        @elseif($isOwnCard)
+                                            <h4 class="price-value">$0</h4>
                                         @else
                                             @php
                                                 $cardPhone = null;
