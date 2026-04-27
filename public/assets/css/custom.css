@@ -360,9 +360,9 @@ select {
     height: 45px;
     background: #444;
 }
-/* input.form-control {
-    color: var(--select-color) !important;
-} */
+input.form-control {
+    color: var(--select-color);
+}
 /* Price */
 .price input {
     width: 160px;
@@ -2616,7 +2616,7 @@ section.agent-header {
 }
 
 .form-card.shadow-sm input.form-control {
-    background-color: #f9f9f9;
+    background-color: var(--banner-bg-color);
     border: 1px solid #e0e0e0;
 }
 
@@ -2742,6 +2742,10 @@ ul.list-unstyled.service-list li {
     border: 1px solid #eee;
 }
 
+textarea.form-control::placeholder {
+    color: var(--select-color);
+}
+
 .dropdownn .btn {
     font-size: 14px;
     font-weight: 500;
@@ -2767,7 +2771,7 @@ ul.list-unstyled.service-list li {
 }
 
 .card-container {
-    background: white;
+    background: var(--bg-color);
     border: 1px solid #dee2e6;
     border-radius: 8px;
     padding: 25px;
@@ -2785,7 +2789,7 @@ ul.list-unstyled.service-list li {
 
 /* Image Upload Section */
 .img-upload-box {
-    border: 2px dashed #ff9800;
+    border: 1px dashed #ff9800;
     border-radius: 8px;
     height: 150px;
     display: flex;
@@ -2794,7 +2798,7 @@ ul.list-unstyled.service-list li {
     justify-content: center;
     color: #ff9800;
     cursor: pointer;
-    background: #fffdfa;
+    background: var(--banner-bg-color);
 }
 
 .preview-img-container {
@@ -2829,9 +2833,11 @@ ul.list-unstyled.service-list li {
 /* Form Styling */
 .form-control,
 .form-select {
-    /* background-color: var(--banner-bg-color) !important; */
+    background-color: var(--banner-bg-color);
     border: 1px solid #e9ecef;
     padding: 12px;
+    color: var(--select-color);
+    
 }
 
 .modal-content {
@@ -2853,16 +2859,22 @@ ul.list-unstyled.service-list li {
 }
 
 .modal-body .form-control {
-    background-color: var(--modal-body-inputs);
-    border: var(--border-color);
+    background-color: var(--border-color);
     color: var(--select-color);
     padding: 12px;
+    /* border-color: #ff9800 !important; */
+
+}
+
+.modal-body .form-control::placeholder {
+    color: var(--select-color);
 }
 
 .modal-body .form-control:focus {
-    background-color: var(--modal-body-inputs);
+    background-color: var(--border-color);
     border-color: #ff9800 !important;
     padding: 12px;
+
 }
 input.form-control::placeholder {
     color: var(--select-color);
@@ -2882,13 +2894,25 @@ input.form-control::placeholder {
 }
 
 .form-control:focus {
-    background-color: #fff;
+    background-color: var(--banner-bg-color);
     border-color: #ff9800 !important;
     box-shadow: none;
+    color: var(--select-color);
+}
+
+/* Autofill color override */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px var(--banner-bg-color) inset !important;
+    -webkit-text-fill-color: var(--select-color) !important;
+    caret-color: var(--select-color);
+    transition: background-color 9999s ease-in-out 0s;
 }
 
 .form-select:focus {
-    background-color: #fff;
+    background-color: var(--banner-bg-color);
     border-color: #ff9800 !important;
     box-shadow: none;
 }
@@ -2926,7 +2950,7 @@ input.form-control::placeholder {
 }
 
 .card-container h4.mt-4.mb-3 {
-    color: #000;
+    color: var(--select-color);
 }
 
 h2.section-title {
@@ -2935,10 +2959,11 @@ h2.section-title {
 .card-container input.form-control {
     /* background-color: #f1f3f5; */
     border: 1px solid #e9ecef;
+    color: var(--select-color);
 }
 
 .card-container h2.section-title {
-    color: #000;
+    color: var(--select-color);
 }
 
 /* Swiper container ko target karein */
