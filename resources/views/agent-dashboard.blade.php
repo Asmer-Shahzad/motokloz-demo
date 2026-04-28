@@ -84,7 +84,12 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>${{ number_format($listing->disclosed_price ?? '0') }}</td>
+                                        <td>
+                                                @php
+                                                $cleanedPrice = preg_replace('/[^0-9.]/', '', $inventory->disclosed_price ?? '0');
+                                                $displayPrice = round((float) $cleanedPrice);
+                                                @endphp
+                                            ${{ number_format($displayPrice) }}</td>
                                         <td>{{ $listing->created_at ? \Carbon\Carbon::parse($listing->created_at)->format('d M Y') : 'N/A' }}</td>
                                     </tr>
                                     @empty

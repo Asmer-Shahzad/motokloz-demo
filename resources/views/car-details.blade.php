@@ -860,7 +860,10 @@ function formatPrice($price)
                                 </p>
 
                                 <div class="car-price-block text-end">
-                                    @php $displayPrice = round($relatedVehicle->disclosed_price ?? 0); @endphp
+                                    @php 
+                                $cleanedPrice = preg_replace('/[^0-9.]/', '', $relatedVehicle->disclosed_price ?? '0');
+                                $displayPrice = round((float) $cleanedPrice); 
+                                @endphp
                                     @if($displayPrice > 0)
                                         <h4 class="price-value">${{ number_format($displayPrice) }}</h4>
                                     @elseif($relatedIsOwn)

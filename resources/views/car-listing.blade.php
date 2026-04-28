@@ -18,19 +18,20 @@
 
 @section('content')
 
-    <section class="banner-car-listing" data-aos="fade-down" data-aos-duration="700">
-        <div class="container-fluid">
-            <div class="car-listing-bg">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="car-listing-cont">
-                                <h4>CANADA'S PREMIERE AUTOMOTIVE, LEISURE, AND HEAVY EQUIPMENT MARKETPLACE</h4>
-                                {{-- <h2>Find Your Perfect {{ $assetWord }}</h2>
-                                <p>Search and find your best to buy with easy way</p> --}}
-                            </div>
-                            <div class="search-wrapper">
-                                <form action="{{ route('search_inventory') }}" method="GET" class="search-wrapper">
+<section class="banner-car-listing" data-aos="fade-down" data-aos-duration="700">
+    <div class="container-fluid">
+        <div class="car-listing-bg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="car-listing-cont">
+                            
+                            <h4>Canada's Premiere Automotive, Leisure and Heavy Equipment Marketplace</h4>
+                            {{-- <h2>Find Your Perfect {{ $assetWord }}</h2>
+                            <p>Search and find your best to buy with easy way</p> --}}
+                        </div>
+                        <div class="search-wrapper">
+                            <form action="{{ route('search_inventory') }}" method="GET" class="search-wrapper">
 
                                     <!-- Tabs -->
                                     <div class="tabs">
@@ -542,7 +543,10 @@
                                                                                                                                                                                                                                                                                                                                                     </div> -->
 
                                                         <div class="car-price-block text-end">
-                                                            @php $displayPrice = round($recent_vehicle->disclosed_price ?? 0); @endphp
+                                                            @php 
+                                $cleanedPrice = preg_replace('/[^0-9.]/', '', $recent_vehicle->disclosed_price ?? '0');
+                                $displayPrice = round((float) $cleanedPrice); 
+                                @endphp
                                                             @if($displayPrice > 0)
                                                                 <h4 class="price-value">${{ formatPrice($displayPrice) }}</h4>
                                                             @elseif($isOwnCard)

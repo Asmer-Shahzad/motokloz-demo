@@ -161,11 +161,15 @@
                                             </p>
 
                                             <div class="d-flex justify-content-between align-items-center">
-                                                @php $displayPrice = round($inventory->disclosed_price ?? 0); @endphp
+                                                @php
+                                                $cleanedPrice = preg_replace('/[^0-9.]/', '', $inventory->disclosed_price ?? '0');
+                                                $displayPrice = round((float) $cleanedPrice);
+                                                @endphp
+                                                
                                                 @if($displayPrice > 0)
                                                     <div class="price-wrap">
                                                         <span class="text-span">From</span>
-                                                        <span class="price-span">${{ number_format($displayPrice, 2) }}</span>
+                                                        <span class="price-span">${{ number_format($displayPrice) }}</span>
                                                         <span class="text-span">/ USD</span>
                                                     </div>
                                                 @else
