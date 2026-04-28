@@ -26,92 +26,41 @@ class HomeController extends Controller
     
     public function home()
     {
-        $user = Auth::user();
+        $user     = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
 
-        $assets = [
-            'AUTO',
-            'FARM EQUIPMENT',
-            'HEAVY DUTY TRAILERS',
-            'HEAVY TRUCK/EQUIPMENT',
-            'MARINE',
-            'MOTORCYCLE / ATV / POWERSPORTS',
-            'RV / TRAILER',
-            'SNOWSPORTS',
-            'WATERSPORT'
-        ];
+        $response = Http::get($this->disklozBaseUrl() . '/api/home_data');
 
-        $assetCounts = [];
-        $allVehicles = collect();
-        $makeTypes = []; // will hold grouped makes
-        $dealerLocationMap  = $this->dealerLocationMap();
+        // ✅ true — sab kuch array ban jayega, stdClass nahi
+        $data        = json_decode($response->body(), true);
+
+        $assetCounts = $data['asset_counts'] ?? [];
+        $makeTypes   = $data['make_types']   ?? [];
+
+        $dealerLocationMap   = $this->dealerLocationMap();
         $motoklozLocationMap = $this->motoklozUserLocationMap();
 
-        foreach ($assets as $asset) {
-            $response = Http::get($this->disklozBaseUrl() . '/api/search_inventory', [
-                'selected_asset' => $asset,
-                'per_page' => 4,
-            ]);
-
-            if ($response->successful()) {
-                $inventory = json_decode($response->body());
-
-                // Count vehicles per asset type
-                $assetCounts[$asset] = $inventory->inventory->total ?? 0;
-
-                // Merge latest vehicles
-                if (!empty($inventory->inventory->data)) {
-                    $enrichedVehicles = collect($inventory->inventory->data)->map(function ($vehicle) use ($dealerLocationMap, $motoklozLocationMap) {
-                        return $this->enrichVehicleLocation($vehicle, $motoklozLocationMap, $dealerLocationMap);
-                    });
-                    $allVehicles = $allVehicles->merge($enrichedVehicles);
-                }
-
-                // Merge makes grouped by type
-                if (!empty($inventory->filters)) {
-                    // Convert stdClass to collection
-                    $filters = collect($inventory->filters);
-
-                    // Use only MfgAuto for this asset
-                    if (!empty($filters->MfgAuto)) {
-                        $makeTypes[$asset] = collect($filters->MfgAuto)
-                            ->map(function ($m) {
-                                return ['id' => $m->id, 'name' => $m->name];
-                            })
-                            ->sortBy('name')
-                            ->values();
-                    } else {
-                        $makeTypes[$asset] = collect(); // empty collection if none
-                    }
-                }
-            }
-        }
-
-        // Get latest 4 vehicles overall
-        $latestVehicles = $allVehicles
-        ->filter(function ($vehicle) {
-            $img = $vehicle->primary_image ?? null;
-
-            return !empty($img)
-                && $img !== 'defaultimage.jpg'
-                && !str_contains($img, 'defaultimage.jpg');
-        })
-        ->sortByDesc('created_at')
-        ->take(4)
-        ->values();
+        // ✅ latest_vehicles bhi array hogi, object nahi
+        $latestVehicles = collect($data['latest_vehicles'] ?? [])
+            ->map(fn($v) => $this->enrichVehicleLocation(
+                (object) $v,  // enrichVehicleLocation object expect karta hai
+                $motoklozLocationMap,
+                $dealerLocationMap
+            ))
+            ->values();
 
         return view('home', [
-            'user' => $user,
-            'userInfo' => $userInfo,
-            'pageTitle' => 'Home',
-            'assetCounts' => $assetCounts,
-            'assetData' => $latestVehicles,
-            'assets' => $assets,
-            'makeTypes' => $makeTypes,
+            'user'           => $user,
+            'userInfo'       => $userInfo,
+            'pageTitle'      => 'Home',
+            'assetCounts'    => $assetCounts,
+            'assetData'      => $latestVehicles,
+            'assets'         => array_keys($assetCounts),
+            'makeTypes'      => $makeTypes,
             'disklozBaseUrl' => $this->disklozBaseUrl(),
         ]);
     }
-
+    
     public function buyFlowStep1()
     {
         return view('buy-flow-step-1', ['pageTitle' => 'Step 1']);

@@ -731,13 +731,21 @@ function formatPrice($price) {
                                             onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
                                         >
                                     </a>
-                                    <button class="card-wishlist-btn"
-                                        id="wishlist-btn-{{ $recent_vehicle->id }}"
-                                        onclick="event.stopPropagation(); toggleLike({{ $recent_vehicle->id }}, this, {{ auth()->id() ?? 'null' }})"
-                                        title="Add to Wishlist">
-                                        <i class="fa fa-spinner fa-spin d-none" id="wishlist-spinner-{{ $recent_vehicle->id }}"></i>
-                                        <i class="far fa-star" id="wishlist-icon-{{ $recent_vehicle->id }}"></i>
-                                    </button>
+                                    @php
+                                        $isOwnCard = auth()->check()
+                                            && strtolower($recent_vehicle->source ?? '') === 'motokloz'
+                                            && !empty($recent_vehicle->client_id)
+                                            && (int) $recent_vehicle->client_id === auth()->id();
+                                    @endphp
+                                    @if(!$isOwnCard)
+                                        <button class="card-wishlist-btn" id="wishlist-btn-{{ $recent_vehicle->id }}"
+                                            onclick="event.stopPropagation(); toggleLike({{ $recent_vehicle->id }}, this, {{ auth()->id() ?? 'null' }})"
+                                            title="Add to Wishlist">
+                                            <i class="fa-spin fa-spinner fa d-none"
+                                                id="wishlist-spinner-{{ $recent_vehicle->id }}"></i>
+                                            <i class="far fa-star" id="wishlist-icon-{{ $recent_vehicle->id }}"></i>
+                                        </button>
+                                    @endif
                                     <div class="badge-mileage"><img src="/assets/images/mile1.png" alt="Mileage" class="me-2" style="width:20px; height:12px;"> 
                                         {{ $recent_vehicle->mileage 
                                         ? number_format((float) trim(str_ireplace('km', '', $recent_vehicle->mileage))) . ' km'
@@ -785,17 +793,24 @@ function formatPrice($price) {
                                         @php $displayPrice = round($recent_vehicle->disclosed_price ?? 0); @endphp
                                         @if($displayPrice > 0)
                                             <h4 class="price-value">${{ formatPrice($displayPrice) }}</h4>
+                                        @elseif($isOwnCard)
+                                            <h4 class="price-value">$0</h4>
                                         @else
                                             @php
                                                 $cardPhone = null;
-                                                if (!empty($dealer) && !empty($dealer->phone_no)) {
-                                                    $cardPhone = $dealer->phone_no;
+                                                if (!empty($recent_vehicle->dealer) && !empty($recent_vehicle->dealer->phone_no)) {
+                                                    $cardPhone = $recent_vehicle->dealer->phone_no;
                                                 } elseif (!empty($recent_vehicle->dealer_phone_no)) {
                                                     $cardPhone = $recent_vehicle->dealer_phone_no;
+                                                } elseif (!empty($recent_vehicle->phone_no)) {
+                                                    $cardPhone = $recent_vehicle->phone_no;
                                                 }
+
                                             @endphp
                                             @if($cardPhone)
-                                                <a href="tel:{{ $cardPhone }}" class="price-value call-seller d-block text-decoration-none" onclick="event.stopPropagation();">
+                                                <a href="tel:{{ $cardPhone }}"
+                                                    class="price-value call-seller d-block text-decoration-none"
+                                                    onclick="event.stopPropagation();">
                                                     <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
                                                 </a>
                                             @else
@@ -804,7 +819,6 @@ function formatPrice($price) {
                                                 </h4>
                                             @endif
                                         @endif
-                                        <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                     </div>
                                 </div>
                             </div>
