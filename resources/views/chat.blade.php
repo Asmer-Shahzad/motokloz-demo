@@ -2155,6 +2155,224 @@
                 });
             });
 
+            // ── AJAX SIDEBAR NAVIGATION (no page reload) ──────────────
+            document.querySelectorAll('.chat-item').forEach(function(item) {
+                item.addEventListener('click', function(e) {
+                    // Allow avatar/name clicks to navigate to dealer profile
+                    if (e.target.closest('img[onclick], span[onclick]')) return;
+                    e.preventDefault();
+
+                    var href = item.getAttribute('href');
+                    if (!href || href === '#') return;
+
+                    // Mark active
+                    document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+
+                    // Fetch JSON data
+                    var jsonUrl = href + '/data';
+                    fetch(jsonUrl, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    })
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) {
+                        // Update browser URL without reload
+                        history.pushState({}, '', href);
+                        // Render the chat panel
+                        renderChatPanel(data);
+                    })
+                    .catch(function(err) {
+                        // Fallback to normal navigation
+                        window.location.href = href;
+                    });
+                });
+            });
+
+            function escHtml(str) {
+                return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+            }
+
+            function fmtTime(dateStr) {
+                var str = String(dateStr).replace(' ', 'T');
+                if (!str.endsWith('Z') && !str.includes('+')) str += 'Z';
+                var d = new Date(str);
+                if (isNaN(d)) return '';
+                var h = d.getHours(), m = d.getMinutes();
+                var ampm = h >= 12 ? 'PM' : 'AM';
+                h = h % 12 || 12;
+                return h + ':' + (m < 10 ? '0' + m : m) + ' ' + ampm;
+            }
+
+            function renderChatPanel(data) {
+                var chatContent = document.querySelector('.chat-content');
+                if (!chatContent) return;
+
+                var messagesHtml = '';
+                if (data.messages && data.messages.length > 0) {
+                    data.messages.forEach(function(msg) {
+                        var isMine = msg.is_mine;
+                        var timeStr = fmtTime(msg.created_at);
+                        var avatarHtml = isMine ? '' : '<img src="' + escHtml(data.opAvatar) + '" class="msg-avatar" alt="" onerror="this.src=\'https://ui-avatars.com/api/?name=' + encodeURIComponent(data.opName) + '&background=F58D02&color=fff&size=36\'">';
+                        var nameHtml = isMine ? '' : '<span class="msg-name">' + escHtml(data.opName) + '</span>';
+                        messagesHtml += '<div class="message ' + (isMine ? 'sent' : 'received') + '" data-id="' + msg.id + '">' +
+                            avatarHtml +
+                            '<div class="msg-content"><div class="msg-header">' + nameHtml +
+                            '<span class="msg-time">' + timeStr + '</span></div>' +
+                            '<div class="msg-text">' + escHtml(msg.message_body) + '</div></div></div>';
+                    });
+                } else {
+                    messagesHtml = '<div style="text-align:center;color:#91929E;padding:40px 20px;"><p>No messages yet. Say hello!</p></div>';
+                }
+
+                var lastId = data.messages && data.messages.length > 0 ? data.messages[data.messages.length - 1].id : 0;
+
+                chatContent.innerHTML =
+                    // TOP BAR
+                    '<div class="chat-topbar">' +
+                        '<div style="display:flex;align-items:center;">' +
+                            '<button class="vip-back-btn" onclick="mobileBack()"><span class="back-arrow">&#8592;</span> Back</button>' +
+                            '<div class="chat-user">' +
+                                '<a href="' + escHtml(data.dealerProfileUrl) + '" style="flex-shrink:0;">' +
+                                    '<img class="chat-user-img" src="' + escHtml(data.opAvatar) + '" alt="' + escHtml(data.opName) + '" onerror="this.src=\'https://ui-avatars.com/api/?name=' + encodeURIComponent(data.opName) + '&background=F58D02&color=fff&size=52\'">' +
+                                '</a>' +
+                                '<div><h6 class="chat-user-heading" style="display:flex;align-items:baseline;gap:4px;">' +
+                                    '<a href="' + escHtml(data.dealerProfileUrl) + '" style="color:inherit;text-decoration:none;font-weight:700;">' + escHtml(data.opName) + '</a>' +
+                                    '<a href="' + escHtml(data.invDetailUrl) + '" style="font-weight:400;font-size:13px;opacity:0.7;text-decoration:none;color:inherit;">(' + escHtml(data.invTitle) + ')</a>' +
+                                '</h6></div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="chat-actions"><a href="#"><img src="/assets/images/icon (7).png" alt=""></a><a href="#"><img src="/assets/images/icon (8).png" alt=""></a></div>' +
+                    '</div>' +
+                    // INV CONTEXT BAR
+                    '<div class="inv-context-bar">' +
+                        '<a href="' + escHtml(data.invDetailUrl) + '" class="inv-context-link">' +
+                            '<div class="inv-context-img-wrap"><img src="' + escHtml(data.invImg) + '" alt="' + escHtml(data.invTitle) + '" onerror="this.src=\'/assets/images/defaultimage.jpg\'"></div>' +
+                            '<div class="inv-context-info"><div class="inv-context-title">' + escHtml(data.invTitle) + '</div></div>' +
+                        '</a>' +
+                        '<a href="' + escHtml(data.invDetailUrl) + '" class="inv-context-view-btn">View Listing →</a>' +
+                    '</div>' +
+                    // MESSAGES
+                    '<div class="chat-messages scrol-bar" id="chatMessagesContainer">' +
+                        '<div class="messages-body" id="messagesBody">' + messagesHtml + '</div>' +
+                    '</div>' +
+                    // INPUT
+                    '<div class="chat-input-wrapper">' +
+                        '<form id="chatForm" data-ajax="true" class="chat-input" style="margin:0;">' +
+                            '<input type="hidden" name="_token" value="' + document.querySelector('meta[name="csrf-token"]').getAttribute('content') + '">' +
+                            '<button type="button" id="emojiBtn" class="chat-action-btn" title="Emoji">' +
+                                '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>' +
+                            '</button>' +
+                            '<div class="input-wrapper" style="flex:1;position:relative;">' +
+                                '<input id="messageInput" class="text-input" type="text" placeholder="Type a message..." autocomplete="off">' +
+                            '</div>' +
+                            '<button type="submit" id="sendBtn" class="send-btn">' +
+                                '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="white" viewBox="0 0 16 16"><path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11z"/></svg>' +
+                            '</button>' +
+                        '</form>' +
+                    '</div>';
+
+                // Scroll to bottom
+                var container = document.getElementById('chatMessagesContainer');
+                if (container) container.scrollTop = container.scrollHeight;
+
+                // Re-init send form with new URLs
+                initChatForm(data.sendUrl, data.pollUrl, data.senderType, data.opName, data.opAvatar, lastId);
+            }
+
+            function initChatForm(sendUrl, pollUrl, myType, otherName, otherAvatar, initialLastId) {
+                var form    = document.getElementById('chatForm');
+                var input   = document.getElementById('messageInput');
+                var sendBtn = document.getElementById('sendBtn');
+                var container = document.getElementById('chatMessagesContainer');
+                var body    = document.getElementById('messagesBody');
+                if (!form || !input) return;
+
+                var lastId = initialLastId;
+                var pollTimer = null;
+
+                function scrollBottom() { if (container) container.scrollTop = container.scrollHeight; }
+
+                function fmtMsg(str) {
+                    return escHtml(str).replace(/@(\w[\w\s]*)/g, '<span class="mention-tag">@$1</span>');
+                }
+
+                function buildBubble(msg) {
+                    var isMine = msg.is_mine;
+                    var timeStr = fmtTime(msg.created_at);
+                    var avatarHtml = isMine ? '' : '<img src="' + escHtml(otherAvatar) + '" class="msg-avatar" alt="" onerror="this.src=\'https://ui-avatars.com/api/?name=' + encodeURIComponent(otherName) + '&background=F58D02&color=fff&size=36\'">';
+                    var nameHtml = isMine ? '' : '<span class="msg-name">' + escHtml(otherName) + '</span>';
+                    var div = document.createElement('div');
+                    div.className = 'message ' + (isMine ? 'sent' : 'received');
+                    div.setAttribute('data-id', msg.id);
+                    div.innerHTML = avatarHtml + '<div class="msg-content"><div class="msg-header">' + nameHtml + '<span class="msg-time">' + timeStr + '</span></div><div class="msg-text">' + fmtMsg(msg.message_body) + '</div></div>';
+                    return div;
+                }
+
+                // Send message
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    var msg = input.value.trim();
+                    if (!msg) return;
+                    sendBtn.disabled = true;
+                    input.value = '';
+
+                    fetch(sendUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ message_body: msg })
+                    })
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        if (data.success) {
+                            // Remove empty state
+                            var empty = body.querySelector('[data-empty]');
+                            if (empty) empty.remove();
+                            var bubble = buildBubble(data.message);
+                            body.appendChild(bubble);
+                            lastId = data.message.id;
+                            scrollBottom();
+                        }
+                    })
+                    .finally(function() { sendBtn.disabled = false; input.focus(); });
+                });
+
+                // Poll for new messages
+                function poll() {
+                    fetch(pollUrl + '?after=' + lastId, {
+                        headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') }
+                    })
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        if (data.messages && data.messages.length > 0) {
+                            var empty = body.querySelector('[data-empty]');
+                            if (empty) empty.remove();
+                            data.messages.forEach(function(msg) {
+                                if (!body.querySelector('[data-id="' + msg.id + '"]')) {
+                                    body.appendChild(buildBubble(msg));
+                                    lastId = msg.id;
+                                }
+                            });
+                            scrollBottom();
+                        }
+                    })
+                    .catch(function() {})
+                    .finally(function() { pollTimer = setTimeout(poll, 3000); });
+                }
+
+                // Clear any existing poll timer
+                if (window._chatPollTimer) clearTimeout(window._chatPollTimer);
+                pollTimer = setTimeout(poll, 3000);
+                window._chatPollTimer = pollTimer;
+            }
+
             // ---------- COLLAPSIBLE SECTIONS ----------
             window.toggleSection = function (sectionId) {
                 const section = document.getElementById(sectionId);
