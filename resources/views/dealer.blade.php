@@ -61,10 +61,12 @@
                             ])->filter()->implode(', ') ?: 'Address not available' }}
 
                             </p>
+                            @if($dealer->regulator)
                             <p class="mb-3">
                                 <i class="fas fa-id-card text-warning me-1"></i>
                                 {{$dealer->regulator ?? ''}} 
                             </p>
+                            @endif
                             <span class="badge bg-light text-dark border mt-2 p-2 rounded-5">
                                 {{ $inventory->total() }} Vehicles
                             </span>
