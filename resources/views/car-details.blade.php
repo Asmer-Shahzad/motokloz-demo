@@ -428,7 +428,6 @@ function formatPrice($price)
                                             {{ $dealerAddress }}
                                         </p>
                                         <p class="small text-muted mb-0">
-                                            <i class="fas fa-id-card text-warning me-1"></i>
                                             {{ $dealerRegulator }}
                                         </p>
                                     </div>
