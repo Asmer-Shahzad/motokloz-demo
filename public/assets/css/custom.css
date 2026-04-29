@@ -1433,7 +1433,7 @@ section.banner-car-listing {
     font-weight: 500;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     font-size: 13px;
-    z-index: 99996;
+    z-index: 1;
 }
 
 .badge-mileage i {
@@ -1447,7 +1447,7 @@ section.banner-car-listing {
     background: var(--banner-bg-color);
     border-radius: 12px;
     margin-top: -10px;
-    z-index: 999;
+    /* z-index: 999; */
     position: relative;
 }
 
@@ -2841,7 +2841,6 @@ textarea.form-control::placeholder {
     border: 1px solid #e9ecef;
     padding: 12px;
     color: var(--select-color);
-    
 }
 
 .modal-content {
@@ -2867,7 +2866,6 @@ textarea.form-control::placeholder {
     color: var(--select-color);
     padding: 12px;
     /* border-color: #ff9800 !important; */
-
 }
 
 .modal-body .form-control::placeholder {
@@ -2878,7 +2876,6 @@ textarea.form-control::placeholder {
     background-color: var(--border-color);
     border-color: #ff9800 !important;
     padding: 12px;
-
 }
 input.form-control::placeholder {
     color: var(--select-color);

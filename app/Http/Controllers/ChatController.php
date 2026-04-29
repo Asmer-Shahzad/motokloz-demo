@@ -643,8 +643,106 @@ class ChatController extends Controller
         ]);
     }
 
-    public function markRead(int $clientId, int $dealerId, int $inventoryId)
+    /**
+     * GET /chat/{clientId}/{dealerId}/{inventoryId}/data
+     * Returns conversation data as JSON for AJAX navigation (no page reload)
+     */
+    public function showJson(int $clientId, int $dealerId, int $inventoryId)
     {
+        $authId = Auth::id();
+
+        if ($authId !== $clientId && $authId !== $dealerId) {
+            abort(403);
+        }
+
+        $messages = Chat::where('client_id', $clientId)
+            ->where('user_id', $dealerId)
+            ->where('inventory_id', $inventoryId)
+            ->orderBy('created_at')
+            ->get();
+
+        $apiData    = $this->getInventoryFromApi($inventoryId);
+        $inventory  = $apiData ?? Inventory::find($inventoryId);
+        $dealerInfo = ($authId === $clientId) ? ($apiData?->dealer ?? null) : null;
+
+        $otherPartyId = ($authId === $clientId) ? $dealerId : $clientId;
+        $otherParty   = User::with('information')->find($otherPartyId);
+        $senderType   = ($authId === $clientId) ? 'client' : 'dealer';
+
+        // Mark as read
+        Chat::where('client_id', $clientId)
+            ->where('user_id', $dealerId)
+            ->where('inventory_id', $inventoryId)
+            ->where('is_read', 0)
+            ->where('sender_type', '!=', $senderType)
+            ->update(['is_read' => 1]);
+
+        $disklozBase = rtrim(config('services.diskloz.base_url', ''), '/');
+
+        // Build other party info
+        $opName = $dealerInfo?->dba
+            ?: $otherParty?->information?->full_name
+            ?: $otherParty?->name
+            ?: 'Unknown';
+
+        $rawLogo = $dealerInfo?->logo ?? null;
+        if ($rawLogo) {
+            $opAvatar = str_starts_with($rawLogo, 'http') ? $rawLogo : ($disklozBase . '/admin_assets/images/dealer_images/' . $rawLogo);
+        } elseif ($otherParty?->information?->avatar) {
+            $av = $otherParty->information->avatar;
+            $opAvatar = str_starts_with($av, 'http') ? $av : (str_starts_with($av, 'uploads/') || str_starts_with($av, 'avatars/') ? asset('storage/' . $av) : $av);
+        } else {
+            $opAvatar = 'https://ui-avatars.com/api/?name=' . urlencode($opName) . '&background=F58D02&color=fff&size=52';
+        }
+
+        // Inventory image
+        $rawImg = $inventory ? ($inventory->primary_image ?? null) : null;
+        if ($rawImg && str_starts_with($rawImg, 'http')) {
+            $invImg = $rawImg;
+        } elseif ($rawImg) {
+            $invImg = $disklozBase . '/admin_assets/images/inventory_images/' . $rawImg;
+        } else {
+            $invImg = asset('assets/images/defaultimage.jpg');
+        }
+
+        $invTitle = 'Vehicle';
+        if ($inventory) {
+            $invTitle = trim(collect([$inventory->title ?? null, $inventory->year ?? null, $inventory->mfg_auto ?? null, $inventory->model ?? null])->filter()->implode(' ')) ?: ($inventory->model ?? 'Vehicle');
+        }
+
+        $isMotoklozDealer = !$dealerInfo && $otherParty;
+        $dealerSlug = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($opName)), '-');
+        $dealerProfileUrl = $isMotoklozDealer
+            ? route('dealer_inventory_details', ['name' => $dealerSlug, 'id' => $dealerId, 'source' => 'motokloz'])
+            : route('dealer_inventory_details', ['name' => $dealerSlug, 'id' => $dealerId]);
+
+        $invSlug = \Illuminate\Support\Str::slug($invTitle) ?: 'vehicle';
+        $invDetailUrl = route('inventory_product_details', ['name' => $invSlug, 'id' => $inventoryId]);
+
+        return response()->json([
+            'clientId'       => $clientId,
+            'dealerId'       => $dealerId,
+            'inventoryId'    => $inventoryId,
+            'senderType'     => $senderType,
+            'opName'         => $opName,
+            'opAvatar'       => $opAvatar,
+            'invTitle'       => $invTitle,
+            'invImg'         => $invImg,
+            'invDetailUrl'   => $invDetailUrl,
+            'dealerProfileUrl' => $dealerProfileUrl,
+            'sendUrl'        => route('chat.send', [$clientId, $dealerId, $inventoryId]),
+            'pollUrl'        => route('chat.poll', [$clientId, $dealerId, $inventoryId]),
+            'messages'       => $messages->map(fn($msg) => [
+                'id'           => $msg->id,
+                'message_body' => $msg->message_body,
+                'sender_type'  => $msg->sender_type,
+                'created_at'   => $msg->created_at,
+                'is_mine'      => $msg->sender_type === $senderType,
+            ]),
+        ]);
+    }
+
+    public function markRead(int $clientId, int $dealerId, int $inventoryId)    {
         $authId = Auth::id();
 
         if ($authId !== $clientId && $authId !== $dealerId) {
