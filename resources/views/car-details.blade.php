@@ -114,7 +114,7 @@ function formatPrice($price)
                             $dealer->province         ?? null,
                             $dealer->postal_code      ?? null,
                         ])->filter()->implode(', ') : '';
-
+    $dealerRegulator = $dealer->regulator     ?? null;
     $localInventoryId = $searched_vehicle->id     ?? null;
     $localDealerId    = $searched_vehicle->user_id
                         ?? $searched_vehicle->client_id
@@ -424,7 +424,13 @@ function formatPrice($price)
                                         onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultdealerlogo.png') }}';">
                                     <div>
                                         <h6 class="mb-0 fw-bold">{{ $dealerName }}</h6>
-                                        <p class="small text-muted mb-0">{{ $dealerAddress }}</p>
+                                        <p class="small text-muted mb-0">
+                                            {{ $dealerAddress }}
+                                        </p>
+                                        <p class="small text-muted mb-0">
+                                            <i class="fas fa-id-card text-warning me-1"></i>
+                                            {{ $dealerRegulator }}
+                                        </p>
                                     </div>
                                 </div>
                             </a>

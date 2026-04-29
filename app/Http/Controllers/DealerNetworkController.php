@@ -214,13 +214,13 @@ class DealerNetworkController extends Controller
             // Send email
             Mail::raw($emailContent, function ($message) use ($validated) {
                 $subject = 'New Support Request - ' . ($validated['source'] ?? 'General') . ' - ' . $validated['dealership_name'];
-                $message->to('huzaifatenmarch@gmail.com')
+                $message->to('brandi@diskloz.com')
                         ->subject($subject)
                         ->from('no-reply@diskloz.com', 'Diskloz')
                         ->replyTo($validated['contact_email'], $validated['contact_name']);
             });
 
-            Log::info('Email sent successfully to huzaifatenmarch@gmail.com from source: ' . ($validated['source'] ?? 'unknown'));
+            Log::info('Email sent successfully to brandi@diskloz.com from source: ' . ($validated['source'] ?? 'unknown'));
 
             return response()->json([
                 'success' => true,

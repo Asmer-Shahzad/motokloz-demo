@@ -3,7 +3,7 @@
         <div class="footer-top">
             <div class="row">
                 <div class="col-lg-8">
-                    <h3>Subscribe to see secret deals prices drop the moment you sign up!</h3>
+                    <h3>Subscribe to get deals on services near you!</h3>
                 </div>
                 <div class="subscribe-box col-lg-4">
                     <input type="email" placeholder="Enter your Email">

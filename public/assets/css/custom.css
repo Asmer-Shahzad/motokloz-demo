@@ -2545,7 +2545,7 @@ span.mto-rating-badge {
 
 label {
     font-size: 13px;
-    color: #666;
+    color: var(--select-color);
     margin-bottom: 5px;
     font-weight: 500;
 }
@@ -2733,12 +2733,16 @@ ul.list-unstyled.service-list li {
 }
 
 .content-box input.form-control {
-    background-color: #fff;
+    background-color: var(--bg-color);
     border: 1px solid #eee;
 }
 
+.form-check.feature-checkbox label {
+    color: var(--select-color);
+}
+
 .content-box textarea.form-control {
-    background-color: #fff;
+    background-color: var(--bg-color);
     border: 1px solid #eee;
 }
 

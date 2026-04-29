@@ -66,7 +66,7 @@ function formatPrice($price) {
                                     {{$dealer->dba}}
                                     <!--{{ $dealer->first_name }} {{ $dealer->last_name }}-->
                                 </h3>
-                                <p class="mb-3">
+                                <p>
                                     <i class="fas fa-map-marker-alt text-warning me-1"></i>
 
                                 {{ collect([
@@ -75,7 +75,11 @@ function formatPrice($price) {
                                     $dealer?->province,
                                     $dealer?->postal_code
                                 ])->filter()->implode(', ') ?: 'Address not available' }}
-
+                                {{$dealer->regulator ?? ''}} 
+                                </p>
+                                <p class="mb-3">
+                                    <i class="fas fa-id-card text-warning me-1"></i>
+                                    {{$dealer->regulator ?? ''}} 
                                 </p>
 
                                 <span class="badge bg-light text-dark border mt-2 p-2 rounded-5">
@@ -502,7 +506,7 @@ function formatPrice($price) {
 
                         <!-- Name Field -->
                         <div class="mb-3 position-relative">
-                            <img src="/assets/images/userlogin.png" class="input-icon" alt="" width="20">
+                            <img src="/assets/images/userlogin.png" class="input-icon light-dark" alt="" width="20">
                             <input type="text" 
                                 id="name"
                                 name="name"
@@ -513,7 +517,7 @@ function formatPrice($price) {
 
                         <!-- Email Field -->
                         <div class="mb-3 position-relative">
-                            <img src="/assets/images/email.png" class="input-icon" alt="" width="20">
+                            <img src="/assets/images/email.png" class="input-icon light-dark" alt="" width="20">
                             <input type="email" 
                                 id="email"
                                 name="email"
@@ -524,7 +528,7 @@ function formatPrice($price) {
 
                         <!-- Phone Field -->
                         <div class="mb-3 position-relative">
-                            <img src="/assets/images/telephone.png" class="input-icon" alt="" width="20">
+                            <img src="/assets/images/telephone.png" class="input-icon light-dark" alt="" width="20">
                             <input type="tel" 
                                 id="phone"
                                 name="phone"
@@ -666,6 +670,7 @@ function formatPrice($price) {
                             <circle cx="8" cy="6" r="2.5" fill="#fff"/>
                         </svg>
                         {{ $dealer->physical_address ?? 'Location Not Available'}}
+                        {{ $dealer->regulator ?? ''}}
                     </p>
                 </div>
                 @if(!$isMotokloz)
