@@ -318,7 +318,7 @@ span.gt_float_switcher-arrow {
     font-size: 12px;
     color: #aaa;
     display: block;
-    margin-bottom: 6px;
+    /* margin-bottom: 6px; */
 }
 
 .select {
@@ -1433,7 +1433,7 @@ section.banner-car-listing {
     font-weight: 500;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     font-size: 13px;
-    z-index: 1;
+    z-index: 99996;
 }
 
 .badge-mileage i {
@@ -1447,7 +1447,7 @@ section.banner-car-listing {
     background: var(--banner-bg-color);
     border-radius: 12px;
     margin-top: -10px;
-    /* z-index: 999; */
+    z-index: 999;
     position: relative;
 }
 
@@ -1522,7 +1522,7 @@ section.banner-car-listing {
 
 .pr-track-wrap {
     position: relative;
-    height: 36px;
+    height: 20px;
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -1552,8 +1552,8 @@ section.banner-car-listing {
 
 .pr-handle {
     position: absolute;
-    width: 24px;
-    height: 24px;
+    width: 15px;
+    height: 15px;
     background: #f7941d;
     border: 2px solid #f7941d;
     border-radius: 50%;
@@ -2841,6 +2841,7 @@ textarea.form-control::placeholder {
     border: 1px solid #e9ecef;
     padding: 12px;
     color: var(--select-color);
+    
 }
 
 .modal-content {
@@ -2866,6 +2867,7 @@ textarea.form-control::placeholder {
     color: var(--select-color);
     padding: 12px;
     /* border-color: #ff9800 !important; */
+
 }
 
 .modal-body .form-control::placeholder {
@@ -2876,6 +2878,7 @@ textarea.form-control::placeholder {
     background-color: var(--border-color);
     border-color: #ff9800 !important;
     padding: 12px;
+
 }
 input.form-control::placeholder {
     color: var(--select-color);
@@ -3065,12 +3068,11 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .values {
-    /* margin-top: 10px; */
     font-weight: 600;
-    background: #d9d9d975;
-    /* color: #fff; */
-    /* padding: 3px 5px; */
-    border-radius: 6px;
+    border-radius: 8px;
+    height: 30px;
+    /* border: 1px solid #e9ecef; */
+    transition: 0.2s ease;
 }
 
 /* ===== Custom Scrollbar — Motokloz Theme ===== */
@@ -3170,6 +3172,10 @@ input[type="range"]::-moz-range-thumb {
     align-items: center;
     gap: 6px;
     line-height: 22px;
+    height: 50px;
+}
+.pr-input-wrap span {
+    font-size: 12px;
 }
 
 .btn-allow-location:hover {

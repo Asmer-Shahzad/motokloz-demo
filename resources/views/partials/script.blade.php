@@ -679,7 +679,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const parseSafe = (val) => {
         if (!val) return null;
-        let num = parseFloat(val.toString().replace(/,/g, ''));
+        let num = Math.round(parseFloat(val.toString().replace(/,/g, '')));
         return isNaN(num) ? null : num;
     };
 
@@ -733,7 +733,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!active) return;
 
             const cx = e.touches ? e.touches[0].clientX : e.clientX;
-            let v = getValFromPx(cx);
+            let v = Math.round(getValFromPx(cx));
 
             if (isMin) {
                 minVal = clamp(v, MIN, maxVal - STEP);
@@ -762,7 +762,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // click on track
     track.addEventListener('click', e => {
-        const v = getValFromPx(e.clientX);
+        let v = Math.round(getValFromPx(e.clientX));
 
         if (Math.abs(v - minVal) < Math.abs(v - maxVal)) {
             minVal = clamp(v, MIN, maxVal - STEP);

@@ -113,7 +113,7 @@
                                         <label>Type</label>
                                         <div class="select">
                                             <i class="fa-solid fa-car"></i>
-                                            <select name="selected_asset" id="filter-type" class="filter-options">
+                                            <select name="selected_asset" id="filter-type" class="filter-options form-select border border-0">
                                                 <option value="">Select Type</option>
                                                 @foreach($assets as $asset)
                                                 <option value="{{ $asset }}" {{ request('selected_asset')==$asset
@@ -133,7 +133,7 @@
                                         <div class="select">
                                             <i class="fa-solid fa-car-side me-2"></i>
 
-                                            <select id="filter-make" name="selected_make" class="filter-options">
+                                            <select id="filter-make" name="selected_make" class="filter-options form-select border border-0">
                                                 <option value="">Select Make</option>
 
                                                 @php
@@ -173,7 +173,7 @@
                                     <div class="filter">
                                         <label>Model</label>
                                         <div class="select">
-                                            <input type="text" name="selected_model" class="form-control model-input"
+                                            <input type="text" name="selected_model" class="form-control model-input border border-0"
                                                 placeholder="Enter Model" value="{{ request('selected_model') }}">
                                         </div>
                                     </div>
@@ -196,9 +196,15 @@
                                         </div>
 
                                         <div class="pr-values values">
-                                            <div class="pr-input-wrap"><input class="pr-input filter-all" id="prMinInput" type="text" inputmode="numeric"></div>
-                                            <span class="pr-sep">—</span>
-                                            <div class="pr-input-wrap"><input class="pr-input filter-all" id="prMaxInput" type="text" inputmode="numeric"></div>
+                                            <div class="pr-input-wrap">
+                                                <span>$</span>
+                                                <input class="pr-input filter-all" id="prMinInput" type="text" inputmode="numeric">
+                                            </div>
+                                            <span class="pr-sep"></span>
+                                            <div class="pr-input-wrap">
+                                                <span>$</span>
+                                                <input class="pr-input filter-all" id="prMaxInput" type="text" inputmode="numeric">
+                                            </div>
                                         </div>
 
                                         {{-- Hidden inputs for form submission --}}
@@ -213,7 +219,7 @@
                                         <label>Distance</label>
                                         <div class="select distance-dropdown-container">
                                             <i class="fa-solid fa-location-dot"></i>
-                                            <select name="selected_distance" id="dealer-topbar-distance-select" class="filter-options" style="display:none;">
+                                            <select name="selected_distance" id="dealer-topbar-distance-select" class="filter-options form-select border border-0" style="display:none;">
                                                 <option value="">Any Distance</option>
                                                 <option value="50"         {{ request('selected_distance')=='50'         ? 'selected':'' }}>Under 50 km</option>
                                                 <option value="100"        {{ request('selected_distance')=='100'        ? 'selected':'' }}>Under 100 km</option>
