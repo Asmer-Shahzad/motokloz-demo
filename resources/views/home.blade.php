@@ -818,35 +818,52 @@
         fetchAllMakes();
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const slider1 = document.getElementById('slider-1');
-            const slider2 = document.getElementById('slider-2');
-            const minValueSpan = document.getElementById('min-value');
-            const maxValueSpan = document.getElementById('max-value');
-            const form = document.getElementById('vehicleFilterForm');
+document.addEventListener('DOMContentLoaded', function () {
 
-            // Function to fetch all makes from all types
-            function fetchAllMakes() {
-                const types = [
-                    'AUTO', 'MARINE', 'RV / TRAILER', 'SNOWSPORTS', 'MOTORCYCLE / ATV / POWERSPORTS',
-                    'WATERSPORT', 'FARM EQUIPMENT', 'HEAVY TRUCK/EQUIPMENT', 'HEAVY DUTY TRAILERS'
-                ];
+    const slider1 = document.getElementById('slider-1');
+    const slider2 = document.getElementById('slider-2');
+    const minValueSpan = document.getElementById('min-value');
+    const maxValueSpan = document.getElementById('max-value');
+    const form = document.getElementById('vehicleFilterForm');
 
-                slider1.addEventListener('input', () => { minValueSpan.textContent = slider1.value; });
-                slider2.addEventListener('input', () => { maxValueSpan.textContent = slider2.value; });
+    // Function to fetch all makes from all types
+    function fetchAllMakes() {
+        const types = [
+            'AUTO', 'MARINE', 'RV / TRAILER', 'SNOWSPORTS', 'MOTORCYCLE / ATV / POWERSPORTS',
+            'WATERSPORT', 'FARM EQUIPMENT', 'HEAVY TRUCK/EQUIPMENT', 'HEAVY DUTY TRAILERS'
+        ];
 
-                // Tabs redirect
-                document.querySelectorAll('.tabs .tab').forEach(tab => {
-                    tab.addEventListener('click', function () {
-                        document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
-                        this.classList.add('active');
+        // (agar future me use karna ho to logic yahan add karo)
+        console.log(types);
+    }
 
-                        document.getElementById('selected_condition_input').value = this.dataset.condition || '';
-                        form.submit(); // redirect with filters
-                    });
-                });
-            });
-    </script>
+    // Sliders
+    if (slider1 && slider2) {
+        slider1.addEventListener('input', () => {
+            minValueSpan.textContent = slider1.value;
+        });
+
+        slider2.addEventListener('input', () => {
+            maxValueSpan.textContent = slider2.value;
+        });
+    }
+
+    // Tabs redirect
+    document.querySelectorAll('.tabs .tab').forEach(tab => {
+        tab.addEventListener('click', function () {
+            document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+
+            document.getElementById('selected_condition_input').value = this.dataset.condition || '';
+            form.submit();
+        });
+    });
+
+    // Call function
+    fetchAllMakes();
+
+});
+</script>
 
 <script>
 var DISKLOZ_BASE_HOME = "{{ env('diskloz_base_url') }}";
