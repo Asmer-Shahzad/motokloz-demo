@@ -52,6 +52,9 @@ Route::get('/dealer-profile/{name}/{id}', [DealerProfileController::class, 'deal
 Route::get('/dealer-network', [DealerNetworkController::class, 'fetch_dealers'])->name('fetch_dealers');
 Route::post('/dealer-application/submit', [DealerNetworkController::class, 'dealer_application_submit'])->name('dealer.application.submit');
 Route::post('/support/submit', [DealerNetworkController::class, 'support_submti'])->name('support.application.submit');
+Route::post('/subscribe', [DealerNetworkController::class, 'subscribe_submit'])
+    ->name('subscribe.application.submit');
+
 Route::get('/coming-soon', [HomeController::class, 'comingsoon'])->name('comingsoon');
 Route::get('/buy/step-1', [HomeController::class, 'buyFlowStep1'])->name('buy.step1');
 Route::get('/buy/step-2', [HomeController::class, 'buyFlowStep2'])->name('buy.step2');

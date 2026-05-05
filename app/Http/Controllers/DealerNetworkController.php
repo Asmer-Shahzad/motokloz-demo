@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserInformation;
+use Illuminate\Support\Facades\Config;
 use App\Http\Controllers\Concerns\EnrichesVehicleLocation;
 
 
@@ -129,18 +130,7 @@ class DealerNetworkController extends Controller
             // $emailContent .= "IP Address: " . $request->ip() . "\n";
             $emailContent .= "\n==========================================\n";
 
-            // Force mail configuration
-            config([
-                'mail.default' => 'smtp',
-                'mail.mailers.smtp.host' => 'smtp.zeptomail.com',
-                'mail.mailers.smtp.port' => 587,
-                'mail.mailers.smtp.username' => 'emailapikey',
-                'mail.mailers.smtp.password' => 'wSsVR61+rB/xCvx5nGD5Iug7mFVQA1mgR00o3gGk6nD+SP/KoMdvl0DLB1DyG6RNR2dqQjoVprJ6zhpW0zFcitR4m1EAWiiF9mqRe1U4J3x17qnvhDzIXW9bkRqLL48NxA9um2diG8Fu',
-                'mail.mailers.smtp.encryption' => 'tls',
-                'mail.from.address' => 'no-reply@diskloz.com',
-                'mail.from.name' => 'Diskloz'
-            ]);
-
+      
             // Send email
             Mail::raw($emailContent, function ($message) use ($validated) {
                 $message->to('brandi@diskloz.com')
@@ -199,28 +189,17 @@ class DealerNetworkController extends Controller
             $emailContent .= "Submitted At: " . now()->format('Y-m-d H:i:s') . "\n";
             $emailContent .= "\n==========================================\n";
 
-            // Force mail configuration
-            config([
-                'mail.default' => 'smtp',
-                'mail.mailers.smtp.host' => 'smtp.zeptomail.com',
-                'mail.mailers.smtp.port' => 587,
-                'mail.mailers.smtp.username' => 'emailapikey',
-                'mail.mailers.smtp.password' => 'wSsVR61+rB/xCvx5nGD5Iug7mFVQA1mgR00o3gGk6nD+SP/KoMdvl0DLB1DyG6RNR2dqQjoVprJ6zhpW0zFcitR4m1EAWiiF9mqRe1U4J3x17qnvhDzIXW9bkRqLL48NxA9um2diG8Fu',
-                'mail.mailers.smtp.encryption' => 'tls',
-                'mail.from.address' => 'no-reply@diskloz.com',
-                'mail.from.name' => 'Diskloz'
-            ]);
 
             // Send email
             Mail::raw($emailContent, function ($message) use ($validated) {
                 $subject = 'New Support Request - ' . ($validated['source'] ?? 'General') . ' - ' . $validated['dealership_name'];
-                $message->to('brandi@diskloz.com')
+                $message->to('support@motokloz.com')
                         ->subject($subject)
                         ->from('no-reply@diskloz.com', 'Diskloz')
                         ->replyTo($validated['contact_email'], $validated['contact_name']);
             });
 
-            Log::info('Email sent successfully to brandi@diskloz.com from source: ' . ($validated['source'] ?? 'unknown'));
+            Log::info('Email sent successfully to support@motokloz.com from source: ' . ($validated['source'] ?? 'unknown'));
 
             return response()->json([
                 'success' => true,
@@ -236,4 +215,52 @@ class DealerNetworkController extends Controller
             ], 500);
         }
     }
+
+public function subscribe_submit(Request $request)
+{
+    try {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+
+        $userEmail = $request->email;
+
+        Log::info('Subscribe attempt', [
+            'email' => $userEmail
+        ]);
+
+        Mail::raw('Test Mail from: ' . $userEmail, function ($message) {
+            $message->to('subscribe@motokloz.com')
+                    ->subject('Test Subscribe');
+        });
+
+        Log::info('Mail sent successfully', [
+            'email' => $userEmail
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Subscribed successfully!'
+        ]);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+
+        return response()->json([
+            'status' => false,
+            'message' => $e->errors()['email'][0] ?? 'Validation error'
+        ], 422);
+
+    } catch (\Exception $e) {
+
+        Log::error('Mail sending failed', [
+            'email' => $request->email ?? null,
+            'error' => $e->getMessage()
+        ]);
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Something went wrong!'
+        ], 500);
+    }
+}
 }

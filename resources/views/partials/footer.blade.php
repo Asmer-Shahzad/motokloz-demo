@@ -6,8 +6,13 @@
                     <h3>Subscribe to get deals on services near you!</h3>
                 </div>
                 <div class="subscribe-box col-lg-4">
-                    <input type="email" placeholder="Enter your Email">
-                    <button type="submit">Subscribe</button>
+                    <form data-ajax="true" id="subscribeForm" action="{{ route('subscribe.application.submit') }}" method="POST">
+                        @csrf
+                        <input type="email" name="email" id="email" placeholder="Enter your email" required>
+                        <button type="submit">Subscribe</button>
+                    </form>
+
+                    <p id="msg"></p>
                 </div>
             </div>
         </div>
@@ -27,7 +32,7 @@
                         <li><i class="fa-sharp fa-solid fa-clock"></i><a href="#">Hours: 8:00 - 17:00, Mon - Sat</a>
                         </li>
                         <li><i class="fa-sharp fa-solid fa-envelope"></i><a
-                                href="mailto:websitesupport@motokloz.com">websitesupport@motokloz.com</a></li>
+                                href="mailto:support@motokloz.com">support@motokloz.com</a></li>
                     </ul>
                     <div class="calltoaction">
                         <h5><i class="fa-sharp fa-solid fa-phone"></i> Need help? Call us</h5>
@@ -146,6 +151,49 @@
     </div>
     @include('partials.support-modal')
 </footer>
+
+<script>
+$(document).ready(function () {
+
+    $('#subscribeForm').on('submit', function (e) {
+        e.preventDefault();
+
+        let $form = $(this);
+        let $btn = $form.find('button[type="submit"]');
+        let originalText = $btn.html();
+
+        let email = $('#email').val();
+
+        $btn.prop('disabled', true).text('Subscribing...');
+
+        $.ajax({
+            url: $form.attr('action'),
+            method: 'POST',
+            data: {
+                _token: $('input[name="_token"]').val(),
+                email: email
+            },
+
+            success: function (res) {
+                showSnackbar(res.message || 'Subscribed successfully!', 'success');
+                $form[0].reset();
+            },
+
+            error: function (xhr) {
+                let msg = xhr.responseJSON?.message || 'Something went wrong';
+                showSnackbar(msg, 'error');
+            },
+
+            complete: function () {
+                $btn.prop('disabled', false).html(originalText);
+            }
+        });
+
+    });
+
+});
+</script>
+
 
 <style>
     .social-icons img {

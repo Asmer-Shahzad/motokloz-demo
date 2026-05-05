@@ -181,29 +181,27 @@
                                     <div class="divider"></div>
 
                                     <!-- Price Range -->
-                                    <div class="price-box filter">
+                                    <div class="price-box filter" id="priceRangeFilter">
                                         <label>Price Range</label>
 
-                                        <div class="pr-track-wrap" id="prTrack">
-                                            <div class="pr-track"></div>
-                                            <div class="pr-fill" id="prFill"></div>
-                                            <div class="pr-handle" id="prHandleMin" tabindex="0" role="slider" aria-label="Minimum price">
-                                                <div class="pr-handle-inner"></div>
-                                            </div>
-                                            <div class="pr-handle" id="prHandleMax" tabindex="0" role="slider" aria-label="Maximum price">
-                                                <div class="pr-handle-inner"></div>
-                                            </div>
+                                        <div class="pr-display-wrap" id="prDisplayWrap">
+                                            <span class="pr-display-text" id="prDisplayText">Any Price</span>
+                                            <i class="fa-solid fa-angle-down pr-chevron"></i>
                                         </div>
 
-                                        <div class="pr-values values">
-                                            <div class="pr-input-wrap">
-                                                <span>$</span>
-                                                <input class="pr-input filter-all" id="prMinInput" type="text" inputmode="numeric">
+                                        <div class="pr-dropdown" id="prDropdown">
+                                            <div class="pr-inputs-row">
+                                                <input class="pr-input-field" id="prMinInput" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Min. Price"
+                                                    oninput="this.value=this.value.replace(/[^0-9]/g,''); clearPrError();"
+                                                    onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('prApplyBtn').click();}">
+                                                <span class="pr-to-sep">To</span>
+                                                <input class="pr-input-field" id="prMaxInput" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Max. Price"
+                                                    oninput="this.value=this.value.replace(/[^0-9]/g,''); clearPrError();"
+                                                    onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('prApplyBtn').click();}">
                                             </div>
-                                            <span class="pr-sep"></span>
-                                            <div class="pr-input-wrap">
-                                                <span>$</span>
-                                                <input class="pr-input filter-all" id="prMaxInput" type="text" inputmode="numeric">
+                                            <div class="pr-actions-row">
+                                                <button type="button" class="pr-clear-btn" id="prClearBtn">Clear</button>
+                                                <button type="button" class="pr-apply-btn" id="prApplyBtn">Apply</button>
                                             </div>
                                         </div>
 
@@ -1175,6 +1173,112 @@ function toggleLike(vehicleId, element, authId) {
         });
     });
 })();
+</script>
+
+{{-- Price Range Dropdown JS --}}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var form        = document.querySelector('form.search-wrapper');
+    var prFilter    = document.getElementById('priceRangeFilter');
+    var prMinInput  = document.getElementById('prMinInput');
+    var prMaxInput  = document.getElementById('prMaxInput');
+    var prDisplayText = document.getElementById('prDisplayText');
+    var hiddenMin   = document.getElementById('hiddenMin');
+    var hiddenMax   = document.getElementById('hiddenMax');
+    var prApplyBtn  = document.getElementById('prApplyBtn');
+    var prClearBtn  = document.getElementById('prClearBtn');
+
+    // Pre-fill display from query string
+    var initMin = hiddenMin ? hiddenMin.value : '0';
+    var initMax = hiddenMax ? hiddenMax.value : '1000000';
+    if (prMinInput && initMin && initMin !== '0') prMinInput.value = initMin;
+    if (prMaxInput && initMax && initMax !== '1000000') prMaxInput.value = initMax;
+    updatePrDisplayText();
+
+    // Toggle dropdown
+    if (prFilter) {
+        var displayWrap = prFilter.querySelector('.pr-display-wrap');
+        if (displayWrap) {
+            displayWrap.addEventListener('click', function (e) {
+                e.stopPropagation();
+                prFilter.classList.toggle('pr-open');
+            });
+        }
+    }
+
+    // Close on outside click
+    document.addEventListener('click', function (e) {
+        if (prFilter && !prFilter.contains(e.target)) {
+            prFilter.classList.remove('pr-open');
+        }
+    });
+
+    // Apply button
+    if (prApplyBtn) {
+        prApplyBtn.addEventListener('click', function () {
+            var minVal = prMinInput ? prMinInput.value.replace(/[^0-9]/g, '') : '';
+            var maxVal = prMaxInput ? prMaxInput.value.replace(/[^0-9]/g, '') : '';
+
+            if (minVal !== '' && maxVal !== '' && parseInt(minVal) > parseInt(maxVal)) {
+                prMinInput.style.borderColor = '#e53935';
+                prMaxInput.style.borderColor = '#e53935';
+                var errMsg = document.getElementById('prErrorMsg');
+                if (!errMsg) {
+                    errMsg = document.createElement('p');
+                    errMsg.id = 'prErrorMsg';
+                    errMsg.style.cssText = 'color:#e53935;font-size:12px;margin:6px 0 0;';
+                    document.querySelector('#prDropdown .pr-inputs-row').after(errMsg);
+                }
+                errMsg.textContent = 'Min price cannot be greater than Max price.';
+                return;
+            }
+
+            clearPrError();
+            if (hiddenMin) hiddenMin.value = minVal || '0';
+            if (hiddenMax) hiddenMax.value = maxVal || '1000000';
+            updatePrDisplayText();
+            if (prFilter) prFilter.classList.remove('pr-open');
+            if (form) form.submit();
+        });
+    }
+
+    // Clear button
+    if (prClearBtn) {
+        prClearBtn.addEventListener('click', function () {
+            if (prMinInput) prMinInput.value = '';
+            if (prMaxInput) prMaxInput.value = '';
+            if (hiddenMin) hiddenMin.value = '0';
+            if (hiddenMax) hiddenMax.value = '1000000';
+            clearPrError();
+            updatePrDisplayText();
+        });
+    }
+
+    function clearPrError() {
+        var errMsg = document.getElementById('prErrorMsg');
+        if (errMsg) errMsg.remove();
+        if (prMinInput) prMinInput.style.borderColor = '';
+        if (prMaxInput) prMaxInput.style.borderColor = '';
+    }
+
+    // Make clearPrError global (for oninput calls)
+    window.clearPrError = clearPrError;
+
+    function updatePrDisplayText() {
+        if (!prDisplayText) return;
+        var minVal = prMinInput ? prMinInput.value.replace(/[^0-9]/g, '') : '';
+        var maxVal = prMaxInput ? prMaxInput.value.replace(/[^0-9]/g, '') : '';
+        if (!minVal && !maxVal) {
+            prDisplayText.textContent = 'Any Price';
+        } else if (minVal && maxVal) {
+            prDisplayText.textContent = '$' + Number(minVal).toLocaleString() + ' \u2013 $' + Number(maxVal).toLocaleString();
+        } else if (minVal) {
+            prDisplayText.textContent = 'From $' + Number(minVal).toLocaleString();
+        } else {
+            prDisplayText.textContent = 'Up to $' + Number(maxVal).toLocaleString();
+        }
+    }
+});
 </script>
 
 @endsection
