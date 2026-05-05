@@ -79,7 +79,7 @@
                                         <div class="filter">
                                             <label>Model</label>
                                             <div class="select">
-                                                <input class="form-control border border-0" type="text" name="selected_model" id="Model"
+                                                <input class="form-control model-input border border-0" type="text" name="selected_model" id="Model"
                                                     placeholder="Enter Model">
                                             </div>
                                         </div>
@@ -87,46 +87,23 @@
                                         <div class="divider"></div>
 
                                         <!-- Price Range -->
-                                        <!-- <div class="price-box filter">
-                                            <label>Price Range</label>
-                                            <div class="range-container">
-                                                <div class="slider-track" id="track"></div>
-                                                <input class="filter-all" type="range" min="0" max="1000000" step="10000"
-                                                    value="{{ request('selected_lowest_price', 0) }}" id="slider-1"
-                                                    name="selected_lowest_price">
-                                                <input class="filter-all" type="range" min="0" max="1000000" step="10000"
-                                                    value="{{ request('selected_highest_price', 1000000) }}" id="slider-2"
-                                                    name="selected_highest_price">
-                                            </div>
-
-                                            <div class="values">
-                                                $ <span id="min-value"></span> - $ <span id="max-value"></span>
-                                            </div>
-                                        </div> -->
-                                        <!-- Price Range -->
-                                        <div class="price-box filter">
+                                        <div class="price-box filter" id="priceRangeFilter">
                                             <label>Price Range</label>
 
-                                            <div class="pr-track-wrap" id="prTrack">
-                                                <div class="pr-track"></div>
-                                                <div class="pr-fill" id="prFill"></div>
-                                                <div class="pr-handle" id="prHandleMin" tabindex="0" role="slider" aria-label="Minimum price">
-                                                    <div class="pr-handle-inner"></div>
-                                                </div>
-                                                <div class="pr-handle" id="prHandleMax" tabindex="0" role="slider" aria-label="Maximum price">
-                                                    <div class="pr-handle-inner"></div>
-                                                </div>
+                                            <div class="pr-display-wrap" id="prDisplayWrap">
+                                                <span class="pr-display-text" id="prDisplayText">Any Price</span>
+                                                <i class="fa-solid fa-angle-down pr-chevron"></i>
                                             </div>
 
-                                            <div class="pr-values values">
-                                                <div class="pr-input-wrap">
-                                                    <span>$</span>
-                                                    <input class="pr-input filter-all" id="prMinInput" type="text" inputmode="numeric">
+                                            <div class="pr-dropdown" id="prDropdown">
+                                                <div class="pr-inputs-row">
+                                                    <input class="pr-input-field" id="prMinInput" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Min. Price" oninput="this.value=this.value.replace(/[^0-9]/g,''); clearPrError();" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('prApplyBtn').click();}">
+                                                    <span class="pr-to-sep">To</span>
+                                                    <input class="pr-input-field" id="prMaxInput" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Max. Price" oninput="this.value=this.value.replace(/[^0-9]/g,''); clearPrError();" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('prApplyBtn').click();}">
                                                 </div>
-                                                <span class="pr-sep"></span>
-                                                <div class="pr-input-wrap">
-                                                    <span>$</span>
-                                                    <input class="pr-input filter-all" id="prMaxInput" type="text" inputmode="numeric">
+                                                <div class="pr-actions-row">
+                                                    <button type="button" class="pr-clear-btn" id="prClearBtn">Clear</button>
+                                                    <button type="button" class="pr-apply-btn" id="prApplyBtn">Apply</button>
                                                 </div>
                                             </div>
 
@@ -229,7 +206,7 @@
                                                 <img src="/assets/images/Motorcycle.png" class="img-fluid">
                                                 <span>{{ $assetCounts['MOTORCYCLE / ATV / POWERSPORTS'] ?? 0 }}
                                                     vehicles</span>
-                                                <h4>Motorcycle</h4>
+                                                <h4>Powersports</h4>
                                             </a>
                                         </div>
 
@@ -817,35 +794,113 @@
         // Initial load: populate all makes
         fetchAllMakes();
     </script>
+ 
+
     <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    const slider1 = document.getElementById('slider-1');
-    const slider2 = document.getElementById('slider-2');
-    const minValueSpan = document.getElementById('min-value');
-    const maxValueSpan = document.getElementById('max-value');
     const form = document.getElementById('vehicleFilterForm');
 
-    // Function to fetch all makes from all types
-    function fetchAllMakes() {
-        const types = [
-            'AUTO', 'MARINE', 'RV / TRAILER', 'SNOWSPORTS', 'MOTORCYCLE / ATV / POWERSPORTS',
-            'WATERSPORT', 'FARM EQUIPMENT', 'HEAVY TRUCK/EQUIPMENT', 'HEAVY DUTY TRAILERS'
-        ];
+    // ── Price Range Dropdown ──
+    const prFilter    = document.getElementById('priceRangeFilter');
+    const prDropdown  = document.getElementById('prDropdown');
+    const prMinInput  = document.getElementById('prMinInput');
+    const prMaxInput  = document.getElementById('prMaxInput');
+    const prDisplayText = document.getElementById('prDisplayText');
+    const hiddenMin   = document.getElementById('hiddenMin');
+    const hiddenMax   = document.getElementById('hiddenMax');
+    const prApplyBtn  = document.getElementById('prApplyBtn');
+    const prClearBtn  = document.getElementById('prClearBtn');
 
-        // (agar future me use karna ho to logic yahan add karo)
-        console.log(types);
+    // Pre-fill from query string
+    var initMin = hiddenMin ? hiddenMin.value : '0';
+    var initMax = hiddenMax ? hiddenMax.value : '1000000';
+    if (prMinInput && initMin && initMin !== '0') prMinInput.value = initMin;
+    if (prMaxInput && initMax && initMax !== '1000000') prMaxInput.value = initMax;
+    updatePrDisplayText();
+
+    // Toggle dropdown
+    if (prFilter) {
+        prFilter.querySelector('.pr-display-wrap').addEventListener('click', function (e) {
+            e.stopPropagation();
+            prFilter.classList.toggle('pr-open');
+        });
     }
 
-    // Sliders
-    if (slider1 && slider2) {
-        slider1.addEventListener('input', () => {
-            minValueSpan.textContent = slider1.value;
-        });
+    // Close on outside click
+    document.addEventListener('click', function (e) {
+        if (prFilter && !prFilter.contains(e.target)) {
+            prFilter.classList.remove('pr-open');
+        }
+    });
 
-        slider2.addEventListener('input', () => {
-            maxValueSpan.textContent = slider2.value;
+    // Apply button
+    if (prApplyBtn) {
+        prApplyBtn.addEventListener('click', function () {
+            var minVal = prMinInput ? prMinInput.value.replace(/[^0-9]/g, '') : '';
+            var maxVal = prMaxInput ? prMaxInput.value.replace(/[^0-9]/g, '') : '';
+
+            // Validation: min cannot be greater than max
+            if (minVal && maxVal && parseInt(minVal) > parseInt(maxVal)) {
+                prMinInput.style.borderColor = '#e53935';
+                prMaxInput.style.borderColor = '#e53935';
+                var errMsg = document.getElementById('prErrorMsg');
+                if (!errMsg) {
+                    errMsg = document.createElement('p');
+                    errMsg.id = 'prErrorMsg';
+                    errMsg.style.cssText = 'color:#e53935;font-size:12px;margin:6px 0 0;';
+                    document.querySelector('.pr-inputs-row').after(errMsg);
+                }
+                errMsg.textContent = 'Min price cannot be greater than Max price.';
+                return;
+            }
+
+            // Clear any previous error
+            prMinInput.style.borderColor = '';
+            prMaxInput.style.borderColor = '';
+            var errMsg = document.getElementById('prErrorMsg');
+            if (errMsg) errMsg.remove();
+
+            if (hiddenMin) hiddenMin.value = minVal || '0';
+            if (hiddenMax) hiddenMax.value = maxVal || '1000000';
+            updatePrDisplayText();
+            if (prFilter) prFilter.classList.remove('pr-open');
+            if (form) form.submit();
         });
+    }
+
+    // Clear button
+    if (prClearBtn) {
+        prClearBtn.addEventListener('click', function () {
+            if (prMinInput) prMinInput.value = '';
+            if (prMaxInput) prMaxInput.value = '';
+            if (hiddenMin) hiddenMin.value = '0';
+            if (hiddenMax) hiddenMax.value = '1000000';
+            clearPrError();
+            updatePrDisplayText();
+        });
+    }
+
+    function clearPrError() {
+        var errMsg = document.getElementById('prErrorMsg');
+        if (errMsg) errMsg.remove();
+        if (prMinInput) prMinInput.style.borderColor = '';
+        if (prMaxInput) prMaxInput.style.borderColor = '';
+    }
+
+    function updatePrDisplayText() {
+        if (!prDisplayText) return;
+        var minVal = prMinInput ? prMinInput.value.replace(/[^0-9]/g, '') : '';
+        var maxVal = prMaxInput ? prMaxInput.value.replace(/[^0-9]/g, '') : '';
+        if (!minVal && !maxVal) {
+            prDisplayText.textContent = 'Any Price';
+        } else if (minVal && maxVal) {
+            prDisplayText.textContent = '$' + Number(minVal).toLocaleString() + ' – $' + Number(maxVal).toLocaleString();
+        } else if (minVal) {
+            prDisplayText.textContent = 'From $' + Number(minVal).toLocaleString();
+        } else {
+            prDisplayText.textContent = 'Up to $' + Number(maxVal).toLocaleString();
+        }
     }
 
     // Tabs redirect
@@ -853,14 +908,10 @@ document.addEventListener('DOMContentLoaded', function () {
         tab.addEventListener('click', function () {
             document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
             this.classList.add('active');
-
             document.getElementById('selected_condition_input').value = this.dataset.condition || '';
             form.submit();
         });
     });
-
-    // Call function
-    fetchAllMakes();
 
 });
 </script>
