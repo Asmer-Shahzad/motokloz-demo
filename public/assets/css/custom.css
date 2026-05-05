@@ -693,6 +693,10 @@ input.form-control {
     padding-bottom: 100px;
 }
 
+.about-motokloz .container {
+    z-index: 9999;
+    position: relative;
+}
 .car-wrap {
     position: relative;
     width: 100%;
