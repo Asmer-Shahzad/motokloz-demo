@@ -153,42 +153,47 @@
 </footer>
 
 <script>
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function () {
 
-    $('#subscribeForm').on('submit', function (e) {
+    var form = document.getElementById('subscribeForm');
+    if (!form) return;
+
+    form.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        let $form = $(this);
-        let $btn = $form.find('button[type="submit"]');
-        let originalText = $btn.html();
+        var btn = form.querySelector('button[type="submit"]');
+        var originalText = btn.innerHTML;
+        var email = document.getElementById('email').value;
+        var token = form.querySelector('input[name="_token"]').value;
 
-        let email = $('#email').val();
+        btn.disabled = true;
+        btn.textContent = 'Subscribing...';
 
-        $btn.prop('disabled', true).text('Subscribing...');
-
-        $.ajax({
-            url: $form.attr('action'),
+        fetch(form.getAttribute('action'), {
             method: 'POST',
-            data: {
-                _token: $('input[name="_token"]').val(),
-                email: email
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': token,
+                'Accept': 'application/json'
             },
-
-            success: function (res) {
-                showSnackbar(res.message || 'Subscribed successfully!', 'success');
-                $form[0].reset();
-            },
-
-            error: function (xhr) {
-                let msg = xhr.responseJSON?.message || 'Something went wrong';
-                showSnackbar(msg, 'error');
-            },
-
-            complete: function () {
-                $btn.prop('disabled', false).html(originalText);
+            body: JSON.stringify({ email: email })
+        })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+            if (typeof showSnackbar === 'function') {
+                showSnackbar(data.message || 'Subscribed successfully!', 'success');
             }
+            form.reset();
+        })
+        .catch(function () {
+            if (typeof showSnackbar === 'function') {
+                showSnackbar('Something went wrong. Please try again.', 'error');
+            }
+        })
+        .finally(function () {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
         });
-
     });
 
 });
