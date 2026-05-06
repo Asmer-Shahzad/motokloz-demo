@@ -45,7 +45,7 @@
                             </button>
                         </div>
 
-                        <button class="btn-dealer btn-dealer-22" type="button" data-bs-toggle="modal" data-bs-target="#testDriveModal">
+                        <button class="btn-dealer btn-dealer-22" type="button" data-bs-toggle="modal" data-bs-target="#testDriveModal" data-title="Become a Dealer">
                             Become a Dealer
                             <img src="/assets/images/Vector (3).png" alt="Dealer icon">
                         </button>
@@ -143,44 +143,7 @@
     </section>
 
                             
-    <!-- Become a Dealer Modal -->
-    <div class="modal fade" id="testDriveModal" tabindex="-1" aria-labelledby="testDriveModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="testDriveModalLabel">Become a Dealer</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form data-ajax="true" id="dealerApplicationForm" action="{{ route('dealer.application.submit') }}" method="POST">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="dealership_name" class="form-label">Dealership Name</label>
-                            <input type="text" class="form-control" id="dealership_name" name="dealership_name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="contact_name" class="form-label">Contact Name</label>
-                            <input type="text" class="form-control" id="contact_name" name="contact_name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="contact_email" class="form-label">Contact Email</label>
-                            <input type="email" class="form-control" id="contact_email" name="contact_email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="contact_phone" class="form-label">Contact Phone</label>
-                            <input type="tel" class="form-control" id="contact_phone" name="contact_phone" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="notes" class="form-label">Notes</label>
-                            <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Any additional notes..."></textarea>
-                        </div>
-                        <button type="submit" class="mto-btn-orange w-100 mb-3">Submit</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    {{-- Modal is included globally via footer (partials/support-modal) --}}
 
     <!-- MISSION SECTION -->
     <!-- <section class="mission-section py-5">
@@ -231,70 +194,8 @@
         </div>
     </section> -->
      
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function(){
-
-            $('#dealerApplicationForm').on('submit', function(e){
-                e.preventDefault();
-
-                // ===== UI STATE (same as test drive) =====
-                var $btn = $(this).find('button[type="submit"]');
-                var originalText = $btn.html();
-
-                $btn.prop('disabled', true)
-                    .html('<i class="fas fa-spinner fa-spin ms-2"></i>');
-
-                $('#loadingSpinner').show();
-
-                var form = this;
-                var formData = new FormData(form);
-
-                $.ajax({
-                    url: form.action,
-                    method: 'POST',
-                    data: formData,
-                    processData: false,   // IMPORTANT for FormData
-                    contentType: false,   // IMPORTANT for FormData
-
-                    success: function(res){
-                        showSnackbar(res.message || 'Submitted successfully!', 'success');
-
-                        form.reset();
-
-                        // modal close (agar hai)
-                        const modalEl = document.getElementById('testDriveModal');
-                        if (modalEl) {
-                            const modal = bootstrap.Modal.getInstance(modalEl);
-                            if (modal) modal.hide();
-                        }
-                    },
-
-                    error: function(xhr){
-                        if (xhr.status === 422 && xhr.responseJSON?.errors) {
-                            let msgs = [];
-                            $.each(xhr.responseJSON.errors, function(field, messages) {
-                                msgs.push(messages.join(', '));
-                            });
-                            showSnackbar(msgs.join(' | '), 'error');
-
-                        } else if (xhr.status === 500) {
-                            showSnackbar('Server error. Please try again later.', 'error');
-
-                        } else {
-                            showSnackbar(xhr.responseJSON?.message || 'Something went wrong.', 'error');
-                        }
-                    },
-
-                    complete: function(){
-                        $btn.prop('disabled', false).html(originalText);
-                        $('#loadingSpinner').hide();
-                    }
-                });
-            });
-
-        });
-    </script>
+    {{-- jQuery already loaded in partials/script.blade.php --}}
+    {{-- Form submit handled by support-modal.blade.php --}}
 
     <style>
         .dealer-search-wrap {

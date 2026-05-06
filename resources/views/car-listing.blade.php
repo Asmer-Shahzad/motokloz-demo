@@ -30,10 +30,11 @@
                             {{-- <h2>Find Your Perfect {{ $assetWord }}</h2>
                             <p>Search and find your best to buy with easy way</p> --}}
                         </div>
+                        <!-- 
                         <div class="search-wrapper">
                             <form action="{{ route('search_inventory') }}" method="GET" class="search-wrapper">
 
-                                    <!-- Tabs -->
+                                    
                                     <div class="tabs">
                                          <h2 class="main-title">Filter Your Search</h2>
                                         <!-- <a class="tab {{ request('selected_condition') == '' ? 'active' : '' }}"
@@ -41,7 +42,7 @@
                                         <a class="tab {{ request('selected_condition') == 'NEW' ? 'active' : '' }}"
                                             data-condition="NEW">New</a>
                                         <a class="tab {{ request('selected_condition') == 'USED' ? 'active' : '' }}"
-                                            data-condition="USED">Used</a> -->
+                                            data-condition="USED">Used</a>
 
                                         <div class="help">
                                             <i class="fa-solid fa-user"></i>
@@ -49,14 +50,14 @@
                                         </div>
                                     </div>
 
-                                    <!-- Hidden input for condition -->
+                                    
                                     <input type="hidden" name="selected_condition" id="selected_condition_input_2"
                                         value="{{ request('selected_condition') }}">
 
-                                    <!-- Filter Bar -->
+                                    
                                     <div class="filter-bar">
 
-                                        <!-- Type -->
+                                        
                                         <div class="filter">
                                             <label>Type</label>
                                             <div class="select">
@@ -75,7 +76,7 @@
 
                                         <div class="divider"></div>
 
-                                        <!-- Make -->
+                                        
                                         <div class="filter">
                                             <label>Make</label>
                                             <div class="select">
@@ -95,7 +96,7 @@
 
                                         <div class="divider"></div>
 
-                                        <!-- Model -->
+                                        
                                         <div class="filter">
                                             <label>Model</label>
                                             <div class="select">
@@ -106,7 +107,7 @@
 
                                         <div class="divider"></div>
 
-                                        <!-- Price Range -->
+                                        
                                         <div class="price-box filter" id="priceRangeFilter">
                                             <label>Price Range</label>
 
@@ -140,12 +141,11 @@
 
                                         <div class="divider"></div>
 
-                                        <!-- Distance to Seller (Top Bar) -->
+                                       
                                         <div class="filter distance-filter-wrap" id="topbar-distance-wrap">
                                             <label>Distance</label>
                                             <div class="select distance-dropdown-container" id="topbar-distance-container">
                                                 <i class="fa-solid fa-location-dot"></i>
-                                                <!-- Rendered by JS based on localStorage state -->
                                                 <select name="selected_distance" id="topbar-distance-select"
                                                     class="filter-options form-select border border-0" style="display:none;">
                                                     <option value="">Any Distance</option>
@@ -164,7 +164,7 @@
                                                     <option value="national" {{ ($selected_distance ?? '') == 'national'
         ? 'selected' : '' }}>National</option>
                                                 </select>
-                                                <!-- Allow location button shown when GPS not granted -->
+                                               
                                                 <button type="button" class="btn-allow-location" id="topbar-allow-location"
                                                     style="display:none;">
                                                     <i class="fa-solid fa-location-crosshairs me-1"></i> Allow Location
@@ -174,7 +174,7 @@
                                                     Location not supported
                                                 </span>
                                             </div>
-                                            <!-- Hidden GPS coordinate inputs for top bar form -->
+                                       
                                             <input type="hidden" name="user_lat" id="topbar-user-lat"
                                                 value="{{ $user_lat ?? '' }}">
                                             <input type="hidden" name="user_lng" id="topbar-user-lng"
@@ -189,6 +189,7 @@
                                     </div>
                                 </form>
                             </div>
+                                                    -->
                         </div>
                     </div>
                 </div>

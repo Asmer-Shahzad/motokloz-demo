@@ -1219,7 +1219,7 @@ footer ul li a:hover::after {
 .car-listing-bg {
     background: url("../images/car-listing-banner.png");
     margin: 20px 0 0 0;
-    padding: 180px 0 0px 0;
+    padding: 100px 0 0px 0;
     border-radius: 20px;
     background-repeat: no-repeat;
     background-size: 100%;
@@ -1227,14 +1227,15 @@ footer ul li a:hover::after {
 }
 
 .car-listing-cont h4 {
-    border-radius: 72px;
+    border-radius: 80px;
     display: table;
     margin: 0 auto;
     text-align: center;
-    padding: 25px;
+    padding: 54px;
     color: #f58d02;
     margin-bottom: 20px;
-    font-size: 16px;
+    font-weight: 700;
+    font-size: 25px;
     background: rgba(255, 225, 185, 0.2);
     backdrop-filter: blur(7px);
 }
@@ -1287,11 +1288,12 @@ footer ul li a:hover::after {
 }
 
 section.banner-car-listing {
-    margin-bottom: 136px;
+    margin-bottom: 50px;
 }
 
 .fleet-section {
-    padding: 50px 0;
+    /* padding: 50px 0; */
+    padding-bottom: 35px;
 }
 
 .dealer-fleet-section {
