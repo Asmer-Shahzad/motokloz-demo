@@ -105,37 +105,26 @@ class DealerNetworkController extends Controller
     public function dealer_application_submit(Request $request)
     {
         try {
-            // Log request
             Log::info('Dealer application received', $request->except('_token'));
-            
-            // Validate
+
             $validated = $request->validate([
                 'dealership_name' => 'required|string|max:255',
-                'contact_name' => 'required|string|max:255',
-                'contact_email' => 'required|email|max:255',
-                'contact_phone' => 'required|string|max:20',
-                'notes' => 'nullable|string',
+                'contact_name'    => 'required|string|max:255',
+                'contact_email'   => 'required|email|max:255',
+                'contact_phone'   => 'required|string|max:20',
+                'notes'           => 'nullable|string',
             ]);
 
-            // Prepare email content
-            $emailContent = "==========================================\n";
-            $emailContent .= "      NEW DEALER APPLICATION\n";
-            $emailContent .= "==========================================\n\n";
-            $emailContent .= "Dealership Name: " . $validated['dealership_name'] . "\n";
-            $emailContent .= "Contact Name: " . $validated['contact_name'] . "\n";
-            $emailContent .= "Contact Email: " . $validated['contact_email'] . "\n";
-            $emailContent .= "Contact Phone: " . $validated['contact_phone'] . "\n";
-            $emailContent .= "Notes: " . ($validated['notes'] ?? 'No notes provided') . "\n";
-            $emailContent .= "Submitted At: " . now()->format('Y-m-d H:i:s') . "\n";
-            // $emailContent .= "IP Address: " . $request->ip() . "\n";
-            $emailContent .= "\n==========================================\n";
-
-      
-            // Send email
-            Mail::raw($emailContent, function ($message) use ($validated) {
+            Mail::send('emails.dealer-application', [
+                'dealership_name' => $validated['dealership_name'],
+                'contact_name'    => $validated['contact_name'],
+                'contact_email'   => $validated['contact_email'],
+                'contact_phone'   => $validated['contact_phone'],
+                'notes'           => $validated['notes'] ?? '',
+                'submittedAt'     => now()->format('F j, Y \a\t g:i A'),
+            ], function ($message) use ($validated) {
                 $message->to('brandi@diskloz.com')
                         ->subject('New Dealer Application - ' . $validated['dealership_name'])
-                        ->from('no-reply@diskloz.com', 'Diskloz')
                         ->replyTo($validated['contact_email'], $validated['contact_name']);
             });
 
@@ -148,7 +137,6 @@ class DealerNetworkController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Dealer application error: ' . $e->getMessage());
-            
             return response()->json([
                 'success' => false,
                 'message' => 'Error: ' . $e->getMessage()
@@ -159,43 +147,31 @@ class DealerNetworkController extends Controller
     public function support_submti(Request $request)
     {
         try {
-            // Log request
             Log::info('Support form submission received', $request->except('_token'));
-            
-            // ✅ Log the source specifically
             Log::info('Form Source: ' . $request->input('source'));
-            
-            // Validate (add source validation if needed)
+
             $validated = $request->validate([
                 'dealership_name' => 'required|string|max:255',
-                'contact_name' => 'required|string|max:255',
-                'contact_email' => 'required|email|max:255',
-                'contact_phone' => 'required|string|max:20',
-                'notes' => 'nullable|string',
-                'source' => 'nullable|string|max:100',  // ✅ Add source validation
+                'contact_name'    => 'required|string|max:255',
+                'contact_email'   => 'required|email|max:255',
+                'contact_phone'   => 'required|string|max:20',
+                'notes'           => 'nullable|string',
+                'source'          => 'nullable|string|max:100',
             ]);
 
-            // Prepare email content with source
-            $emailContent = "==========================================\n";
-            $emailContent .= "      NEW SUPPORT REQUEST\n";
-            $emailContent .= "==========================================\n\n";
-            $emailContent .= "Source: " . ($validated['source'] ?? 'Not specified') . "\n";  // ✅ Add source
-            $emailContent .= "------------------------------------------\n\n";
-            $emailContent .= "Dealership Name: " . $validated['dealership_name'] . "\n";
-            $emailContent .= "Contact Name: " . $validated['contact_name'] . "\n";
-            $emailContent .= "Contact Email: " . $validated['contact_email'] . "\n";
-            $emailContent .= "Contact Phone: " . $validated['contact_phone'] . "\n";
-            $emailContent .= "Notes: " . ($validated['notes'] ?? 'No notes provided') . "\n";
-            $emailContent .= "Submitted At: " . now()->format('Y-m-d H:i:s') . "\n";
-            $emailContent .= "\n==========================================\n";
-
-
-            // Send email
-            Mail::raw($emailContent, function ($message) use ($validated) {
+            Mail::send('emails.support', [
+                'type'            => 'Support Request',
+                'source'          => $validated['source'] ?? '',
+                'dealership_name' => $validated['dealership_name'],
+                'contact_name'    => $validated['contact_name'],
+                'contact_email'   => $validated['contact_email'],
+                'contact_phone'   => $validated['contact_phone'],
+                'notes'           => $validated['notes'] ?? '',
+                'submittedAt'     => now()->format('F j, Y \a\t g:i A'),
+            ], function ($message) use ($validated) {
                 $subject = 'New Support Request - ' . ($validated['source'] ?? 'General') . ' - ' . $validated['dealership_name'];
                 $message->to('support@motokloz.com')
                         ->subject($subject)
-                        ->from('noreply@motokloz.com', 'Motokloz')
                         ->replyTo($validated['contact_email'], $validated['contact_name']);
             });
 
@@ -208,7 +184,6 @@ class DealerNetworkController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Support form error: ' . $e->getMessage());
-            
             return response()->json([
                 'success' => false,
                 'message' => 'Error: ' . $e->getMessage()
@@ -225,40 +200,36 @@ public function subscribe_submit(Request $request)
 
         $userEmail = $request->email;
 
-        Log::info('Subscribe attempt', [
-            'email' => $userEmail
-        ]);
+        Log::info('Subscribe attempt', ['email' => $userEmail]);
 
-        Mail::raw('Test Mail from: ' . $userEmail, function ($message) {
+        Mail::send('emails.subscribe', [
+            'userEmail'    => $userEmail,
+            'subscribedAt' => now()->format('F j, Y \a\t g:i A'),
+        ], function ($message) use ($userEmail) {
             $message->to('subscribe@motokloz.com')
-                    ->subject('Test Subscribe');
+                    ->subject('New Subscriber: ' . $userEmail);
         });
 
-        Log::info('Mail sent successfully', [
-            'email' => $userEmail
-        ]);
+        Log::info('Mail sent successfully', ['email' => $userEmail]);
 
         return response()->json([
-            'status' => true,
+            'status'  => true,
             'message' => 'Subscribed successfully!'
         ]);
 
     } catch (\Illuminate\Validation\ValidationException $e) {
-
         return response()->json([
-            'status' => false,
+            'status'  => false,
             'message' => $e->errors()['email'][0] ?? 'Validation error'
         ], 422);
 
     } catch (\Exception $e) {
-
         Log::error('Mail sending failed', [
             'email' => $request->email ?? null,
             'error' => $e->getMessage()
         ]);
-
         return response()->json([
-            'status' => false,
+            'status'  => false,
             'message' => 'Something went wrong!'
         ], 500);
     }
