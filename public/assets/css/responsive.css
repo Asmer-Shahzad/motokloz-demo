@@ -4,8 +4,11 @@
     }
 
     .filter-bar {
-        gap: 30px;
+        gap: 9px;
     }
+    .header-top li.nav-item {
+    padding: 0 0px 0 15px;
+}
     .car-circle-icons-group {
         gap: 2px;
     }
@@ -455,6 +458,23 @@
 }
 
 @media only screen and (max-width: 767px) {
+    #relatedVehiclesContainer .col-lg-3.col-sm-6.dealer-vehicle-card {
+    margin: 0 0 20px 0;
+}
+
+#relatedVehiclesContainer .col-lg-3.col-sm-6.dealer-vehicle-card:last-child {
+    margin: 0;
+}
+    .search-wrapper {
+    padding: 5px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.browse-slider h2 {
+    font-size: 25px;
+    padding-top: 20px;
+}
     .popular-button ul li {
         margin-bottom: 12px !important;
     }
