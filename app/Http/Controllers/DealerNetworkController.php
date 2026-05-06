@@ -195,7 +195,7 @@ class DealerNetworkController extends Controller
                 $subject = 'New Support Request - ' . ($validated['source'] ?? 'General') . ' - ' . $validated['dealership_name'];
                 $message->to('support@motokloz.com')
                         ->subject($subject)
-                        ->from('no-reply@diskloz.com', 'Diskloz')
+                        ->from('noreply@motokloz.com', 'Motokloz')
                         ->replyTo($validated['contact_email'], $validated['contact_name']);
             });
 
