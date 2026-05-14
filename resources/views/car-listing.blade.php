@@ -20,7 +20,22 @@
 
 <section class="banner-car-listing" data-aos="fade-down" data-aos-duration="700">
     <div class="container-fluid">
-        <div class="car-listing-bg">
+        @php
+            $assetBanners = [
+                'AUTO'                          => 'car-listing-banner.png',
+                'SNOWSPORTS'                    => 'Snowsportssss.png',
+                'WATERSPORT'                    => 'waterlist.png',
+                'MARINE'                        => 'marinelist.png',
+                'RV / TRAILER'                  => 'rvrentlist.png',
+                'HEAVY TRUCK/EQUIPMENT'         => 'truckk.png',
+                'FARM EQUIPMENT'                => 'farmlist.png',
+                'MOTORCYCLE / ATV / POWERSPORTS' => 'motolist.png',
+                'HEAVY DUTY TRAILERS'           => 'trailorslist.png',
+            ];
+            $selectedAsset = request('selected_asset');
+            $bannerImage = $assetBanners[$selectedAsset] ?? 'car-listing-banner.png';
+        @endphp
+        <div class="car-listing-bg" style="background-image: url('{{ asset('assets/images/' . $bannerImage) }}');">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
