@@ -3,43 +3,59 @@
         padding: 15px !important;
     }
 
+    .car-listing-cont h4 {
+        font-size: 38px;
+        padding: 44px 60px;
+    }
+
     .filter-bar {
         gap: 9px;
     }
+
     .header-top li.nav-item {
-    padding: 0 0px 0 15px;
-}
+        padding: 0 0px 0 15px;
+    }
+
     .car-circle-icons-group {
         gap: 2px;
     }
+
     .logo-o {
         height: 40px;
     }
+
     #themeToggle img#themeIcon {
         height: 40px;
     }
+
     #themeToggle {
         width: 40px;
         height: 40px;
     }
+
     .card span {
         width: 60%;
     }
+
     /*.car-circle-icons-group img {*/
     /*    width: 18%;*/
     /*}*/
     .car-price-block .price-value {
         font-size: 20px;
     }
+
     .car-main-title {
         font-size: 16px;
     }
+
     .search-wrapper.search-dealer-container {
         margin-bottom: 25px;
     }
+
     section.dealer-fleet-section.container .my-4 {
         margin-top: 0 !important;
     }
+
     .listing-page .page-title {
         padding: 0 0 0 15px;
     }
@@ -49,9 +65,16 @@
     .col-lg-6.btn-header img {
         margin: 0 0 0 5px;
     }
+
+    .car-listing-cont h4 {
+        font-size: 32px;
+        padding: 38px 50px;
+    }
+
     .container.account-setting.my-py-80 {
         padding-top: 34px;
     }
+
     .sidebar-top.user-info {
         padding: 16px 10px;
     }
@@ -59,54 +82,70 @@
     .sidebar-center .username {
         font-size: 15px;
     }
+
     .fw-semibold {
         font-size: 15px;
     }
+
     .offer-content .title {
         font-size: 13px;
     }
+
     .dropdownn.m-4.lang-dropdown {
         margin-top: 10px !important;
         margin-bottom: 10px !important;
     }
+
     .mto-pill-btn {
         padding: 3px 8px;
     }
+
     .mto-card-unit {
         padding: 15px !important;
         margin-bottom: 15px !important;
     }
+
     .mto-specs-container.mb-5 {
         padding: 15px;
         margin-bottom: 15px !important;
     }
+
     .mto-info-tile {
         padding: 12px 0px;
     }
+
     .mto-stack-trigger {
         padding: 15px;
     }
+
     .mto-stack-content {
         padding: 0 15px 15px;
     }
+
     section.mto-main-wrapper.py-5 {
         padding-top: 20px !important;
     }
+
     .fleet-section {
         padding-top: 20px;
     }
+
     .filter-group {
         margin-bottom: 10px;
     }
+
     .complete-sidebar {
         padding: 20px 10px;
     }
+
     .search-btn {
         margin: 0 auto;
     }
+
     .header-top .col-lg-8 {
         width: 100%;
     }
+
     .filter-bar {
         flex-wrap: wrap;
         justify-content: space-evenly;
@@ -143,8 +182,8 @@
     .car-review h2 {
         font-size: 35px;
     }
-    footer .footer-mid {
-    }
+
+    footer .footer-mid {}
 
     footer .footer-mid .col-lg-4 {
         width: 33%;
@@ -154,16 +193,20 @@
         width: 33%;
         margin-bottom: 40px;
     }
+
     .header-top li.nav-item {
         padding: 0 0px 0 20px;
     }
+
     img.logo {
         width: 250px;
     }
+
     .subscribe-box button {
         margin-left: 0px;
         padding: 14px 20px;
     }
+
     .logo-o {
         height: 32px;
         font-size: 13px;
@@ -176,9 +219,11 @@
     .dropdownn .btn {
         padding: 5px 28px !important;
     }
+
     .header-top a.nav-link {
         font-size: 14px;
     }
+
     .car-main-title {
         font-size: 14px;
     }
@@ -187,14 +232,17 @@
         padding: 4px 10px;
         font-size: 13px;
     }
+
     .footer-top h3 {
         font-size: 25px;
     }
+
     .secure-box i.fa-solid.fa-arrow-right {
         width: 50px;
         border-radius: 100px;
         height: 50px;
     }
+
     .secure-box {
         align-items: flex-end;
         justify-content: space-between;
@@ -203,6 +251,7 @@
         margin: 0;
         padding: 25px 30px 25px 30px;
     }
+
     .secure-box p {
         color: #fff;
     }
@@ -219,18 +268,30 @@
     .features.d-flex.flex-wrap.gap-3.mb-3 {
         margin-bottom: 10px !important;
     }
+
     .book-btn {
         padding: 4px 18px !important;
     }
 }
+
 @media only screen and (max-width: 991px) {
     .purchase-img {
         width: auto !important;
     }
 
+    .car-listing-cont h4 {
+        font-size: 26px;
+        padding: 30px 40px;
+    }
+
+    .car-listing-bg {
+        height: 380px !important;
+    }
+
     .col-12 .car-main-title {
         font-size: 18px;
     }
+
     .mission-title br {
         display: none;
     }
@@ -238,16 +299,20 @@
     .mission-text {
         max-width: 100% !important;
     }
+
     .dealer-card {
         padding: 15px !important;
     }
+
     .dealer-search-inner {
         align-items: center;
         justify-content: center;
     }
+
     .content-box {
         padding: 25px 15px !important;
     }
+
     .dealer-profile-banner {
         height: auto !important;
         min-height: auto !important;
@@ -260,28 +325,35 @@
     .container.my-5 {
         margin-top: 20px !important;
     }
+
     .search-dealer-container {
         padding: 15px 15px;
     }
+
     div#overviewContent .d-flex.align-items-start.mb-4.border.p-4.rounded-3 {
         padding: 15px !important;
     }
+
     .car-main-title {
         line-height: 21px;
         min-height: auto;
     }
+
     .car-card-bottom {
         padding: 25px 12px 20px 12px;
     }
+
     .page-square {
         font-size: 14px;
         width: 35px;
         height: 35px;
     }
+
     .form-control,
     .form-select {
         padding: 6px 12px;
     }
+
     .car-listing-bg {
         padding: 70px 0 0px 0;
         height: auto;
@@ -309,8 +381,7 @@
         gap: 2px !important;
     }
 
-    .toolbar-left.d-flex.align-items-center {
-    }
+    .toolbar-left.d-flex.align-items-center {}
 
     .toolbar-left.d-flex.align-items-center .view-icons.me-3 {
         margin-right: 9px !important;
@@ -323,6 +394,7 @@
     .fleet-section .col-lg-9.col-md-8 {
         padding-left: 0;
     }
+
     .footer-top h3 {
         width: 100%;
         margin-bottom: 20px;
@@ -333,6 +405,7 @@
         justify-content: space-between;
         align-items: flex-start;
     }
+
     /*.car-circle-icons-group img {*/
     /*    width: 14%;*/
     /*}*/
@@ -342,37 +415,45 @@
     .mobile-btn {
         display: block;
     }
+
     .header-top .col-lg-8 {
         width: 10%;
     }
+
     .header-top .row {
         align-items: center;
     }
+
     .navbar-toggler-icon {
         filter: invert(1);
     }
+
     .logo-o {
         width: 95px;
         height: 33px;
         font-size: 12px;
         margin: 8px 0 20px 0;
     }
+
     .col-lg-6.btn-header .logo-o {
         display: none;
     }
+
     .header .col-lg-6 {
         width: 80%;
     }
+
     .col-lg-6.btn-header {
         width: 20%;
     }
+
     .btn-mobile {
         width: 90%;
         display: flex;
         flex-direction: row-reverse;
     }
-    .section-two .row {
-    }
+
+    .section-two .row {}
 
     .secure-box {
         margin-bottom: 20px;
@@ -405,6 +486,7 @@
         /*position: absolute;*/
         order: 0;
     }
+
     .header-top li.nav-item {
         padding: 0;
     }
@@ -412,45 +494,56 @@
     .header-top a.nav-link {
         font-size: 14px;
     }
+
     .btn-mobile {
         display: none;
     }
+
     .thumb-strip-slider {
         height: 107px;
     }
+
     section.gallery-section {
         padding-top: 15px;
     }
+
     .mto-stack-item {
         margin-bottom: 15px !important;
     }
 }
+
 @media (max-width: 768px) {
     .dealer-top-title {
         font-size: 25px;
     }
-    .content-box
-        h5.fw-bold.mb-4.d-flex.justify-content-between.align-items-center.collapsed {
+
+    .content-box h5.fw-bold.mb-4.d-flex.justify-content-between.align-items-center.collapsed {
         margin-bottom: 0 !important;
     }
+
     div#overviewContent h3.mb-3.fw-bold {
         font-size: 20px;
     }
+
     div#overviewContent .d-flex.align-items-start.mb-4.border-bottom.p-4 {
         padding-left: 0 !important;
         padding-right: 0 !important;
     }
+
     .search-box {
         flex-direction: column;
         padding: 20px;
     }
+
     .divider {
         display: none;
     }
+
     .filter-item {
         width: 100%;
         margin-bottom: 20px;
     }
+
     .find-btn {
         width: 100%;
         justify-content: center;
@@ -459,22 +552,24 @@
 
 @media only screen and (max-width: 767px) {
     #relatedVehiclesContainer .col-lg-3.col-sm-6.dealer-vehicle-card {
-    margin: 0 0 20px 0;
-}
+        margin: 0 0 20px 0;
+    }
 
-#relatedVehiclesContainer .col-lg-3.col-sm-6.dealer-vehicle-card:last-child {
-    margin: 0;
-}
+    #relatedVehiclesContainer .col-lg-3.col-sm-6.dealer-vehicle-card:last-child {
+        margin: 0;
+    }
+
     .search-wrapper {
-    padding: 5px;
-    margin-top: 0;
-    margin-bottom: 0;
-}
+        padding: 5px;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
 
-.browse-slider h2 {
-    font-size: 25px;
-    padding-top: 20px;
-}
+    .browse-slider h2 {
+        font-size: 25px;
+        padding-top: 20px;
+    }
+
     .popular-button ul li {
         margin-bottom: 12px !important;
     }
@@ -484,6 +579,7 @@
         margin: 0 !important;
         line-height: 40px;
     }
+
     #themeToggle img#themeIcon {
         height: 33px;
     }
@@ -500,9 +596,20 @@
         margin: 0 0 12px 0 !important;
         font-size: 25px;
     }
+
     .car-listing-bg {
-        padding: 35px 0 0px 0;
+        padding: 70px 0 0px 0;
+        height: 300px;
+        background-size: cover;
+        background-position: center;
     }
+
+    .car-listing-cont h4 {
+        font-size: 20px;
+        padding: 24px 30px;
+        border-radius: 50px;
+    }
+
     a#userDropdown img.img-fluid.light-dark {
         width: 60%;
     }
@@ -511,19 +618,16 @@
         width: 34%;
         margin: 0 0 0 7px;
     }
+
     .listing-page .listing {
         padding-left: 12px !important;
     }
+
     .listing-page .listing-bottom .listing-main .listing-head .listing-left h2 {
         font-size: 14px;
     }
 
-    .listing-page
-        .listing-bottom
-        .listing-main
-        .listing-head
-        .search-form
-        form {
+    .listing-page .listing-bottom .listing-main .listing-head .search-form form {
         width: auto;
     }
 
@@ -531,6 +635,7 @@
         padding: 9px 8px;
         gap: 4px;
     }
+
     .container.account-setting.my-py-80 .row {
         margin: 0;
     }
@@ -539,6 +644,7 @@
         padding: 0 0 5px 16px;
         margin: 0;
     }
+
     .page-title h1 {
         font-size: 25px;
     }
@@ -555,6 +661,7 @@
     .btn-orange {
         padding: 10px 27px;
     }
+
     .modern-car-card.shadow-sm {
         align-content: flex-end;
         flex-wrap: wrap;
@@ -572,6 +679,7 @@
         border-bottom: 1px solid;
         width: 100%;
     }
+
     .dealer-banner {
         min-height: auto !important;
     }
@@ -580,74 +688,94 @@
         height: 150px !important;
         padding-bottom: 15px;
     }
+
     .banner-content h2.fw-bold.mb-0 {
         font-size: 20px;
     }
+
     .container.py-3.border-bottom.mb-4 {
         padding-left: 0;
         padding-right: 0;
     }
+
     .dealer-fleet-section .top-back {
         padding-top: 10px;
         padding-bottom: 10px;
     }
+
     .dealer-fleet-section {
         padding-left: 15px;
         padding-right: 15px;
     }
+
     .main-gallery-slider img {
         height: auto !important;
     }
+
     .swiper-slide {
         height: auto !important;
     }
+
     .swiper-wrapper {
         height: auto !important;
     }
+
     .main-gallery-slider {
         height: 255px;
     }
+
     .gallery-action-overlay {
         left: 7%;
         transform: translateX(-3%);
         bottom: 25px;
     }
+
     .thumb-strip-slider {
         height: 75px;
     }
+
     section.mto-main-wrapper.py-5 {
         padding-top: 0px !important;
     }
+
     .mto-top-headline {
         font-size: 25px;
     }
+
     .page-square {
         width: 25px;
         height: 25px;
     }
+
     .fleet-section .col-lg-9.col-md-8 {
         padding-left: 15px;
     }
+
     .fleet-section .container {
         padding: 0 30px;
     }
+
     .fleet-toolbar.d-flex.flex-wrap.justify-content-between.align-items-center.mb-4 {
         align-items: center;
         justify-content: center !important;
         display: flex;
         gap: 10px !important;
     }
+
     .main-title {
         font-size: 25px;
     }
+
     .car-listing-cont h2 {
         font-size: 20px;
         line-height: 30px;
     }
+
     .subscribe-box button {
         padding: 14px 15px;
         margin-left: 6px;
     }
+
     .secure-box i.fa-solid.fa-arrow-right {
         width: 35px;
         height: 35px;
@@ -656,6 +784,7 @@
     .secure-box h4 {
         font-size: 20px;
     }
+
     .secure-box {
         padding: 15px 15px 15px 15px;
         height: 200px;
@@ -664,6 +793,7 @@
     .header .col-lg-6 {
         width: 75%;
     }
+
     .dropdownn .btn {
         padding: 2px 10px !important;
         font-size: 12px;
@@ -672,12 +802,15 @@
     .dropdownn.m-4.lang-dropdown {
         margin: 0 !important;
     }
+
     .footer-top h3 {
         width: 100%;
     }
+
     .help {
         display: none;
     }
+
     .col-lg-4.btn-mobile {
         display: none;
     }
@@ -730,6 +863,7 @@
     .search-btn {
         margin: 0;
     }
+
     .secure-box {
         display: inline-grid;
     }
@@ -799,6 +933,7 @@
         padding: 0 10px;
     }
 }
+
 /* 
 .gtranslate_wrapper {
     width: 100%;
@@ -827,6 +962,20 @@
 
     .gtranslate_wrapper .gt_float_switcher img {
         width: 10px !important;
+    }
+
+    .car-listing-bg {
+        height: 220px;
+        background-size: cover;
+        background-position: center;
+        padding: 70px 0 0px 0;
+    }
+
+    .car-listing-cont h4 {
+        font-size: 15px;
+        padding: 18px 22px;
+        border-radius: 40px;
+        line-height: 1.4;
     }
 
     .header .col-lg-6 {

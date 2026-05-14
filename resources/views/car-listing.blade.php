@@ -26,7 +26,7 @@
                     <div class="col-lg-12">
                         <div class="car-listing-cont">
                             
-                            <h4>Canada's Premiere Automotive, Leisure and Heavy Equipment Marketplace</h4>
+                            <h4>Canada's Premiere Automotive,<br> Leisure and Heavy Equipment Marketplace</h4>
                             {{-- <h2>Find Your Perfect {{ $assetWord }}</h2>
                             <p>Search and find your best to buy with easy way</p> --}}
                         </div>
@@ -1344,7 +1344,8 @@
                 if (hiddenMax) hiddenMax.value = maxVal || '1000000';
                 updatePrDisplayText();
                 if (prFilter) prFilter.classList.remove('pr-open');
-                if (form) form.submit();
+                // form submit nahi hoga - sirf values fill hongi
+                // actual search "Find a Vehicle" button se hogi
             });
         }
 

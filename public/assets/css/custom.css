@@ -705,6 +705,7 @@ input.form-control {
     z-index: 9999;
     position: relative;
 }
+
 .car-wrap {
     position: relative;
     width: 100%;
@@ -1232,16 +1233,17 @@ footer ul li a:hover::after {
 
 .car-listing-cont h4 {
     border-radius: 80px;
-    display: table;
-    margin: 0 auto;
+    display: flex;
+    justify-content: center;
     text-align: center;
-    padding: 54px;
+    padding: 54px 15px;
     color: #f58d02;
-    margin-bottom: 20px;
     font-weight: 700;
-    font-size: 25px;
+    font-size: 60px;
     background: rgba(255, 225, 185, 0.2);
     backdrop-filter: blur(7px);
+    align-items: center;
+    margin: 0;
 }
 
 .car-listing-cont h2 {

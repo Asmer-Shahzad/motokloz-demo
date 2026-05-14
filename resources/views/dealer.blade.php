@@ -1238,7 +1238,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (hiddenMax) hiddenMax.value = maxVal || '1000000';
             updatePrDisplayText();
             if (prFilter) prFilter.classList.remove('pr-open');
-            if (form) form.submit();
+            // form submit nahi hoga - sirf values fill hongi
+            // actual search "Find a Vehicle" button se hogi
         });
     }
 
