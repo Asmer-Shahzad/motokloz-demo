@@ -1,10 +1,12 @@
-@media only screen and (max-width: 1199px) {
+@media screen and (max-width: 1199px) {
     .search-btn {
         margin: 0 auto;
     }
+
     .header-top .col-lg-8 {
         width: 100%;
     }
+
     .filter-bar {
         flex-wrap: wrap;
         justify-content: space-evenly;
@@ -41,8 +43,7 @@
     .car-review h2 {
         font-size: 35px;
     }
-    footer .footer-mid {
-    }
+
 
     footer .footer-mid .col-lg-4 {
         width: 33%;
@@ -52,38 +53,50 @@
         width: 33%;
         margin-bottom: 40px;
     }
+
+
+
+
 }
+
 @media only screen and (max-width: 991px) {
     .header-top .col-lg-8 {
         width: 10%;
     }
+
     .header-top .row {
         align-items: center;
     }
+
     .navbar-toggler-icon {
         filter: invert(1);
     }
+
     .logo-o {
         width: 95px;
         height: 33px;
         font-size: 12px;
     }
+
     .col-lg-6.btn-header .logo-o {
         display: none;
     }
+
     .header .col-lg-6 {
         width: 80%;
     }
+
     .col-lg-6.btn-header {
         width: 20%;
     }
+
     .btn-mobile {
         width: 90%;
         display: flex;
         flex-direction: row-reverse;
     }
-    .section-two .row {
-    }
+
+    .section-two .row {}
 
     .secure-box {
         margin-bottom: 20px;
@@ -115,6 +128,7 @@
         width: 745px;
         position: absolute;
     }
+
     .header-top li.nav-item {
         padding: 0 0px 0 18px;
     }
@@ -123,30 +137,37 @@
         font-size: 14px;
     }
 }
+
 @media (max-width: 768px) {
     .search-box {
         flex-direction: column;
         padding: 20px;
     }
+
     .divider {
         display: none;
     }
+
     .filter-item {
         width: 100%;
         margin-bottom: 20px;
     }
+
     .find-btn {
         width: 100%;
         justify-content: center;
     }
 }
+
 @media only screen and (max-width: 767px) {
     .footer-top h3 {
         width: 100%;
     }
+
     .help {
         display: none;
     }
+
     .col-lg-4.btn-mobile {
         display: none;
     }
@@ -207,6 +228,7 @@
     .search-btn {
         margin: 0;
     }
+
     .secure-box {
         display: inline-grid;
     }

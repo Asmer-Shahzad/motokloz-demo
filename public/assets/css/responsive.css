@@ -61,7 +61,7 @@
     }
 }
 
-@media only screen and (max-width: 1199px) {
+@media screen and (max-width: 1199px) {
     .col-lg-6.btn-header img {
         margin: 0 0 0 5px;
     }
@@ -272,6 +272,14 @@
     .book-btn {
         padding: 4px 18px !important;
     }
+
+    section.banner-car-listing {
+        margin-bottom: 20px;
+    }
+
+    .car-listing-bg {
+        height: 338px !important;
+    }
 }
 
 @media only screen and (max-width: 991px) {
@@ -355,7 +363,7 @@
     }
 
     .car-listing-bg {
-        padding: 70px 0 0px 0;
+        padding: 10px 0 0px 0;
         height: auto;
     }
 
@@ -510,6 +518,15 @@
     .mto-stack-item {
         margin-bottom: 15px !important;
     }
+
+    .toolbar-right {
+        margin-bottom: 0 !important;
+    }
+
+    .subscribe-box {
+
+        justify-content: center;
+    }
 }
 
 @media (max-width: 768px) {
@@ -598,8 +615,8 @@
     }
 
     .car-listing-bg {
-        padding: 70px 0 0px 0;
-        height: 300px;
+        padding: 20px 0 0px 0;
+        height: 220px !important;
         background-size: cover;
         background-position: center;
     }
@@ -900,7 +917,7 @@
     }
 
     .footer-top h3 {
-        font-size: 25px;
+        font-size: 20px;
         line-height: 35px;
         margin-bottom: 20px;
         width: 100%;
@@ -968,7 +985,7 @@
         height: 220px;
         background-size: cover;
         background-position: center;
-        padding: 70px 0 0px 0;
+        padding: 10px 0 0px 0;
     }
 
     .car-listing-cont h4 {

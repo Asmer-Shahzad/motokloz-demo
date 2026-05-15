@@ -1223,11 +1223,13 @@ footer ul li a:hover::after {
 
 .car-listing-bg {
     margin: 20px 0 0 0;
-    padding: 100px 0 0px 0;
+    padding: 20px;
     border-radius: 20px;
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: cover;
     height: 530px;
+    display: flex;
+    align-items: center;
 }
 
 .car-listing-cont h4 {
@@ -1243,6 +1245,7 @@ footer ul li a:hover::after {
     backdrop-filter: blur(7px);
     align-items: center;
     margin: 0;
+
 }
 
 .car-listing-cont h2 {
