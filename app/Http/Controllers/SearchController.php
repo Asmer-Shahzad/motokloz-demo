@@ -270,23 +270,29 @@ class SearchController extends Controller
                         $dealerCoords = null;
 
                         if (!empty($vehicle->dealer_postal_code)) {
-                            $dealerCoords = $geocoder->geocodePostalCode($vehicle->dealer_postal_code);
+                            $dealerCoords = $geocoder->geocodePostalCode(
+                                $vehicle->dealer_postal_code,
+                                $vehicle->dealer_city    ?? null,
+                                $vehicle->dealer_country ?? null
+                            );
                         }
 
                         if ($dealerCoords === null && !empty($vehicle->dealer_city) && !empty($vehicle->dealer_province)) {
                             $dealerCoords = $geocoder->geocodeCityProvince(
                                 $vehicle->dealer_city,
-                                $vehicle->dealer_province
+                                $vehicle->dealer_province,
+                                $vehicle->dealer_country ?? null
                             );
                         }
 
                         if ($dealerCoords === null) {
-                            return true;
+                            // Location resolve nahi hui → strict filter, exclude karo
+                            return false;
                         }
 
                         $dist = $this->haversineDistance($userCoords, $dealerCoords);
 
-                        return $dist === null || $dist <= $kmLimit;
+                        return $dist !== null && $dist <= $kmLimit;
                     })->values();
                 }
             }

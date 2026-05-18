@@ -1237,15 +1237,14 @@ footer ul li a:hover::after {
     display: flex;
     justify-content: center;
     text-align: center;
-    padding: 54px 15px;
+    padding: 25px 12px;
     color: #f58d02;
     font-weight: 700;
-    font-size: 60px;
+    font-size: 45px;
     background: rgba(255, 225, 185, 0.2);
     backdrop-filter: blur(7px);
     align-items: center;
     margin: 0;
-
 }
 
 .car-listing-cont h2 {
