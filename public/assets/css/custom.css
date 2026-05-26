@@ -2954,8 +2954,6 @@ input:-webkit-autofill:active {
     color: var(--select-color);
 }
 
-h2.section-title {}
-
 .card-container input.form-control {
     /* background-color: #f1f3f5; */
     border: 1px solid #e9ecef;

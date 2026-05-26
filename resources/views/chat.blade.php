@@ -5,12 +5,12 @@
 @section('content')
 
     <div class="top-back">
-        <a href="{{ route('chat.index') }}" class="dashboard-back">
-            <span class="back-icon">
-                <img src="/assets/images/Carento (5).png" alt="Back">
-            </span>
-            <span class="back-text">Go back to dashboard</span>
-        </a>
+<a href="{{ url()->previous() }}" class="dashboard-back">
+    <span class="back-icon">
+        <img src="/assets/images/Carento (5).png" alt="Back">
+    </span>
+    <span class="back-text">Go back</span>
+</a>
     </div>
 
     <section class="main-chat">
@@ -30,7 +30,7 @@
                             style="width: 100%; padding: 10px 40px 10px 16px; border-radius: 30px; border: 1px solid #E6EBF5; background: #F5F7FA; font-size: 15px;">
                         <span class="search-close"
                             style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px; color: #7D8592;">&times;</span>
-                    </div>
+                    </div> 
                 </div>
 
                 <!-- Chat list with scroll -->
@@ -710,7 +710,16 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
 
+.header-top {
+    display: none;
+}
 
+.header {
+    display: none;
+}
+footer.footer {
+    display: none;
+}
         /* width */
         .scrol-bar::-webkit-scrollbar {
             width: 10px;
@@ -808,7 +817,7 @@
         /* ---------- MAIN CHAT LAYOUT ---------- */
         .main-chat {
             background: var(--bg-color);
-            height: 100vh;
+            height: 95vh;
             padding: 20px;
             position: relative;
 
@@ -1906,7 +1915,7 @@
         }
 
         .main-chat {
-            height: 100dvh;
+            height: 95vh;
             /* mobile safe height */
             padding: 16px;
         }
