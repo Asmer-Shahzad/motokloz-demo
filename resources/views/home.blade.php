@@ -389,18 +389,14 @@
                                     </button>
                                     @endif
                                     <div class="badge-mileage d-flex align-items-center">
-                                        <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
-                                            style="width:20px; height:12px;">
-                                         {{ $recent_vehicle->mileage 
-                                        ? number_format((float) trim(str_ireplace('km', '', $recent_vehicle->mileage))) . ' km'
-                                        : '0 km'
-                                    }}
+                                                                                                       {{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
+                                                            {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}
                                     </div>
                                 </div>
                                 <div class="car-card-bottom">
-                                    <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
+                                    <!-- <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
                                         {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}
-                                    </h5>
+                                    </h5> -->
                                     @php
                                         $dealerPostalCode = data_get($recent_vehicle, 'dealer.postal_code')
                                             ?? $recent_vehicle->dealer_postal_code
@@ -416,12 +412,23 @@
                                             ?? $recent_vehicle->dealer_country
                                             ?? '';
                                     @endphp
-                                    <p class="car-distance-away" data-dealer-postal="{{ $dealerPostalCode }}"
-                                        data-dealer-city="{{ $dealerCity }}" data-dealer-province="{{ $dealerProvince }}"
-                                        data-dealer-country="{{ $dealerCountry }}">
-                                        <i class="fa-solid fa-location-dot"></i>
-                                        <span class="distance-value">Loading...</span>
-                                    </p>
+                                         <div class="car-distance-container">
+                                                        <p class="car-distance-away" data-dealer-postal="{{ $dealerPostalCode }}"
+                                                            data-dealer-city="{{ $dealerCity }}" data-dealer-province="{{ $dealerProvince }}"
+                                                            data-dealer-country="{{ $dealerCountry }}">
+                                                            <i class="fa-solid fa-location-dot box-icon"></i>
+                                                            <span class="distance-value">Loading...</span>
+                                                        </p>
+                                                        <div>
+                                                              <img src="/assets/images/mile1.png" alt="Mileage" class="box-icon"
+                                                                style="width:20px; height:12px;">
+                                                            {{ $recent_vehicle->mileage
+                                    ? number_format((float) trim(str_ireplace('km', '', $recent_vehicle->mileage))) . ' km'
+                                    : '0 km'
+                                                                                                                                    }}
+                                                        </div>
+                                                      
+                                                        </div>
 
                                     <!-- <div class="car-circle-icons-group">
                                         <img src="/assets/images/no-accidents.png" alt="">
@@ -448,16 +455,25 @@
                                                 } elseif (!empty($recent_vehicle->dealer_phone_no)) {
                                                     $cardPhone = $recent_vehicle->dealer_phone_no;
                                                 }
+                                                $popupDealerName    = data_get($recent_vehicle,'dealer.dba') ?? data_get($recent_vehicle,'dealer.first_name') ?? 'Dealer';
+                                                $popupDealerEmail   = data_get($recent_vehicle,'dealer.email') ?? '';
+                                                $popupDealerAddress = trim(collect([data_get($recent_vehicle,'dealer.city') ?? $recent_vehicle->dealer_city ?? '', data_get($recent_vehicle,'dealer.province') ?? $recent_vehicle->dealer_province ?? '', data_get($recent_vehicle,'dealer.country') ?? $recent_vehicle->dealer_country ?? ''])->filter()->implode(', '));
+                                                $popupDealerWebsite  = data_get($recent_vehicle,'dealer.website') ?? '';
+                                                $popupDealerWhatsapp = data_get($recent_vehicle,'dealer.phone_no') ?? $cardPhone ?? '';
+                                                $popupVehicleTitle   = trim(($recent_vehicle->year ?? '').' '.($recent_vehicle->mfg_auto ?? '').' '.($recent_vehicle->model ?? ''));
                                             @endphp
-                                            @if($cardPhone)
-                                                <a href="tel:{{ $cardPhone }}" class="price-value call-seller d-block text-decoration-none" onclick="event.stopPropagation();">
-                                                    <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
-                                                </a>
-                                            @else
-                                                <h4 class="price-value call-seller">
-                                                    <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
-                                                </h4>
-                                            @endif
+                                            <a href="{{ $cardPhone ? 'tel:'.$cardPhone : '#' }}"
+                                                class="price-value call-seller d-block text-decoration-none call-seller-btn"
+                                                data-phone="{{ $cardPhone ?? '' }}"
+                                                data-dealer="{{ e($popupDealerName) }}"
+                                                data-email="{{ e($popupDealerEmail) }}"
+                                                data-address="{{ e($popupDealerAddress) }}"
+                                                data-website="{{ e($popupDealerWebsite) }}"
+                                                data-whatsapp="{{ e($popupDealerWhatsapp) }}"
+                                                data-vehicle="{{ e($popupVehicleTitle) }}"
+                                                onclick="handleCallClick(event, this);">
+                                                <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                            </a>
                                         @endif
                                         <!-- <p class="price-sub-text">In sapien eu diam eu</p> -->
                                     </div>
@@ -1031,5 +1047,5 @@ function toggleLike(vehicleId, element, authId) {
     });
 })();
 </script>
-
+@include('partials.dealer-contact-modal')
 @endsection

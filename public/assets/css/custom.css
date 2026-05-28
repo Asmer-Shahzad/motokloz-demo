@@ -1228,7 +1228,7 @@ footer ul li a:hover::after {
     background-repeat: no-repeat;
     background-size: cover;
     height: 530px;
-    display: flex;
+  
     align-items: center;
 }
 
@@ -1301,6 +1301,9 @@ section.banner-car-listing {
 .fleet-section {
     /* padding: 50px 0; */
     padding-bottom: 35px;
+    margin-top: -170px;
+    z-index: 99;
+    position: relative;
 }
 
 .dealer-fleet-section {
@@ -1384,7 +1387,7 @@ section.banner-car-listing {
 
 .results-info {
     font-size: 14px;
-    color: #888888;
+    color: #DDE1DE;
 }
 
 .btn-clear-filters {
@@ -1443,10 +1446,10 @@ section.banner-car-listing {
     position: absolute;
     bottom: 0;
     left: 12px;
-    background: #fff;
+    background: black;
     padding: 6px 16px;
     border-radius: 20px;
-    color: #737373;
+    color: #fff;
     font-weight: 500;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     font-size: 13px;
@@ -1623,9 +1626,23 @@ section.banner-car-listing {
 }
 
 .car-distance-away {
-    font-size: 14px;
     margin-bottom: 22px;
     color: var(--select-color);
+}
+
+.car-distance-away {margin-bottom: 0;}
+
+.car-distance-container {
+    display: flex;
+    gap: 10px;
+    font-size: 14px;
+    line-height: 1.2;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.box-icon {
+    margin-right: 4px;
 }
 
 /* Orange Circular Icons */

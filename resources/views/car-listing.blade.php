@@ -227,6 +227,44 @@
                         <aside class="complete-sidebar">
                             <h5 class="sidebar-main-heading">Filter Search</h5>
 
+                               <div class="filter-group" id="sidebar-distance-group">
+                                <label class="sidebar-label">
+                                    <i class="fa-solid fa-location-dot me-1"></i> Distance to Seller
+                                </label>
+                                <!-- Select shown when GPS is granted -->
+                                <select name="selected_distance" id="sidebar-distance-select"
+                                    class="form-select sidebar-input" style="display:none;">
+                                    <option value="">Any Distance</option>
+                                    <option value="50" {{ ($selected_distance ?? '') == '50' ? 'selected' : '' }}>Under 50 km
+                                    </option>
+                                    <option value="100" {{ ($selected_distance ?? '') == '100' ? 'selected' : '' }}>Under 100
+                                        km</option>
+                                    <option value="250" {{ ($selected_distance ?? '') == '250' ? 'selected' : '' }}>Under 250
+                                        km</option>
+                                    <option value="500" {{ ($selected_distance ?? '') == '500' ? 'selected' : '' }}>Under 500
+                                        km</option>
+                                    <option value="1000" {{ ($selected_distance ?? '') == '1000' ? 'selected' : '' }}>Under
+                                        1000 km</option>
+                                    <option value="provincial" {{ ($selected_distance ?? '') == 'provincial' ? 'selected'
+        : '' }}>Provincial</option>
+                                    <option value="national" {{ ($selected_distance ?? '') == 'national' ? 'selected' : ''
+                                                    }}>
+                                        National</option>
+                                </select>
+                                <!-- Allow location button shown when GPS not granted -->
+                                <button type="button" class="btn-allow-location w-100" id="sidebar-allow-location"
+                                    style="display:none;">
+                                    <i class="fa-solid fa-location-crosshairs me-1"></i> Allow Location
+                                </button>
+                                <span class="location-not-supported" id="sidebar-location-unsupported"
+                                    style="display:none; font-size:12px; color:#aaa;">
+                                    Location not supported by your browser
+                                </span>
+                                <!-- Hidden GPS coordinate inputs for sidebar form -->
+                                <input type="hidden" name="user_lat" id="sidebar-user-lat" value="{{ $user_lat ?? '' }}">
+                                <input type="hidden" name="user_lng" id="sidebar-user-lng" value="{{ $user_lng ?? '' }}">
+                            </div>
+
                             <!-- Condition -->
                             <div class="filter-group">
                                 <label class="sidebar-label">Condition</label>
@@ -250,6 +288,14 @@
                                             {{ $asset }}
                                         </option>
                                     @endforeach
+                                </select>
+                            </div>  
+
+                               <!-- Body Style -->
+                            <div class="filter-group">
+                                <label class="sidebar-label">Body Style</label>
+                                <select name="selected_body_style" id="body-style-select" class="form-select sidebar-input">
+                                    <option value="">Select Body Style</option>
                                 </select>
                             </div>
 
@@ -333,13 +379,7 @@
                                     placeholder="Enter Max Mileage" value="{{ request('selected_mileage') }}">
                             </div>
 
-                            <!-- Body Style -->
-                            <div class="filter-group">
-                                <label class="sidebar-label">Body Style</label>
-                                <select name="selected_body_style" id="body-style-select" class="form-select sidebar-input">
-                                    <option value="">Select Body Style</option>
-                                </select>
-                            </div>
+                         
 
                             <!-- Fuel -->
                             <div class="filter-group">
@@ -379,43 +419,7 @@
                             </div>
 
                             <!-- Distance to Seller (Sidebar) -->
-                            <div class="filter-group" id="sidebar-distance-group">
-                                <label class="sidebar-label">
-                                    <i class="fa-solid fa-location-dot me-1"></i> Distance to Seller
-                                </label>
-                                <!-- Select shown when GPS is granted -->
-                                <select name="selected_distance" id="sidebar-distance-select"
-                                    class="form-select sidebar-input" style="display:none;">
-                                    <option value="">Any Distance</option>
-                                    <option value="50" {{ ($selected_distance ?? '') == '50' ? 'selected' : '' }}>Under 50 km
-                                    </option>
-                                    <option value="100" {{ ($selected_distance ?? '') == '100' ? 'selected' : '' }}>Under 100
-                                        km</option>
-                                    <option value="250" {{ ($selected_distance ?? '') == '250' ? 'selected' : '' }}>Under 250
-                                        km</option>
-                                    <option value="500" {{ ($selected_distance ?? '') == '500' ? 'selected' : '' }}>Under 500
-                                        km</option>
-                                    <option value="1000" {{ ($selected_distance ?? '') == '1000' ? 'selected' : '' }}>Under
-                                        1000 km</option>
-                                    <option value="provincial" {{ ($selected_distance ?? '') == 'provincial' ? 'selected'
-        : '' }}>Provincial</option>
-                                    <option value="national" {{ ($selected_distance ?? '') == 'national' ? 'selected' : ''
-                                                    }}>
-                                        National</option>
-                                </select>
-                                <!-- Allow location button shown when GPS not granted -->
-                                <button type="button" class="btn-allow-location w-100" id="sidebar-allow-location"
-                                    style="display:none;">
-                                    <i class="fa-solid fa-location-crosshairs me-1"></i> Allow Location
-                                </button>
-                                <span class="location-not-supported" id="sidebar-location-unsupported"
-                                    style="display:none; font-size:12px; color:#aaa;">
-                                    Location not supported by your browser
-                                </span>
-                                <!-- Hidden GPS coordinate inputs for sidebar form -->
-                                <input type="hidden" name="user_lat" id="sidebar-user-lat" value="{{ $user_lat ?? '' }}">
-                                <input type="hidden" name="user_lng" id="sidebar-user-lng" value="{{ $user_lng ?? '' }}">
-                            </div>
+                         
                         </aside>
                     </form>
                     <!-- <div class="sidebar-map-box mt-4 complete-sidebar">
@@ -516,18 +520,21 @@
                                                             </button>
                                                         @endif
                                                         <div class="badge-mileage d-flex align-items-center">
-                                                            <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
+                                                            <!-- <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
                                                                 style="width:20px; height:12px;">
                                                             {{ $recent_vehicle->mileage
                                     ? number_format((float) trim(str_ireplace('km', '', $recent_vehicle->mileage))) . ' km'
                                     : '0 km'
-                                                                                                                                    }}
+                                                                                                                                    }} -->
+
+                                                                                                                                    {{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
+                                                            {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}
                                                         </div>
                                                     </div>
                                                     <div class="car-card-bottom">
-                                                        <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
+                                                        <!-- <h5 class="car-main-title">{{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
                                                             {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}
-                                                        </h5>
+                                                        </h5> -->
 
                                                         @php
                                                             $dealerPostalCode = data_get($recent_vehicle, 'dealer.postal_code')
@@ -544,12 +551,23 @@
                                                                 ?? $recent_vehicle->dealer_country
                                                                 ?? '';
                                                         @endphp
+                                                        <div class="car-distance-container">
                                                         <p class="car-distance-away" data-dealer-postal="{{ $dealerPostalCode }}"
                                                             data-dealer-city="{{ $dealerCity }}" data-dealer-province="{{ $dealerProvince }}"
                                                             data-dealer-country="{{ $dealerCountry }}">
-                                                            <i class="fa-solid fa-location-dot"></i>
+                                                            <i class="fa-solid fa-location-dot box-icon"></i>
                                                             <span class="distance-value">Loading...</span>
                                                         </p>
+                                                        <div>
+                                                              <img src="/assets/images/mile1.png" alt="Mileage" class="box-icon"
+                                                                style="width:20px; height:12px;">
+                                                            {{ $recent_vehicle->mileage
+                                    ? number_format((float) trim(str_ireplace('km', '', $recent_vehicle->mileage))) . ' km'
+                                    : '0 km'
+                                                                                                                                    }}
+                                                        </div>
+                                                      
+                                                        </div>
 
                                                         <!-- <div class="car-circle-icons-group">
                                                                                                                                                                                                                                                                                                                                                         <img src="/assets/images/no-accidents.png" alt="">
@@ -580,16 +598,54 @@
                                                                     }
 
                                                                 @endphp
+                                                                @php
+                                                                    $popupDealerName = data_get($recent_vehicle, 'dealer.dba')
+                                                                        ?? data_get($recent_vehicle, 'dealer.first_name')
+                                                                        ?? $recent_vehicle->dealer_name
+                                                                        ?? 'Dealer';
+                                                                    $popupDealerEmail = data_get($recent_vehicle, 'dealer.email')
+                                                                        ?? $recent_vehicle->dealer_email
+                                                                        ?? '';
+                                                                    $popupDealerAddress = trim(collect([
+                                                                        data_get($recent_vehicle, 'dealer.address') ?? $recent_vehicle->dealer_address ?? '',
+                                                                        $dealerCity,
+                                                                        $dealerProvince,
+                                                                        $dealerCountry,
+                                                                    ])->filter()->implode(', '));
+                                                                    $popupDealerWebsite = data_get($recent_vehicle, 'dealer.website')
+                                                                        ?? $recent_vehicle->dealer_website
+                                                                        ?? '';
+                                                                    $popupDealerWhatsapp = data_get($recent_vehicle, 'dealer.whatsapp')
+                                                                        ?? data_get($recent_vehicle, 'dealer.phone_no')
+                                                                        ?? $cardPhone ?? '';
+                                                                    $popupVehicleTitle = trim(($recent_vehicle->year ?? '') . ' ' . ($recent_vehicle->mfg_auto ?? '') . ' ' . ($recent_vehicle->model ?? ''));
+                                                                @endphp
                                                                 @if($cardPhone)
                                                                     <a href="tel:{{ $cardPhone }}"
-                                                                        class="price-value call-seller d-block text-decoration-none"
-                                                                        onclick="event.stopPropagation();">
+                                                                        class="price-value call-seller d-block text-decoration-none call-seller-btn"
+                                                                        data-phone="{{ $cardPhone }}"
+                                                                        data-dealer="{{ e($popupDealerName) }}"
+                                                                        data-email="{{ e($popupDealerEmail) }}"
+                                                                        data-address="{{ e($popupDealerAddress) }}"
+                                                                        data-website="{{ e($popupDealerWebsite) }}"
+                                                                        data-whatsapp="{{ e($popupDealerWhatsapp) }}"
+                                                                        data-vehicle="{{ e($popupVehicleTitle) }}"
+                                                                        onclick="handleCallClick(event, this);">
                                                                         <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
                                                                     </a>
                                                                 @else
-                                                                    <h4 class="price-value call-seller">
+                                                                    <a href="#"
+                                                                        class="price-value call-seller d-block text-decoration-none call-seller-btn"
+                                                                        data-phone=""
+                                                                        data-dealer="{{ e($popupDealerName) }}"
+                                                                        data-email="{{ e($popupDealerEmail) }}"
+                                                                        data-address="{{ e($popupDealerAddress) }}"
+                                                                        data-website="{{ e($popupDealerWebsite) }}"
+                                                                        data-whatsapp="{{ e($popupDealerWhatsapp) }}"
+                                                                        data-vehicle="{{ e($popupVehicleTitle) }}"
+                                                                        onclick="handleCallClick(event, this);">
                                                                         <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
-                                                                    </h4>
+                                                                    </a>
                                                                 @endif
                                                             @endif
                                                         </div>
@@ -1135,9 +1191,6 @@
         }
     </script>
 
-    {{-- ============================================================
-    DISTANCE FILTER — Geolocation + localStorage
-    ============================================================ --}}
     <script>
         (function () {
             var LAT_KEY = 'motokloz_user_lat';
@@ -1399,5 +1452,7 @@
         }
     });
     </script>
+
+@include('partials.dealer-contact-modal')
 
 @endsection
