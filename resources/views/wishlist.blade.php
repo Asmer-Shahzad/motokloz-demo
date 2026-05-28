@@ -180,16 +180,25 @@
                                                         } elseif (!empty($inventory->dealer_phone_no)) {
                                                             $cardPhone = $inventory->dealer_phone_no;
                                                         }
+                                                        $popupDealerName    = data_get($inventory,'dealer.dba') ?? data_get($inventory,'dealer.first_name') ?? 'Dealer';
+                                                        $popupDealerEmail   = data_get($inventory,'dealer.email') ?? '';
+                                                        $popupDealerAddress = trim(collect([data_get($inventory,'dealer.city') ?? '', data_get($inventory,'dealer.province') ?? '', data_get($inventory,'dealer.country') ?? ''])->filter()->implode(', '));
+                                                        $popupDealerWebsite  = data_get($inventory,'dealer.website') ?? '';
+                                                        $popupDealerWhatsapp = data_get($inventory,'dealer.phone_no') ?? $cardPhone ?? '';
+                                                        $popupVehicleTitle   = trim(($inventory->year ?? '').' '.($inventory->mfg_auto ?? '').' '.($inventory->model ?? ''));
                                                     @endphp
-                                                    @if($cardPhone)
-                                                        <a href="tel:{{ $cardPhone }}" class="price-value call-seller text-decoration-none">
-                                                            <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
-                                                        </a>
-                                                    @else
-                                                        <span class="price-value call-seller">
-                                                            <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
-                                                        </span>
-                                                    @endif
+                                                    <a href="{{ $cardPhone ? 'tel:'.$cardPhone : '#' }}"
+                                                        class="price-value call-seller text-decoration-none call-seller-btn"
+                                                        data-phone="{{ $cardPhone ?? '' }}"
+                                                        data-dealer="{{ e($popupDealerName) }}"
+                                                        data-email="{{ e($popupDealerEmail) }}"
+                                                        data-address="{{ e($popupDealerAddress) }}"
+                                                        data-website="{{ e($popupDealerWebsite) }}"
+                                                        data-whatsapp="{{ e($popupDealerWhatsapp) }}"
+                                                        data-vehicle="{{ e($popupVehicleTitle) }}"
+                                                        onclick="handleCallClick(event, this);">
+                                                        <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                                    </a>
                                                 @endif
                                                 
                                                 @if($isMotoklozInventory)
@@ -1146,5 +1155,7 @@ $(document).ready(function () {
     });
 });
 </script>
+
+@include('partials.dealer-contact-modal')
 
 @endsection

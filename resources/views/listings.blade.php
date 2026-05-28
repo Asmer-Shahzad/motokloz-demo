@@ -144,19 +144,14 @@
                                                     </button>
 
                                                     <div class="badge-mileage d-flex align-items-center">
-                                                        <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
-                                                            style="width:20px; height:12px;">
-                                                        {{ $listing->mileage 
-                                                            ? number_format((float) trim(str_ireplace('km', '', $listing->mileage))) . ' km'
-                                                            : '0 km'
-                                                        }}
+                                                        <i class="fa-solid fa-gauge-high me-1" style="color:#f0a500;font-size:13px;"></i>
+                                                        {{ $listing->mileage ? number_format((float)trim(str_ireplace('km','',$listing->mileage))).' km' : '0 km' }}
+                                                    </div>
+                                                    <div class="badge-unit-details">
+                                                        {{ $listing->year }} {{ $listing->mfg_auto }} {{ $listing->model }} {{ $listing->trim }}
                                                     </div>
                                                 </div>
                                                 <div class="car-card-bottom">
-                                                    <h5 class="car-main-title">
-                                                        {{ $listing->year }} {{ $listing->mfg_auto }} {{ $listing->model
-                                                        }} {{ $listing->trim }}
-                                                    </h5>
 
                                                     @php
                                                     $dealerPostalCode = $listing->dealer_postal_code ?? '';
@@ -165,14 +160,18 @@
                                                     $dealerCountry = $listing->dealer_country ?? '';
                                                     @endphp
 
-                                                    <p class="car-distance-away"
-                                                        data-dealer-postal="{{ $dealerPostalCode }}"
-                                                        data-dealer-city="{{ $dealerCity }}"
-                                                        data-dealer-province="{{ $dealerProvince }}"
-                                                        data-dealer-country="{{ $dealerCountry }}">
-                                                        <i class="fa-solid fa-location-dot"></i>
-                                                        <span class="distance-value">Loading...</span>
-                                                    </p>
+                                                    <div class="car-distance-container">
+                                                        <p class="car-distance-away" data-dealer-postal="{{ $dealerPostalCode }}"
+                                                            data-dealer-city="{{ $dealerCity }}" data-dealer-province="{{ $dealerProvince }}"
+                                                            data-dealer-country="{{ $dealerCountry }}">
+                                                            <i class="fa-solid fa-location-dot"></i>
+                                                            <span class="distance-value">Loading...</span>
+                                                        </p>
+                                                        <div>
+                                                            <i class="fa-solid fa-gauge-high box-icon" style="color:#f0a500;font-size:13px;"></i>
+                                                            {{ $listing->mileage ? number_format((float)trim(str_ireplace('km','',$listing->mileage))).' km' : '0 km' }}
+                                                        </div>
+                                                    </div>
 
                                                     <!-- <div class="car-circle-icons-group">
                                                                                                         <img src="/assets/images/no-accidents.png" alt="">
@@ -471,3 +470,4 @@
             }
         });
     </script>
+    @include('partials.dealer-contact-modal')
