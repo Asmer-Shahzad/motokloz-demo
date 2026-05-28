@@ -1,5 +1,4 @@
-    @extends('layouts.app')
-
+@extends('layouts.app')
 @php
 function formatPrice($price) {
     $cleaned = str_replace(['$', ','], '', $price);
@@ -11,6 +10,14 @@ function formatPrice($price) {
     $source     = request()->query('source', 'diskloz');
     $isMotokloz = $source === 'motokloz';
 @endphp
+@section('meta')
+<meta name="title" content="{{ $dealer->dba ? $dealer->dba : $dealer->legal_name }} | {{ $dealer->city ?? '' }}, {{ $dealer->province ?? '' }}"/>
+<meta name="description" content="{{ $dealer->dba ? $dealer->dba : $dealer->legal_name }} offers {{ $total_inventory }} vehicles in {{ $dealer->province ?? '' }}. Flexible auto financing, trade-in appraisals & a full-service maintenance centre." />
+
+@endsection
+@section('canonical')
+<link rel="canonical" href="{{ url()->current() }}">
+@endsection
 @section('title', 'Motokloz | ' . $dealer->dba)
 @section('content')
 
@@ -1162,5 +1169,88 @@ function toggleLike(vehicleId, element, authId) {
     });
 }
 </script>
+@endsection
+@section('schema')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Dealer Network",
+      "item": "{{ url('/dealer-network') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "{{ $dealer->dba }}",
+      "item": "{{ url()->current() }}"
+    }
+  ]
+}
+</script>
+{{-- AutoDealer Schema --}}
+@php
+    // Helper: Safe JSON value
+    function safeJson($value) {
+        return $value ?: '';
+    }
 
+    // Build address parts
+    $addressParts = array_filter([
+        $dealer->physical_address ?? null,
+        $dealer->city ?? null,
+        $dealer->province ?? null,
+        $dealer->postal_code ?? null
+    ]);
+
+    // Default logo
+    $dealerLogo = $dealer->logo
+        ? (Str::startsWith($dealer->logo, 'http')
+            ? $dealer->logo
+            : env('diskloz_base_url') . '/admin_assets/images/dealer_images/' . $dealer->logo)
+        : asset('assets/images/defaultdealerlogo.png');
+
+    
+@endphp
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "{{ safeJson($dealer->assets_type) }}",
+  "name": "{{ safeJson($dealer->dba) }}",
+  "url": "{{ url()->current() }}",
+  "logo": "{{ $dealerLogo }}",
+  "image": "{{ $dealerLogo }}",
+  "description": "{{ safeJson($dealer->internal_notes ?: ($dealer->dba . ' offers quality vehicles with financing and service options in ' . ($dealer->city ?? 'Canada') . '.')) }}",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "{{ safeJson($dealer->physical_address ?? '') }}",
+    "addressLocality": "{{ safeJson($dealer->city ?? '') }}",
+    "addressRegion": "{{ safeJson($dealer->province ?? '') }}",
+    "postalCode": "{{ safeJson($dealer->postal_code ?? '') }}",
+    "addressCountry": "CA"
+  },
+  
+  "telephone": "{{ safeJson($dealer->phone_no ?? '') }}",
+  "email": "{{ safeJson($dealer->email ?? '') }}",
+
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Vehicle Inventory",
+    "numberOfItems": {{ $total_inventory ?? 0 }}
+  },
+  "areaServed": [
+    {"@type": "City", "name": "{{ safeJson($dealer->city ?? 'Drumheller') }}"}
+  ],
+  "priceRange": "$$",
+  "currenciesAccepted": "CAD",
+  "paymentAccepted": "Cash, Credit Card, Financing",
+  "sameAs": [
+    "{{ url()->current() }}"
+  ]
+}
+</script>
 @endsection
