@@ -827,8 +827,7 @@ function formatPrice($price)
                                 </button>
                                 @endif
                                 <div class="badge-mileage d-flex align-items-center">
-                                    <i class="fa-solid fa-gauge-high me-1" style="color:#f0a500;font-size:13px;"></i>
-                                    {{ $relatedVehicle->mileage ? number_format((float)trim(str_ireplace('km','',$relatedVehicle->mileage))).' km' : '0 km' }}
+                                {{ $relatedVehicle->year }} {{ $relatedVehicle->mfg_auto }} {{ $relatedVehicle->model }} {{ $relatedVehicle->trim }}
                                 </div>
                                 <div class="badge-unit-details">
                                     {{ $relatedVehicle->year }} {{ $relatedVehicle->mfg_auto }} {{ $relatedVehicle->model }} {{ $relatedVehicle->trim }}
