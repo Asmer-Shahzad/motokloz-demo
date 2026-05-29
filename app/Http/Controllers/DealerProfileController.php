@@ -179,7 +179,7 @@ class DealerProfileController extends Controller
 
         // ✅ Motokloz dealer — redirect to dealer_inventory_details with source=motokloz
         if ($request->query('source') === 'motokloz') {
-            return $this->dealer_inventory_details($id, $request);
+            return $this->dealer_inventory_details('dealer', $id, $request);
         }
 
         $selectedAsset = $request->selected_asset;
@@ -445,18 +445,37 @@ class DealerProfileController extends Controller
                 } else {
                     $kmLimit = (int) $selectedDistance;
                     if ($kmLimit > 0) {
-                        $inventoryData = $inventoryData->filter(function ($vehicle) use ($geocoder, $userCoords, $kmLimit) {
-                            $dealerCoords = null;
-                            if (!empty($vehicle->dealer_postal_code)) {
-                                $dealerCoords = $geocoder->geocodePostalCode($vehicle->dealer_postal_code);
-                            }
-                            if ($dealerCoords === null && !empty($vehicle->dealer_city) && !empty($vehicle->dealer_province)) {
-                                $dealerCoords = $geocoder->geocodeCityProvince($vehicle->dealer_city, $vehicle->dealer_province);
-                            }
-                            if ($dealerCoords === null) return true;
+                        // Dealer ka apna location resolve karo (ek baar, saare vehicles ke liye same hai)
+                        $dealerPostalCode = $dealer->postal_code ?? null;
+                        $dealerCity       = $dealer->city       ?? null;
+                        $dealerProvince   = $dealer->province   ?? null;
+
+                        $dealerCoords = null;
+                        if (!empty($dealerPostalCode)) {
+                            $dealerCoords = $geocoder->geocodePostalCode(
+                                $dealerPostalCode,
+                                $dealerCity,
+                                $dealer->country ?? null
+                            );
+                        }
+                        if ($dealerCoords === null && !empty($dealerCity) && !empty($dealerProvince)) {
+                            $dealerCoords = $geocoder->geocodeCityProvince(
+                                $dealerCity,
+                                $dealerProvince,
+                                $dealer->country ?? null
+                            );
+                        }
+
+                        if ($dealerCoords === null) {
+                            // Location resolve nahi hui (API bhi fail) → sab dikhao
+                        } else {
+                            // Dealer ka location resolve hua — ek baar check karo
                             $dist = $this->haversineDistance($userCoords, $dealerCoords);
-                            return $dist === null || $dist <= $kmLimit;
-                        })->values();
+                            if ($dist === null || $dist > $kmLimit) {
+                                $inventoryData = collect(); // dealer range se bahar hai, sab hide karo
+                            }
+                            // else: dealer range mein hai, sab dikhao
+                        }
                     }
                 }
             }

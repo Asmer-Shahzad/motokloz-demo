@@ -119,7 +119,7 @@
                     <ul class="social-icons">
                         <li>Follow us</li>
                         <li>
-                            <a href="#">
+                            <a href="https://www.instagram.com/motokloz/">
                                 <img src="/assets/images/insta (1).png" alt="Instagram" width="20">
                             </a>
                         </li>
@@ -137,7 +137,7 @@
                         </li>
 
                         <li>
-                            <a href="#">
+                            <a href="https://www.youtube.com/@motokloz9561">
                                 <img src="/assets/images/insta.png" alt="YouTube" width="20">
                             </a>
                         </li>

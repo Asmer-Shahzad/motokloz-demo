@@ -59,6 +59,10 @@
     .listing-page .page-title {
         padding: 0 0 0 15px;
     }
+
+    .car-distance-container {
+        font-size: 13px;
+    }
 }
 
 @media screen and (max-width: 1199px) {
@@ -533,6 +537,14 @@
     .dealer-top-title {
         font-size: 25px;
     }
+
+    .fleet-section {
+    padding: 50px 0;
+    padding-bottom: 35px;
+    margin-top: -88px;
+    z-index: 99;
+    position: relative;
+}
 
     .content-box h5.fw-bold.mb-4.d-flex.justify-content-between.align-items-center.collapsed {
         margin-bottom: 0 !important;

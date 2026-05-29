@@ -826,19 +826,14 @@ function formatPrice($price)
                                     <i class="far fa-star" id="wishlist-icon-{{ $relatedVehicle->id }}"></i>
                                 </button>
                                 @endif
-                                <div class="badge-mileage">
-                                    <img src="/assets/images/mile1.png" alt="Mileage" class="me-2" style="width:20px; height:12px;"> 
-                                    {{ $relatedVehicle->mileage 
-                                        ? number_format((float) trim(str_ireplace('km', '', $relatedVehicle->mileage))) . ' km'
-                                        : '0 km'
-                                    }}
+                                <div class="badge-mileage d-flex align-items-center">
+                                {{ $relatedVehicle->year }} {{ $relatedVehicle->mfg_auto }} {{ $relatedVehicle->model }} {{ $relatedVehicle->trim }}
+                                </div>
+                                <div class="badge-unit-details">
+                                    {{ $relatedVehicle->year }} {{ $relatedVehicle->mfg_auto }} {{ $relatedVehicle->model }} {{ $relatedVehicle->trim }}
                                 </div>
                             </div>
                             <div class="car-card-bottom">
-                                <h5 class="car-main-title">
-                                    {{ $relatedVehicle->year }} {{ $relatedVehicle->mfg_auto }}
-                                    {{ $relatedVehicle->model }} {{ $relatedVehicle->trim }}
-                                </h5>
                                 
                                 @php
                                     $dealerPostalCode = data_get($relatedVehicle, 'dealer.postal_code')
@@ -854,16 +849,18 @@ function formatPrice($price)
                                         ?? $relatedVehicle->dealer_country
                                         ?? '';
                                 @endphp
-                                
-                                <p class="car-distance-away"
-                                    data-dealer-postal="{{ $dealerPostalCode }}"
-                                    data-dealer-city="{{ $dealerCity }}"
-                                    data-dealer-province="{{ $dealerProvince }}"
+                                <div class="car-distance-container">
+                                <p class="car-distance-away" data-dealer-postal="{{ $dealerPostalCode }}"
+                                    data-dealer-city="{{ $dealerCity }}" data-dealer-province="{{ $dealerProvince }}"
                                     data-dealer-country="{{ $dealerCountry }}">
                                     <i class="fa-solid fa-location-dot"></i>
                                     <span class="distance-value">Loading...</span>
                                 </p>
-
+                                <div>
+                                    <i class="fa-solid fa-gauge-high box-icon" style="color:#f0a500;font-size:13px;"></i>
+                                    {{ $relatedVehicle->mileage ? number_format((float)trim(str_ireplace('km','',$relatedVehicle->mileage))).' km' : '0 km' }}
+                                </div>
+                                </div>
                                 <div class="car-price-block text-end">
                                     @php 
                                 $cleanedPrice = preg_replace('/[^0-9.]/', '', $relatedVehicle->disclosed_price ?? '0');
@@ -883,16 +880,25 @@ function formatPrice($price)
                                             } elseif (!empty($dealer) && !empty($dealer->phone_no)) {
                                                 $cardPhone = $dealer->phone_no;
                                             }
+                                            $popupDealerName    = data_get($relatedVehicle,'dealer.dba') ?? data_get($relatedVehicle,'dealer.first_name') ?? 'Dealer';
+                                            $popupDealerEmail   = data_get($relatedVehicle,'dealer.email') ?? '';
+                                            $popupDealerAddress = trim(collect([data_get($relatedVehicle,'dealer.city') ?? $relatedVehicle->dealer_city ?? '', data_get($relatedVehicle,'dealer.province') ?? $relatedVehicle->dealer_province ?? '', data_get($relatedVehicle,'dealer.country') ?? $relatedVehicle->dealer_country ?? ''])->filter()->implode(', '));
+                                            $popupDealerWebsite  = data_get($relatedVehicle,'dealer.website') ?? '';
+                                            $popupDealerWhatsapp = data_get($relatedVehicle,'dealer.phone_no') ?? $cardPhone ?? '';
+                                            $popupVehicleTitle   = trim(($relatedVehicle->year ?? '').' '.($relatedVehicle->mfg_auto ?? '').' '.($relatedVehicle->model ?? ''));
                                         @endphp
-                                        @if($cardPhone)
-                                            <a href="tel:{{ $cardPhone }}" class="price-value call-seller d-block text-decoration-none" onclick="event.stopPropagation();">
-                                                <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
-                                            </a>
-                                        @else
-                                            <h4 class="price-value call-seller">
-                                                <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
-                                            </h4>
-                                        @endif
+                                        <a href="{{ $cardPhone ? 'tel:'.$cardPhone : '#' }}"
+                                            class="price-value call-seller d-block text-decoration-none call-seller-btn"
+                                            data-phone="{{ $cardPhone ?? '' }}"
+                                            data-dealer="{{ e($popupDealerName) }}"
+                                            data-email="{{ e($popupDealerEmail) }}"
+                                            data-address="{{ e($popupDealerAddress) }}"
+                                            data-website="{{ e($popupDealerWebsite) }}"
+                                            data-whatsapp="{{ e($popupDealerWhatsapp) }}"
+                                            data-vehicle="{{ e($popupVehicleTitle) }}"
+                                            onclick="handleCallClick(event, this);">
+                                            <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                        </a>
                                     @endif
                                 </div>
                             </div>
@@ -1372,5 +1378,5 @@ document.addEventListener('DOMContentLoaded', function () {
     @media (max-width: 768px) { .modal-gallery-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; } }
     @media (max-width: 480px) { .modal-gallery-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; } }
 </style>
-
+@include('partials.dealer-contact-modal')
 @endsection
