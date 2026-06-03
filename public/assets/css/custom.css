@@ -3162,8 +3162,9 @@ textarea.form-control::placeholder {
     color: var(--select-color);
 
 }
-.main-right{
-    margin-top: -30px;
+.main-right {
+    margin-top: -95px;
+    z-index: 99;
 }
 .modal-content {
     position: relative;
