@@ -826,11 +826,9 @@ function formatPrice($price)
                                     <i class="far fa-star" id="wishlist-icon-{{ $relatedVehicle->id }}"></i>
                                 </button>
                                 @endif
-                                @if(!empty($relatedVehicle->mileage) && (float)trim(str_ireplace('km','',$relatedVehicle->mileage)) > 0)
                                 <div class="badge-mileage d-flex align-items-center">
                                 {{ $relatedVehicle->year }} {{ $relatedVehicle->mfg_auto }} {{ $relatedVehicle->model }} {{ $relatedVehicle->trim }}
                                 </div>
-                                @endif
                                 <div class="badge-unit-details">
                                     {{ $relatedVehicle->year }} {{ $relatedVehicle->mfg_auto }} {{ $relatedVehicle->model }} {{ $relatedVehicle->trim }}
                                 </div>

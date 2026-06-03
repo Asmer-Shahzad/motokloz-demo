@@ -758,12 +758,10 @@ function formatPrice($price) {
                                             <i class="far fa-star" id="wishlist-icon-{{ $recent_vehicle->id }}"></i>
                                         </button>
                                     @endif
-                                    @if(!empty($recent_vehicle->mileage) && (float)trim(str_ireplace('km','',$recent_vehicle->mileage)) > 0)
                                     <div class="badge-mileage">
-                                                                                                           {{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
-                                                            {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}
+                                        {{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
+                                        {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}
                                     </div>
-                                    @endif
                                 </div>
                                 <div class="car-card-bottom">
                                     @php
@@ -1321,6 +1319,7 @@ function toggleLike(vehicleId, element, authId) {
 @include('partials.dealer-contact-modal')
 @include('partials.chat-form')
 @section('schema')
+@endsection
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
