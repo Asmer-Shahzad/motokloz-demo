@@ -4,6 +4,16 @@
 <head>
     <title>@yield('title', 'Motokloz')</title>
     <meta charset="utf-8">
+    <meta name="google-site-verification" content="HLgaXPD3LiHY8_aiTFkuEI1MuPZMA5D1SUgzUueaUfU" />
+     <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-280LYHN8KV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-280LYHN8KV');
+    </script> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="apple-mobile-web-app-title" content="Motokloz" />
     <!-- Bootstrap -->
@@ -31,7 +41,9 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/favicon.png') }}">
-     @yield('meta')
+         @yield('canonical')
+         @yield('meta') 
+        @yield('schema')
 
 </head>
 
@@ -991,7 +1003,7 @@
 
         });
     </script>
-
+   
     @yield('content')
     @include('partials.footer')
     @include('partials.script')

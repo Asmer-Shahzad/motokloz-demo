@@ -1244,7 +1244,7 @@ footer ul li a:hover::after {
     display: flex;
     justify-content: center;
     text-align: center;
-    padding: 25px 12px;
+    padding: 30px 15px;
     color: #f58d02;
     font-weight: 700;
     font-size: 45px;

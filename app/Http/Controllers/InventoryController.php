@@ -878,6 +878,13 @@ class InventoryController extends Controller
             ], 500);
         }
     }
+    
+    public function sitemap()
+    {
+        $response = Http::get($this->baseUrl() . '/api/sitemap');
+        $data['inv'] = json_decode($response->body());
+        return view('sitemap', ['inventories' => $data['inv']]);
+    }
 
 
     public function favorites(Request $request)

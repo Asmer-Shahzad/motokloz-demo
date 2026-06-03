@@ -42,6 +42,7 @@ Route::middleware('guest')->group(function () {
 */
 Route::get('/dealer/{id}', [DealerProfileController::class, 'dealer_inventory'])->name('dealer_inventory');
 Route::post('/add_like', [InventoryController::class, 'add_like']);
+Route::get('/sitemap', [InventoryController::class, 'sitemap']);
 Route::post('/remove_like', [InventoryController::class, 'remove_like']);
 Route::get('/pdf/disklozer/{id}', [InventoryController::class, 'inventoryDisklozer1']);
 Route::get('/', [HomeController::class, 'home'])->name('home');
