@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @php
 function formatPrice($price) {
     $cleaned = str_replace(['$', ','], '', $price);
@@ -940,9 +940,7 @@ function formatPrice($price) {
                                         @endif
                                     </div>
 
-                                    @if($displayPrice > 0)
                                     <p class="card-pricing-disclaimer">*Pricing subject to applicable tax and fees, click listing for details</p>
-                                    @endif
                                 </div>
                             </div>
                         </div>

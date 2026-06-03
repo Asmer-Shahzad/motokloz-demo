@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 @php
@@ -798,9 +798,7 @@ return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
                                 </div>
 
                                 {{-- Row 4: Pricing disclaimer (figma: below card) --}}
-                                @if($displayPrice > 0)
                                 <p class="card-pricing-disclaimer">*Pricing subject to applicable tax and fees, click listing for details</p>
-                                @endif
 
                             </div>
                         </div>
@@ -1290,11 +1288,7 @@ return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
     var DISKLOZ_BASE_DEALER = "{{ env('diskloz_base_url') }}";
     $(document).ready(function() {
         @auth
-        var authId = {
-            {
-                auth() - > id()
-            }
-        };
+        var authId = {{ auth()->id() }};
         fetch(DISKLOZ_BASE_DEALER + '/api/favorites?client_id=' + authId)
             .then(function(res) {
                 return res.json();

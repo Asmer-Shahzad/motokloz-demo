@@ -622,9 +622,7 @@ return number_format(round($number), 0, '.', ',');
                         </div>
 
                         {{-- Row 4: Pricing disclaimer (figma: below card) --}}
-                        @if($displayPrice > 0)
                         <p class="card-pricing-disclaimer">*Pricing subject to applicable tax and fees, click listing for details</p>
-                        @endif
 
                     </div>
                 </div>
@@ -1097,11 +1095,7 @@ return number_format(round($number), 0, '.', ',');
     var DISKLOZ_BASE_HOME = "{{ env('diskloz_base_url') }}";
     $(document).ready(function() {
         @auth
-        var authId = {
-            {
-                auth() - > id()
-            }
-        };
+        var authId = {{ auth()->id() }};
         fetch(DISKLOZ_BASE_HOME + '/api/favorites?client_id=' + authId)
             .then(function(res) {
                 return res.json();
