@@ -394,19 +394,10 @@ return number_format(round($number), 0, '.', ',');
                             <i class="far fa-star" id="wishlist-icon-{{ $recent_vehicle->id }}"></i>
                         </button>
                         @endif
-                        @if(!empty($recent_vehicle->mileage) && (float)trim(str_ireplace('km','',$recent_vehicle->mileage)) > 0)
                         <div class="badge-mileage d-flex align-items-center">
-                            <!-- <img src="/assets/images/mile1.png" alt="Mileage" class="me-2"
-                                                                style="width:20px; height:12px;">
-                                                            {{ $recent_vehicle->mileage
-                                    ? number_format((float) trim(str_ireplace('km', '', $recent_vehicle->mileage))) . ' km'
-                                    : '0 km'
-                                                                                                                                    }} -->
-
                             {{ $recent_vehicle->year }} {{ $recent_vehicle->mfg_auto }}
                             {{ $recent_vehicle->model }} {{ $recent_vehicle->trim }}
                         </div>
-                        @endif
                     </div>
                     <div class="car-card-bottom">
 
