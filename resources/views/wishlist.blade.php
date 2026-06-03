@@ -181,11 +181,19 @@
                                                             $cardPhone = $inventory->dealer_phone_no;
                                                         }
                                                         $popupDealerName    = data_get($inventory,'dealer.dba') ?? data_get($inventory,'dealer.first_name') ?? 'Dealer';
-                                                        $popupDealerEmail   = data_get($inventory,'dealer.email') ?? '';
+                                                        $popupDealerEmail   = data_get($inventory,'dealer.email') ?? $inventory->dealer_email ?? '';
                                                         $popupDealerAddress = trim(collect([data_get($inventory,'dealer.city') ?? '', data_get($inventory,'dealer.province') ?? '', data_get($inventory,'dealer.country') ?? ''])->filter()->implode(', '));
                                                         $popupDealerWebsite  = data_get($inventory,'dealer.website') ?? '';
                                                         $popupDealerWhatsapp = data_get($inventory,'dealer.phone_no') ?? $cardPhone ?? '';
                                                         $popupVehicleTitle   = trim(($inventory->year ?? '').' '.($inventory->mfg_auto ?? '').' '.($inventory->model ?? ''));
+                                                        // Dealer avatar/logo
+                                                        $rawAvatar = data_get($inventory, 'dealer.logo') ?? data_get($inventory, 'dealer.avatar') ?? $inventory->dealer_avatar ?? null;
+                                                        if ($rawAvatar) {
+                                                            $popupDealerAvatar = Str::startsWith($rawAvatar, 'http') ? $rawAvatar : (env('diskloz_base_url') . '/admin_assets/images/dealer_images/' . $rawAvatar);
+                                                        } else {
+                                                            $popupDealerAvatar = '';
+                                                        }
+                                                        $popupDealerLocation = trim(collect([data_get($inventory,'dealer.city') ?? '', data_get($inventory,'dealer.province') ?? ''])->filter()->implode(', '));
                                                     @endphp
                                                     <a href="{{ $cardPhone ? 'tel:'.$cardPhone : '#' }}"
                                                         class="price-value call-seller text-decoration-none call-seller-btn"
@@ -196,6 +204,8 @@
                                                         data-website="{{ e($popupDealerWebsite) }}"
                                                         data-whatsapp="{{ e($popupDealerWhatsapp) }}"
                                                         data-vehicle="{{ e($popupVehicleTitle) }}"
+                                                        data-avatar="{{ e($popupDealerAvatar) }}"
+                                                        data-location="{{ e($popupDealerLocation) }}"
                                                         onclick="handleCallClick(event, this);">
                                                         <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
                                                     </a>

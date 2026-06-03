@@ -103,7 +103,7 @@
                                     <div class="row g-4" id="vehicleContainer">
 
                                         @forelse($listings as $listing)
-                                        <div class="col-lg-4 col-sm-6 vehicle-card" data-id="{{ $listing->id }}"
+                                        <div class="col-lg-4 col-sm-6" data-id="{{ $listing->id }}"
                                             data-name="{{ strtolower($listing->mfg_auto ?? '') }} {{ strtolower($listing->model ?? '') }}"
                                             data-price="{{ $listing->disclosed_price ?? 0 }}"
                                             data-year="{{ $listing->year ?? 0 }}">
@@ -143,15 +143,17 @@
                                                             : 'Inactive' }}</span>
                                                     </button>
 
+                                                    @if(!empty($listing->mileage) && (float)trim(str_ireplace('km','',$listing->mileage)) > 0)
                                                     <div class="badge-mileage d-flex align-items-center">
                                                         <i class="fa-solid fa-gauge-high me-1" style="color:#f0a500;font-size:13px;"></i>
-                                                        {{ $listing->mileage ? number_format((float)trim(str_ireplace('km','',$listing->mileage))).' km' : '0 km' }}
+                                                        {{ number_format((float)trim(str_ireplace('km','',$listing->mileage))).' km' }}
                                                     </div>
-                                                    <div class="badge-unit-details">
-                                                        {{ $listing->year }} {{ $listing->mfg_auto }} {{ $listing->model }} {{ $listing->trim }}
+                                                    @endif
+                                                    <div class="badge-mileage d-flex align-items-center">
+                                                        {{ $listing->year }} {{ $listing->mfg_auto ?? $listing->title ?? '' }} {{ $listing->model }} {{ $listing->trim }}
                                                     </div>
                                                 </div>
-                                                <div class="car-card-bottom">
+                                                    <div class="car-card-bottom">
 
                                                     @php
                                                     $dealerPostalCode = $listing->dealer_postal_code ?? '';
@@ -160,36 +162,63 @@
                                                     $dealerCountry = $listing->dealer_country ?? '';
                                                     @endphp
 
-                                                    <div class="car-distance-container">
+                                                    {{-- Grid view: mileage right aligned --}}
+                                                    @if(!empty($listing->mileage) && (float)trim(str_ireplace('km','',$listing->mileage)) > 0)
+                                                    <div class="card-mileage-row">
+                                                        <img src="/assets/images/mile1.png" alt="Mileage" style="width:20px;height:12px;">
+                                                        {{ number_format((float)trim(str_ireplace('km','',$listing->mileage))) }} km
+                                                    </div>
+                                                    @endif
+
+                                                    @php
+                                                        $allServiceIcons = [
+                                                            ['src' => '/assets/images/no-accidents.png',             'alt' => 'No Accidents'],
+                                                            ['src' => '/assets/images/low-mileage.png',              'alt' => 'Low Mileage'],
+                                                            ['src' => '/assets/images/service-plan.png',             'alt' => 'Service Plan'],
+                                                            ['src' => '/assets/images/powertrain-warranty.png',      'alt' => 'Powertrain Warranty'],
+                                                            ['src' => '/assets/images/Comprehensive warranty.png',   'alt' => 'Comprehensive Warranty'],
+                                                            ['src' => '/assets/images/Verified seller.png',          'alt' => 'Verified Seller'],
+                                                            ['src' => '/assets/images/Certified.png',                'alt' => 'Certified'],
+                                                            ['src' => '/assets/images/Inspected.png',                'alt' => 'Inspected'],
+                                                            ['src' => '/assets/images/Service history available.png','alt' => 'Service History'],
+                                                            ['src' => '/assets/images/Rim Warranty.png',             'alt' => 'Rim Warranty'],
+                                                            ['src' => '/assets/images/Key Replacement.png',          'alt' => 'Key Replacement'],
+                                                            ['src' => '/assets/images/3M.png',                       'alt' => '3M'],
+                                                            ['src' => '/assets/images/Protection Package Items.png', 'alt' => 'Protection Package'],
+                                                            ['src' => '/assets/images/2 keys.png',                   'alt' => '2 Keys'],
+                                                            ['src' => '/assets/images/2 sets of tires.png',          'alt' => '2 Sets of Tires'],
+                                                            ['src' => '/assets/images/2 sets of rims.png',           'alt' => '2 Sets of Rims'],
+                                                            ['src' => '/assets/images/sRim Warranty.png',            'alt' => 'Spare Rim Warranty'],
+                                                            ['src' => '/assets/images/Tire Warranty.png',            'alt' => 'Tire Warranty'],
+                                                            ['src' => '/assets/images/No Surprise Pricing.png',      'alt' => 'No Surprise Pricing'],
+                                                            ['src' => '/assets/images/Discreet test drive.png',      'alt' => 'Discreet Test Drive'],
+                                                            ['src' => '/assets/images/Low Rates Available.png',      'alt' => 'Low Rates Available'],
+                                                        ];
+                                                        $svcVisible = 4;
+                                                        $svcHidden  = count($allServiceIcons) - $svcVisible;
+                                                    @endphp
+                                                    <div class="car-circle-icons-group">
+                                                        @foreach(array_slice($allServiceIcons, 0, $svcVisible) as $icon)
+                                                            <img src="{{ $icon['src'] }}" alt="{{ $icon['alt'] }}" title="{{ $icon['alt'] }}">
+                                                        @endforeach
+                                                        @foreach(array_slice($allServiceIcons, $svcVisible) as $icon)
+                                                            <img src="{{ $icon['src'] }}" alt="{{ $icon['alt'] }}" title="{{ $icon['alt'] }}" class="extra-service-icon">
+                                                        @endforeach
+                                                        <span class="extra-icons-count">{{ $svcHidden }}+</span>
+                                                    </div>
+
+                                                    <div class="card-bottom-row">
                                                         <p class="car-distance-away" data-dealer-postal="{{ $dealerPostalCode }}"
                                                             data-dealer-city="{{ $dealerCity }}" data-dealer-province="{{ $dealerProvince }}"
                                                             data-dealer-country="{{ $dealerCountry }}">
-                                                            <i class="fa-solid fa-location-dot"></i>
+                                                            <i class="fa-solid fa-location-dot box-icon"></i>
                                                             <span class="distance-value">Loading...</span>
                                                         </p>
-                                                        <div>
-                                                            <i class="fa-solid fa-gauge-high box-icon" style="color:#f0a500;font-size:13px;"></i>
-                                                            {{ $listing->mileage ? number_format((float)trim(str_ireplace('km','',$listing->mileage))).' km' : '0 km' }}
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- <div class="car-circle-icons-group">
-                                                                                                        <img src="/assets/images/no-accidents.png" alt="">
-                                                                                                        <img src="/assets/images/low-mileage.png" alt="">
-                                                                                                        <img src="/assets/images/service-plan.png" alt="">
-                                                                                                        <img src="/assets/images/powertrain-warranty.png" alt="">
-                                                                                                        <span class="extra-icons-count">12+</span>
-                                                                                                    </div> -->
-
-                                                    <div class="car-price-block text-end">
-                                                        @php 
-                                            $cleanedPrice = preg_replace('/[^0-9.]/', '', $listing->disclosed_price ?? '0');
-                                            $displayPrice = round((float) $cleanedPrice); 
-                                            @endphp
-                                                        <h4 class="price-value">
-                                                            ${{ number_format((float) ($displayPrice))
-                                                            }}
-                                                        </h4>
+                                                        @php
+                                                            $cleanedPrice = preg_replace('/[^0-9.]/', '', $listing->disclosed_price ?? '0');
+                                                            $displayPrice = round((float)$cleanedPrice);
+                                                        @endphp
+                                                        <h4 class="price-value ms-auto">${{ number_format($displayPrice) }}</h4>
                                                     </div>
                                                 </div>
                                             </div>
