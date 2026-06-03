@@ -45,6 +45,18 @@ class AuthController extends Controller
         // Regenerate session
         $request->session()->regenerate();
 
+        // ── Chat intent redirect ──
+        $intendedChatDealerId    = session('intended_chat_dealer_id');
+        $intendedChatInventoryId = session('intended_chat_inventory_id');
+        $intendedChatSource      = session('intended_chat_source', 'diskloz');
+        if ($intendedChatDealerId && $intendedChatInventoryId) {
+            session()->forget(['intended_chat_dealer_id', 'intended_chat_inventory_id', 'intended_chat_source', 'intended_chat_url']);
+            // Store source in session for ChatController
+            $authId = Auth::id();
+            session(["chat_source_{$authId}_{$intendedChatDealerId}_{$intendedChatInventoryId}" => $intendedChatSource]);
+            return redirect()->route('chat.show', [$authId, $intendedChatDealerId, $intendedChatInventoryId]);
+        }
+
         return redirect()->intended(route('home'));
     }
 
@@ -77,6 +89,17 @@ class AuthController extends Controller
         // Auto login
         Auth::login($user);
         $request->session()->regenerate();
+
+        // ── Chat intent redirect ──
+        $intendedChatDealerId    = session('intended_chat_dealer_id');
+        $intendedChatInventoryId = session('intended_chat_inventory_id');
+        $intendedChatSource      = session('intended_chat_source', 'diskloz');
+        if ($intendedChatDealerId && $intendedChatInventoryId) {
+            session()->forget(['intended_chat_dealer_id', 'intended_chat_inventory_id', 'intended_chat_source', 'intended_chat_url']);
+            $authId = Auth::id();
+            session(["chat_source_{$authId}_{$intendedChatDealerId}_{$intendedChatInventoryId}" => $intendedChatSource]);
+            return redirect()->route('chat.show', [$authId, $intendedChatDealerId, $intendedChatInventoryId]);
+        }
 
         return redirect()->route('home')->with('success', 'Account created successfully!');
     }

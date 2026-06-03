@@ -826,15 +826,17 @@ function formatPrice($price)
                                     <i class="far fa-star" id="wishlist-icon-{{ $relatedVehicle->id }}"></i>
                                 </button>
                                 @endif
+                                @if(!empty($relatedVehicle->mileage) && (float)trim(str_ireplace('km','',$relatedVehicle->mileage)) > 0)
                                 <div class="badge-mileage d-flex align-items-center">
                                 {{ $relatedVehicle->year }} {{ $relatedVehicle->mfg_auto }} {{ $relatedVehicle->model }} {{ $relatedVehicle->trim }}
                                 </div>
+                                @endif
                                 <div class="badge-unit-details">
                                     {{ $relatedVehicle->year }} {{ $relatedVehicle->mfg_auto }} {{ $relatedVehicle->model }} {{ $relatedVehicle->trim }}
                                 </div>
                             </div>
                             <div class="car-card-bottom">
-                                
+
                                 @php
                                     $dealerPostalCode = data_get($relatedVehicle, 'dealer.postal_code')
                                         ?? $relatedVehicle->dealer_postal_code
@@ -849,58 +851,167 @@ function formatPrice($price)
                                         ?? $relatedVehicle->dealer_country
                                         ?? '';
                                 @endphp
-                                <div class="car-distance-container">
-                                <p class="car-distance-away" data-dealer-postal="{{ $dealerPostalCode }}"
-                                    data-dealer-city="{{ $dealerCity }}" data-dealer-province="{{ $dealerProvince }}"
-                                    data-dealer-country="{{ $dealerCountry }}">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                    <span class="distance-value">Loading...</span>
-                                </p>
-                                <div>
-                                    <i class="fa-solid fa-gauge-high box-icon" style="color:#f0a500;font-size:13px;"></i>
-                                    {{ $relatedVehicle->mileage ? number_format((float)trim(str_ireplace('km','',$relatedVehicle->mileage))).' km' : '0 km' }}
-                                </div>
-                                </div>
-                                <div class="car-price-block text-end">
-                                    @php 
-                                $cleanedPrice = preg_replace('/[^0-9.]/', '', $relatedVehicle->disclosed_price ?? '0');
-                                $displayPrice = round((float) $cleanedPrice); 
-                                @endphp
-                                    @if($displayPrice > 0)
-                                        <h4 class="price-value">${{ number_format($displayPrice) }}</h4>
-                                    @elseif($relatedIsOwn)
-                                        <h4 class="price-value">$0</h4>
-                                    @else
-                                        @php
-                                            $cardPhone = null;
-                                            if (!empty($relatedVehicle->dealer->phone_no)) {
-                                                $cardPhone = $relatedVehicle->dealer->phone_no;
-                                            } elseif (!empty($relatedVehicle->dealer_phone_no)) {
-                                                $cardPhone = $relatedVehicle->dealer_phone_no;
-                                            } elseif (!empty($dealer) && !empty($dealer->phone_no)) {
-                                                $cardPhone = $dealer->phone_no;
-                                            }
-                                            $popupDealerName    = data_get($relatedVehicle,'dealer.dba') ?? data_get($relatedVehicle,'dealer.first_name') ?? 'Dealer';
-                                            $popupDealerEmail   = data_get($relatedVehicle,'dealer.email') ?? '';
-                                            $popupDealerAddress = trim(collect([data_get($relatedVehicle,'dealer.city') ?? $relatedVehicle->dealer_city ?? '', data_get($relatedVehicle,'dealer.province') ?? $relatedVehicle->dealer_province ?? '', data_get($relatedVehicle,'dealer.country') ?? $relatedVehicle->dealer_country ?? ''])->filter()->implode(', '));
-                                            $popupDealerWebsite  = data_get($relatedVehicle,'dealer.website') ?? '';
-                                            $popupDealerWhatsapp = data_get($relatedVehicle,'dealer.phone_no') ?? $cardPhone ?? '';
-                                            $popupVehicleTitle   = trim(($relatedVehicle->year ?? '').' '.($relatedVehicle->mfg_auto ?? '').' '.($relatedVehicle->model ?? ''));
-                                        @endphp
-                                        <a href="{{ $cardPhone ? 'tel:'.$cardPhone : '#' }}"
-                                            class="price-value call-seller d-block text-decoration-none call-seller-btn"
-                                            data-phone="{{ $cardPhone ?? '' }}"
-                                            data-dealer="{{ e($popupDealerName) }}"
-                                            data-email="{{ e($popupDealerEmail) }}"
-                                            data-address="{{ e($popupDealerAddress) }}"
-                                            data-website="{{ e($popupDealerWebsite) }}"
-                                            data-whatsapp="{{ e($popupDealerWhatsapp) }}"
-                                            data-vehicle="{{ e($popupVehicleTitle) }}"
-                                            onclick="handleCallClick(event, this);">
-                                            <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
-                                        </a>
+
+                                {{-- List view title --}}
+                                <h5 class="card-list-title">
+                                    {{ $relatedVehicle->year }} {{ $relatedVehicle->mfg_auto }}
+                                    {{ $relatedVehicle->model }} {{ $relatedVehicle->trim }}
+                                </h5>
+
+                                {{-- List view: location + mileage same line --}}
+                                <div class="card-location-mileage-row">
+                                    <span class="car-distance-away list-distance" data-dealer-postal="{{ $dealerPostalCode }}"
+                                        data-dealer-city="{{ $dealerCity }}" data-dealer-province="{{ $dealerProvince }}"
+                                        data-dealer-country="{{ $dealerCountry }}">
+                                        <i class="fa-solid fa-location-dot box-icon"></i>
+                                        <span class="distance-value">Loading...</span>
+                                    </span>
+                                    @if(!empty($relatedVehicle->mileage) && (float)trim(str_ireplace('km','',$relatedVehicle->mileage)) > 0)
+                                    <span class="list-mileage-inline">
+                                        <img src="/assets/images/mile1.png" alt="Mileage" style="width:20px;height:12px;margin-right:4px;">
+                                        {{ number_format((float)trim(str_ireplace('km','',$relatedVehicle->mileage))) }} km
+                                    </span>
                                     @endif
                                 </div>
+
+                                {{-- Grid view: mileage right aligned --}}
+                                @if(!empty($relatedVehicle->mileage) && (float)trim(str_ireplace('km','',$relatedVehicle->mileage)) > 0)
+                                <div class="card-mileage-row">
+                                    <img src="/assets/images/mile1.png" alt="Mileage" style="width:20px;height:12px;">
+                                    {{ number_format((float)trim(str_ireplace('km','',$relatedVehicle->mileage))) }} km
+                                </div>
+                                @endif
+
+                                @php
+                                    $allServiceIcons = [
+                                        ['src' => '/assets/images/no-accidents.png',             'alt' => 'No Accidents'],
+                                        ['src' => '/assets/images/low-mileage.png',              'alt' => 'Low Mileage'],
+                                        ['src' => '/assets/images/service-plan.png',             'alt' => 'Service Plan'],
+                                        ['src' => '/assets/images/powertrain-warranty.png',      'alt' => 'Powertrain Warranty'],
+                                        ['src' => '/assets/images/Comprehensive warranty.png',   'alt' => 'Comprehensive Warranty'],
+                                        ['src' => '/assets/images/Verified seller.png',          'alt' => 'Verified Seller'],
+                                        ['src' => '/assets/images/Certified.png',                'alt' => 'Certified'],
+                                        ['src' => '/assets/images/Inspected.png',                'alt' => 'Inspected'],
+                                        ['src' => '/assets/images/Service history available.png','alt' => 'Service History'],
+                                        ['src' => '/assets/images/Rim Warranty.png',             'alt' => 'Rim Warranty'],
+                                        ['src' => '/assets/images/Key Replacement.png',          'alt' => 'Key Replacement'],
+                                        ['src' => '/assets/images/3M.png',                       'alt' => '3M'],
+                                        ['src' => '/assets/images/Protection Package Items.png', 'alt' => 'Protection Package'],
+                                        ['src' => '/assets/images/2 keys.png',                   'alt' => '2 Keys'],
+                                        ['src' => '/assets/images/2 sets of tires.png',          'alt' => '2 Sets of Tires'],
+                                        ['src' => '/assets/images/2 sets of rims.png',           'alt' => '2 Sets of Rims'],
+                                        ['src' => '/assets/images/sRim Warranty.png',            'alt' => 'Spare Rim Warranty'],
+                                        ['src' => '/assets/images/Tire Warranty.png',            'alt' => 'Tire Warranty'],
+                                        ['src' => '/assets/images/No Surprise Pricing.png',      'alt' => 'No Surprise Pricing'],
+                                        ['src' => '/assets/images/Discreet test drive.png',      'alt' => 'Discreet Test Drive'],
+                                        ['src' => '/assets/images/Low Rates Available.png',      'alt' => 'Low Rates Available'],
+                                    ];
+                                    $svcVisible = 4; $svcHidden = count($allServiceIcons) - $svcVisible;
+                                @endphp
+                                <div class="car-circle-icons-group">
+                                    @foreach(array_slice($allServiceIcons, 0, $svcVisible) as $icon)
+                                        <img src="{{ $icon['src'] }}" alt="{{ $icon['alt'] }}" title="{{ $icon['alt'] }}">
+                                    @endforeach
+                                    @foreach(array_slice($allServiceIcons, $svcVisible) as $icon)
+                                        <img src="{{ $icon['src'] }}" alt="{{ $icon['alt'] }}" title="{{ $icon['alt'] }}" class="extra-service-icon">
+                                    @endforeach
+                                    <span class="extra-icons-count">{{ $svcHidden }}+</span>
+                                </div>
+
+                                @php
+                                    $cardPhone = null;
+                                    if (!empty($relatedVehicle->dealer) && !empty($relatedVehicle->dealer->phone_no)) {
+                                        $cardPhone = $relatedVehicle->dealer->phone_no;
+                                    } elseif (!empty($relatedVehicle->dealer_phone_no)) {
+                                        $cardPhone = $relatedVehicle->dealer_phone_no;
+                                    } elseif (!empty($relatedVehicle->phone_no)) {
+                                        $cardPhone = $relatedVehicle->phone_no;
+                                    }
+                                    $popupDealerName = data_get($relatedVehicle, 'dealer.dba')
+                                        ?? data_get($relatedVehicle, 'dealer.first_name')
+                                        ?? $relatedVehicle->dealer_name
+                                        ?? 'Dealer';
+                                    $popupDealerEmail = data_get($relatedVehicle, 'dealer.email')
+                                        ?? $relatedVehicle->dealer_email
+                                        ?? '';
+                                    $popupDealerAddress = trim(collect([
+                                        data_get($relatedVehicle, 'dealer.address') ?? $relatedVehicle->dealer_address ?? '',
+                                        $dealerCity, $dealerProvince, $dealerCountry,
+                                    ])->filter()->implode(', '));
+                                    $popupDealerWebsite = data_get($relatedVehicle, 'dealer.website')
+                                        ?? $relatedVehicle->dealer_website ?? '';
+                                    $popupDealerWhatsapp = data_get($relatedVehicle, 'dealer.whatsapp')
+                                        ?? data_get($relatedVehicle, 'dealer.phone_no')
+                                        ?? $cardPhone ?? '';
+                                    $popupVehicleTitle = trim(($relatedVehicle->year ?? '') . ' ' . ($relatedVehicle->mfg_auto ?? '') . ' ' . ($relatedVehicle->model ?? ''));
+                                    $rawAvatar = data_get($relatedVehicle, 'dealer.logo')
+                                        ?? data_get($relatedVehicle, 'dealer.avatar')
+                                        ?? $relatedVehicle->dealer_avatar ?? null;
+                                    $popupDealerAvatar = $rawAvatar
+                                        ? (Str::startsWith($rawAvatar, 'http') ? $rawAvatar : env('diskloz_base_url') . '/admin_assets/images/dealer_images/' . $rawAvatar)
+                                        : '';
+                                    $popupDealerLocation = trim(collect([$dealerCity, $dealerProvince])->filter()->implode(', '));
+                                    $chatDealerId = (int)($relatedVehicle->client_id ?? data_get($relatedVehicle, 'dealer.id') ?? 0);
+                                    $chatInventoryId = (int)($relatedVehicle->id ?? 0);
+                                    $chatSource = strtolower($relatedVehicle->source ?? 'diskloz');
+                                    $cleanedPrice = preg_replace('/[^0-9.]/', '', $relatedVehicle->disclosed_price ?? '0');
+                                    $displayPrice = round((float)$cleanedPrice);
+                                @endphp
+
+                                <div class="card-bottom-row">
+                                    <p class="car-distance-away" data-dealer-postal="{{ $dealerPostalCode }}"
+                                        data-dealer-city="{{ $dealerCity }}" data-dealer-province="{{ $dealerProvince }}"
+                                        data-dealer-country="{{ $dealerCountry }}">
+                                        <i class="fa-solid fa-location-dot box-icon"></i>
+                                        <span class="distance-value">Loading...</span>
+                                    </p>
+
+                                    @if($displayPrice > 0)
+                                        <div class="card-action-icons">
+                                            @if(!$relatedIsOwn)
+                                                <button type="button" class="card-icon-btn" title="Chat with Seller"
+                                                    onclick="handleChatClick(event, {{ $chatDealerId }}, {{ $chatInventoryId }}, '{{ $chatSource }}')">
+                                                    <img src="{{ asset('assets/images/Borders.png') }}" alt="Chat" class="light-dark" style="width:22px;height:22px;object-fit:contain;">
+                                                </button>
+                                            @endif
+                                            <button type="button" class="card-icon-btn" title="Call Seller"
+                                                data-phone="{{ $cardPhone }}" data-dealer="{{ e($popupDealerName) }}"
+                                                data-email="{{ e($popupDealerEmail) }}" data-address="{{ e($popupDealerAddress) }}"
+                                                data-website="{{ e($popupDealerWebsite) }}" data-whatsapp="{{ e($popupDealerWhatsapp) }}"
+                                                data-vehicle="{{ e($popupVehicleTitle) }}" data-avatar="{{ e($popupDealerAvatar) }}"
+                                                data-location="{{ e($popupDealerLocation) }}" onclick="handleCallClick(event, this)">
+                                                <img src="{{ asset('assets/images/Border (1).png') }}" alt="Call" class="light-dark" style="width:22px;height:22px;object-fit:contain;">
+                                            </button>
+                                            <h4 class="price-value">${{ formatPrice($displayPrice) }}</h4>
+                                        </div>
+                                    @elseif($relatedIsOwn)
+                                        <h4 class="price-value ms-auto">$0</h4>
+                                    @else
+                                        @if($cardPhone)
+                                            <a href="tel:{{ $cardPhone }}" class="price-value call-seller ms-auto text-decoration-none call-seller-btn"
+                                                data-phone="{{ $cardPhone }}" data-dealer="{{ e($popupDealerName) }}"
+                                                data-email="{{ e($popupDealerEmail) }}" data-address="{{ e($popupDealerAddress) }}"
+                                                data-website="{{ e($popupDealerWebsite) }}" data-whatsapp="{{ e($popupDealerWhatsapp) }}"
+                                                data-vehicle="{{ e($popupVehicleTitle) }}" data-avatar="{{ e($popupDealerAvatar) }}"
+                                                data-location="{{ e($popupDealerLocation) }}" onclick="handleCallClick(event, this);">
+                                                <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                            </a>
+                                        @else
+                                            <a href="#" class="price-value call-seller ms-auto text-decoration-none call-seller-btn"
+                                                data-phone="" data-dealer="{{ e($popupDealerName) }}"
+                                                data-email="{{ e($popupDealerEmail) }}" data-address="{{ e($popupDealerAddress) }}"
+                                                data-website="{{ e($popupDealerWebsite) }}" data-whatsapp="{{ e($popupDealerWhatsapp) }}"
+                                                data-vehicle="{{ e($popupVehicleTitle) }}" data-avatar="{{ e($popupDealerAvatar) }}"
+                                                data-location="{{ e($popupDealerLocation) }}" onclick="handleCallClick(event, this);">
+                                                <i class="fa-solid fa-phone-volume me-1"></i> Call Seller for Details
+                                            </a>
+                                        @endif
+                                    @endif
+                                </div>
+
+                                @if($displayPrice > 0)
+                                <p class="card-pricing-disclaimer">*Pricing subject to applicable tax and fees, click listing for details</p>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -1379,4 +1490,5 @@ document.addEventListener('DOMContentLoaded', function () {
     @media (max-width: 480px) { .modal-gallery-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; } }
 </style>
 @include('partials.dealer-contact-modal')
+@include('partials.chat-form')
 @endsection

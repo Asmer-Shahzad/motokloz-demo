@@ -1,4 +1,13 @@
 @media only screen and (max-width: 1399px) {
+    #vehicleContainer.list-view .car-circle-icons-group {
+    grid-template-columns: repeat(8, 44px);
+}
+
+#vehicleContainer.list-view .car-card-bottom {
+    padding: 11px 20px;    
+}
+
+
     .card-body {
         padding: 15px !important;
     }
@@ -43,6 +52,17 @@
     .car-price-block .price-value {
         font-size: 20px;
     }
+
+    .car-card-bottom .price-value{
+        font-size: 16px;
+    }
+    .car-card-bottom .car-circle-icons-group img {
+    width: 30px;
+}
+
+.badge-mileage {
+    font-size: 12px;
+}
 
     .car-main-title {
         font-size: 16px;
@@ -284,6 +304,42 @@
     .car-listing-bg {
         height: 338px !important;
     }
+    .card-bottom-row {
+    flex-wrap: wrap;
+}
+
+.card-action-icons {
+    margin-left: 0px;
+    width: 100%;
+}
+
+.car-circle-icons-group {
+    margin-bottom: 12px;
+}
+
+
+
+.main-right {
+    margin-top: 16px;
+}
+
+.search-fill {
+    margin-top: -90px;
+
+}
+
+.card-bottom-row .price-value {
+    flex: 1;
+    text-align: right;
+}
+    .car-circle-icons-group {
+    display: flex !important;
+    flex-wrap: wrap;
+}
+    #vehicleContainer.list-view .car-circle-icons-group img {
+    width: 42px;
+    height: 42px;
+}
 }
 
 @media only screen and (max-width: 991px) {
@@ -531,6 +587,35 @@
 
         justify-content: center;
     }
+#vehicleContainer.list-view .car-card-top {
+    width: auto;
+}
+.search-fill {
+    margin-top: -100px;
+}
+#vehicleContainer.list-view .modern-car-card {
+    flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#vehicleContainer {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+
+
+#vehicleContainer.list-view .car-card-bottom {
+    border-radius: 0;
+}
+
+.car-card-bottom .price-value {
+    font-size: 20px;
+}
+#relatedVehiclesContainer {
+    row-gap: 24px;
+}
 }
 
 @media (max-width: 768px) {
@@ -577,6 +662,19 @@
         width: 100%;
         justify-content: center;
     }
+    .search-fill {
+    margin-top: 20px;
+}
+
+.car-card-top {}
+
+#vehicleContainer.list-view .car-card-top img.img-box {}
+
+#vehicleContainer.list-view .car-card-top,
+.car-card-top {
+    height: 285px;
+}
+
 }
 
 @media only screen and (max-width: 767px) {
@@ -1008,11 +1106,18 @@
     }
 
     .header .col-lg-6 {
-        width: 85%;
+        width: 82%;
     }
 
     .col-lg-6.btn-header {
         width: 15%;
         padding: 0;
     }
+    #vehicleContainer.list-view .car-card-top, .car-card-top {
+    height: 225px;
+} 
+#vehicleContainer.list-view .car-circle-icons-group img {
+    width: 32px;
+    height: 32px;
+}
 }

@@ -123,6 +123,9 @@ Route::get('/auth/{provider}/callback', [AuthController::class, 'handleProviderC
 
 // Store chat intent in session (guest accessible)
 Route::post('/chat/set-intent', function (Illuminate\Http\Request $request) {
-    session(['intended_chat_url' => $request->input('url')]);
+    session(['intended_chat_url'       => $request->input('url')]);
+    session(['intended_chat_dealer_id'    => $request->input('dealer_id')]);
+    session(['intended_chat_inventory_id' => $request->input('inventory_id')]);
+    session(['intended_chat_source'       => $request->input('source', 'diskloz')]);
     return response()->json(['ok' => true]);
 })->name('chat.set.intent');
