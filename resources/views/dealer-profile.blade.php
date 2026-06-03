@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @php
 function formatPrice($price) {
 $cleaned = str_replace(['$', ','], '', $price);

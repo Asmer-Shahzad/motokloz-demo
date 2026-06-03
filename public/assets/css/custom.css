@@ -3162,8 +3162,9 @@ textarea.form-control::placeholder {
     color: var(--select-color);
 
 }
-.main-right{
-    margin-top: -30px;
+.main-right {
+    margin-top: -95px;
+    z-index: 99;
 }
 .modal-content {
     position: relative;
@@ -3569,7 +3570,7 @@ input[type="range"]::-moz-range-thumb {
 
 .pr-input-field {
     flex: 1;
-    border: 1.5px solid #D0D0D0;
+    border: 1.5px solid #dde1de33;
     border-radius: 10px;
     padding: 10px 14px;
     font-size: 14px;
@@ -3585,7 +3586,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .pr-input-field:focus {
-    border-color: #1AAA8A;
+    border-color: #ff9d00;
 }
 
 .pr-to-sep {
