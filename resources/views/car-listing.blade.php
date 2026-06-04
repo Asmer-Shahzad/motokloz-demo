@@ -616,19 +616,19 @@ return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
                                 $visibleCount = 4;
                                 $hiddenCount = count($allServiceIcons) - $visibleCount;
                                 @endphp
-                                <div class="car-circle-icons-group">
-                                    {{-- Always visible: first 4 --}}
-                                    @foreach(array_slice($allServiceIcons, 0, $visibleCount) as $icon)
-                                    <img src="{{ $icon['src'] }}" alt="{{ $icon['alt'] }}" title="{{ $icon['alt'] }}">
-                                    @endforeach
+                                <!--<div class="car-circle-icons-group">-->
+                                <!--    {{-- Always visible: first 4 --}}-->
+                                <!--    @foreach(array_slice($allServiceIcons, 0, $visibleCount) as $icon)-->
+                                <!--    <img src="{{ $icon['src'] }}" alt="{{ $icon['alt'] }}" title="{{ $icon['alt'] }}">-->
+                                <!--    @endforeach-->
 
-                                    {{-- Hidden extras: shown in list view --}}
-                                    @foreach(array_slice($allServiceIcons, $visibleCount) as $icon)
-                                    <img src="{{ $icon['src'] }}" alt="{{ $icon['alt'] }}" title="{{ $icon['alt'] }}" class="extra-service-icon">
-                                    @endforeach
+                                <!--    {{-- Hidden extras: shown in list view --}}-->
+                                <!--    @foreach(array_slice($allServiceIcons, $visibleCount) as $icon)-->
+                                <!--    <img src="{{ $icon['src'] }}" alt="{{ $icon['alt'] }}" title="{{ $icon['alt'] }}" class="extra-service-icon">-->
+                                <!--    @endforeach-->
 
-                                    <span class="extra-icons-count">{{ $hiddenCount }}+</span>
-                                </div>
+                                <!--    <span class="extra-icons-count">{{ $hiddenCount }}+</span>-->
+                                <!--</div>-->
 
                                 @php
                                 // ── Dealer contact data ──
@@ -892,9 +892,9 @@ return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
                 });
 
                 // Re-add selected_asset if it existed
-                if (selectedAsset) {
-                    currentUrl.searchParams.set('selected_asset', selectedAsset);
-                }
+                // if (selectedAsset) {
+                //     currentUrl.searchParams.set('selected_asset', selectedAsset);
+                // }
 
                 // Alternative: Clear all parameters at once and then add selected_asset
                 // currentUrl.search = '';
