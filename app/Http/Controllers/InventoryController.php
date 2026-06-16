@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserInformation;
 use App\Http\Controllers\Concerns\EnrichesVehicleLocation;
+use Illuminate\Support\Collection as SupportCollection;
+use Illuminate\Support\Str;
 
 class InventoryController extends Controller
 {
@@ -881,9 +883,286 @@ class InventoryController extends Controller
     
     public function sitemap()
     {
-        $response = Http::get($this->baseUrl() . '/api/sitemap');
-        $data['inv'] = json_decode($response->body());
-        return view('sitemap', ['inventories' => $data['inv']]);
+        $maxUrls = 50000;
+        $staticUrls = $this->withSitemapSection($this->staticSitemapUrls(), 'Static Pages');
+        $remainingSlots = max(0, $maxUrls - $staticUrls->count());
+
+        $dealerUrls = $this->withSitemapSection($this->dealerSitemapUrls(1, $remainingSlots), 'Dealer Profiles');
+        $remainingSlots = max(0, $remainingSlots - $dealerUrls->count());
+
+        $inventoryUrls = $this->withSitemapSection($this->inventorySitemapUrls(1, $remainingSlots), 'Inventory Details');
+
+        $urls = $staticUrls
+            ->merge($dealerUrls)
+            ->merge($inventoryUrls)
+            ->values();
+
+        return $this->xmlResponse($this->buildUrlSet($urls));
+    }
+
+    private function withSitemapSection(SupportCollection $urls, string $section): SupportCollection
+    {
+        return $urls->map(function (array $url) use ($section) {
+            $url['section'] = $section;
+
+            return $url;
+        });
+    }
+
+    private function staticSitemapUrls(): SupportCollection
+    {
+        $assetTypes = [
+            'AUTO',
+            'FARM EQUIPMENT',
+            'HEAVY DUTY TRAILERS',
+            'HEAVY TRUCK/EQUIPMENT',
+            'MARINE',
+            'MOTORCYCLE / ATV / POWERSPORTS',
+            'RV / TRAILER',
+            'SNOWSPORTS',
+            'WATERSPORT',
+        ];
+
+        $urls = collect([
+            ['loc' => $this->absoluteUrl('/'), 'priority' => '1.0', 'changefreq' => 'daily'],
+            ['loc' => $this->absoluteUrl('/car-listing'), 'priority' => '0.9', 'changefreq' => 'daily'],
+            ['loc' => $this->absoluteUrl('/dealer-network'), 'priority' => '0.8', 'changefreq' => 'weekly'],
+            ['loc' => $this->absoluteUrl('/sell'), 'priority' => '0.7', 'changefreq' => 'weekly'],
+            ['loc' => $this->absoluteUrl('/buy/step-1'), 'priority' => '0.6', 'changefreq' => 'monthly'],
+            ['loc' => $this->absoluteUrl('/buy/step-2'), 'priority' => '0.6', 'changefreq' => 'monthly'],
+            ['loc' => $this->absoluteUrl('/buy/step-3'), 'priority' => '0.6', 'changefreq' => 'monthly'],
+            ['loc' => $this->absoluteUrl('/buy/step-4'), 'priority' => '0.6', 'changefreq' => 'monthly'],
+            ['loc' => $this->absoluteUrl('/buy/step-5'), 'priority' => '0.6', 'changefreq' => 'monthly'],
+            ['loc' => $this->absoluteUrl('/buy/step-6'), 'priority' => '0.6', 'changefreq' => 'monthly'],
+            ['loc' => $this->absoluteUrl('/login'), 'priority' => '0.3', 'changefreq' => 'monthly'],
+            ['loc' => $this->absoluteUrl('/signup'), 'priority' => '0.3', 'changefreq' => 'monthly'],
+            ['loc' => $this->absoluteUrl('/forgot-password'), 'priority' => '0.2', 'changefreq' => 'yearly'],
+        ]);
+
+        foreach ($assetTypes as $asset) {
+            $urls->push([
+                'loc' => $this->absoluteUrl('/car-listing?' . http_build_query(['selected_asset' => $asset])),
+                'priority' => '0.8',
+                'changefreq' => 'daily',
+            ]);
+        }
+
+        return $urls->values();
+    }
+
+    private function inventorySitemapUrls(int $page, int $chunkSize): SupportCollection
+    {
+        return $this->fetchInventorySitemapItems($page, $chunkSize)
+            ->map(fn($inventory) => (object) $inventory)
+            ->filter(fn($inventory) => !empty($inventory->id))
+            ->map(function ($inventory) {
+                $title = trim(implode(' ', array_filter([
+                    $inventory->year ?? null,
+                    $inventory->mfg_auto ?? $inventory->make ?? null,
+                    $inventory->model ?? null,
+                    $inventory->trim ?? null,
+                ])));
+
+                if ($title === '') {
+                    $title = $inventory->title ?? 'vehicle-' . $inventory->id;
+                }
+
+                return [
+                    'loc' => $this->absoluteUrl('/car-details/' . Str::slug($title) . '/' . $inventory->id),
+                    'lastmod' => $this->formatSitemapDate($inventory->updated_at ?? $inventory->created_at ?? null),
+                    'priority' => '0.9',
+                    'changefreq' => 'daily',
+                ];
+            })
+            ->values();
+    }
+
+    private function dealerSitemapUrls(int $page, int $chunkSize): SupportCollection
+    {
+        return $this->fetchDealerSitemapItems($page, $chunkSize)
+            ->filter(fn($dealer) => !empty(data_get($dealer, 'id')))
+            ->map(function ($dealer) {
+                $dealerId = data_get($dealer, 'id');
+                $dealerName = $this->dealerSitemapName($dealer);
+
+                return [
+                    'loc' => $this->absoluteUrl('/dealer-profile/' . Str::slug($dealerName) . '/' . $dealerId),
+                    'lastmod' => $this->formatSitemapDate(data_get($dealer, 'updated_at') ?? data_get($dealer, 'created_at')),
+                    'priority' => '0.8',
+                    'changefreq' => 'weekly',
+                ];
+            })
+            ->values();
+    }
+
+    private function fetchInventorySitemapItems(int $page, int $perPage): SupportCollection
+    {
+        $payload = $this->fetchInventorySitemapPayload([
+            'page' => $page,
+            'per_page' => $perPage,
+        ]);
+
+        if (!$payload) {
+            return collect();
+        }
+
+        $items = $this->extractInventoryItems($payload);
+
+        if ($items->count() > $perPage) {
+            return $items->forPage($page, $perPage)->values();
+        }
+
+        return $items->values();
+    }
+
+    private function fetchInventorySitemapPayload(array $query): ?array
+    {
+        $response = Http::timeout(60)->get($this->baseUrl() . '/api/sitemap', $query);
+
+        if (!$response->successful()) {
+            $response = Http::timeout(60)->get($this->baseUrl() . '/api/search_inventory', $query);
+        }
+
+        return $response->successful() ? $response->json() : null;
+    }
+
+    private function extractInventoryItems($payload): SupportCollection
+    {
+        $items = data_get($payload, 'inventory.data')
+            ?? data_get($payload, 'data.data')
+            ?? data_get($payload, 'data')
+            ?? data_get($payload, 'inv')
+            ?? $payload;
+
+        return collect(is_array($items) ? $items : []);
+    }
+
+    private function fetchDealerSitemapItems(int $page, int $perPage): SupportCollection
+    {
+        $payload = $this->fetchDealerSitemapPayload([
+            'page' => $page,
+            'per_page' => $perPage,
+        ]);
+
+        if (!$payload) {
+            return collect();
+        }
+
+        $items = $this->extractDealerItems($payload);
+
+        if ($items->count() > $perPage) {
+            return $items->forPage($page, $perPage)->values();
+        }
+
+        return $items->values();
+    }
+
+    private function fetchDealerSitemapPayload(array $query): ?array
+    {
+        $response = Http::timeout(60)->get($this->baseUrl() . '/api/sitemap-dealers', $query);
+
+        if (!$response->successful()) {
+            $response = Http::timeout(60)->get($this->baseUrl() . '/api/all_dealers_with_inventory_count', $query);
+        }
+
+        return $response->successful() ? $response->json() : null;
+    }
+
+    private function extractDealerItems($payload): SupportCollection
+    {
+        $items = data_get($payload, 'dealers.data')
+            ?? data_get($payload, 'data.data')
+            ?? data_get($payload, 'dealers')
+            ?? data_get($payload, 'data')
+            ?? $payload;
+
+        return collect(is_array($items) ? $items : []);
+    }
+
+    private function dealerSitemapName($dealer): string
+    {
+        $name = trim((string) (
+            data_get($dealer, 'dba')
+            ?? data_get($dealer, 'legal_name')
+            ?? data_get($dealer, 'name')
+            ?? trim(data_get($dealer, 'first_name', '') . ' ' . data_get($dealer, 'last_name', ''))
+            ?? ''
+        ));
+
+        if ($name === '') {
+            $name = 'dealer-' . data_get($dealer, 'id');
+        }
+
+        return $name;
+    }
+
+    private function buildUrlSet(SupportCollection $urls): string
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        $xml .= '<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>' . "\n";
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+
+        $currentSection = null;
+
+        foreach ($urls as $url) {
+            if (($url['section'] ?? null) !== $currentSection) {
+                $currentSection = $url['section'] ?? null;
+
+                if ($currentSection) {
+                    $xml .= "\n  <!-- " . $this->xmlCommentEscape($currentSection) . " -->\n";
+                }
+            }
+
+            $xml .= "  <url>\n";
+            $xml .= '    <loc>' . $this->xmlEscape($url['loc']) . "</loc>\n";
+            if (!empty($url['lastmod'])) {
+                $xml .= '    <lastmod>' . $this->xmlEscape($url['lastmod']) . "</lastmod>\n";
+            }
+            $xml .= '    <changefreq>' . $this->xmlEscape($url['changefreq'] ?? 'weekly') . "</changefreq>\n";
+            $xml .= '    <priority>' . $this->xmlEscape($url['priority'] ?? '0.5') . "</priority>\n";
+            $xml .= "  </url>\n";
+        }
+
+        return $xml . '</urlset>';
+    }
+
+    private function absoluteUrl(string $path): string
+    {
+        $baseUrl = rtrim(config('app.url'), '/');
+
+        if (str_contains($baseUrl, 'localhost') || str_contains($baseUrl, '127.0.0.1')) {
+            $baseUrl = 'https://motokloz.com';
+        }
+
+        return $baseUrl . '/' . ltrim($path, '/');
+    }
+
+    private function formatSitemapDate($value): ?string
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        try {
+            return \Carbon\Carbon::parse($value)->toDateString();
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
+    private function xmlEscape(string $value): string
+    {
+        return htmlspecialchars($value, ENT_XML1 | ENT_COMPAT, 'UTF-8');
+    }
+
+    private function xmlCommentEscape(string $value): string
+    {
+        return str_replace('--', '-', $value);
+    }
+
+    private function xmlResponse(string $xml)
+    {
+        return response($xml, 200)->header('Content-Type', 'application/xml; charset=UTF-8');
     }
 
 

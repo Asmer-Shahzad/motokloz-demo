@@ -1368,7 +1368,7 @@ function toggleLike(vehicleId, element, authId) {
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "{{ safeJson($dealer->assets_type) }}",
+  "@type": "{{ safeJson($dealer->assets_type ?? 'AutoDealer') }}",
   "name": "{{ safeJson($dealer->dba) }}",
   "url": "{{ url()->current() }}",
   "logo": "{{ $dealerLogo }}",

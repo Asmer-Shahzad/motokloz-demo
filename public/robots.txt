@@ -1,2 +1,4 @@
 User-agent: *
 Disallow:
+
+Sitemap: https://motokloz.com/sitemap.xml
