@@ -197,15 +197,15 @@
                                                         $svcVisible = 4;
                                                         $svcHidden  = count($allServiceIcons) - $svcVisible;
                                                     @endphp
-                                                    <div class="car-circle-icons-group">
-                                                        @foreach(array_slice($allServiceIcons, 0, $svcVisible) as $icon)
-                                                            <img src="{{ $icon['src'] }}" alt="{{ $icon['alt'] }}" title="{{ $icon['alt'] }}">
-                                                        @endforeach
-                                                        @foreach(array_slice($allServiceIcons, $svcVisible) as $icon)
-                                                            <img src="{{ $icon['src'] }}" alt="{{ $icon['alt'] }}" title="{{ $icon['alt'] }}" class="extra-service-icon">
-                                                        @endforeach
-                                                        <span class="extra-icons-count">{{ $svcHidden }}+</span>
-                                                    </div>
+                                                    <!--<div class="car-circle-icons-group">-->
+                                                    <!--    @foreach(array_slice($allServiceIcons, 0, $svcVisible) as $icon)-->
+                                                    <!--        <img src="{{ $icon['src'] }}" alt="{{ $icon['alt'] }}" title="{{ $icon['alt'] }}">-->
+                                                    <!--    @endforeach-->
+                                                    <!--    @foreach(array_slice($allServiceIcons, $svcVisible) as $icon)-->
+                                                    <!--        <img src="{{ $icon['src'] }}" alt="{{ $icon['alt'] }}" title="{{ $icon['alt'] }}" class="extra-service-icon">-->
+                                                    <!--    @endforeach-->
+                                                    <!--    <span class="extra-icons-count">{{ $svcHidden }}+</span>-->
+                                                    <!--</div>-->
 
                                                     <div class="card-bottom-row">
                                                         <p class="car-distance-away" data-dealer-postal="{{ $dealerPostalCode }}"
