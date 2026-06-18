@@ -21,6 +21,8 @@ class InventoryController extends Controller
 
     use EnrichesVehicleLocation;
 
+    private array $excludedSitemapDealerIds = [1, 2, 55];
+
 
     private function baseUrl(): string
     {
@@ -880,7 +882,7 @@ class InventoryController extends Controller
             ], 500);
         }
     }
-    
+
     public function sitemap()
     {
         $maxUrls = 50000;
@@ -955,6 +957,7 @@ class InventoryController extends Controller
         return $this->fetchInventorySitemapItems($page, $chunkSize)
             ->map(fn($inventory) => (object) $inventory)
             ->filter(fn($inventory) => !empty($inventory->id))
+            ->reject(fn($inventory) => $this->isExcludedSitemapInventory($inventory))
             ->map(function ($inventory) {
                 $title = trim(implode(' ', array_filter([
                     $inventory->year ?? null,
@@ -981,6 +984,7 @@ class InventoryController extends Controller
     {
         return $this->fetchDealerSitemapItems($page, $chunkSize)
             ->filter(fn($dealer) => !empty(data_get($dealer, 'id')))
+            ->reject(fn($dealer) => $this->isExcludedSitemapDealer($dealer))
             ->map(function ($dealer) {
                 $dealerId = data_get($dealer, 'id');
                 $dealerName = $this->dealerSitemapName($dealer);
@@ -993,6 +997,21 @@ class InventoryController extends Controller
                 ];
             })
             ->values();
+    }
+
+    private function isExcludedSitemapDealer($dealer): bool
+    {
+        return in_array((int) data_get($dealer, 'id'), $this->excludedSitemapDealerIds, true);
+    }
+
+    private function isExcludedSitemapInventory($inventory): bool
+    {
+        $dealerId = data_get($inventory, 'dealer.id')
+            ?? data_get($inventory, 'dealer_id')
+            ?? data_get($inventory, 'client_id')
+            ?? data_get($inventory, 'user_id');
+
+        return in_array((int) $dealerId, $this->excludedSitemapDealerIds, true);
     }
 
     private function fetchInventorySitemapItems(int $page, int $perPage): SupportCollection
