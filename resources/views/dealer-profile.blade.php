@@ -181,6 +181,13 @@ $isMotokloz = $source === 'motokloz';
 
 
                     </div>
+                    <div class="mb-4">
+                        @if(!empty($dealer->internal_notes))
+                        <p>{{ $dealer->internal_notes }}</p>
+                        @else
+                        <p class="text-muted">No description available for this dealer.</p>
+                        @endif
+                    </div>
 
                 </div>
             </div>
