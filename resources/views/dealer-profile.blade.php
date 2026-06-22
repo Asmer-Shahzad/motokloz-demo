@@ -5,6 +5,82 @@ function formatPrice($price) {
     $number = is_numeric($cleaned) ? (float)$cleaned : 0;
     return number_format(round($number), 0, '.', ','); // 👈 yahan fix
 }
+function dealerServiceItems($dealer) {
+    $candidates = [
+        $dealer->services_providers ?? null,
+        $dealer->service_providers ?? null,
+        $dealer->services ?? null,
+        $dealer->dealer_services ?? null,
+        $dealer->dealer_services_providers ?? null,
+        $dealer->services_field ?? null,
+    ];
+
+    $raw = collect($candidates)->first(fn ($value) => !blank($value));
+
+    $extractStrings = function ($value) use (&$extractStrings) {
+        if (is_array($value)) {
+            $items = [];
+
+            foreach ($value as $key => $item) {
+                if (is_string($key) && in_array(strtolower($key), ['title', 'name', 'label', 'value', 'text'], true)) {
+                    $items[] = trim((string) $item);
+                    continue;
+                }
+
+                $items = array_merge($items, $extractStrings($item));
+            }
+
+            return $items;
+        }
+
+        if (!is_string($value)) {
+            return [];
+        }
+
+        $value = trim($value);
+        if ($value === '') {
+            return [];
+        }
+
+        if (preg_match('/^(?:a|s|i|b|d):\d+:/', $value)) {
+            $decoded = @unserialize($value);
+
+            if ($decoded !== false || $value === 'b:0;') {
+                return $extractStrings($decoded);
+            }
+        }
+
+        if (str_contains($value, '{') || str_contains($value, '}')) {
+            return [];
+        }
+
+        if (str_contains($value, 'a:') || str_contains($value, 's:') || str_contains($value, 'i:')) {
+            return [];
+        }
+
+        return [$value];
+    };
+
+    $items = $extractStrings($raw);
+
+    $items = collect($items)
+        ->map(function ($item) {
+            $item = trim((string) $item);
+            $item = preg_replace('/^[^A-Za-z0-9]+/', '', $item);
+            $item = preg_replace('/^[-:\s]+/', '', $item);
+
+            return trim($item);
+        })
+        ->filter(function ($item) {
+            return $item !== ''
+                && !preg_match('/^(?:a|s|i|b|d):\d+:/', $item)
+                && !preg_match('/^[{}]+$/', $item);
+        })
+        ->values()
+        ->all();
+
+    return array_values(array_unique($items));
+}
 @endphp
 @php
     $source     = request()->query('source', 'diskloz');
@@ -104,8 +180,7 @@ function formatPrice($price) {
                                 <p class="text-muted">No description available for this dealer.</p>
                             @endif
                         </div>
-
-                        <div class="row g-3">
+                        <!-- <div class="row g-3">
                             <div class="col-6">
                                 <img src="/assets/images/Carento (10).png" class="gallery-img" alt="Car">
                             </div>
@@ -119,7 +194,8 @@ function formatPrice($price) {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
+
 
                     </div>
                 </div>
@@ -136,53 +212,26 @@ function formatPrice($price) {
                     <!-- Collapsible Content -->
                     <div class="collapse show" id="servicesContent">
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <ul class="list-unstyled service-list">
-                                    <li class="services-list">
-                                        <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
-                                        Exclusive car vehicle sales with customization options
-                                    </li>
-                                    <li class="services-list">
-                                        <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
-                                        Certified pre-owned vehicles with comprehensive inspections
-                                    </li>
-                                    <li class="services-list">
-                                        <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
-                                        Flexible financing and leasing solutions tailored to your needs
-                                    </li>
-                                    <li class="services-list">
-                                        <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
-                                        Full-service vehicle maintenance and repair center
-                                    </li>
-                                    <li class="services-list">
-                                        <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
-                                        Authentic parts and accessories for optimal vehicle performance
-                                    </li>
-                                </ul>
-                            </div>
+                        @php
+                            $dealerServices = dealerServiceItems($dealer);
+                        @endphp
 
-                            <div class="col-md-6">
-                                <ul class="list-unstyled service-list">
-                                    <li class="services-list">
-                                        <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
-                                         Comprehensive Vehicle Maintenance
-                                    </li>
-                                    <li class="services-list">
-                                        <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
-                                         Genuine Parts & Accessories
-                                    </li>
-                                    <li class="services-list">
-                                        <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
-                                         Trade-in evaluation
-                                    </li>
-                                    <li class="services-list">
-                                        <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
-                                         Extended Warranty Plans
-                                    </li>
-                                </ul>
+                        @if(count($dealerServices))
+                            <div class="row">
+                                <div class="col-12">
+                                    <ul class="list-unstyled service-list row g-3 mb-0">
+                                        @foreach($dealerServices as $service)
+                                            <li class="services-list col-md-6">
+                                                <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
+                                                <span>{{ $service }}</span>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            <p class="text-muted mb-0">No services have been added yet.</p>
+                        @endif
 
                     </div>
                 </div>
@@ -412,45 +461,71 @@ function formatPrice($price) {
 
                             </div>
                         </div>
-                        <h5 class="fw-bold mb-4 d-flex justify-content-between align-items-center">
-                            Leave feedback
+                        <div class="p-4 p-md-5">
+                            @php
+                                $selectedReviewRating = old('rating', 5);
+                                $reviewerName = old('name', $userInfo->full_name ?? $user->name ?? '');
+                                $reviewerEmail = old('email', $user->email ?? '');
+                            @endphp
+                            <form data-ajax="true" id="dealerReviewForm" action="{{ route('dealer.review.submit') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="dealer_id" value="{{ $dealer->id ?? '' }}">
+                                <input type="hidden" name="dealer_name" value="{{ $dealer->dba ?? $dealer->legal_name ?? '' }}">
+                                <input type="hidden" name="dealer_number" value="{{ $dealer->id ?? '' }}">
+                                @if(session('review_success'))
+                                    <div class="alert alert-success mb-4 review-flash">{{ session('review_success') }}</div>
+                                @endif
 
-                        </h5>
-                        <form action="#" method="POST">
+                                @if(session('review_error'))
+                                    <div class="alert alert-danger mb-4 review-flash">{{ session('review_error') }}</div>
+                                @endif
 
-                            <div class="row g-4">
+                                <div class="row g-4">
+                                    <div class="col-12">
+                                        <div class="rating-widget">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="text-muted">Your rating</span>
+                                                <span class="text-warning fw-semibold" id="ratingLabel"></span>
+                                            </div>
+                                            <div class="star-picker" role="radiogroup" aria-label="Dealer rating">
+                                                @for($i = 5; $i >= 1; $i--)
+                                                    <input
+                                                        type="radio"
+                                                        id="review-star-{{ $i }}"
+                                                        name="rating"
+                                                        value="{{ $i }}"    
+                                                        class="star-input"
+                                                        {{ (int) $selectedReviewRating === $i ? 'checked' : '' }}
+                                                        required>
+                                                    <label
+                                                        for="review-star-{{ $i }}"
+                                                        class="star-label"
+                                                        data-rating="{{ $i }}">&#9733;</label>
+                                                @endfor
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                <div class="col-md-6">
-                                    <input type="text" 
-                                        name="name"
-                                        class="form-control" 
-                                        placeholder="Your name"
-                                        required>
+                                    <div class="col-md-6">
+                                        <input type="text" name="name" class="form-control" placeholder="Your name" value="{{ $reviewerName }}" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <input type="email" name="email" class="form-control" placeholder="Email address" value="{{ $reviewerEmail }}">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <textarea class="form-control" name="comment" rows="6" placeholder="Write your review" required></textarea>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-orange px-5" id="dealerReviewSubmitBtn">
+                                            Submit review
+                                        </button>
+                                    </div>
                                 </div>
-
-                                <div class="col-md-6">
-                                    <input type="email" 
-                                        name="email"
-                                        class="form-control" 
-                                        placeholder="Email address"
-                                        required>
-                                </div>
-
-                                <div class="col-12">
-                                    <textarea class="form-control" 
-                                            name="comment"
-                                            rows="5" 
-                                            placeholder="Your comment"
-                                            required></textarea>
-                                </div>
-
-                            </div>
-
-                            <button type="submit" class="btn btn-orange mt-4 px-5" disabled>
-                                Submit review
-                            </button>
-
-                        </form>
+                            </form>
+                        </div>
 
                     </div>
                 </div>
@@ -482,6 +557,57 @@ function formatPrice($price) {
 
                 [data-bs-toggle="collapse"][aria-expanded="true"] i {
                     transform: rotate(180deg);
+                }
+
+                .star-picker {
+                    display: inline-flex;
+                    flex-direction: row-reverse;
+                    gap: 10px;
+                    align-items: center;
+                    position: relative;
+                    z-index: 2;
+                }
+
+                .star-input {
+                    position: absolute;
+                    opacity: 0;
+                    width: 1px;
+                    height: 1px;
+                    overflow: hidden;
+                    pointer-events: none;
+                }
+
+                .star-label {
+                    display: inline-block;
+                    font-size: 2rem;
+                    line-height: 1;
+                    color: #5b5b5b;
+                    cursor: pointer;
+                    transition: color 0.2s ease, transform 0.2s ease;
+                    padding: 0;
+                    user-select: none;
+                }
+
+                .star-label:hover,
+                .star-label:hover ~ .star-label,
+                .star-input:checked ~ .star-label {
+                    color: #f79a1f;
+                }
+
+                .star-input:focus + .star-label {
+                    outline: 2px solid #f79a1f;
+                    outline-offset: 4px;
+                }
+
+                .star-label:hover {
+                    transform: translateY(-1px);
+                }
+
+                .rating-widget {
+                    background: rgba(255,255,255,0.03);
+                    border: 1px solid rgba(255,255,255,0.08);
+                    border-radius: 14px;
+                    padding: 18px 18px 14px;
                 }
             </style>
             <div class="col-lg-4">
@@ -965,9 +1091,6 @@ function formatPrice($price) {
 
 
             function handleErrors(xhr){
-                console.log('Error Response:', xhr.responseJSON);
-                console.log('Status Code:', xhr.status);
-
                 if (xhr.status === 422 && xhr.responseJSON?.errors) {
                     let msgs = [];
                     $.each(xhr.responseJSON.errors, function(field, messages) {
@@ -986,6 +1109,22 @@ function formatPrice($price) {
                 }
             }
 
+            function syncDealerReviewLabel() {
+                var rating = $('#dealerReviewForm input[name="rating"]:checked').val() || 5;
+                $('#ratingLabel').text(rating + ' / 5');
+            }
+
+            $('#dealerReviewForm').on('change', 'input[name="rating"]', function () {
+                syncDealerReviewLabel();
+            });
+
+            $('#ratingLabel').text('');
+
+            setTimeout(function () {
+                $('.review-flash').fadeOut(300, function () {
+                    $(this).remove();
+                });
+            }, 3000);
 
             // ===================== CONTACT FORM (Email Only) =====================
             $('#leadForm').on('submit', function (e) {
@@ -1029,8 +1168,6 @@ function formatPrice($price) {
                 $btn.prop('disabled', true);
                 var originalText = $btn.html();
                 $btn.html('<i class="fas fa-spinner fa-spin"></i> Sending...');
-                
-                console.log('Sending contact email to:', dealerEmail);
                 
                 // Send AJAX to send email
                 $.ajax({
@@ -1322,6 +1459,7 @@ function toggleLike(vehicleId, element, authId) {
 </script>
 @include('partials.dealer-contact-modal')
 @include('partials.chat-form')
+@endsection
 @section('schema')
 <script type="application/ld+json">
 {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Database\Eloquent\Collection;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
@@ -139,6 +140,64 @@ class DealerProfileController extends Controller
             'mapAddress'       => $mapAddress,
             'pageTitle' => $dealer->dba . ' | Motokloz'  //  Set page title
         ]);
+    }
+
+    public function submitDealerReview(Request $request)
+    {
+        try {
+            \Log::info('User Review Request Received', $request->except('_token'));
+
+            $validated = $request->validate([
+                'dealer_id' => 'required|integer',
+                'dealer_name' => 'required|string|max:255',
+                'dealer_number' => 'required|string|max:100',
+                'rating' => 'required|integer|min:1|max:5',
+                'name' => 'required|string|max:255',
+                'email' => 'nullable|email|max:255',
+                'comment' => 'required|string|max:4000',
+            ]);
+
+            \Log::info('Sending user review email', [
+                'dealer_name' => $validated['dealer_name'],
+                'dealer_number' => $validated['dealer_number'],
+                'recipient' => 'hafeez.ariatech@gmail.com',
+            ]);
+
+            \Log::info('Rendering user review email template', [
+                'view' => 'emails.dealer-review',
+                'dealer_name' => $validated['dealer_name'],
+                'dealer_number' => $validated['dealer_number'],
+            ]);
+
+            Mail::send('emails.dealer-review', [
+                'dealer_name' => $validated['dealer_name'],
+                'dealer_number' => $validated['dealer_number'],
+                'rating' => $validated['rating'],
+                'name' => $validated['name'],
+                'email' => $validated['email'] ?? '',
+                'comment' => $validated['comment'],
+                'submittedAt' => now()->format('F j, Y \a\t g:i A'),
+            ], function ($message) use ($validated) {
+                $message->to('hafeez.ariatech@gmail.com')
+                    ->subject('User Review - ' . $validated['dealer_name'] . ' #' . $validated['dealer_number'])
+                    ->replyTo($validated['email'] ?: config('mail.from.address'), $validated['name']);
+            });
+
+            \Log::info('User review email sent successfully to: hafeez.ariatech@gmail.com');
+
+            return back()->with('review_success', 'Review sent successfully.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('User Review Validation Error: ' . json_encode($e->errors()));
+
+            return back()
+                ->withErrors($e->validator)
+                ->withInput();
+        } catch (\Exception $e) {
+            \Log::error('User Review Email Error: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+
+            return back()->with('review_error', 'Unable to send review right now.');
+        }
     }
 
     private function haversineDistance(?array $from, ?array $to): ?float
