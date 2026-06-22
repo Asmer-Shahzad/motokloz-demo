@@ -5,7 +5,7 @@
 @php
 function formatPrice($price)
 {
-    $cleaned = str_replace(['$', ','], '', $price);
+    $cleaned = preg_replace('/[^0-9.]/', '', (string) $price);
     $number = is_numeric($cleaned) ? (float) $cleaned : 0;
     return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
 }
@@ -15,17 +15,26 @@ function formatPrice($price)
     $make = $searched_vehicle->mfg_auto ?? '';
     $model = $searched_vehicle->model ?? '';
     $trim = $searched_vehicle->trim ?? '';
-    $condition = $searched_vehicle->inventory_condition ?? '';
+    $color = $searched_vehicle->ext_color ?? '';
+    $city = $dealer->city ?? $searched_vehicle->dealer_city ?? $searched_vehicle->city ?? '';
+    $province = $dealer->province ?? $searched_vehicle->dealer_province ?? $searched_vehicle->province ?? '';
+    $price = formatPrice($searched_vehicle->disclosed_price ?? 0);
+    $mileage = formatPrice($searched_vehicle->mileage ?? 0);
+    $transmission = $searched_vehicle->transmission ?? 'N/A';
+    $drivetrain = $searched_vehicle->drivetrain ?? 'N/A';
+    $dealerName = $dealer->dba ?? $dealer->first_name ?? $searched_vehicle->dealer_name ?? 'Dealer';
     
-    // ✅ Add dots (.) between variables
-    $vehicleTitle = trim($year . ' ' . $make . ' ' . $model);
-    if (empty($vehicleTitle)) {
+    $vehicleName = trim($year . ' ' . $make . ' ' . $model . ' ' . $trim);
+    $vehicleNameWithColor = trim($year . ' ' . $color . ' ' . $make . ' ' . $model . ' ' . $trim);
+    $location = collect([$city, $province])->filter()->implode(', ');
+
+    $vehicleTitle = trim('Used ' . $vehicleName . ' for Sale' . ($location ? ' in ' . $location : '') . ' | Motokloz');
+    if (trim($vehicleName) === '') {
         $vehicleTitle = "Vehicle for Sale | Motokloz";
     }
     
-    // ✅ Add dots (.) between variables
-    $vehicleDescription = trim($condition . ' ' . $year . ' ' . $make . ' ' . $model . ' ' . $trim);
-    if (empty($vehicleDescription)) {
+    $vehicleDescription = trim('Used ' . $vehicleNameWithColor . ' for $' . $price . ($location ? ' in ' . $location : '') . '. ' . $mileage . ' km, ' . $transmission . ' and ' . $drivetrain . '. Contact ' . $dealerName . ' on Motokloz.');
+    if (trim($vehicleName) === '') {
         $vehicleDescription = "Check out this vehicle at Motokloz. Contact us for more details and pricing.";
     }
     
