@@ -178,12 +178,12 @@ class DealerProfileController extends Controller
                 'comment' => $validated['comment'],
                 'submittedAt' => now()->format('F j, Y \a\t g:i A'),
             ], function ($message) use ($validated) {
-                $message->to('hafeez.ariatech@gmail.com')
+                $message->to('dealerpagereview@motokloz.com')
                     ->subject('User Review - ' . $validated['dealer_name'] . ' #' . $validated['dealer_number'])
                     ->replyTo($validated['email'] ?: config('mail.from.address'), $validated['name']);
             });
 
-            \Log::info('User review email sent successfully to: hafeez.ariatech@gmail.com');
+            \Log::info('User review email sent successfully to: dealerpagereview@motokloz.com');
 
             return back()->with('review_success', 'Review sent successfully.');
         } catch (\Illuminate\Validation\ValidationException $e) {
