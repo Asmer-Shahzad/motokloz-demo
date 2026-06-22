@@ -51,6 +51,7 @@ Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/car-listing', [SearchController::class, 'search_inventory'])->name('search_inventory');
 Route::get('/car-details/{name}/{id}', [InventoryController::class, 'inventory_product_details'])->name('inventory_product_details');
 Route::get('/dealer-profile/{name}/{id}', [DealerProfileController::class, 'dealer_inventory_details'])->name('dealer_inventory_details');
+Route::post('/dealer-profile/review', [DealerProfileController::class, 'submitDealerReview'])->name('dealer.review.submit');
 Route::get('/dealer-network', [DealerNetworkController::class, 'fetch_dealers'])->name('fetch_dealers');
 Route::post('/dealer-application/submit', [DealerNetworkController::class, 'dealer_application_submit'])->name('dealer.application.submit');
 Route::post('/support/submit', [DealerNetworkController::class, 'support_submti'])->name('support.application.submit');

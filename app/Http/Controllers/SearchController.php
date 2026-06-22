@@ -366,21 +366,22 @@ class SearchController extends Controller
 
             $dealerEmail = $validated['dealer_email'];
 
-            // Prepare email content
-            $emailBody = "==========================================\n";
-            $emailBody .= "      NEW TEST DRIVE REQUEST\n";
-            $emailBody .= "==========================================\n\n";
-            $emailBody .= "Name: " . $validated['name'] . "\n";
-            $emailBody .= "Email: " . $validated['email'] . "\n";
-            $emailBody .= "Phone: " . $validated['phone'] . "\n";
-            $emailBody .= "Preferred Date: " . $validated['date'] . "\n";
-            $emailBody .= "Vehicle ID: " . ($request->vehicle_id ?? 'N/A') . "\n";
-            $emailBody .= "Message: " . ($request->message ?? 'No message') . "\n";
-            $emailBody .= "Submitted At: " . now()->format('Y-m-d H:i:s') . "\n";
-            $emailBody .= "\n==========================================\n";
-
-            // Send email - .env se config automatically lega
-            Mail::raw($emailBody, function ($message) use ($dealerEmail, $validated) {
+            Mail::send('emails.generic-notification', [
+                'title' => 'New Test Drive Request',
+                'heading' => 'New Test Drive Request',
+                'subtitle' => 'Submitted via Motokloz',
+                'intro' => 'A new test drive request has been submitted. Details are below.',
+                'rows' => [
+                    ['label' => 'Name', 'value' => $validated['name']],
+                    ['label' => 'Email', 'value' => $validated['email']],
+                    ['label' => 'Phone', 'value' => $validated['phone']],
+                    ['label' => 'Preferred Date', 'value' => $validated['date']],
+                    ['label' => 'Vehicle ID', 'value' => $request->vehicle_id ?? 'N/A'],
+                    ['label' => 'Message', 'value' => $request->message ?? 'No message'],
+                    ['label' => 'Submitted At', 'value' => now()->format('Y-m-d H:i:s')],
+                ],
+                'footer' => 'This request was submitted via Motokloz. Please contact the customer directly.',
+            ], function ($message) use ($dealerEmail, $validated) {
                 $message->to($dealerEmail)
                     ->subject('New Test Drive Request - ' . $validated['name'])
                     ->replyTo($validated['email'], $validated['name']);
@@ -419,20 +420,21 @@ class SearchController extends Controller
 
             $dealerEmail = $validated['dealer_email'];
 
-            // Prepare email content
-            $emailBody = "==========================================\n";
-            $emailBody .= "         NEW OFFER REQUEST\n";
-            $emailBody .= "==========================================\n\n";
-            $emailBody .= "Name: " . $validated['name'] . "\n";
-            $emailBody .= "Email: " . $validated['email'] . "\n";
-            $emailBody .= "Phone: " . $validated['phone'] . "\n";
-            $emailBody .= "Offer Price: $" . number_format($validated['offer_price'], 2) . "\n";
-            $emailBody .= "Vehicle ID: " . ($request->vehicle_id ?? 'N/A') . "\n";
-            $emailBody .= "Submitted At: " . now()->format('Y-m-d H:i:s') . "\n";
-            $emailBody .= "\n==========================================\n";
-
-            // Send email - .env se config automatically lega
-            Mail::raw($emailBody, function ($message) use ($dealerEmail, $validated) {
+            Mail::send('emails.generic-notification', [
+                'title' => 'New Offer Request',
+                'heading' => 'New Offer Request',
+                'subtitle' => 'Submitted via Motokloz',
+                'intro' => 'A new offer request has been submitted. Details are below.',
+                'rows' => [
+                    ['label' => 'Name', 'value' => $validated['name']],
+                    ['label' => 'Email', 'value' => $validated['email']],
+                    ['label' => 'Phone', 'value' => $validated['phone']],
+                    ['label' => 'Offer Price', 'value' => '$' . number_format($validated['offer_price'], 2)],
+                    ['label' => 'Vehicle ID', 'value' => $request->vehicle_id ?? 'N/A'],
+                    ['label' => 'Submitted At', 'value' => now()->format('Y-m-d H:i:s')],
+                ],
+                'footer' => 'This request was submitted via Motokloz. Please contact the customer directly.',
+            ], function ($message) use ($dealerEmail, $validated) {
                 $message->to($dealerEmail)
                     ->subject('New Offer Request - $' . number_format($validated['offer_price'], 2))
                     ->replyTo($validated['email'], $validated['name']);
@@ -474,22 +476,22 @@ class SearchController extends Controller
 
             Log::info('Sending contact email to: ' . $dealerEmail);
 
-            // Prepare email content
-            $emailBody = "==========================================\n";
-            $emailBody .= "         NEW CONTACT MESSAGE\n";
-            $emailBody .= "==========================================\n\n";
-            $emailBody .= "Name: " . $validated['name'] . "\n";
-            $emailBody .= "Email: " . $validated['email'] . "\n";
-            $emailBody .= "Phone: " . $validated['phone'] . "\n";
-            $emailBody .= "Vehicle ID: " . ($request->vehicle_id ?? 'N/A') . "\n";
-            $emailBody .= "Source: " . ($request->source ?? 'Website') . "\n";
-            $emailBody .= "Submitted At: " . now()->format('Y-m-d H:i:s') . "\n";
-            $emailBody .= "\n--- Message ---\n";
-            $emailBody .= $validated['message'] . "\n";
-            $emailBody .= "\n==========================================\n";
-
-            // Send email
-            Mail::raw($emailBody, function ($message) use ($dealerEmail, $validated) {
+            Mail::send('emails.generic-notification', [
+                'title' => 'New Contact Message',
+                'heading' => 'New Contact Message',
+                'subtitle' => 'Submitted via Motokloz',
+                'intro' => 'A new contact message has been submitted. Details are below.',
+                'rows' => [
+                    ['label' => 'Name', 'value' => $validated['name']],
+                    ['label' => 'Email', 'value' => $validated['email']],
+                    ['label' => 'Phone', 'value' => $validated['phone']],
+                    ['label' => 'Vehicle ID', 'value' => $request->vehicle_id ?? 'N/A'],
+                    ['label' => 'Source', 'value' => $request->source ?? 'Website'],
+                    ['label' => 'Message', 'value' => $validated['message']],
+                    ['label' => 'Submitted At', 'value' => now()->format('Y-m-d H:i:s')],
+                ],
+                'footer' => 'This message was submitted via Motokloz. Please contact the customer directly.',
+            ], function ($message) use ($dealerEmail, $validated) {
                 $message->to($dealerEmail)
                     ->subject('New Contact Message - ' . $validated['name'])
                     ->replyTo($validated['email'], $validated['name']);
@@ -555,41 +557,24 @@ class SearchController extends Controller
 
             Log::info('Sending test drive email to dealer: ' . $dealerEmail);
 
-            // Prepare email content
-            $emailBody = "==========================================\n";
-            $emailBody .= "         NEW TEST DRIVE REQUEST\n";
-            $emailBody .= "==========================================\n\n";
-            $emailBody .= "Customer Information:\n";
-            $emailBody .= "-------------------\n";
-            $emailBody .= "Name: " . $validated['name'] . "\n";
-            $emailBody .= "Email: " . $validated['email'] . "\n";
-            $emailBody .= "Phone: " . $validated['phone'] . "\n";
-            $emailBody .= "Preferred Date: " . $validated['date'] . "\n\n";
-
-            if (!empty($validated['vehicle_id'])) {
-                $emailBody .= "Vehicle Information:\n";
-                $emailBody .= "-------------------\n";
-                $emailBody .= "Vehicle ID: " . $validated['vehicle_id'] . "\n\n";
-            }
-
-            if (!empty($validated['message'])) {
-                $emailBody .= "Customer Message:\n";
-                $emailBody .= "-------------------\n";
-                $emailBody .= $validated['message'] . "\n\n";
-            }
-
-            $emailBody .= "Additional Information:\n";
-            $emailBody .= "-------------------\n";
-            $emailBody .= "Source: " . ($validated['source'] ?? 'Motokloz Website') . "\n";
-            $emailBody .= "Submitted At: " . now()->format('Y-m-d H:i:s') . "\n";
-            $emailBody .= "IP Address: " . $request->ip() . "\n";
-            $emailBody .= "\n==========================================\n";
-            $emailBody .= "This request was submitted via Motokloz.\n";
-            $emailBody .= "Please contact the customer directly.\n";
-            $emailBody .= "==========================================\n";
-
-            // Send email
-            Mail::raw($emailBody, function ($message) use ($dealerEmail, $validated) {
+            Mail::send('emails.generic-notification', [
+                'title' => 'New Test Drive Request',
+                'heading' => 'New Test Drive Request',
+                'subtitle' => 'Submitted via Motokloz',
+                'intro' => 'A new test drive request has been submitted. Details are below.',
+                'rows' => array_values(array_filter([
+                    ['label' => 'Name', 'value' => $validated['name']],
+                    ['label' => 'Email', 'value' => $validated['email']],
+                    ['label' => 'Phone', 'value' => $validated['phone']],
+                    ['label' => 'Preferred Date', 'value' => $validated['date']],
+                    !empty($validated['vehicle_id']) ? ['label' => 'Vehicle ID', 'value' => $validated['vehicle_id']] : null,
+                    !empty($validated['message']) ? ['label' => 'Customer Message', 'value' => $validated['message']] : null,
+                    ['label' => 'Source', 'value' => $validated['source'] ?? 'Motokloz Website'],
+                    ['label' => 'Submitted At', 'value' => now()->format('Y-m-d H:i:s')],
+                    ['label' => 'IP Address', 'value' => $request->ip()],
+                ])),
+                'footer' => 'This request was submitted via Motokloz. Please contact the customer directly.',
+            ], function ($message) use ($dealerEmail, $validated) {
                 $message->to($dealerEmail)
                     ->subject('New Test Drive Request - ' . $validated['name'])
                     ->from('no-reply@diskloz.com', 'Motokloz')

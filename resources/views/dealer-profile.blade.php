@@ -5,6 +5,82 @@ $cleaned = str_replace(['$', ','], '', $price);
 $number = is_numeric($cleaned) ? (float)$cleaned : 0;
 return number_format(round($number), 0, '.', ','); // 👈 yahan fix
 }
+function dealerServiceItems($dealer) {
+    $candidates = [
+        $dealer->services_providers ?? null,
+        $dealer->service_providers ?? null,
+        $dealer->services ?? null,
+        $dealer->dealer_services ?? null,
+        $dealer->dealer_services_providers ?? null,
+        $dealer->services_field ?? null,
+    ];
+
+    $raw = collect($candidates)->first(fn ($value) => !blank($value));
+
+    $extractStrings = function ($value) use (&$extractStrings) {
+        if (is_array($value)) {
+            $items = [];
+
+            foreach ($value as $key => $item) {
+                if (is_string($key) && in_array(strtolower($key), ['title', 'name', 'label', 'value', 'text'], true)) {
+                    $items[] = trim((string) $item);
+                    continue;
+                }
+
+                $items = array_merge($items, $extractStrings($item));
+            }
+
+            return $items;
+        }
+
+        if (!is_string($value)) {
+            return [];
+        }
+
+        $value = trim($value);
+        if ($value === '') {
+            return [];
+        }
+
+        if (preg_match('/^(?:a|s|i|b|d):\d+:/', $value)) {
+            $decoded = @unserialize($value);
+
+            if ($decoded !== false || $value === 'b:0;') {
+                return $extractStrings($decoded);
+            }
+        }
+
+        if (str_contains($value, '{') || str_contains($value, '}')) {
+            return [];
+        }
+
+        if (str_contains($value, 'a:') || str_contains($value, 's:') || str_contains($value, 'i:')) {
+            return [];
+        }
+
+        return [$value];
+    };
+
+    $items = $extractStrings($raw);
+
+    $items = collect($items)
+        ->map(function ($item) {
+            $item = trim((string) $item);
+            $item = preg_replace('/^[^A-Za-z0-9]+/', '', $item);
+            $item = preg_replace('/^[-:\s]+/', '', $item);
+
+            return trim($item);
+        })
+        ->filter(function ($item) {
+            return $item !== ''
+                && !preg_match('/^(?:a|s|i|b|d):\d+:/', $item)
+                && !preg_match('/^[{}]+$/', $item);
+        })
+        ->values()
+        ->all();
+
+    return array_values(array_unique($items));
+}
 @endphp
 @php
 $source = request()->query('source', 'diskloz');
@@ -87,32 +163,23 @@ $isMotokloz = $source === 'motokloz';
                                 {{ $total_inventory }} Vehicles
                             </span>
                         </div>
-
-                    </div>
-
-
-                    <div class="mb-4">
-                        @if(!empty($dealer->internal_notes))
-                        <p>{{ $dealer->internal_notes }}</p>
-                        @else
-                        <p class="text-muted">No description available for this dealer.</p>
-                        @endif
-                    </div>
-
-                    <div class="row g-3">
-                        <div class="col-6">
-                            <img src="/assets/images/Carento (10).png" class="gallery-img" alt="Car">
-                        </div>
-                        <div class="col-6">
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <img src="/assets/images/Carento (20).png" class="gallery-img" alt="Car">
-                                </div>
-                                <div class="col-12">
-                                    <img src="/assets/images/Carento (30).png" class="gallery-img" alt="Car">
+                        <!-- <div class="row g-3">
+                            <div class="col-6">
+                                <img src="/assets/images/Carento (10).png" class="gallery-img" alt="Car">
+                            </div>
+                            <div class="col-6">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <img src="/assets/images/Carento (20).png" class="gallery-img" alt="Car">
+                                    </div>
+                                    <div class="col-12">
+                                        <img src="/assets/images/Carento (30).png" class="gallery-img" alt="Car">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
+
+
                     </div>
 
                 </div>
@@ -130,56 +197,29 @@ $isMotokloz = $source === 'motokloz';
                 <!-- Collapsible Content -->
                 <div class="collapse show" id="servicesContent">
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ul class="list-unstyled service-list">
-                                <li class="services-list">
-                                    <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
-                                    Exclusive car vehicle sales with customization options
-                                </li>
-                                <li class="services-list">
-                                    <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
-                                    Certified pre-owned vehicles with comprehensive inspections
-                                </li>
-                                <li class="services-list">
-                                    <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
-                                    Flexible financing and leasing solutions tailored to your needs
-                                </li>
-                                <li class="services-list">
-                                    <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
-                                    Full-service vehicle maintenance and repair center
-                                </li>
-                                <li class="services-list">
-                                    <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
-                                    Authentic parts and accessories for optimal vehicle performance
-                                </li>
-                            </ul>
-                        </div>
+                        @php
+                            $dealerServices = dealerServiceItems($dealer);
+                        @endphp
 
-                        <div class="col-md-6">
-                            <ul class="list-unstyled service-list">
-                                <li class="services-list">
-                                    <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
-                                    Comprehensive Vehicle Maintenance
-                                </li>
-                                <li class="services-list">
-                                    <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
-                                    Genuine Parts & Accessories
-                                </li>
-                                <li class="services-list">
-                                    <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
-                                    Trade-in evaluation
-                                </li>
-                                <li class="services-list">
-                                    <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
-                                    Extended Warranty Plans
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                        @if(count($dealerServices))
+                            <div class="row">
+                                <div class="col-12">
+                                    <ul class="list-unstyled service-list row g-3 mb-0">
+                                        @foreach($dealerServices as $service)
+                                            <li class="services-list col-md-6">
+                                                <img src="/assets/images/tick-green.2bab987d.svg (1).png" alt="">
+                                                <span>{{ $service }}</span>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        @else
+                            <p class="text-muted mb-0">No services have been added yet.</p>
+                        @endif
 
-                </div>
-            </div>
+                </div><!-- closes: collapse servicesContent -->
+            </div><!-- closes: content-box (Services) -->
 
             <!-- Rate Reviews Section -->
             <!-- <div class="content-box shadow-sm">
@@ -346,7 +386,7 @@ $isMotokloz = $source === 'motokloz';
                 </h5>
 
                 <div class="collapse" id="addReviewContent">
-                    <div class="container py-3 border-bottom mb-4   ">
+                    <div class="py-3 mb-4">
                         <div class="row g-3">
 
                             <!-- Item -->
@@ -405,41 +445,77 @@ $isMotokloz = $source === 'motokloz';
                             </div>
 
                         </div>
-                    </div>
-                    <h5 class="fw-bold mb-4 d-flex justify-content-between align-items-center">
-                        Leave feedback
+                        <div class="pt-4 pt-md-5">
+                            @php
+                                $selectedReviewRating = old('rating', 5);
+                                $reviewerName = old('name', $userInfo->full_name ?? $user->name ?? '');
+                                $reviewerEmail = old('email', $user->email ?? '');
+                            @endphp
+                            <form data-ajax="true" id="dealerReviewForm" action="{{ route('dealer.review.submit') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="dealer_id" value="{{ $dealer->id ?? '' }}">
+                                <input type="hidden" name="dealer_name" value="{{ $dealer->dba ?? $dealer->legal_name ?? '' }}">
+                                <input type="hidden" name="dealer_number" value="{{ $dealer->id ?? '' }}">
+                                @if(session('review_success'))
+                                    <div class="alert alert-success mb-4 review-flash">{{ session('review_success') }}</div>
+                                @endif
 
-                    </h5>
-                    <form action="#" method="POST">
+                                @if(session('review_error'))
+                                    <div class="alert alert-danger mb-4 review-flash">{{ session('review_error') }}</div>
+                                @endif
 
-                        <div class="row g-4">
+                                <div class="row g-4">
+                                    <div class="col-12">
+                                        <div class="rating-widget">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="text-muted">Your rating</span>
+                                                <span class="text-warning fw-semibold" id="ratingLabel"></span>
+                                            </div>
+                                            <div class="star-picker" role="radiogroup" aria-label="Dealer rating">
+                                                @for($i = 5; $i >= 1; $i--)
+                                                    <input
+                                                        type="radio"
+                                                        id="review-star-{{ $i }}"
+                                                        name="rating"
+                                                        value="{{ $i }}"    
+                                                        class="star-input"
+                                                        {{ (int) $selectedReviewRating === $i ? 'checked' : '' }}
+                                                        required>
+                                                    <label
+                                                        for="review-star-{{ $i }}"
+                                                        class="star-label"
+                                                        data-rating="{{ $i }}">&#9733;</label>
+                                                @endfor
+                                            </div>
+                                        </div>
+                                    </div>
 
-                            <div class="col-md-6">
-                                <input type="text" name="name" class="form-control" placeholder="Your name" required>
-                            </div>
+                                    <div class="col-md-6">
+                                        <input type="text" name="name" class="form-control" placeholder="Your name" value="{{ $reviewerName }}" required>
+                                    </div>
 
-                            <div class="col-md-6">
-                                <input type="email" name="email" class="form-control" placeholder="Email address"
-                                    required>
-                            </div>
+                                    <div class="col-md-6">
+                                        <input type="email" name="email" class="form-control" placeholder="Email address" value="{{ $reviewerEmail }}">
+                                    </div>
 
-                            <div class="col-12">
-                                <textarea class="form-control" name="comment" rows="5" placeholder="Your comment"
-                                    required></textarea>
-                            </div>
+                                    <div class="col-12">
+                                        <textarea class="form-control" name="comment" rows="6" placeholder="Write your review" required></textarea>
+                                    </div>
 
-                        </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-orange px-5" id="dealerReviewSubmitBtn">
+                                            Submit review
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div><!-- closes: p-4 p-md-5 -->
 
-                        <button type="submit" class="btn btn-orange mt-4 px-5" disabled>
-                            Submit review
-                        </button>
+                    </div><!-- closes: container py-3 border-bottom mb-4 -->
+                </div><!-- closes: collapse addReviewContent -->
+            </div><!-- closes: content-box (Add a Review) -->
 
-                    </form>
-
-                </div>
-            </div>
-
-        </div>
+        </div><!-- closes: col-lg-8 -->
         <style>
             .review-header-custom {
                 border-bottom: 1px solid #DDE1DE;
@@ -460,16 +536,63 @@ $isMotokloz = $source === 'motokloz';
                 padding: 50px 40px;
             }
 
-            [data-bs-toggle="collapse"] i {
-                transition: 0.3s ease;
-            }
+                [data-bs-toggle="collapse"][aria-expanded="true"] i {
+                    transform: rotate(180deg);
+                }
 
-            [data-bs-toggle="collapse"][aria-expanded="true"] i {
-                transform: rotate(180deg);
-            }
-        </style>
-        <div class="col-lg-4">
-            <div class="content-box shadow-sm p-4" data-aos="fade-left" data-aos-duration="700">
+                .star-picker {
+                    display: inline-flex;
+                    flex-direction: row-reverse;
+                    gap: 10px;
+                    align-items: center;
+                    position: relative;
+                    z-index: 2;
+                }
+
+                .star-input {
+                    position: absolute;
+                    opacity: 0;
+                    width: 1px;
+                    height: 1px;
+                    overflow: hidden;
+                    pointer-events: none;
+                }
+
+                .star-label {
+                    display: inline-block;
+                    font-size: 2rem;
+                    line-height: 1;
+                    color: #5b5b5b;
+                    cursor: pointer;
+                    transition: color 0.2s ease, transform 0.2s ease;
+                    padding: 0;
+                    user-select: none;
+                }
+
+                .star-label:hover,
+                .star-label:hover ~ .star-label,
+                .star-input:checked ~ .star-label {
+                    color: #f79a1f;
+                }
+
+                .star-input:focus + .star-label {
+                    outline: 2px solid #f79a1f;
+                    outline-offset: 4px;
+                }
+
+                .star-label:hover {
+                    transform: translateY(-1px);
+                }
+
+                .rating-widget {
+                    background: rgba(255,255,255,0.03);
+                    border: 1px solid rgba(255,255,255,0.08);
+                    border-radius: 14px;
+                    padding: 18px 18px 14px;
+                }
+            </style>
+            <div class="col-lg-4">
+                <div class="content-box shadow-sm p-4" data-aos="fade-left" data-aos-duration="700">
                 <h5 class="fw-bold mb-4">Get in touch</h5>
 
                 @if(!$isMotokloz)
@@ -1029,14 +1152,13 @@ $isMotokloz = $source === 'motokloz';
         $('#leadForm').on('submit', function (e) {
             e.preventDefault();
 
-            var dealerId = $('#dealer_id').val();
-            var productId = $('#product_id').val();
-
-            // ===== VALIDATIONS =====
-            if (!dealerId || dealerId === '' || dealerId.toLowerCase() === 'null') {
-                showSnackbar('Dealer info missing. Refresh page.', 'warning');
-                return;
-            }
+            function handleErrors(xhr){
+                if (xhr.status === 422 && xhr.responseJSON?.errors) {
+                    let msgs = [];
+                    $.each(xhr.responseJSON.errors, function(field, messages) {
+                        msgs.push(messages.join(', '));
+                    });
+                    showSnackbar(msgs.join(' | '), 'error');
 
             dealerId = parseInt(dealerId);
             productId = parseInt(productId);
@@ -1046,74 +1168,85 @@ $isMotokloz = $source === 'motokloz';
                 return;
             }
 
-
-            var formData = {
-                name: $('#name').val(),
-                email: $('#email').val(),
-                phone: $('#phone').val(),
-                message: $('#message').val(),
-                reason: $('#reason').val(),
-                type: $('input[name="type"]').val(),
-                source: $('input[name="source"]').val(),
-                lead_status: $('input[name="lead_status"]').val(),
-                dealer_id: dealerId,
-                product_id: productId,
-                lead_source: $('input[name="lead_source"]').val(),
-                lead_type: $('input[name="lead_type"]').val()
-            };
-
-            if (!formData.name || !formData.email || !formData.phone || !formData.message) {
-                showSnackbar('Fill all required fields', 'warning');
-                return;
+            function syncDealerReviewLabel() {
+                var rating = $('#dealerReviewForm input[name="rating"]:checked').val() || 5;
+                $('#ratingLabel').text(rating + ' / 5');
             }
 
-            var emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
-            if (!emailRegex.test(formData.email)) {
-                showSnackbar('Invalid email address', 'warning');
-                return;
-            }
+            $('#dealerReviewForm').on('change', 'input[name="rating"]', function () {
+                syncDealerReviewLabel();
+            });
 
-            if (formData.phone.length < 10) {
-                showSnackbar('Enter valid phone number', 'warning');
-                return;
-            }
+            $('#ratingLabel').text('');
 
-            // ===== UI STATE (SAME STYLE) =====
-            var $btn = $(this).find('button[type="submit"]');
-            var originalText = $btn.html();
+            setTimeout(function () {
+                $('.review-flash').fadeOut(300, function () {
+                    $(this).remove();
+                });
+            }, 3000);
 
-            $btn.prop('disabled', true)
-                .html('<i class="fas fa-spinner fa-spin me-2"></i>');
-
-            $('#loadingSpinner').show();
-
-            // ===== AJAX =====
-            $.ajax({
-                url: "{{ env('diskloz_base_url') }}/api/leads",
-                method: 'POST',
-                data: JSON.stringify(formData),
-                contentType: 'application/json',
-                dataType: 'json',
-
-                success: function (res) {
-                    showSnackbar('Form Submitted successfully!', 'success');
-
-                    $('#leadForm')[0].reset();
-                },
-
-                error: function (xhr) {
-                    if (xhr.status === 422 && xhr.responseJSON?.errors) {
-                        let msgs = [];
-                        $.each(xhr.responseJSON.errors, function (field, messages) {
-                            msgs.push(messages.join(', '));
-                        });
-                        showSnackbar(msgs.join(' | '), 'error');
-
-                    } else if (xhr.status === 500) {
-                        showSnackbar('Server error. Please try again later.', 'error');
-
-                    } else {
-                        showSnackbar(xhr.responseJSON?.message || 'Something went wrong.', 'error');
+            // ===================== CONTACT FORM (Email Only) =====================
+            $('#leadForm').on('submit', function (e) {
+                e.preventDefault();
+                
+                var $form = $(this);
+                var $btn = $form.find('button[type="submit"]');
+                
+                // Check if dealer email exists
+                var dealerEmail = $form.find('input[name="dealer_email"]').val();
+                if (!dealerEmail) {
+                    alert('Error: Dealer email is missing. Please contact support.');
+                    return;
+                }
+                
+                // Get form data
+                var formData = {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    name: $('#name').val().trim(),
+                    email: $('#email').val().trim(),
+                    phone: $('#phone').val().trim(),
+                    message: $('#message').val().trim(),
+                    dealer_email: dealerEmail,
+                    vehicle_id: $form.find('input[name="product_id"]').val(),
+                    source: 'Motokloz'
+                };
+                
+                // Validation
+                if (!formData.name || !formData.email || !formData.phone || !formData.message) {
+                    alert('Please fill all required fields!');
+                    return;
+                }
+                
+                // Email validation
+                if (!/^[^\s@]+@([^\s@]+\.)+[^\s@]+$/.test(formData.email)) {
+                    alert('Please enter a valid email address.');
+                    return;
+                }
+                
+                // Disable button
+                $btn.prop('disabled', true);
+                var originalText = $btn.html();
+                $btn.html('<i class="fas fa-spinner fa-spin"></i> Sending...');
+                
+                // Send AJAX to send email
+                $.ajax({
+                    url: "/contact-mail",
+                    method: "POST",
+                    data: formData,
+                    success: function (response) {
+                        alert(response.message || 'Message sent successfully!');
+                        $form[0].reset();
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 419) {
+                            alert('Session expired. Refreshing page...');
+                            location.reload();
+                        } else {
+                            alert('Error: ' + (xhr.responseJSON?.message || 'Something went wrong'));
+                        }
+                    },
+                    complete: function () {
+                        $btn.prop('disabled', false).html(originalText);
                     }
                 },
 
