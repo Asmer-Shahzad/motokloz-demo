@@ -16,6 +16,10 @@
     font-weight: 500;
 }
 
+div#testDriveModal {
+    z-index: 99999;
+}
+
 .header-top li.nav-item {
     padding: 0 0px 0 45px;
 }
@@ -80,8 +84,8 @@ button#themeToggle {
     border: none !important;
 }
 
-.search-fill{
-        margin-top: -170px;
+.search-fill {
+    margin-top: -170px;
     z-index: 99;
     position: relative;
 
@@ -1306,7 +1310,7 @@ section.banner-car-listing {
 }
 
 .fleet-section {
-   
+
     padding-bottom: 35px;
 
 }
@@ -1658,25 +1662,30 @@ section.banner-car-listing {
     #vehicleContainer.list-view .modern-car-card {
         flex-direction: column;
     }
+
     #vehicleContainer.list-view .car-card-top {
         width: 100%;
         min-width: unset;
         border-radius: 12px 12px 0 0;
         height: 190px;
     }
+
     #vehicleContainer.list-view .car-card-top img.img-box {
         min-height: 190px;
     }
+
     #vehicleContainer.list-view .car-card-bottom {
         border-radius: 0 0 12px 12px;
     }
+
     #vehicleContainer.list-view .badge-mileage {
         font-size: 15px !important;
     }
 }
+
 /* END LIST VIEW */
-    height: auto;
-    max-height: 300px !important;
+height: auto;
+max-height: 300px !important;
 }
 
 .col-12 .badge-mileage {
@@ -1906,13 +1915,16 @@ section.banner-car-listing {
     white-space: nowrap;
 
 }
-.distance-value{
+
+.distance-value {
     font-size: 11px;
 
 }
-a.price-value.call-seller{
-        font-size: 12px;
+
+a.price-value.call-seller {
+    font-size: 12px;
 }
+
 .card-bottom-row .price-value {
     margin: 0;
     white-space: nowrap;
@@ -1956,6 +1968,7 @@ a.price-value.call-seller{
     transition: border-color .18s, background .18s;
     flex-shrink: 0;
 }
+
 /* 
 .card-icon-btn svg {
     width: 14px;
@@ -1965,13 +1978,13 @@ a.price-value.call-seller{
 
 .card-icon-btn:hover {
     border-color: #f0a500;
-    background: rgba(240,165,0,0.15);
+    background: rgba(240, 165, 0, 0.15);
     color: #f0a500;
 }
 
 /* In light theme (grid cards have light bg) */
 .modern-car-card .card-icon-btn {
-    border-color: rgba(0,0,0,0.2);
+    border-color: rgba(0, 0, 0, 0.2);
     color: #555;
 }
 
@@ -3157,15 +3170,17 @@ textarea.form-control::placeholder {
     background-color: var(--banner-bg-color);
     border: 1px solid #e9ecef;
     padding: 12px;
-        font-weight: 400;
+    font-weight: 400;
     line-height: 20px !important;
     color: var(--select-color);
 
 }
+
 .main-right {
     margin-top: -95px;
     z-index: 99;
 }
+
 .modal-content {
     position: relative;
     display: flex;

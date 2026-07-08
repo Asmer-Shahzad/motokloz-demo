@@ -128,6 +128,22 @@ class DealerProfileController extends Controller
             )
         );
 
+        $topBrands = collect($inventoryData)
+            ->map(function ($item) {
+                $item = (array) $item;
+                return trim($item['mfg_auto'] ?? $item['make'] ?? $item['brand'] ?? '');
+            })
+            ->filter()
+            ->unique()
+            ->values()
+            ->take(3)
+            ->implode(', ');
+
+        $dealerName = trim((string) ($dealer->dba ?? $dealer->legal_name ?? $dealer->first_name ?? $dealer->name ?? 'Dealer'));
+        $dealerCity = trim((string) ($dealer->city ?? ''));
+        $dealerProvince = trim((string) ($dealer->province ?? ''));
+        $dealerTitle = trim($dealerName . ' | ' . ($dealerCity !== '' ? $dealerCity : 'Location') . ', Used Car Dealer');
+
         return view('dealer-profile', [
             'user'             => $user,
             'userInfo'         => $userInfo,
@@ -138,7 +154,11 @@ class DealerProfileController extends Controller
             'searched_vehicle' => $searched_vehicle,
             'disklozBaseUrl'   => $this->disklozBaseUrl(),
             'mapAddress'       => $mapAddress,
-            'pageTitle' => $dealer->dba . ' | Motokloz'  //  Set page title
+            'pageTitle'        => $dealerTitle,
+            'dealerName'       => $dealerName,
+            'dealerCity'       => $dealerCity,
+            'dealerProvince'   => $dealerProvince,
+            'topBrands'        => $topBrands,
         ]);
     }
 

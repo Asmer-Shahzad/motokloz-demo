@@ -85,18 +85,19 @@ function dealerServiceItems($dealer) {
 @php
 $source = request()->query('source', 'diskloz');
 $isMotokloz = $source === 'motokloz';
+$dealerName = $dealerName ?? ($dealer->dba ?? $dealer->legal_name ?? $dealer->first_name ?? $dealer->name ?? 'Dealer');
+$dealerCity = $dealerCity ?? ($dealer->city ?? '');
+$dealerProvince = $dealerProvince ?? ($dealer->province ?? '');
 @endphp
 @section('meta')
-<meta name="title"
-    content="{{ $dealer->dba ? $dealer->dba : $dealer->legal_name }} | {{ $dealer->city ?? '' }}, {{ $dealer->province ?? '' }}" />
-<meta name="description"
-    content="{{ $dealer->dba ? $dealer->dba : $dealer->legal_name }} offers {{ $total_inventory }} vehicles in {{ $dealer->province ?? '' }}. Flexible auto financing, trade-in appraisals & a full-service maintenance centre." />
+<meta name="title" content="{{ $pageTitle }}" />
+<meta name="description" content="{{ $dealerName }} has {{ $total_inventory }} vehicles in stock in {{ $dealerCity }}{{ $dealerProvince ? ' | ' . $dealerProvince : '' }}, including {{ $topBrands ?: 'popular brands' }}. Financing, trade-ins & full-service maintenance available." />
 
 @endsection
 @section('canonical')
 <link rel="canonical" href="{{ url()->current() }}">
 @endsection
-@section('title', 'Motokloz | ' . $dealer->dba)
+@section('title', $pageTitle)
 @section('content')
 
 <!-- DEALER PROFILE BANNER — Google Maps Embed -->
