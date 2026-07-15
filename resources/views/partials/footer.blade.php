@@ -125,13 +125,13 @@
                         </li>
 
                         <li>
-                            <a href="#">
+                            <a href="https://www.facebook.com/MOTOKLOZofficial">
                                 <img src="/assets/images/insta (2).png" alt="Facebook" width="20">
                             </a>
                         </li>
 
                         <li>
-                            <a href="#">
+                            <a href="https://x.com/motokloz">
                                 <img src="/assets/images/insta (3).png" alt="Twitter" width="20">
                             </a>
                         </li>
