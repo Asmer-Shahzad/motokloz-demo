@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 @section('title', $pageTitle ?? 'Motokloz | Car Details')
 
 @section('meta')
@@ -132,32 +132,31 @@ function formatPrice($price)
 @endphp
 
 <section class="gallery-section">
-    <div class="container-fluid">
-        <div class="row g-0">
-            <div class="col-12">
+    <div class="container">
+        @php
+            $logo = [];
 
-                @php
-                    $logo = [];
+            if (!empty($searched_vehicle->primary_image)) {
+                $logo[] = $searched_vehicle->primary_image;
+            }
 
-                    if (!empty($searched_vehicle->primary_image)) {
-                        $logo[] = $searched_vehicle->primary_image;
-                    }
+            if (!empty($searched_vehicle->inventory_logo)) {
+                $extra = explode('|', $searched_vehicle->inventory_logo);
+                $logo  = array_merge($logo, $extra);
+            }
 
-                    if (!empty($searched_vehicle->inventory_logo)) {
-                        $extra = explode('|', $searched_vehicle->inventory_logo);
-                        $logo  = array_merge($logo, $extra);
-                    }
+            if (empty($logo)) {
+                $logo[] = 'car_thumb.png';
+            }
 
-                    if (empty($logo)) {
-                        $logo[] = 'car_thumb.png';
-                    }
+            $images       = array_values(array_filter($logo));
+            $images       = empty($images) ? ['default'] : $images;
+            $defaultImage = asset('assets/images/defaultimage.jpg');
+        @endphp
 
-                    $images       = array_filter($logo);
-                    $images       = empty($images) ? ['default'] : $images;
-                    $defaultImage = asset('assets/images/defaultimage.jpg');
-                @endphp
-
-                <!-- MAIN GALLERY -->
+        <div class="mto-gallery-row">
+            <!-- LEFT COLUMN: MAIN CAROUSEL -->
+            <div class="mto-gallery-main-col">
                 <div class="swiper main-gallery-slider">
                     <div class="swiper-wrapper">
                         @foreach ($images as $eachLogo)
@@ -179,42 +178,47 @@ function formatPrice($price)
                         @endforeach
                     </div>
 
-                    <div class="gallery-action-overlay">
-                        <button class="btn-lexus-orange" data-bs-toggle="modal" data-bs-target="#galleryModal">
-                            <i class="fa-solid fa-table-cells-large"></i> See All Photos ({{ count($images) }})
-                        </button>
-                        <button class="btn-lexus-white" data-bs-toggle="modal" data-bs-target="#videoModal">
-                            <i class="fa-solid fa-circle-play"></i> Video Clips
-                        </button>
-                    </div>
-
                     <div class="swiper-button-next arrow-round"></div>
                     <div class="swiper-button-prev arrow-round"></div>
                 </div>
+            </div>
 
-                <!-- THUMBNAILS -->
-                <div class="swiper thumb-strip-slider mt-3">
-                    <div class="swiper-wrapper">
-                        @foreach ($images as $eachLogo)
-                            @php
-                                $img = ($eachLogo == 'default' || str_contains($eachLogo, 'car_thumb.png'))
-                                    ? $defaultImage
-                                    : (Str::startsWith($eachLogo, 'http')
-                                        ? $eachLogo
-                                        : env('diskloz_base_url') . '/admin_assets/images/inventory_images/' . $eachLogo);
-                            @endphp
-                            <div class="swiper-slide">
-                                <div class="thumbnail">
-                                    <img src="{{ $img }}"
-                                        class="img-thumbnail"
-                                        alt="Thumbnail"
-                                        onerror="this.onerror=null;this.src='{{ $defaultImage }}';">
+            <!-- RIGHT COLUMN: STATIC GRID OF THUMBNAILS (UP TO 8) -->
+            <div class="mto-gallery-thumbs-col">
+                <div class="mto-thumbs-grid">
+                    @foreach (array_slice($images, 0, 8) as $index => $eachLogo)
+                        @php
+                            $img = ($eachLogo == 'default' || str_contains($eachLogo, 'car_thumb.png'))
+                                ? $defaultImage
+                                : (Str::startsWith($eachLogo, 'http')
+                                    ? $eachLogo
+                                    : env('diskloz_base_url') . '/admin_assets/images/inventory_images/' . $eachLogo);
+                        @endphp
+                        
+                        @if ($index == 7 && count($images) > 8)
+                            <div class="mto-thumb-cell position-relative" onclick="jQuery('#galleryModal').modal('show')">
+                                <img src="{{ $img }}" alt="Thumbnail {{ $index + 1 }}" onerror="this.onerror=null;this.src='{{ $defaultImage }}';">
+                                <div class="mto-thumb-overlay-container">
+                                    <span>+{{ count($images) - 7 }}</span>
                                 </div>
                             </div>
-                        @endforeach
-                    </div>
+                        @else
+                            <div class="mto-thumb-cell {{ $index == 0 ? 'active-thumb' : '' }}" onclick="slideToIndex({{ $index }})">
+                                <img src="{{ $img }}" alt="Thumbnail {{ $index + 1 }}" onerror="this.onerror=null;this.src='{{ $defaultImage }}';">
+                            </div>
+                        @endif
+                    @endforeach
                 </div>
 
+                <!-- ACTION BUTTONS BELOW GRID -->
+                <div class="mto-gallery-actions">
+                    <button class="btn-lexus-orange" data-bs-toggle="modal" data-bs-target="#galleryModal">
+                        <i class="fa-solid fa-table-cells-large"></i> See All Photos ({{ count($images) }})
+                    </button>
+                    <button class="btn-lexus-white" data-bs-toggle="modal" data-bs-target="#videoModal">
+                        <i class="fa-solid fa-circle-play"></i> Video Clips
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -281,6 +285,13 @@ function formatPrice($price)
                     @if($dealer && !empty($dealer->id))
                         <a href="{{ $detailUrl }}" class="mto-map-link fw-bold">Show on map</a>
                     @endif
+
+                    @if(!empty($searched_vehicle->stock_number))
+                        <span class="mto-meta-item ms-lg-2">
+                            <i class="fa-solid fa-barcode me-1"></i>
+                            Fleet Code: {{ $searched_vehicle->stock_number }}
+                        </span>
+                    @endif
                 </div>
             </div>
 
@@ -325,6 +336,80 @@ function formatPrice($price)
 
         <div class="row">
             <div class="col-lg-8">
+
+                {{-- NEW: Vin/Serial and Mileage side-by-side row --}}
+                <div class="mto-meta-box-row">
+                    <div class="mto-meta-box">
+                        <span class="label">Vin/Serial:</span>
+                        <span class="value">{{ $searched_vehicle->vin ?? $searched_vehicle->stock_number ?? '-----' }}</span>
+                    </div>
+                    <div class="mto-meta-box">
+                        <span class="label">Mileage:</span>
+                        <span class="value">{{ !empty($searched_vehicle->mileage) ? number_format((float)trim(str_ireplace('km','',$searched_vehicle->mileage))) . ' km' : '-----' }}</span>
+                    </div>
+                </div>
+
+                {{-- NEW: MotoBadge Filters section --}}
+                @php
+                    $allServiceIcons = [
+                        ['src' => '/assets/images/Verified seller.png',          'alt' => 'Verified Seller',          'key' => 'verified seller'],
+                        ['src' => '/assets/images/Certified.png',                'alt' => 'Certified',                'key' => 'certified'],
+                        ['src' => '/assets/images/Inspected.png',                'alt' => 'Inspected',                'key' => 'inspected'],
+                        ['src' => '/assets/images/no-accidents.png',             'alt' => 'No Accidents',             'key' => 'no accident'],
+                        ['src' => '/assets/images/low-mileage.png',              'alt' => 'Low Mileage',              'key' => 'low mileage'],
+                        ['src' => '/assets/images/Service history available.png','alt' => 'Service History',          'key' => 'service history'],
+                        ['src' => '/assets/images/Comprehensive warranty.png',   'alt' => 'Comprehensive Warranty',   'key' => 'comprehensive warranty'],
+                        ['src' => '/assets/images/powertrain-warranty.png',      'alt' => 'Powertrain Warranty',      'key' => 'powertrain warranty'],
+                        ['src' => '/assets/images/Tire Warranty.png',            'alt' => 'Tire Warranty',            'key' => 'tire warranty'],
+                        ['src' => '/assets/images/Rim Warranty.png',             'alt' => 'Rim Warranty',             'key' => 'rim warranty'],
+                        ['src' => '/assets/images/sRim Warranty.png',            'alt' => 'Spare Rim Warranty',       'key' => 'spare rim'],
+                        ['src' => '/assets/images/Key Replacement.png',          'alt' => 'Key Replacement',          'key' => 'key replacement'],
+                        ['src' => '/assets/images/service-plan.png',             'alt' => 'Service Plan',             'key' => 'service plan'],
+                        ['src' => '/assets/images/3M.png',                       'alt' => '3M',                       'key' => '3m'],
+                        ['src' => '/assets/images/2 sets of tires.png',          'alt' => '2 Sets of Tires',          'key' => 'tires'],
+                        ['src' => '/assets/images/2 sets of rims.png',           'alt' => '2 Sets of Rims',           'key' => 'rims'],
+                        ['src' => '/assets/images/2 keys.png',                   'alt' => '2 Keys',                   'key' => 'keys'],
+                        ['src' => '/assets/images/Protection Package Items.png', 'alt' => 'Protection Package',       'key' => 'protection package'],
+                        ['src' => '/assets/images/No Surprise Pricing.png',      'alt' => 'No Surprise Pricing',      'key' => 'pricing'],
+                        ['src' => '/assets/images/Low Rates Available.png',      'alt' => 'Low Rates Available',      'key' => 'rates'],
+                        ['src' => '/assets/images/Discreet test drive.png',      'alt' => 'Discreet Test Drive',      'key' => 'test drive'],
+                        ['src' => '/assets/images/badge-1.png',                  'alt' => 'Theft/Fire Damage Clear',  'key' => 'fire'],
+                        ['src' => '/assets/images/badge-3.png',                  'alt' => 'EV / Electric Hybrid',     'key' => 'electric'],
+                    ];
+
+                    $vehicleSearchText = strtolower(implode(' ', array_filter([
+                        $searched_vehicle->extras ?? '',
+                        $searched_vehicle->interior ?? '',
+                        $searched_vehicle->benefits_features ?? '',
+                        $searched_vehicle->notes_discussion ?? '',
+                        $searched_vehicle->description ?? '',
+                        $searched_vehicle->options ?? '',
+                        $searched_vehicle->title ?? '',
+                        $searched_vehicle->model ?? '',
+                    ])));
+                @endphp
+
+                <div class="motobadge-filters-section">
+                    <h5 class="fw-bold mb-3" style="color: var(--select-color);">MotoBadge Filters</h5>
+                    <div class="motobadge-grid">
+                        @foreach ($allServiceIcons as $badge)
+                            @php
+                                $isActive = false;
+                                if (str_contains($vehicleSearchText, $badge['key'])) {
+                                    $isActive = true;
+                                }
+                                // Fallback: default active for first 7 badges if none match
+                                if (empty(trim($searched_vehicle->extras ?? '')) && empty(trim($searched_vehicle->interior ?? ''))) {
+                                    $isActive = in_array($badge['key'], ['verified seller', 'certified', 'inspected', 'no accident', 'low mileage', 'service history', 'comprehensive warranty']);
+                                }
+                            @endphp
+                            <div class="motobadge-item {{ $isActive ? 'active' : 'inactive' }}" data-badge="{{ $badge['key'] }}" title="{{ $badge['alt'] }}">
+                                <img src="{{ $badge['src'] }}" alt="{{ $badge['alt'] }}">
+                            </div>
+                        @endforeach
+                    </div>
+                    <button class="btn btn-dark btn-sm px-4 py-2" id="clear-badge-filters" style="border-radius: 20px; font-weight: 600;">Clear Filters</button>
+                </div>
 
                 <div class="mto-specs-container mb-5" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
                     <div class="row g-2">
@@ -413,78 +498,7 @@ function formatPrice($price)
 
             <div class="col-lg-4" data-aos="fade-left" data-aos-duration="700" data-aos-delay="100">
                 <div class="mto-sticky-side">
-                    <!-- Dealer Card -->
-                    <div class="mto-card-unit p-4 mb-4 shadow-sm">
-                        <div class="d-flex justify-content-between mb-4 listed-card-right">
-                            <span class="fw-bold">Listed by</span>
-                            <!-- <span class="mto-rating-badge">
-                                <i class="fa-solid fa-star me-1"></i> 4.96
-                                <span class="fw-normal text-muted ms-1">(672 reviews)</span>
-                            </span> -->
-                        </div>
-
-                        @if($dealer)
-
-                            <a class="link-text-decoration" href="{{ $profileUrl }}">
-                                <div class="d-flex align-items-center mb-4">
-                                    <img src="{{ $dealerLogo }}"
-                                        class="img-fluid dealerlogo rounded-circle me-3"
-                                        alt="Dealer"
-                                        onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultdealerlogo.png') }}';">
-                                    <div>
-                                        <h6 class="mb-0 fw-bold">{{ $dealerName }}</h6>
-                                        <p class="small text-muted mb-0">
-                                            {{ $dealerAddress }}
-                                        </p>
-                                        <p class="small text-muted mb-0">
-                                            {{ $dealerRegulator }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-
-                            <div class="mto-contact-details small fw-semibold">
-                                <div class="mb-2">
-                                    <img src="/assets/images/Background (8).png" alt="phone" class="contact-icon light-dark">
-                                    @if($dealerPhone !== 'N/A')
-                                        Phone: <a href="tel:{{ $dealerPhone }}" class="dealer-contact-link">{{ $dealerPhone }}</a>
-                                    @else
-                                        Phone: N/A
-                                    @endif
-                                </div>
-                                <div class="mb-2">
-                                    <img src="/assets/images/Background (10).png" alt="email" class="contact-icon light-dark">
-                                    Email: {{ $dealerEmail }}
-                                </div>
-                                <div class="mb-2">
-                                    <img src="/assets/images/Background (11).png" alt="whatsapp" class="contact-icon light-dark">
-                                    @if($dealerPhone !== 'N/A')
-                                        WhatsApp: <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $dealerPhone) }}" target="_blank" class="dealer-contact-link">{{ $dealerPhone }}</a>
-                                    @else
-                                        WhatsApp: N/A
-                                    @endif
-                                </div>
-                                @if($searched_vehicle->dealer && $searched_vehicle->dealer->subaccount && $dealer->subaccount->twilio_phone_number)
-                                    <div class="mb-2">
-                                        <img src="/assets/images/Background (11).png" width="20" alt="whatsapp" class="contact-icon light-dark"> 
-                                        SMS: {{ $searched_vehicle->dealer->subaccount->twilio_phone_number }}
-                                    </div>
-                                @endif
-                            </div>
-                        @else
-                            <p class="text-muted small">Dealer info not available.</p>
-                        @endif
-
-                        {{-- Dealer Inventory Button --}}
-                        @if($dealer && !empty($dealer->id) && $source !== 'motokloz')
-                            <a href="{{ $inventoryUrl }}">
-                                <button class="mto-btn-orange mt-2 w-100 py-2">
-                                    Dealer's Inventory
-                                    <i class="fa-solid fa-arrow-right ms-2"></i>
-                                </button>
-                            </a>
-                        @endif
-                    </div>
+                    <!-- Get Started (Moved to Top) -->
                     @if(strtolower($source ?? '') === 'motokloz')
                         <div class="mto-card-unit mb-4 p-4 shadow-sm">
 
@@ -589,6 +603,79 @@ function formatPrice($price)
                             @endif
                         </div>
                     @endif
+
+                    <!-- Dealer Card (Listed by) (Moved to Bottom) -->
+                    <div class="mto-card-unit p-4 mb-4 shadow-sm">
+                        <div class="d-flex justify-content-between mb-4 listed-card-right">
+                            <span class="fw-bold">Listed by</span>
+                            <!-- <span class="mto-rating-badge">
+                                <i class="fa-solid fa-star me-1"></i> 4.96
+                                <span class="fw-normal text-muted ms-1">(672 reviews)</span>
+                            </span> -->
+                        </div>
+
+                        @if($dealer)
+
+                            <a class="link-text-decoration" href="{{ $profileUrl }}">
+                                <div class="d-flex align-items-center mb-4">
+                                    <img src="{{ $dealerLogo }}"
+                                        class="img-fluid dealerlogo rounded-circle me-3"
+                                        alt="Dealer"
+                                        onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultdealerlogo.png') }}';">
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">{{ $dealerName }}</h6>
+                                        <p class="small text-muted mb-0">
+                                            {{ $dealerAddress }}
+                                        </p>
+                                        <p class="small text-muted mb-0">
+                                            {{ $dealerRegulator }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <div class="mto-contact-details small fw-semibold">
+                                <div class="mb-2">
+                                    <img src="/assets/images/Background (8).png" alt="phone" class="contact-icon light-dark">
+                                    @if($dealerPhone !== 'N/A')
+                                        Phone: <a href="tel:{{ $dealerPhone }}" class="dealer-contact-link">{{ $dealerPhone }}</a>
+                                    @else
+                                        Phone: N/A
+                                    @endif
+                                </div>
+                                <div class="mb-2">
+                                    <img src="/assets/images/Background (10).png" alt="email" class="contact-icon light-dark">
+                                    Email: {{ $dealerEmail }}
+                                </div>
+                                <div class="mb-2">
+                                    <img src="/assets/images/Background (11).png" alt="whatsapp" class="contact-icon light-dark">
+                                    @if($dealerPhone !== 'N/A')
+                                        WhatsApp: <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $dealerPhone) }}" target="_blank" class="dealer-contact-link">{{ $dealerPhone }}</a>
+                                    @else
+                                        WhatsApp: N/A
+                                    @endif
+                                </div>
+                                @if($searched_vehicle->dealer && $searched_vehicle->dealer->subaccount && $dealer->subaccount->twilio_phone_number)
+                                    <div class="mb-2">
+                                        <img src="/assets/images/Background (11).png" width="20" alt="whatsapp" class="contact-icon light-dark"> 
+                                        SMS: {{ $searched_vehicle->dealer->subaccount->twilio_phone_number }}
+                                    </div>
+                                @endif
+                            </div>
+                        @else
+                            <p class="text-muted small">Dealer info not available.</p>
+                        @endif
+
+                        {{-- Dealer Inventory Button --}}
+                        @if($dealer && !empty($dealer->id) && $source !== 'motokloz')
+                            <a href="{{ $inventoryUrl }}">
+                                <button class="mto-btn-orange mt-2 w-100 py-2">
+                                    Dealer's Inventory
+                                    <i class="fa-solid fa-arrow-right ms-2"></i>
+                                </button>
+                            </a>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
@@ -1470,6 +1557,111 @@ document.addEventListener('DOMContentLoaded', function () {
             this.style.transform  = `scale(${scale})`;
             this.style.transition = 'transform 0.3s ease';
             this.style.cursor     = scale === 2 ? 'zoom-out' : 'zoom-in';
+        });
+    }
+
+    // --- Custom static thumbnails & main Swiper logic ---
+    var swiperEl = document.querySelector('.main-gallery-slider');
+    window.slideToIndex = function (index) {
+        if (swiperEl && swiperEl.swiper) {
+            swiperEl.swiper.slideToLoop(index);
+        }
+    };
+
+    if (swiperEl) {
+        var checkSwiperInterval = setInterval(function () {
+            if (swiperEl.swiper) {
+                clearInterval(checkSwiperInterval);
+                
+                // Bind slideChange event
+                swiperEl.swiper.on('slideChange', function () {
+                    var index = swiperEl.swiper.realIndex;
+                    document.querySelectorAll('.mto-thumb-cell').forEach(function (cell, i) {
+                        if (i === index) {
+                            cell.classList.add('active-thumb');
+                        } else {
+                            cell.classList.remove('active-thumb');
+                        }
+                    });
+                });
+            }
+        }, 100);
+        setTimeout(function () {
+            clearInterval(checkSwiperInterval);
+        }, 5000);
+    }
+
+    // --- MotoBadge Filters logic ---
+    var initialStates = [];
+    document.querySelectorAll('.motobadge-item').forEach(function (item) {
+        initialStates.push({
+            el: item,
+            isActive: item.classList.contains('active')
+        });
+    });
+
+    document.querySelectorAll('.motobadge-item').forEach(function (item) {
+        item.addEventListener('click', function () {
+            var badgeKey = this.getAttribute('data-badge');
+            
+            // Toggle active state
+            if (this.classList.contains('active')) {
+                this.classList.remove('active');
+                this.classList.add('inactive');
+            } else {
+                this.classList.remove('inactive');
+                this.classList.add('active');
+            }
+            
+            updateFeaturesHighlighting();
+        });
+    });
+
+    function updateFeaturesHighlighting() {
+        var activeKeys = Array.from(document.querySelectorAll('.motobadge-item.active')).map(function (el) {
+            return el.getAttribute('data-badge');
+        });
+
+        document.querySelectorAll('.mto-opt').forEach(function (opt) {
+            var optText = opt.textContent.toLowerCase();
+            var isMatch = activeKeys.some(function (key) {
+                return optText.indexOf(key) !== -1;
+            });
+            if (isMatch) {
+                opt.style.backgroundColor = 'rgba(249, 142, 0, 0.15)';
+                opt.style.border = '1px solid #f98e00';
+                opt.style.borderRadius = '8px';
+                opt.style.padding = '5px 10px';
+                opt.style.fontWeight = 'bold';
+            } else {
+                opt.style.backgroundColor = '';
+                opt.style.border = '';
+                opt.style.padding = '';
+                opt.style.fontWeight = '';
+            }
+        });
+    }
+
+    var clearBtn = document.getElementById('clear-badge-filters');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            initialStates.forEach(function (state) {
+                if (state.isActive) {
+                    state.el.classList.add('active');
+                    state.el.classList.remove('inactive');
+                } else {
+                    state.el.classList.remove('active');
+                    state.el.classList.add('inactive');
+                }
+            });
+
+            // reset options styles
+            document.querySelectorAll('.mto-opt').forEach(function (opt) {
+                opt.style.backgroundColor = '';
+                opt.style.border = '';
+                opt.style.padding = '';
+                opt.style.fontWeight = '';
+            });
         });
     }
 });

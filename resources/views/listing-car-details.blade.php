@@ -8,16 +8,15 @@
 
     @php
         // Decode images only once
-        $images = json_decode($searched_vehicle->images, true);
+        $images = array_values(array_filter(json_decode($searched_vehicle->images, true) ?? []));
         $defaultImage = asset('assets/images/defaultimage.jpg');
     @endphp
 
     <section class="gallery-section">
-        <div class="container-fluid">
-            <div class="row g-0">
-                <div class="col-12">
-
-                    <!-- MAIN GALLERY -->
+        <div class="container">
+            <div class="mto-gallery-row">
+                <!-- LEFT COLUMN: MAIN CAROUSEL -->
+                <div class="mto-gallery-main-col">
                     <div class="swiper main-gallery-slider">
                         <div class="swiper-wrapper">
                             @forelse($images as $index => $img)
@@ -42,50 +41,40 @@
                             @endforelse
                         </div>
 
-                        <!-- Buttons -->
-                        <div class="gallery-action-overlay">
-                            <button class="btn-lexus-orange" data-bs-toggle="modal" data-bs-target="#galleryModal">
-                                <i class="fa-solid fa-table-cells-large"></i> See All Photos ({{ count(array_filter($images)) }})
-                            </button>
-
-                            <button class="btn-lexus-white" data-bs-toggle="modal" data-bs-target="#videoModal">
-                                <i class="fa-solid fa-circle-play"></i> Video Clips
-                            </button>
-                        </div>
-
                         <div class="swiper-button-next arrow-round"></div>
                         <div class="swiper-button-prev arrow-round"></div>
                     </div>
+                </div>
 
-                    <!-- THUMBNAILS -->
-                    <div class="swiper thumb-strip-slider mt-3">
-                        <div class="swiper-wrapper">
-                            @forelse($images as $index => $img)
-                                <div class="swiper-slide">
-                                    <div class="thumbnail">
-                                        <img 
-                                            src="{{ $img }}"
-                                            class="img-thumbnail"
-                                            alt="Thumbnail"
-                                            data-index="{{ $index }}"
-                                            onerror="this.onerror=null;this.src='{{ $defaultImage }}';"
-                                        >
+                <!-- RIGHT COLUMN: STATIC GRID OF THUMBNAILS (UP TO 8) -->
+                <div class="mto-gallery-thumbs-col">
+                    <div class="mto-thumbs-grid">
+                        @foreach(array_slice(array_filter($images), 0, 8) as $index => $img)
+                            @if ($index == 7 && count(array_filter($images)) > 8)
+                                <div class="mto-thumb-cell position-relative" onclick="jQuery('#galleryModal').modal('show')">
+                                    <img src="{{ $img }}" alt="Thumbnail {{ $index + 1 }}" onerror="this.onerror=null;this.src='{{ $defaultImage }}';">
+                                    <div class="mto-thumb-overlay-container">
+                                        <span>+{{ count(array_filter($images)) - 7 }}</span>
                                     </div>
                                 </div>
-                            @empty
-                                <div class="swiper-slide">
-                                    <div class="thumbnail">
-                                        <img 
-                                            src="{{ $defaultImage }}"
-                                            class="img-thumbnail"
-                                            alt="No Image"
-                                        >
-                                    </div>
+                            @else
+                                <div class="mto-thumb-cell {{ $index == 0 ? 'active-thumb' : '' }}" onclick="slideToIndex({{ $index }})">
+                                    <img src="{{ $img }}" alt="Thumbnail {{ $index + 1 }}" onerror="this.onerror=null;this.src='{{ $defaultImage }}';">
                                 </div>
-                            @endforelse
-                        </div>
+                            @endif
+                        @endforeach
                     </div>
 
+                    <!-- ACTION BUTTONS BELOW GRID -->
+                    <div class="mto-gallery-actions">
+                        <button class="btn-lexus-orange" data-bs-toggle="modal" data-bs-target="#galleryModal">
+                            <i class="fa-solid fa-table-cells-large"></i> See All Photos ({{ count(array_filter($images)) }})
+                        </button>
+
+                        <button class="btn-lexus-white" data-bs-toggle="modal" data-bs-target="#videoModal">
+                            <i class="fa-solid fa-circle-play"></i> Video Clips
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -139,11 +128,12 @@
                     <div class="mto-meta-row d-flex flex-wrap gap-3 mt-3">
                         <span class="mto-meta-item"><i class="fa-solid fa-location-dot me-1"></i> {{ $userInfo->country ?? $userInfo->country ?? 'N/A' }} , {{ $userInfo->city ?? $userInfo->city ?? 'N/A' }} </span>
                         <a href="{{ route('dealer_inventory_details', $searched_vehicle->dealer->id ?? 'N/A') }}" class="mto-map-link fw-bold">Show on map</a>
-                        <!-- <span class="mto-meta-item flatt">
-                            <img src="/assets/images/code.png" class="light-dark" alt="">
-                            <span class="">Fleet Code:</span>
-                            <span class="value">LVA-4125</span>
-                        </span> -->
+                        @if(!empty($searched_vehicle->stock_number))
+                            <span class="mto-meta-item ms-lg-2">
+                                <i class="fa-solid fa-barcode me-1"></i>
+                                Fleet Code: {{ $searched_vehicle->stock_number }}
+                            </span>
+                        @endif
                     </div>
                 </div>
                 <style>
@@ -186,6 +176,80 @@
 
             <div class="row">
                 <div class="col-lg-8">
+
+                    {{-- NEW: Vin/Serial and Mileage side-by-side row --}}
+                    <div class="mto-meta-box-row">
+                        <div class="mto-meta-box">
+                            <span class="label">Vin/Serial:</span>
+                            <span class="value">{{ $searched_vehicle->vin ?? $searched_vehicle->stock_number ?? '-----' }}</span>
+                        </div>
+                        <div class="mto-meta-box">
+                            <span class="label">Mileage:</span>
+                            <span class="value">{{ !empty($searched_vehicle->mileage) ? number_format((float)trim(str_ireplace('km','',$searched_vehicle->mileage))) . ' km' : '-----' }}</span>
+                        </div>
+                    </div>
+
+                    {{-- NEW: MotoBadge Filters section --}}
+                    @php
+                        $allServiceIcons = [
+                            ['src' => '/assets/images/Verified seller.png',          'alt' => 'Verified Seller',          'key' => 'verified seller'],
+                            ['src' => '/assets/images/Certified.png',                'alt' => 'Certified',                'key' => 'certified'],
+                            ['src' => '/assets/images/Inspected.png',                'alt' => 'Inspected',                'key' => 'inspected'],
+                            ['src' => '/assets/images/no-accidents.png',             'alt' => 'No Accidents',             'key' => 'no accident'],
+                            ['src' => '/assets/images/low-mileage.png',              'alt' => 'Low Mileage',              'key' => 'low mileage'],
+                            ['src' => '/assets/images/Service history available.png','alt' => 'Service History',          'key' => 'service history'],
+                            ['src' => '/assets/images/Comprehensive warranty.png',   'alt' => 'Comprehensive Warranty',   'key' => 'comprehensive warranty'],
+                            ['src' => '/assets/images/powertrain-warranty.png',      'alt' => 'Powertrain Warranty',      'key' => 'powertrain warranty'],
+                            ['src' => '/assets/images/Tire Warranty.png',            'alt' => 'Tire Warranty',            'key' => 'tire warranty'],
+                            ['src' => '/assets/images/Rim Warranty.png',             'alt' => 'Rim Warranty',             'key' => 'rim warranty'],
+                            ['src' => '/assets/images/sRim Warranty.png',            'alt' => 'Spare Rim Warranty',       'key' => 'spare rim'],
+                            ['src' => '/assets/images/Key Replacement.png',          'alt' => 'Key Replacement',          'key' => 'key replacement'],
+                            ['src' => '/assets/images/service-plan.png',             'alt' => 'Service Plan',             'key' => 'service plan'],
+                            ['src' => '/assets/images/3M.png',                       'alt' => '3M',                       'key' => '3m'],
+                            ['src' => '/assets/images/2 sets of tires.png',          'alt' => '2 Sets of Tires',          'key' => 'tires'],
+                            ['src' => '/assets/images/2 sets of rims.png',           'alt' => '2 Sets of Rims',           'key' => 'rims'],
+                            ['src' => '/assets/images/2 keys.png',                   'alt' => '2 Keys',                   'key' => 'keys'],
+                            ['src' => '/assets/images/Protection Package Items.png', 'alt' => 'Protection Package',       'key' => 'protection package'],
+                            ['src' => '/assets/images/No Surprise Pricing.png',      'alt' => 'No Surprise Pricing',      'key' => 'pricing'],
+                            ['src' => '/assets/images/Low Rates Available.png',      'alt' => 'Low Rates Available',      'key' => 'rates'],
+                            ['src' => '/assets/images/Discreet test drive.png',      'alt' => 'Discreet Test Drive',      'key' => 'test drive'],
+                            ['src' => '/assets/images/badge-1.png',                  'alt' => 'Theft/Fire Damage Clear',  'key' => 'fire'],
+                            ['src' => '/assets/images/badge-3.png',                  'alt' => 'EV / Electric Hybrid',     'key' => 'electric'],
+                        ];
+
+                        $vehicleSearchText = strtolower(implode(' ', array_filter([
+                            $searched_vehicle->extras ?? '',
+                            $searched_vehicle->interior ?? '',
+                            $searched_vehicle->benefits_features ?? '',
+                            $searched_vehicle->notes_discussion ?? '',
+                            $searched_vehicle->description ?? '',
+                            $searched_vehicle->options ?? '',
+                            $searched_vehicle->title ?? '',
+                            $searched_vehicle->model ?? '',
+                        ])));
+                    @endphp
+
+                    <div class="motobadge-filters-section">
+                        <h5 class="fw-bold mb-3" style="color: var(--select-color);">MotoBadge Filters</h5>
+                        <div class="motobadge-grid">
+                            @foreach ($allServiceIcons as $badge)
+                                @php
+                                    $isActive = false;
+                                    if (str_contains($vehicleSearchText, $badge['key'])) {
+                                        $isActive = true;
+                                    }
+                                    // Fallback: default active for first 7 badges if none match
+                                    if (empty(trim($searched_vehicle->extras ?? '')) && empty(trim($searched_vehicle->interior ?? ''))) {
+                                        $isActive = in_array($badge['key'], ['verified seller', 'certified', 'inspected', 'no accident', 'low mileage', 'service history', 'comprehensive warranty']);
+                                    }
+                                @endphp
+                                <div class="motobadge-item {{ $isActive ? 'active' : 'inactive' }}" data-badge="{{ $badge['key'] }}" title="{{ $badge['alt'] }}">
+                                    <img src="{{ $badge['src'] }}" alt="{{ $badge['alt'] }}">
+                                </div>
+                            @endforeach
+                        </div>
+                        <button class="btn btn-dark btn-sm px-4 py-2" id="clear-badge-filters" style="border-radius: 20px; font-weight: 600;">Clear Filters</button>
+                    </div>
 
                     <div class="mto-specs-container mb-5" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
                         <div class="row g-2">
@@ -307,10 +371,10 @@
                         <!-- Buttons -->
                         <div class="mto-card-unit mb-4 p-4 shadow-sm">
                             <h6 class="fw-bold mb-3">Get Started</h6>
-                            <button type="button" class="mto-btn-orange w-100 mb-3" data-bs-toggle="modal" data-bs-target="#stestDriveModal">
+                            <button type="button" class="mto-btn-orange w-100 mb-3" data-bs-toggle="modal" data-bs-target="#testDriveModal">
                                 Schedule Test Drive <i class="fa-solid fa-arrow-right ms-2"></i>
                             </button>
-                            <button type="button" class="mto-btn-black w-100" data-bs-toggle="modal" data-bs-target="#sofferModal">
+                            <button type="button" class="mto-btn-black w-100" data-bs-toggle="modal" data-bs-target="#offerModal">
                                 Make An Offer Price <i class="fa-solid fa-arrow-right ms-2"></i>
                             </button>
                         </div>
@@ -960,7 +1024,167 @@
         }
     </script>
     <script>
-        
+        // ===================== GALLERY =====================
+        let galleryImages = [];
+        let currentImageIndex = 0;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            galleryImages = {!! json_encode(array_map(function ($img) use ($defaultImage) {
+                if ($img == 'default' || str_contains($img, 'car_thumb.png')) {
+                    return $defaultImage;
+                }
+                return Str::startsWith($img, 'http')
+                    ? $img
+                    : env('diskloz_base_url') . '/admin_assets/images/inventory_images/' . $img;
+            }, array_filter($images))) !!};
+
+            window.openImageViewer = function (index) {
+                currentImageIndex = index;
+                updateFullscreenImage();
+                new bootstrap.Modal(document.getElementById('imageViewerModal')).show();
+            };
+
+            function updateFullscreenImage() {
+                var el = document.getElementById('fullscreenImage');
+                if (el && galleryImages[currentImageIndex]) el.src = galleryImages[currentImageIndex];
+            }
+
+            window.nextImage = function () {
+                currentImageIndex = (currentImageIndex < galleryImages.length - 1) ? currentImageIndex + 1 : 0;
+                updateFullscreenImage();
+            };
+
+            window.prevImage = function () {
+                currentImageIndex = (currentImageIndex > 0) ? currentImageIndex - 1 : galleryImages.length - 1;
+                updateFullscreenImage();
+            };
+
+            document.addEventListener('keydown', function (e) {
+                var modal = document.getElementById('imageViewerModal');
+                if (modal && modal.classList.contains('show')) {
+                    if (e.key === 'ArrowLeft')  prevImage();
+                    if (e.key === 'ArrowRight') nextImage();
+                    if (e.key === 'Escape') modal.querySelector('.btn-close')?.click();
+                }
+            });
+
+            var fullscreenImg = document.getElementById('fullscreenImage');
+            if (fullscreenImg) {
+                let scale = 1;
+                fullscreenImg.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    scale = scale === 1 ? 2 : 1;
+                    this.style.transform  = `scale(${scale})`;
+                    this.style.transition = 'transform 0.3s ease';
+                    this.style.cursor     = scale === 2 ? 'zoom-out' : 'zoom-in';
+                });
+            }
+
+            // --- Custom static thumbnails & main Swiper logic ---
+            var swiperEl = document.querySelector('.main-gallery-slider');
+            window.slideToIndex = function (index) {
+                if (swiperEl && swiperEl.swiper) {
+                    swiperEl.swiper.slideToLoop(index);
+                }
+            };
+
+            if (swiperEl) {
+                var checkSwiperInterval = setInterval(function () {
+                    if (swiperEl.swiper) {
+                        clearInterval(checkSwiperInterval);
+                        
+                        // Bind slideChange event
+                        swiperEl.swiper.on('slideChange', function () {
+                            var index = swiperEl.swiper.realIndex;
+                            document.querySelectorAll('.mto-thumb-cell').forEach(function (cell, i) {
+                                if (i === index) {
+                                    cell.classList.add('active-thumb');
+                                } else {
+                                    cell.classList.remove('active-thumb');
+                                }
+                            });
+                        });
+                    }
+                }, 100);
+                setTimeout(function () {
+                    clearInterval(checkSwiperInterval);
+                }, 5000);
+            }
+
+            // --- MotoBadge Filters logic ---
+            var initialStates = [];
+            document.querySelectorAll('.motobadge-item').forEach(function (item) {
+                initialStates.push({
+                    el: item,
+                    isActive: item.classList.contains('active')
+                });
+            });
+
+            document.querySelectorAll('.motobadge-item').forEach(function (item) {
+                item.addEventListener('click', function () {
+                    var badgeKey = this.getAttribute('data-badge');
+                    
+                    // Toggle active state
+                    if (this.classList.contains('active')) {
+                        this.classList.remove('active');
+                        this.classList.add('inactive');
+                    } else {
+                        this.classList.remove('inactive');
+                        this.classList.add('active');
+                    }
+                    
+                    updateFeaturesHighlighting();
+                });
+            });
+
+            function updateFeaturesHighlighting() {
+                var activeKeys = Array.from(document.querySelectorAll('.motobadge-item.active')).map(function (el) {
+                    return el.getAttribute('data-badge');
+                });
+
+                document.querySelectorAll('.mto-opt').forEach(function (opt) {
+                    var optText = opt.textContent.toLowerCase();
+                    var isMatch = activeKeys.some(function (key) {
+                        return optText.indexOf(key) !== -1;
+                    });
+                    if (isMatch) {
+                        opt.style.backgroundColor = 'rgba(249, 142, 0, 0.15)';
+                        opt.style.border = '1px solid #f98e00';
+                        opt.style.borderRadius = '8px';
+                        opt.style.padding = '5px 10px';
+                        opt.style.fontWeight = 'bold';
+                    } else {
+                        opt.style.backgroundColor = '';
+                        opt.style.border = '';
+                        opt.style.padding = '';
+                        opt.style.fontWeight = '';
+                    }
+                });
+            }
+
+            var clearBtn = document.getElementById('clear-badge-filters');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function () {
+                    initialStates.forEach(function (state) {
+                        if (state.isActive) {
+                            state.el.classList.add('active');
+                            state.el.classList.remove('inactive');
+                        } else {
+                            state.el.classList.remove('active');
+                            state.el.classList.add('inactive');
+                        }
+                    });
+
+                    // reset options styles
+                    document.querySelectorAll('.mto-opt').forEach(function (opt) {
+                        opt.style.backgroundColor = '';
+                        opt.style.border = '';
+                        opt.style.padding = '';
+                        opt.style.fontWeight = '';
+                    });
+                });
+            }
+        });
     </script>
 
     <style>

@@ -2,10 +2,10 @@
     <div class="container">
         <div class="footer-top">
             <div class="row">
-                <div class="col-lg-8">
+                <div class="col-md-7 col-lg-8">
                     <h3>Subscribe to get deals on services near you!</h3>
                 </div>
-                <div class="subscribe-box col-lg-4">
+                <div class="subscribe-box col-md-5 col-lg-4">
                     <form data-ajax="true" id="subscribeForm" action="{{ route('subscribe.application.submit') }}" method="POST">
                         @csrf
                         <input type="email" name="email" id="email" placeholder="Enter your email" required>
@@ -125,13 +125,13 @@
                         </li>
 
                         <li>
-                            <a href="#">
+                            <a href="https://facebook.com/MOTOKLOZofficial" target="_blank">
                                 <img src="/assets/images/insta (2).png" alt="Facebook" width="20">
                             </a>
                         </li>
 
                         <li>
-                            <a href="#">
+                            <a href="https://x.com/motokloz" target="_blank">
                                 <img src="/assets/images/insta (3).png" alt="Twitter" width="20">
                             </a>
                         </li>

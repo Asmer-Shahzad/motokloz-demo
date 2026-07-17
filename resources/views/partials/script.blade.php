@@ -392,39 +392,48 @@ var swiper = new Swiper(".mySwiper", {
 <script>
     $(document).ready(function () {
 
-        // 1. Initialize Thumbnail Slider First
-        var galleryThumbs = new Swiper(".thumb-strip-slider", {
-            spaceBetween: 15,
-            slidesPerView: 4,
-            freeMode: true,
-            watchSlidesProgress: true,
-            slideToClickedSlide: true, // Fixes the last thumbnail click issue
-            breakpoints: {
-                768: {
-                    slidesPerView: 5
-                },
-                1200: {
-                    slidesPerView: 7
+        // 1. Initialize Thumbnail Slider First if it exists
+        var galleryThumbs = null;
+        if (document.querySelector(".thumb-strip-slider")) {
+            galleryThumbs = new Swiper(".thumb-strip-slider", {
+                spaceBetween: 15,
+                slidesPerView: 4,
+                freeMode: true,
+                watchSlidesProgress: true,
+                slideToClickedSlide: true, // Fixes the last thumbnail click issue
+                breakpoints: {
+                    768: {
+                        slidesPerView: 5
+                    },
+                    1200: {
+                        slidesPerView: 7
+                    }
                 }
-            }
-        });
+            });
+        }
 
-        // 2. Initialize Main Slider (Linked with Thumbs)
-        var galleryMain = new Swiper(".main-gallery-slider", {
-            loop: true,
-            spaceBetween: 0,
-            autoplay: {
-                delay: 4000,
-                disableOnInteraction: false,
-            },
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
-            thumbs: {
-                swiper: galleryThumbs,
-            },
-        });
+        // 2. Initialize Main Slider (Linked with Thumbs if thumbnail slider exists)
+        var galleryMain = null;
+        if (document.querySelector(".main-gallery-slider")) {
+            var swiperParams = {
+                loop: true,
+                spaceBetween: 0,
+                autoplay: {
+                    delay: 4000,
+                    disableOnInteraction: false,
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                }
+            };
+            if (galleryThumbs) {
+                swiperParams.thumbs = {
+                    swiper: galleryThumbs
+                };
+            }
+            galleryMain = new Swiper(".main-gallery-slider", swiperParams);
+        }
 
         // Error Handling: Preventing 'null' reading error (image_983c05.png)
         const reviewEl = document.querySelector('.review-swiper');

@@ -3,6 +3,7 @@
 
 <head>
     <title>@yield('title', 'Motokloz')</title>
+    <meta name="description" content="@yield('meta_description', 'Canada\'s trusted marketplace for cars, RVs, motorcycles, trucks and more. Browse verified listings, get instant trade-in value and financing pre-approval.')" />
     <meta charset="utf-8">
     <meta name="google-site-verification" content="HLgaXPD3LiHY8_aiTFkuEI1MuPZMA5D1SUgzUueaUfU" />
      <!-- Google tag (gtag.js) -->

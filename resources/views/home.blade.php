@@ -1,4 +1,7 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
+
+@section('title', 'Motokloz | Buy and Sell Cars, RVs, Trucks and More in Canada')
+@section('meta_description', 'Canada\'s trusted marketplace for cars, RVs, motorcycles, trucks and more. Browse verified listings, get instant trade-in value and financing pre-approval.')
 
 @section('content')
 
