@@ -3,6 +3,12 @@
 @section('title', 'Motokloz | Buy and Sell Cars, RVs, Trucks and More in Canada')
 @section('meta_description', 'Canada\'s trusted marketplace for cars, RVs, motorcycles, trucks and more. Browse verified listings, get instant trade-in value and financing pre-approval.')
 
+@section('title', 'Motokloz | Buy and Sell Cars, RVs, Trucks and More in Canada')
+
+@section('meta')
+<meta name="description" content="Canada's trusted marketplace for cars, RVs, motorcycles, trucks and more. Browse verified listings, get instant trade-in value and financing pre-approval.">
+@endsection
+
 @section('content')
 
 
