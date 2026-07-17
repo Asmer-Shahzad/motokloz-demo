@@ -389,7 +389,7 @@ function formatPrice($price)
                     ])));
                 @endphp
 
-                <div class="motobadge-filters-section">
+                <!-- <div class="motobadge-filters-section">
                     <h5 class="fw-bold mb-3" style="color: var(--select-color);">MotoBadge Filters</h5>
                     <div class="motobadge-grid">
                         @foreach ($allServiceIcons as $badge)
@@ -408,8 +408,7 @@ function formatPrice($price)
                             </div>
                         @endforeach
                     </div>
-                    <button class="btn btn-dark btn-sm px-4 py-2" id="clear-badge-filters" style="border-radius: 20px; font-weight: 600;">Clear Filters</button>
-                </div>
+                </div> -->
 
                 <div class="mto-specs-container mb-5" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
                     <div class="row g-2">
@@ -1589,80 +1588,6 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(function () {
             clearInterval(checkSwiperInterval);
         }, 5000);
-    }
-
-    // --- MotoBadge Filters logic ---
-    var initialStates = [];
-    document.querySelectorAll('.motobadge-item').forEach(function (item) {
-        initialStates.push({
-            el: item,
-            isActive: item.classList.contains('active')
-        });
-    });
-
-    document.querySelectorAll('.motobadge-item').forEach(function (item) {
-        item.addEventListener('click', function () {
-            var badgeKey = this.getAttribute('data-badge');
-            
-            // Toggle active state
-            if (this.classList.contains('active')) {
-                this.classList.remove('active');
-                this.classList.add('inactive');
-            } else {
-                this.classList.remove('inactive');
-                this.classList.add('active');
-            }
-            
-            updateFeaturesHighlighting();
-        });
-    });
-
-    function updateFeaturesHighlighting() {
-        var activeKeys = Array.from(document.querySelectorAll('.motobadge-item.active')).map(function (el) {
-            return el.getAttribute('data-badge');
-        });
-
-        document.querySelectorAll('.mto-opt').forEach(function (opt) {
-            var optText = opt.textContent.toLowerCase();
-            var isMatch = activeKeys.some(function (key) {
-                return optText.indexOf(key) !== -1;
-            });
-            if (isMatch) {
-                opt.style.backgroundColor = 'rgba(249, 142, 0, 0.15)';
-                opt.style.border = '1px solid #f98e00';
-                opt.style.borderRadius = '8px';
-                opt.style.padding = '5px 10px';
-                opt.style.fontWeight = 'bold';
-            } else {
-                opt.style.backgroundColor = '';
-                opt.style.border = '';
-                opt.style.padding = '';
-                opt.style.fontWeight = '';
-            }
-        });
-    }
-
-    var clearBtn = document.getElementById('clear-badge-filters');
-    if (clearBtn) {
-        clearBtn.addEventListener('click', function () {
-            initialStates.forEach(function (state) {
-                if (state.isActive) {
-                    state.el.classList.add('active');
-                    state.el.classList.remove('inactive');
-                } else {
-                    state.el.classList.remove('active');
-                    state.el.classList.add('inactive');
-                }
-            });
-
-            // reset options styles
-            document.querySelectorAll('.mto-opt').forEach(function (opt) {
-                opt.style.backgroundColor = '';
-                opt.style.border = '';
-                opt.style.padding = '';
-                opt.style.fontWeight = '';
-            });
-        });
     }
 });
 </script>

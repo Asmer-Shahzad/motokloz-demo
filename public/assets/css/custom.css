@@ -3900,7 +3900,7 @@ input[type="range"]::-moz-range-thumb {
     aspect-ratio: 1;
     border-radius: 50%;
     overflow: hidden;
-    cursor: pointer;
+    cursor: default;
     background-color: rgba(220, 220, 220, 0.15);
     display: flex;
     align-items: center;
@@ -3919,7 +3919,6 @@ input[type="range"]::-moz-range-thumb {
 .motobadge-item.active {
     opacity: 1;
     filter: none;
-    transform: scale(1.05);
     border-color: #f98e00;
     box-shadow: 0 4px 10px rgba(249, 142, 0, 0.3);
 }
@@ -3927,17 +3926,6 @@ input[type="range"]::-moz-range-thumb {
 .motobadge-item.inactive {
     opacity: 0.35;
     filter: grayscale(100%);
-}
-
-.motobadge-item:hover {
-    transform: scale(1.08);
-}
-
-#clear-badge-filters {
-    transition: all 0.2s ease;
-}
-#clear-badge-filters:hover {
-    background-color: #3b3b3b !important;
 }
 
 @media (max-width: 767px) {
