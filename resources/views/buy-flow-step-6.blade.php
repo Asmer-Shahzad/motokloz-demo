@@ -156,7 +156,7 @@
                 <!-- SAVE -->
 
                 <div class="text-end mt-4">
-                    <button class="save-btn">Save</button>
+                    <button class="save-btn" onclick="window.location.href='{{ route('home') }}'">Save</button>
                 </div>
 
 

@@ -84,35 +84,35 @@
 
                 <h5 class="form-title mt-4">Body Style</h5>
 
-                <input type="text" class="form-control mb-3 form-text-field"" placeholder=" Add Body Style">
+                <input type="text" class="form-control mb-3 form-text-field" placeholder="Add Body Style">
 
                 <div class="tag-list">
 
-                    <span class="tag">Sapien quisque</span>
-                    <span class="tag">Sapien quisque</span>
-                    <span class="tag">Sapien quisque</span>
+                    <span class="tag">SUV</span>
+                    <span class="tag">Sedan</span>
+                    <span class="tag">Truck</span>
 
                 </div>
 
 
                 <h5 class="form-title mt-4">Must-Haves</h5>
 
-                <input type="text" class="form-control mb-3 form-text-field" placeholder="Add Body Style">
+                <input type="text" class="form-control mb-3 form-text-field" placeholder="Add Must-Haves">
 
                 <div class="tag-list">
 
-                    <span class="tag">Sapien quisque</span>
-                    <span class="tag">Sapien quisque</span>
-                    <span class="tag">Sapien quisque</span>
+                    <span class="tag">Heated Seats</span>
+                    <span class="tag">Backup Camera</span>
+                    <span class="tag">Apple CarPlay</span>
 
                 </div>
 
 
                 <div class="form-actions">
 
-                    <a href="#" class="skip">Skip</a>
+                    <a href="{{ route('buy.step3') }}" class="skip">Skip</a>
 
-                    <button class="continue-btn">
+                    <button class="continue-btn" onclick="window.location.href='{{ route('buy.step3') }}'">
                         Continue
                     </button>
 

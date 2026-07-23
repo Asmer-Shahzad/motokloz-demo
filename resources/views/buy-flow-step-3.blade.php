@@ -56,41 +56,41 @@
 
                     <div class="col-md-6">
                         <label class="form-label">Year</label>
-                        <input type="text" class="form-control form-text-field" placeholder="Add Body Style">
+                        <input type="text" class="form-control form-text-field" placeholder="e.g. 2026">
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Make</label>
-                        <input type="text" class="form-control form-text-field" placeholder="Add Body Style">
+                        <input type="text" class="form-control form-text-field" placeholder="e.g. Ford">
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Model</label>
-                        <input type="text" class="form-control form-text-field" placeholder="Add Body Style">
+                        <input type="text" class="form-control form-text-field" placeholder="e.g. F-150">
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Trim</label>
-                        <input type="text" class="form-control form-text-field" placeholder="Add Body Style">
+                        <input type="text" class="form-control form-text-field" placeholder="e.g. Lariat">
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Max Price</label>
-                        <input type="text" class="form-control form-text-field" placeholder="Add Body Style">
+                        <input type="text" class="form-control form-text-field" placeholder="e.g. $50,000">
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Max Payment</label>
-                        <input type="text" class="form-control form-text-field" placeholder="Add Body Style">
+                        <input type="text" class="form-control form-text-field" placeholder="e.g. $500/mo">
                     </div>
 
                 </div>
 
                 <div class="form-bottom">
 
-                    <a href="#" class="skip">Skip</a>
+                    <a href="{{ route('buy.step4') }}" class="skip">Skip</a>
 
-                    <button class="continue-btn">
+                    <button class="continue-btn" onclick="window.location.href='{{ route('buy.step4') }}'">
                         Continue
                     </button>
 

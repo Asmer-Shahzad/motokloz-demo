@@ -76,7 +76,7 @@
 
                     <label><input type="checkbox"> Motorcycle</label>
 
-                    <button class=" con-btt">Continue</button>
+                    <button class=" con-btt" onclick="window.location.href='{{ route('buy.step2') }}'">Continue</button>
 
                 </div>
 

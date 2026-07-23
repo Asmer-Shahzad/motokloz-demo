@@ -118,7 +118,7 @@
 
                 <div class="form-bottom">
 
-                    <button class="save-btn">
+                    <button class="save-btn" onclick="window.location.href='{{ route('buy.step6') }}'">
                         Get My Discreet Quotes
                     </button>
 

@@ -124,7 +124,7 @@
 
                 <div class="form-bottom">
 
-                    <button class="save-btn">
+                    <button class="save-btn" onclick="window.location.href='{{ route('buy.step5') }}'">
                         Save To Profile
                     </button>
 
