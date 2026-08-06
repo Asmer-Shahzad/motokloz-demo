@@ -26,13 +26,19 @@ div#testDriveModal {
 }
 
 @media (min-width: 992px) {
+    .header-top nav.navbar {
+        max-width: 100% !important;
+        overflow: hidden !important;
+    }
     .header-top div#navbarSupportedContent {
         flex-direction: row !important; /* Force left-to-right to fix left-cut-off bug */
-        overflow: visible !important;
+        overflow: hidden !important;
+        max-width: 100% !important;
     }
     .header-top .mob-menu {
         width: 100%;
-        overflow: visible !important;
+        overflow: hidden !important;
+        max-width: 100% !important;
     }
     .header-top .navbar-nav {
         flex-wrap: nowrap !important;
