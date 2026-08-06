@@ -22,7 +22,7 @@ div#testDriveModal {
 }
 
 .header-top li.nav-item {
-    padding: 0 12px !important;
+    padding: 0 2px !important;
 }
 
 @media (min-width: 992px) {
