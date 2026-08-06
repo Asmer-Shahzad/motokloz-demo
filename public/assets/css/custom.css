@@ -26,17 +26,23 @@ div#testDriveModal {
 }
 
 @media (min-width: 992px) {
-    .header-top .navbar-collapse {
+    .header-top div#navbarSupportedContent {
+        flex-direction: row !important; /* Force left-to-right to fix left-cut-off bug */
         overflow-x: auto;
         scrollbar-width: none; /* Hide scrollbar for Firefox */
     }
-    .header-top .navbar-collapse::-webkit-scrollbar {
+    .header-top div#navbarSupportedContent::-webkit-scrollbar {
         display: none; /* Hide scrollbar for Chrome/Safari */
+    }
+    .header-top .mob-menu {
+        width: 100%;
     }
     .header-top .navbar-nav {
         flex-wrap: nowrap !important;
         width: 100%;
         justify-content: space-between;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
     }
 }
 
