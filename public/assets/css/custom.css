@@ -28,14 +28,11 @@ div#testDriveModal {
 @media (min-width: 992px) {
     .header-top div#navbarSupportedContent {
         flex-direction: row !important; /* Force left-to-right to fix left-cut-off bug */
-        overflow-x: auto;
-        scrollbar-width: none; /* Hide scrollbar for Firefox */
-    }
-    .header-top div#navbarSupportedContent::-webkit-scrollbar {
-        display: none; /* Hide scrollbar for Chrome/Safari */
+        overflow: visible !important;
     }
     .header-top .mob-menu {
         width: 100%;
+        overflow: visible !important;
     }
     .header-top .navbar-nav {
         flex-wrap: nowrap !important;
@@ -43,6 +40,11 @@ div#testDriveModal {
         justify-content: space-between;
         padding-left: 15px !important;
         padding-right: 15px !important;
+        overflow-x: auto !important;
+        scrollbar-width: none; /* Hide scrollbar for Firefox */
+    }
+    .header-top .navbar-nav::-webkit-scrollbar {
+        display: none; /* Hide scrollbar for Chrome/Safari */
     }
 }
 
