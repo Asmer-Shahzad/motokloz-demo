@@ -1,85 +1,89 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 @php
-function formatPrice($price) {
-$cleaned = str_replace(['$', ','], '', $price);
-$number = is_numeric($cleaned) ? (float)$cleaned : 0;
-return number_format(round($number), 0, '.', ','); // 👈 yahan fix
+if (!function_exists('formatPrice')) {
+    function formatPrice($price) {
+        $cleaned = str_replace(['$', ','], '', $price);
+        $number = is_numeric($cleaned) ? (float)$cleaned : 0;
+        return number_format(round($number), 0, '.', ','); // 👈 yahan fix
+    }
 }
-function dealerServiceItems($dealer) {
-    $candidates = [
-        $dealer->services_providers ?? null,
-        $dealer->service_providers ?? null,
-        $dealer->services ?? null,
-        $dealer->dealer_services ?? null,
-        $dealer->dealer_services_providers ?? null,
-        $dealer->services_field ?? null,
-    ];
+if (!function_exists('dealerServiceItems')) {
+    function dealerServiceItems($dealer) {
+        $candidates = [
+            $dealer->services_providers ?? null,
+            $dealer->service_providers ?? null,
+            $dealer->services ?? null,
+            $dealer->dealer_services ?? null,
+            $dealer->dealer_services_providers ?? null,
+            $dealer->services_field ?? null,
+        ];
 
-    $raw = collect($candidates)->first(fn ($value) => !blank($value));
+        $raw = collect($candidates)->first(fn ($value) => !blank($value));
 
-    $extractStrings = function ($value) use (&$extractStrings) {
-        if (is_array($value)) {
-            $items = [];
+        $extractStrings = function ($value) use (&$extractStrings) {
+            if (is_array($value)) {
+                $items = [];
 
-            foreach ($value as $key => $item) {
-                if (is_string($key) && in_array(strtolower($key), ['title', 'name', 'label', 'value', 'text'], true)) {
-                    $items[] = trim((string) $item);
-                    continue;
+                foreach ($value as $key => $item) {
+                    if (is_string($key) && in_array(strtolower($key), ['title', 'name', 'label', 'value', 'text'], true)) {
+                        $items[] = trim((string) $item);
+                        continue;
+                    }
+
+                    $items = array_merge($items, $extractStrings($item));
                 }
 
-                $items = array_merge($items, $extractStrings($item));
+                return $items;
             }
 
-            return $items;
-        }
-
-        if (!is_string($value)) {
-            return [];
-        }
-
-        $value = trim($value);
-        if ($value === '') {
-            return [];
-        }
-
-        if (preg_match('/^(?:a|s|i|b|d):\d+:/', $value)) {
-            $decoded = @unserialize($value);
-
-            if ($decoded !== false || $value === 'b:0;') {
-                return $extractStrings($decoded);
+            if (!is_string($value)) {
+                return [];
             }
-        }
 
-        if (str_contains($value, '{') || str_contains($value, '}')) {
-            return [];
-        }
+            $value = trim($value);
+            if ($value === '') {
+                return [];
+            }
 
-        if (str_contains($value, 'a:') || str_contains($value, 's:') || str_contains($value, 'i:')) {
-            return [];
-        }
+            if (preg_match('/^(?:a|s|i|b|d):\d+:/', $value)) {
+                $decoded = @unserialize($value);
 
-        return [$value];
-    };
+                if ($decoded !== false || $value === 'b:0;') {
+                    return $extractStrings($decoded);
+                }
+            }
 
-    $items = $extractStrings($raw);
+            if (str_contains($value, '{') || str_contains($value, '}')) {
+                return [];
+            }
 
-    $items = collect($items)
-        ->map(function ($item) {
-            $item = trim((string) $item);
-            $item = preg_replace('/^[^A-Za-z0-9]+/', '', $item);
-            $item = preg_replace('/^[-:\s]+/', '', $item);
+            if (str_contains($value, 'a:') || str_contains($value, 's:') || str_contains($value, 'i:')) {
+                return [];
+            }
 
-            return trim($item);
-        })
-        ->filter(function ($item) {
-            return $item !== ''
-                && !preg_match('/^(?:a|s|i|b|d):\d+:/', $item)
-                && !preg_match('/^[{}]+$/', $item);
-        })
-        ->values()
-        ->all();
+            return [$value];
+        };
 
-    return array_values(array_unique($items));
+        $items = $extractStrings($raw);
+
+        $items = collect($items)
+            ->map(function ($item) {
+                $item = trim((string) $item);
+                $item = preg_replace('/^[^A-Za-z0-9]+/', '', $item);
+                $item = preg_replace('/^[-:\s]+/', '', $item);
+
+                return trim($item);
+            })
+            ->filter(function ($item) {
+                return $item !== ''
+                    && !preg_match('/^(?:a|s|i|b|d):\d+:/', $item)
+                    && !preg_match('/^[{}]+$/', $item);
+            })
+            ->values()
+            ->all();
+
+        return array_values(array_unique($items));
+    }
 }
 @endphp
 @php
@@ -1460,8 +1464,10 @@ $dealerProvince = $dealerProvince ?? ($dealer->province ?? '');
 {{-- AutoDealer Schema --}}
 @php
 // Helper: Safe JSON value
-function safeJson($value) {
-return $value ?: '';
+if (!function_exists('safeJson')) {
+    function safeJson($value) {
+        return $value ?: '';
+    }
 }
 
 // Build address parts

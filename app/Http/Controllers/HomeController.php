@@ -49,13 +49,25 @@ class HomeController extends Controller
             ))
             ->values();
 
+        $assets = [
+            'AUTO' => 'Autos',
+            'MOTORCYCLE / ATV / POWERSPORTS' => 'Motorcycles / Powersports',
+            'MARINE,WATERSPORT' => 'Marine / Watersports',
+            'SNOWSPORTS' => 'Snowmobiles / Snowsports',
+            'RV / TRAILER' => 'RV\'s / Motorhomes',
+            'HEAVY DUTY TRAILERS' => 'Trailers',
+            'HEAVY TRUCK/EQUIPMENT' => 'Heavy Truck / Commercial',
+            'HEAVY_EQUIPMENT' => 'Heavy Equipment',
+            'FARM EQUIPMENT' => 'Farming / Agriculture',
+        ];
+
         return view('home', [
             'user'           => $user,
             'userInfo'       => $userInfo,
             'pageTitle'      => 'Home',
             'assetCounts'    => $assetCounts,
             'assetData'      => $latestVehicles,
-            'assets'         => array_keys($assetCounts),
+            'assets'         => $assets,
             'makeTypes'      => $makeTypes,
             'disklozBaseUrl' => $this->disklozBaseUrl(),
         ]);

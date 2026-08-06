@@ -66,8 +66,8 @@
                                 <div class="col-md-12">
                                     <select id="asset" name="selected_asset" class="form-select">
                                         <option value="">Select Asset</option>
-                                        @foreach($assets as $asset)
-                                            <option value="{{ $asset }}">{{ $asset }}</option>
+                                        @foreach($assets as $key => $display)
+                                            <option value="{{ $key }}">{{ $display }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -348,13 +348,14 @@
 
         // -------- FETCH DATA --------
         function fetchFiltersByAsset(asset) {
-            return fetch(`{{ env('diskloz_base_url') }}/api/search_inventory?selected_asset=${encodeURIComponent(asset)}&per_page=1`)
+            const apiAsset = asset === 'HEAVY_EQUIPMENT' ? 'HEAVY TRUCK/EQUIPMENT' : asset;
+            return fetch(`{{ env('diskloz_base_url') }}/api/search_inventory?selected_asset=${encodeURIComponent(apiAsset)}&per_page=1`)
                 .then(res => res.json())
                 .then(data => {
 
                     if (!data || !data.filters) return { makes: [], bodies: [] };
 
-                    switch (asset) {
+                    switch (apiAsset) {
 
                         case 'AUTO':
                             return {

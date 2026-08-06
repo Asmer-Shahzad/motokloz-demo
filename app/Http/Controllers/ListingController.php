@@ -185,12 +185,14 @@ class ListingController extends Controller
     public function loadAssetForm(Request $request)
     {
         $asset = $request->asset;
+        $apiAsset = $asset === 'HEAVY_EQUIPMENT' ? 'HEAVY TRUCK/EQUIPMENT' : $asset;
 
         $partialMap = [
             'AUTO' => 'listings-form.auto',
             'FARM EQUIPMENT' => 'listings-form.farm_equipment',
             'HEAVY DUTY TRAILERS' => 'listings-form.heavy_duty_trailers',
             'HEAVY TRUCK/EQUIPMENT' => 'listings-form.heavy_truck_equipment',
+            'HEAVY_EQUIPMENT' => 'listings-form.heavy_truck_equipment',
             'MARINE' => 'listings-form.marine',
             'MOTORCYCLE / ATV / POWERSPORTS' => 'listings-form.motorcycle_atv_powersports',
             'RV / TRAILER' => 'listings-form.rv_trailer',
@@ -202,7 +204,7 @@ class ListingController extends Controller
 
         // -------- FILTERS API --------
         $res = Http::get($this->disklozBaseUrl() . '/api/search_inventory', [
-            'selected_asset' => $asset,
+            'selected_asset' => $apiAsset,
             'per_page' => 1,
         ]);
 
@@ -219,6 +221,7 @@ class ListingController extends Controller
             'RV / TRAILER' => ['make' => 'MfgRvTrailer', 'body' => 'BodyStyleRvTrailer'],
             'MOTORCYCLE / ATV / POWERSPORTS' => ['make' => 'MfgMotorcycleAtv', 'body' => 'BodyStyleMotorcycleAtv'],
             'HEAVY TRUCK/EQUIPMENT' => ['make' => 'MfgHeavyTruckEquipment', 'body' => 'BodyStyleHeavyTruckEquipment'],
+            'HEAVY_EQUIPMENT' => ['make' => 'MfgHeavyTruckEquipment', 'body' => 'BodyStyleHeavyTruckEquipment'],
             'HEAVY DUTY TRAILERS' => ['make' => 'MfgHeavyDutyTrailer', 'body' => 'BodyStyleHeavyDutyTrailer'],
             'FARM EQUIPMENT' => ['make' => 'MfgFarmEquipment', 'body' => 'BodyStyleFarmEquipment'],
         ];
@@ -281,15 +284,16 @@ class ListingController extends Controller
     public function addlistings()
     {
         $assets = [
-            'AUTO',
-            'FARM EQUIPMENT',
-            'HEAVY DUTY TRAILERS',
-            'HEAVY TRUCK/EQUIPMENT',
-            'MARINE',
-            'MOTORCYCLE / ATV / POWERSPORTS',
-            'RV / TRAILER',
-            'SNOWSPORTS',
-            'WATERSPORT'
+            'AUTO' => 'Autos',
+            'MOTORCYCLE / ATV / POWERSPORTS' => 'Motorcycles / Powersports',
+            'MARINE' => 'Marine (Boats, Yachts)',
+            'WATERSPORT' => 'Watersports (Jet Skis, Sea-Doo)',
+            'SNOWSPORTS' => 'Snowmobiles / Snowsports',
+            'RV / TRAILER' => 'RV\'s / Motorhomes',
+            'HEAVY DUTY TRAILERS' => 'Trailers',
+            'HEAVY TRUCK/EQUIPMENT' => 'Heavy Truck / Commercial',
+            'HEAVY_EQUIPMENT' => 'Heavy Equipment',
+            'FARM EQUIPMENT' => 'Farming / Agriculture',
         ];
 
         $user = Auth::user();
@@ -307,10 +311,10 @@ class ListingController extends Controller
         $transmission = [];
         $driveTrain = [];
 
-        foreach ($assets as $asset) {
-
+        foreach (array_keys($assets) as $asset) {
+            $apiAsset = $asset === 'HEAVY_EQUIPMENT' ? 'HEAVY TRUCK/EQUIPMENT' : $asset;
             $res = Http::get($this->disklozBaseUrl() . '/api/inventory-form', [
-                'selected_asset' => $asset,
+                'selected_asset' => $apiAsset,
                 'per_page' => 1,
             ]);
 
@@ -349,6 +353,7 @@ class ListingController extends Controller
                         $bodyStyles = $inv->filters->BodyStyleMotorcycleAtv ?? [];
                         break;
 
+                    case 'HEAVY_EQUIPMENT':
                     case 'HEAVY TRUCK/EQUIPMENT':
                         $makes = $inv->filters->MfgHeavyTruckEquipment ?? [];
                         $bodyStyles = $inv->filters->BodyStyleHeavyTruckEquipment ?? [];

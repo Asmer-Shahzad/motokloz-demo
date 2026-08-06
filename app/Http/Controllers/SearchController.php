@@ -66,16 +66,18 @@ class SearchController extends Controller
         $userInfo = $user->information ?? new UserInformation();
 
         $assets = [
-            'AUTO',
-            'FARM EQUIPMENT',
-            'HEAVY DUTY TRAILERS',
-            'HEAVY TRUCK/EQUIPMENT',
-            'MARINE',
-            'MOTORCYCLE / ATV / POWERSPORTS',
-            'RV / TRAILER',
-            'SNOWSPORTS',
-            'WATERSPORT'
+            'AUTO' => 'Autos',
+            'MOTORCYCLE / ATV / POWERSPORTS' => 'Motorcycles / Powersports',
+            'MARINE,WATERSPORT' => 'Marine / Watersports',
+            'SNOWSPORTS' => 'Snowmobiles / Snowsports',
+            'RV / TRAILER' => 'RV\'s / Motorhomes',
+            'HEAVY DUTY TRAILERS' => 'Trailers',
+            'HEAVY TRUCK/EQUIPMENT' => 'Heavy Truck / Commercial',
+            'HEAVY_EQUIPMENT' => 'Heavy Equipment',
+            'FARM EQUIPMENT' => 'Farming / Agriculture',
         ];
+
+        $apiAsset = $selectedAsset === 'HEAVY_EQUIPMENT' ? 'HEAVY TRUCK/EQUIPMENT' : $selectedAsset;
 
         $selectedDistance = $request->input('selected_distance', '');
         $userLat          = $request->input('user_lat');
@@ -92,7 +94,7 @@ class SearchController extends Controller
             'selected_condition' => $request->selected_condition,
             'selected_lowest_price' => $request->selected_lowest_price,
             'selected_highest_price' => $request->selected_highest_price,
-            'selected_asset' => $request->selected_asset,
+            'selected_asset' => $apiAsset,
             'selected_power' => $request->selected_power_type,
             'selected_fuel' => $request->selected_fuel_type,
             'selected_seller' => $request->selected_seller, // ✅ ADD THIS
@@ -108,7 +110,7 @@ class SearchController extends Controller
         $bodyStyleTypes = [];
 
         $res = Http::get($this->disklozBaseUrl() . '/api/search_inventory', [
-            'selected_asset' => $selectedAsset,
+            'selected_asset' => $apiAsset,
             'per_page' => 1,
         ]);
 
@@ -116,56 +118,73 @@ class SearchController extends Controller
             $inv = json_decode($res->body());
 
             /** ---------------- MAKES ---------------- */
-            switch ($selectedAsset) {
-                case 'AUTO':
-                    $makes = $inv->filters->MfgAuto ?? [];
-                    $bodyStyles = $inv->filters->BodyStyle ?? [];
-                    break;
-
-                case 'SNOWSPORTS':
-                    $makes = $inv->filters->MfgSnowsport ?? [];
-                    $bodyStyles = $inv->filters->BodyStyleSnowSport ?? [];
-                    break;
-
-                case 'WATERSPORT':
-                    $makes = $inv->filters->MfgWatersport ?? [];
-                    $bodyStyles = $inv->filters->BodyStyle ?? [];
-                    break;
-
-                case 'MARINE':
-                    $makes = $inv->filters->MfgMarine ?? [];
-                    $bodyStyles = $inv->filters->BodyStyle ?? [];
-                    break;
-
-                case 'RV / TRAILER':
-                    $makes = $inv->filters->MfgRvTrailer ?? [];
-                    $bodyStyles = $inv->filters->BodyStyleRvTrailer ?? [];
-                    break;
-
-                case 'MOTORCYCLE / ATV / POWERSPORTS':
-                    $makes = $inv->filters->MfgMotorcycleAtv ?? [];
-                    $bodyStyles = $inv->filters->BodyStyleMotorcycleAtv ?? [];
-                    break;
-
-                case 'HEAVY TRUCK/EQUIPMENT':
-                    $makes = $inv->filters->MfgHeavyTruckEquipment ?? [];
-                    $bodyStyles = $inv->filters->BodyStyleHeavyTruckEquipment ?? [];
-                    break;
-
-                case 'HEAVY DUTY TRAILERS':
-                    $makes = $inv->filters->MfgHeavyDutyTrailer ?? [];
-                    $bodyStyles = $inv->filters->BodyStyleHeavyDutyTrailer ?? [];
-                    break;
-
-                case 'FARM EQUIPMENT':
-                    $makes = $inv->filters->MfgFarmEquipment ?? [];
-                    $bodyStyles = $inv->filters->BodyStyleFarmEquipment ?? [];
-                    break;
-
-                default:
-                    $makes = [];
-                    $bodyStyles = [];
+            $makes = [];
+            $bodyStyles = [];
+            
+            $subAssets = $selectedAsset ? explode(',', $selectedAsset) : [];
+            if (empty($subAssets)) {
+                $subAssets = [$selectedAsset];
             }
+
+            foreach ($subAssets as $subAsset) {
+                switch ($subAsset) {
+                    case 'AUTO':
+                        $subMakes = $inv->filters->MfgAuto ?? [];
+                        $subBodyStyles = $inv->filters->BodyStyle ?? [];
+                        break;
+
+                    case 'SNOWSPORTS':
+                        $subMakes = $inv->filters->MfgSnowsport ?? [];
+                        $subBodyStyles = $inv->filters->BodyStyleSnowSport ?? [];
+                        break;
+
+                    case 'WATERSPORT':
+                        $subMakes = $inv->filters->MfgWatersport ?? [];
+                        $subBodyStyles = $inv->filters->BodyStyle ?? [];
+                        break;
+
+                    case 'MARINE':
+                        $subMakes = $inv->filters->MfgMarine ?? [];
+                        $subBodyStyles = $inv->filters->BodyStyle ?? [];
+                        break;
+
+                    case 'RV / TRAILER':
+                        $subMakes = $inv->filters->MfgRvTrailer ?? [];
+                        $subBodyStyles = $inv->filters->BodyStyleRvTrailer ?? [];
+                        break;
+
+                    case 'MOTORCYCLE / ATV / POWERSPORTS':
+                        $subMakes = $inv->filters->MfgMotorcycleAtv ?? [];
+                        $subBodyStyles = $inv->filters->BodyStyleMotorcycleAtv ?? [];
+                        break;
+
+                    case 'HEAVY_EQUIPMENT':
+                    case 'HEAVY TRUCK/EQUIPMENT':
+                        $subMakes = $inv->filters->MfgHeavyTruckEquipment ?? [];
+                        $subBodyStyles = $inv->filters->BodyStyleHeavyTruckEquipment ?? [];
+                        break;
+
+                    case 'HEAVY DUTY TRAILERS':
+                        $subMakes = $inv->filters->MfgHeavyDutyTrailer ?? [];
+                        $subBodyStyles = $inv->filters->BodyStyleHeavyDutyTrailer ?? [];
+                        break;
+
+                    case 'FARM EQUIPMENT':
+                        $subMakes = $inv->filters->MfgFarmEquipment ?? [];
+                        $subBodyStyles = $inv->filters->BodyStyleFarmEquipment ?? [];
+                        break;
+
+                    default:
+                        $subMakes = [];
+                        $subBodyStyles = [];
+                }
+                $makes = array_merge($makes, (array)$subMakes);
+                $bodyStyles = array_merge($bodyStyles, (array)$subBodyStyles);
+            }
+
+            // Deduplicate makes and body styles by name
+            $makes = collect($makes)->unique('name')->values()->all();
+            $bodyStyles = collect($bodyStyles)->unique('name')->values()->all();
 
             // ✅ Format Makes
             $makeTypes[$selectedAsset] = !empty($makes)
@@ -332,7 +351,7 @@ class SearchController extends Controller
             'conditions' => json_decode($this->curl_get('/api/conditions')->getContent())->data ?? [],
 
             'assetWord' => $request->selected_asset
-                ? ucfirst(strtolower($request->selected_asset))
+                ? (['AUTO' => 'Autos', 'MOTORCYCLE / ATV / POWERSPORTS' => 'Motorcycles / Powersports', 'MARINE,WATERSPORT' => 'Marine / Watersports', 'SNOWSPORTS' => 'Snowmobiles / Snowsports', 'RV / TRAILER' => 'RV\'s / Motorhomes', 'HEAVY DUTY TRAILERS' => 'Trailers', 'HEAVY TRUCK/EQUIPMENT' => 'Heavy Truck / Commercial', 'HEAVY_EQUIPMENT' => 'Heavy Equipment', 'FARM EQUIPMENT' => 'Farming / Agriculture'][$request->selected_asset] ?? ucfirst(strtolower($request->selected_asset)))
                 : 'Car',
 
             'selected_body_style' => $request->selected_body_style,

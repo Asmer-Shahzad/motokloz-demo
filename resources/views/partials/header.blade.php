@@ -2,7 +2,7 @@
     <div class="header-top">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-4 btn-mobile">
+                <div class="col-lg-4 btn-mobile d-lg-none">
                     <a href="{{ route('buy.step1') }}" style="text-decoration: none; color: inherit;">
                         <div class="logo-o">
                             Buy
@@ -22,7 +22,7 @@
                         <span class="speed-line"></span>
                     </div> -->
                 </div>
-                <div class="col-lg-11">
+                <div class="col-lg-12">
                     <nav class="navbar navbar-expand-lg">
                         <!-- <a class="navbar-brand" href="/">
                             <img src="/assets/images/logo.png" class="img-fluid" alt="Logo">
@@ -36,33 +36,31 @@
                             <div class="mob-menu">
                                 <ul class="navbar-nav  mb-2 mb-lg-0">
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=AUTO">Auto</a>
+                                        <a class="nav-link" href="/car-listing?selected_asset=AUTO">Autos</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=SNOWSPORTS">Snowsports</a>
+                                        <a class="nav-link" href="/car-listing?selected_asset=MOTORCYCLE / ATV / POWERSPORTS">Motorcycles / Powersports</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=WATERSPORT">Watersports</a>
+                                        <a class="nav-link" href="/car-listing?selected_asset=MARINE,WATERSPORT">Marine / Watersports</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=MARINE">Marine</a>
+                                        <a class="nav-link" href="/car-listing?selected_asset=SNOWSPORTS">Snowmobiles / Snowsports</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=RV / TRAILER">RV</a>
+                                        <a class="nav-link" href="/car-listing?selected_asset=RV / TRAILER">RV's / Motorhomes</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=MOTORCYCLE / ATV / POWERSPORTS">Motorcycle</a>
+                                        <a class="nav-link" href="/car-listing?selected_asset=HEAVY DUTY TRAILERS">Trailers</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT">Heavy Truck</a>
+                                        <a class="nav-link" href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT">Heavy Truck / Commercial</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link"
-                                            href="/car-listing?selected_asset=HEAVY DUTY TRAILERS">Trailers</a>
+                                        <a class="nav-link" href="/car-listing?selected_asset=HEAVY_EQUIPMENT">Heavy Equipment</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/car-listing?selected_asset=FARM EQUIPMENT">Farm
-                                            Equipment</a>
+                                        <a class="nav-link" href="/car-listing?selected_asset=FARM EQUIPMENT">Farming / Agriculture</a>
                                     </li>
                                 </ul>
                                 <div class="mobile-btn">

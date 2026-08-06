@@ -12,8 +12,9 @@
 
 .header-top a.nav-link {
     color: #ffff;
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 500;
+    white-space: nowrap !important;
 }
 
 div#testDriveModal {
@@ -21,7 +22,22 @@ div#testDriveModal {
 }
 
 .header-top li.nav-item {
-    padding: 0 0px 0 45px;
+    padding: 0 12px !important;
+}
+
+@media (min-width: 992px) {
+    .header-top .navbar-collapse {
+        overflow-x: auto;
+        scrollbar-width: none; /* Hide scrollbar for Firefox */
+    }
+    .header-top .navbar-collapse::-webkit-scrollbar {
+        display: none; /* Hide scrollbar for Chrome/Safari */
+    }
+    .header-top .navbar-nav {
+        flex-wrap: nowrap !important;
+        width: 100%;
+        justify-content: space-between;
+    }
 }
 
 div#navbarSupportedContent {

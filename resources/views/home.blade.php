@@ -13,11 +13,13 @@
 
 
 @php
-function formatPrice($price)
-{
-$cleaned = str_replace(['$', ','], '', $price);
-$number = is_numeric($cleaned) ? (float) $cleaned : 0;
-return number_format(round($number), 0, '.', ',');
+if (!function_exists('formatPrice')) {
+    function formatPrice($price)
+    {
+        $cleaned = str_replace(['$', ','], '', $price);
+        $number = is_numeric($cleaned) ? (float) $cleaned : 0;
+        return number_format(round($number), 0, '.', ',');
+    }
 }
 @endphp
 
@@ -55,9 +57,15 @@ return number_format(round($number), 0, '.', ',');
                                             <i class="fa-solid fa-car"></i>
                                             <select id="filter-type" name="selected_asset" class="filter-options form-select border border-0">
                                                 <option value="">Select Type</option>
-                                                @foreach($assets as $asset)
-                                                <option value="{{ $asset }}">{{ $asset }}</option>
-                                                @endforeach
+                                                <option value="AUTO">Autos</option>
+                                                <option value="MOTORCYCLE / ATV / POWERSPORTS">Motorcycles / Powersports</option>
+                                                <option value="MARINE,WATERSPORT">Marine / Watersports</option>
+                                                <option value="SNOWSPORTS">Snowmobiles / Snowsports</option>
+                                                <option value="RV / TRAILER">RV's / Motorhomes</option>
+                                                <option value="HEAVY DUTY TRAILERS">Trailers</option>
+                                                <option value="HEAVY TRUCK/EQUIPMENT">Heavy Truck / Commercial</option>
+                                                <option value="HEAVY_EQUIPMENT">Heavy Equipment</option>
+                                                <option value="FARM EQUIPMENT">Farming / Agriculture</option>
                                             </select>
                                         </div>
                                     </div>
@@ -173,7 +181,23 @@ return number_format(round($number), 0, '.', ',');
                                         <a href="/car-listing?selected_asset=AUTO" class="card">
                                             <img src="/assets/images/Auto.png" class="img-fluid">
                                             <span>{{ $assetCounts['AUTO'] ?? 0 }} vehicles</span>
-                                            <h4>Auto</h4>
+                                            <h4>Autos</h4>
+                                        </a>
+                                    </div>
+
+                                    <div class="swiper-slide">
+                                        <a href="/car-listing?selected_asset=MOTORCYCLE / ATV / POWERSPORTS" class="card">
+                                            <img src="/assets/images/Motorcycle.png" class="img-fluid">
+                                            <span>{{ $assetCounts['MOTORCYCLE / ATV / POWERSPORTS'] ?? 0 }} vehicles</span>
+                                            <h4>Motorcycles / Powersports</h4>
+                                        </a>
+                                    </div>
+
+                                    <div class="swiper-slide">
+                                        <a href="/car-listing?selected_asset=MARINE,WATERSPORT" class="card">
+                                            <img src="/assets/images/Marine.png" class="img-fluid">
+                                            <span>{{ ($assetCounts['MARINE'] ?? 0) + ($assetCounts['WATERSPORT'] ?? 0) }} vehicles</span>
+                                            <h4>Marine / Watersports</h4>
                                         </a>
                                     </div>
 
@@ -181,23 +205,7 @@ return number_format(round($number), 0, '.', ',');
                                         <a href="/car-listing?selected_asset=SNOWSPORTS" class="card">
                                             <img src="/assets/images/Snow.png" class="img-fluid">
                                             <span>{{ $assetCounts['SNOWSPORTS'] ?? 0 }} vehicles</span>
-                                            <h4>Snowsports</h4>
-                                        </a>
-                                    </div>
-
-                                    <div class="swiper-slide">
-                                        <a href="/car-listing?selected_asset=WATERSPORT" class="card">
-                                            <img src="/assets/images/Water.png" class="img-fluid">
-                                            <span>{{ $assetCounts['WATERSPORT'] ?? 0 }} vehicles</span>
-                                            <h4>Watersports</h4>
-                                        </a>
-                                    </div>
-
-                                    <div class="swiper-slide">
-                                        <a href="/car-listing?selected_asset=MARINE" class="card">
-                                            <img src="/assets/images/Marine.png" class="img-fluid">
-                                            <span>{{ $assetCounts['MARINE'] ?? 0 }} vehicles</span>
-                                            <h4>Marine</h4>
+                                            <h4>Snowmobiles / Snowsports</h4>
                                         </a>
                                     </div>
 
@@ -205,25 +213,7 @@ return number_format(round($number), 0, '.', ',');
                                         <a href="/car-listing?selected_asset=RV / TRAILER" class="card">
                                             <img src="/assets/images/RV.png" class="img-fluid">
                                             <span>{{ $assetCounts['RV / TRAILER'] ?? 0 }} vehicles</span>
-                                            <h4>RV</h4>
-                                        </a>
-                                    </div>
-
-                                    <div class="swiper-slide">
-                                        <a href="/car-listing?selected_asset=MOTORCYCLE / ATV / POWERSPORTS"
-                                            class="card">
-                                            <img src="/assets/images/Motorcycle.png" class="img-fluid">
-                                            <span>{{ $assetCounts['MOTORCYCLE / ATV / POWERSPORTS'] ?? 0 }}
-                                                vehicles</span>
-                                            <h4>Powersports</h4>
-                                        </a>
-                                    </div>
-
-                                    <div class="swiper-slide">
-                                        <a href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT" class="card">
-                                            <img src="/assets/images/Heavy Truck.png" class="img-fluid">
-                                            <span>{{ $assetCounts['HEAVY TRUCK/EQUIPMENT'] ?? 0 }} vehicles</span>
-                                            <h4>Heavy Truck</h4>
+                                            <h4>RV's / Motorhomes</h4>
                                         </a>
                                     </div>
 
@@ -236,10 +226,26 @@ return number_format(round($number), 0, '.', ',');
                                     </div>
 
                                     <div class="swiper-slide">
+                                        <a href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT" class="card">
+                                            <img src="/assets/images/Heavy Truck.png" class="img-fluid">
+                                            <span>{{ ($assetCounts['HEAVY TRUCK/EQUIPMENT'] ?? 0) + ($assetCounts['HEAVYTRUCK/EQUIPMENT'] ?? 0) + ($assetCounts['TRUCK'] ?? 0) }} vehicles</span>
+                                            <h4>Heavy Truck / Commercial</h4>
+                                        </a>
+                                    </div>
+
+                                    <div class="swiper-slide">
+                                        <a href="/car-listing?selected_asset=HEAVY_EQUIPMENT" class="card">
+                                            <img src="/assets/images/Heavy Truck.png" class="img-fluid">
+                                            <span>{{ ($assetCounts['HEAVY TRUCK/EQUIPMENT'] ?? 0) + ($assetCounts['HEAVYTRUCK/EQUIPMENT'] ?? 0) }} vehicles</span>
+                                            <h4>Heavy Equipment</h4>
+                                        </a>
+                                    </div>
+
+                                    <div class="swiper-slide">
                                         <a href="/car-listing?selected_asset=FARM EQUIPMENT" class="card">
                                             <img src="/assets/images/Farm Equipment.png" class="img-fluid">
                                             <span>{{ $assetCounts['FARM EQUIPMENT'] ?? 0 }} vehicles</span>
-                                            <h4>Farm Equipment</h4>
+                                            <h4>Farming / Agriculture</h4>
                                         </a>
                                     </div>
 
@@ -892,24 +898,31 @@ return number_format(round($number), 0, '.', ',');
     const makeSelect = document.getElementById('filter-make');
 
     function populateMakes(makes) {
-
         makeSelect.innerHTML = '<option value="">Select Make</option>';
-
         makes.forEach(make => {
             const option = document.createElement('option');
-
             option.value = make.name;
             option.textContent = make.name;
-
             makeSelect.appendChild(option);
         });
     }
 
     function fetchMakesByType(type) {
-        return fetch(`{{ $disklozBaseUrl }}/api/search_inventory?selected_asset=${encodeURIComponent(type)}&per_page=1`)
+        if (!type) return Promise.resolve([]);
+        if (type.indexOf(',') !== -1) {
+            const subTypes = type.split(',');
+            return Promise.all(subTypes.map(fetchMakesBySingleType))
+                .then(results => results.flat());
+        }
+        return fetchMakesBySingleType(type);
+    }
+
+    function fetchMakesBySingleType(type) {
+        const apiType = type === 'HEAVY_EQUIPMENT' ? 'HEAVY TRUCK/EQUIPMENT' : type;
+        return fetch(`{{ $disklozBaseUrl }}/api/search_inventory?selected_asset=${encodeURIComponent(apiType)}&per_page=1`)
             .then(res => res.json())
             .then(data => {
-                switch (type) {
+                switch (apiType) {
                     case 'AUTO':
                         return data.filters.MfgAuto || [];
                     case 'MARINE':
@@ -918,9 +931,7 @@ return number_format(round($number), 0, '.', ',');
                         return data.filters.MfgRvTrailer || [];
                     case 'SNOWSPORTS':
                         return data.filters.MfgSnowsport || [];
-                    case 'MOTORCYCLE':
-                        return data.filters.MfgMotorcycleAtv || [];
-                    case 'POWERSPORTS':
+                    case 'MOTORCYCLE / ATV / POWERSPORTS':
                         return data.filters.MfgMotorcycleAtv || [];
                     case 'WATERSPORT':
                         return data.filters.MfgWatersport || [];
@@ -940,7 +951,6 @@ return number_format(round($number), 0, '.', ',');
     typeSelect.addEventListener('change', function() {
         const type = this.value;
         if (!type) {
-            // If no type selected, show all makes
             fetchAllMakes();
             return;
         }
@@ -952,15 +962,23 @@ return number_format(round($number), 0, '.', ',');
     // Function to fetch all makes from all types
     function fetchAllMakes() {
         const types = [
-            'AUTO', 'MARINE', 'RV / TRAILER', 'SNOWSPORTS', 'MOTORCYCLE', 'POWERSPORTS',
+            'AUTO', 'MARINE', 'RV / TRAILER', 'SNOWSPORTS', 'MOTORCYCLE / ATV / POWERSPORTS',
             'WATERSPORT', 'FARM EQUIPMENT', 'HEAVY TRUCK/EQUIPMENT', 'HEAVY DUTY TRAILERS'
         ];
 
-        Promise.all(types.map(fetchMakesByType))
+        Promise.all(types.map(fetchMakesBySingleType))
             .then(results => {
-                // Flatten the array of arrays into a single list
                 const allMakes = results.flat();
-                populateMakes(allMakes);
+                // Deduplicate makes by name
+                const uniqueMakes = [];
+                const seen = new Set();
+                allMakes.forEach(make => {
+                    if (make && make.name && !seen.has(make.name)) {
+                        seen.add(make.name);
+                        uniqueMakes.push(make);
+                    }
+                });
+                populateMakes(uniqueMakes);
             })
             .catch(err => console.error('Error fetching all makes:', err));
     }

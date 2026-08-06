@@ -3,11 +3,13 @@
 
 @section('meta')
 @php
-function formatPrice($price)
-{
-    $cleaned = preg_replace('/[^0-9.]/', '', (string) $price);
-    $number = is_numeric($cleaned) ? (float) $cleaned : 0;
-    return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
+if (!function_exists('formatPrice')) {
+    function formatPrice($price)
+    {
+        $cleaned = preg_replace('/[^0-9.]/', '', (string) $price);
+        $number = is_numeric($cleaned) ? (float) $cleaned : 0;
+        return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
+    }
 }
 @endphp
 @php

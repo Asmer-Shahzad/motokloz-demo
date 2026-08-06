@@ -1,12 +1,14 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
 @php
-function formatPrice($price)
-{
-$cleaned = str_replace(['$', ','], '', $price);
-$number = is_numeric($cleaned) ? (float) $cleaned : 0;
-return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
+if (!function_exists('formatPrice')) {
+    function formatPrice($price)
+    {
+        $cleaned = str_replace(['$', ','], '', $price);
+        $number = is_numeric($cleaned) ? (float) $cleaned : 0;
+        return number_format($number, 0, '.', ',');
+    }
 }
 @endphp
 
@@ -115,10 +117,10 @@ return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
                                         <i class="fa-solid fa-car"></i>
                                         <select name="selected_asset" id="filter-type" class="filter-options form-select border border-0">
                                             <option value="">Select Type</option>
-                                            @foreach($assets as $asset)
-                                            <option value="{{ $asset }}" {{ request('selected_asset')==$asset
+                                            @foreach($assets as $key => $display)
+                                            <option value="{{ $key }}" {{ request('selected_asset')==$key
                                                     ? 'selected' : '' }}>
-                                                {{ $asset }}
+                                                {{ $display }}
                                             </option>
                                             @endforeach
                                         </select>
@@ -298,9 +300,9 @@ return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
                             <label class="sidebar-label">Asset Type</label>
                             <select name="selected_asset" id="sidebar-type" class="form-select sidebar-input">
                                 <option value="">Select Asset Type</option>
-                                @foreach($assets as $asset)
-                                <option value="{{ $asset }}" {{ request('selected_asset')==$asset ? 'selected' : '' }}>
-                                    {{ $asset }}
+                                @foreach($assets as $key => $display)
+                                <option value="{{ $key }}" {{ request('selected_asset')==$key ? 'selected' : '' }}>
+                                    {{ $display }}
                                 </option>
                                 @endforeach
                             </select>
@@ -1187,15 +1189,22 @@ return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
 
         // -------- FETCH MAKES --------
         function fetchMakesByType(type) {
-            return fetch(`{{ env('diskloz_base_url') }}/api/dealer_by_id/${dealerId}?selected_asset=${encodeURIComponent(type)}&per_page=1`)
+            if (!type) return Promise.resolve([]);
+            if (type.indexOf(',') !== -1) {
+                const subTypes = type.split(',');
+                return Promise.all(subTypes.map(fetchMakesBySingleType))
+                    .then(results => results.flat());
+            }
+            return fetchMakesBySingleType(type);
+        }
+
+        function fetchMakesBySingleType(type) {
+            const apiType = type === 'HEAVY_EQUIPMENT' ? 'HEAVY TRUCK/EQUIPMENT' : type;
+            return fetch(`{{ env('diskloz_base_url') }}/api/dealer_by_id/${dealerId}?selected_asset=${encodeURIComponent(apiType)}&per_page=1`)
                 .then(res => res.json())
                 .then(data => {
-
                     if (!data || !data.filters) return [];
-
-                    const f = data.filters;
-
-                    switch (type) {
+                    switch (apiType) {
                         case 'AUTO':
                             return data.filters.MfgAuto || [];
                         case 'MARINE':
