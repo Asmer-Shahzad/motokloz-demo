@@ -235,7 +235,7 @@ if (!function_exists('formatPrice')) {
 
                                     <div class="swiper-slide">
                                         <a href="/car-listing?selected_asset=HEAVY_EQUIPMENT" class="card">
-                                            <img src="/assets/images/Heavy Truck.png" class="img-fluid">
+                                            <img src="/assets/images/heavvy.png" class="img-fluid">
                                             <span>{{ ($assetCounts['HEAVY TRUCK/EQUIPMENT'] ?? 0) + ($assetCounts['HEAVYTRUCK/EQUIPMENT'] ?? 0) }} vehicles</span>
                                             <h4>Heavy Equipment</h4>
                                         </a>
