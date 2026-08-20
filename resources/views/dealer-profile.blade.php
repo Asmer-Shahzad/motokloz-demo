@@ -144,10 +144,10 @@ $dealerProvince = $dealerProvince ?? ($dealer->province ?? '');
                             onerror="this.onerror=null;this.src='{{ asset('assets/images/defaultdealerlogo.png') }}';">
 
                         <div>
-                            <h3 class="mb-3 fw-bold">
+                            <h1 class="mb-3 fw-bold">
                                 {{$dealer->dba}}
                                 <!--{{ $dealer->first_name }} {{ $dealer->last_name }}-->
-                            </h3>
+                            </h1>
                             <p>
                                 <i class="fas fa-map-marker-alt text-warning me-1"></i>
 
