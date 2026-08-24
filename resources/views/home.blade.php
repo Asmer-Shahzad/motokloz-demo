@@ -320,7 +320,7 @@ if (!function_exists('formatPrice')) {
 </style>
 
 
-<section class="section-two">
+{{-- <section class="section-two">
     <div class="container">
         <div class="row">
             <div class="col-lg-6" data-aos="fade-right">
@@ -345,7 +345,7 @@ if (!function_exists('formatPrice')) {
             </div>
         </div>
     </div>
-</section>
+</section> --}}
 
 
 

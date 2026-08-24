@@ -169,7 +169,7 @@
 
 
 
-    <section class="section-two">
+    <!-- <section class="section-two">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6">
@@ -194,7 +194,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
 
 

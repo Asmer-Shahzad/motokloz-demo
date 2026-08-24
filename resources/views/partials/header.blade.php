@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-4 btn-mobile d-lg-none">
-                    <a href="{{ route('buy.step1') }}" style="text-decoration: none; color: inherit;">
+                    {{-- <a href="{{ route('buy.step1') }}" style="text-decoration: none; color: inherit;">
                         <div class="logo-o">
                             Buy
                             <span class="speed-line"></span>
@@ -14,7 +14,7 @@
                             Sell
                             <span class="speed-line"></span>
                         </div>
-                    </a>
+                    </a> --}}
                     <!-- <div class="logo-o">Protect
                         <span class="speed-line"></span>
                     </div>
@@ -56,16 +56,16 @@
                                     <li class="nav-item">
                                         <a class="nav-link" href="/car-listing?selected_asset=HEAVY TRUCK/EQUIPMENT">Heavy Truck / Commercial</a>
                                     </li>
-                                    <li class="nav-item">
+                                    {{-- <li class="nav-item">
                                         <a class="nav-link" href="/car-listing?selected_asset=HEAVY_EQUIPMENT">Heavy Equipment</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" href="/car-listing?selected_asset=FARM EQUIPMENT">Farming / Agriculture</a>
-                                    </li>
+                                    </li> --}}
                                 </ul>
                                 <div class="mobile-btn">
 
-                                    <a href="{{ route('buy.step1') }}" style="text-decoration: none; color: inherit;">
+                                    {{-- <a href="{{ route('buy.step1') }}" style="text-decoration: none; color: inherit;">
                                         <div class="logo-o">
                                             Buy
                                             <span class="speed-line"></span>
@@ -76,7 +76,7 @@
                                             Sell
                                             <span class="speed-line"></span>
                                         </div>
-                                    </a>
+                                    </a> --}}
                                     <!-- <div class="logo-o">Protect
                                         <span class="speed-line"></span>
                                     </div>
@@ -221,7 +221,7 @@
                             </a>
                         @endif
                     @endguest
-                    <a href="{{ route('buy.step1') }}" style="text-decoration: none; color: inherit;">
+                    {{-- <a href="{{ route('buy.step1') }}" style="text-decoration: none; color: inherit;">
                         <div class="logo-o">
                             Buy
                             <span class="speed-line"></span>
@@ -232,7 +232,7 @@
                             Sell
                             <span class="speed-line"></span>
                         </div>
-                    </a>
+                    </a> --}}
                     <!-- <div class="logo-o logo-2nd">Protect
                         <span class="speed-line"></span>
                     </div>
