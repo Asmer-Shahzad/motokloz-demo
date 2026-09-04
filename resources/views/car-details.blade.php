@@ -868,7 +868,7 @@ if (!function_exists('formatPrice')) {
                         <h4 class="dealer-top-title">More From This Dealer</h4>
                         <p class="dealer-top-subtitle">Check out other vehicles from the same dealer</p>
                     @else
-                        <h4 class="dealer-top-title">Similar Vehicles</h4>
+                        <h4 class="dealer-top-title">More From This Seller</h4>
                         <p class="dealer-top-subtitle">You might also like these similar vehicles</p>
                     @endif
                 </div>
