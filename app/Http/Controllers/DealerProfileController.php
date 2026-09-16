@@ -289,6 +289,7 @@ class DealerProfileController extends Controller
             'selected_asset' => $apiAsset,
             'selected_power_type' => $request->selected_power_type,
             'selected_fuel_type' => $request->selected_fuel_type,
+            'selected_floor_plan' => $request->selected_floor_plan,
             'keywords' => $request->keywords,
             'client_id' => auth()->check() ? auth()->user()->id : '',
             'page' => $request->page ?? 1,

@@ -303,22 +303,49 @@ if (!function_exists('formatPrice')) {
                         </div>
 
                         <!-- Floor Plan (Shows for RV / TRAILER and HEAVY DUTY TRAILERS) -->
+                        <style>
+                            .fp-searchable-select { position: relative; width: 100%; }
+                            .fp-select-btn { display: flex; align-items: center; justify-content: space-between; text-align: left; cursor: pointer; width: 100%; }
+                            .fp-dropdown-box { position: absolute; top: 100%; left: 0; right: 0; z-index: 1050; background: var(--bg-color); border: 1px solid #3a424d; border-radius: 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); margin-top: 4px; overflow: hidden; }
+                            .fp-search-wrap { padding: 8px; border-bottom: 1px solid #2d3540; }
+                            .fp-search-field { height: 34px !important; font-size: 13px !important; background: #14181d !important; color: #fff !important; border: 1px solid #3a424d !important; border-radius: 4px !important; padding: 0 10px !important; }
+                            .fp-options-list { max-height: 220px; overflow-y: auto; padding: 4px 0; }
+                            .fp-opt-item { padding: 8px 12px; font-size: 13px; color: #cfd6df; cursor: pointer; transition: background 0.15s, color 0.15s; }
+                            .fp-opt-item:hover { background: #ff9800; color: #fff; }
+                            .fp-opt-item.selected { background: rgba(255, 152, 0, 0.2); color: #ff9800; font-weight: 600; }
+                            .fp-no-match { padding: 10px 12px; font-size: 13px; color: #8c97a5; text-align: center; }
+                        </style>
                         @php
                             $currentAsset = request('selected_asset');
                             $showFloorPlan = in_array($currentAsset, ['RV / TRAILER', 'HEAVY DUTY TRAILERS'], true);
+                            $selectedFp = request('selected_floor_plan', '');
                         @endphp
                         <div class="filter-group" id="sidebar-floor-plan-group" style="{{ $showFloorPlan ? '' : 'display:none;' }}">
                             <label class="sidebar-label">Floor Plan</label>
-                            <select name="selected_floor_plan" id="sidebar-floor-plan" class="form-select sidebar-input">
-                                <option value="">Select Floor Plan</option>
-                                @if(isset($floorPlanOptions))
-                                    @foreach($floorPlanOptions as $fp)
-                                        <option value="{{ $fp }}" {{ request('selected_floor_plan') == $fp ? 'selected' : '' }}>
-                                            {{ $fp }}
-                                        </option>
-                                    @endforeach
-                                @endif
-                            </select>
+                            <div class="fp-searchable-select" id="fpSearchableSelect">
+                                <input type="hidden" name="selected_floor_plan" id="sidebar-floor-plan" value="{{ $selectedFp }}">
+                                <button type="button" class="form-select sidebar-input fp-select-btn" id="fpSelectBtn">
+                                    <span id="fpSelectedLabel" class="text-truncate">{{ $selectedFp ?: 'Select Floor Plan' }}</span>
+                                </button>
+                                <div class="fp-dropdown-box" id="fpDropdownBox" style="display:none;">
+                                    <div class="fp-search-wrap">
+                                        <input type="text" class="form-control sidebar-input fp-search-field" id="fpSearchField" placeholder="Search floor plans..." autocomplete="off">
+                                    </div>
+                                    <div class="fp-options-list" id="fpOptionsList">
+                                        <div class="fp-opt-item {{ $selectedFp === '' ? 'selected' : '' }}" data-value="">
+                                            All Floor Plans
+                                        </div>
+                                        @if(isset($floorPlanOptions))
+                                            @foreach($floorPlanOptions as $fp)
+                                                <div class="fp-opt-item {{ $selectedFp === $fp ? 'selected' : '' }}" data-value="{{ $fp }}">
+                                                    {{ $fp }}
+                                                </div>
+                                            @endforeach
+                                        @endif
+                                        <div class="fp-no-match" id="fpNoMatch" style="display:none;">No floor plan found</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Power Type -->
@@ -1067,8 +1094,59 @@ if (!function_exists('formatPrice')) {
                 } else {
                     $('#sidebar-floor-plan-group').hide();
                     $('#sidebar-floor-plan').val('');
+                    $('#fpSelectedLabel').text('Select Floor Plan');
+                    $('#fpOptionsList .fp-opt-item').removeClass('selected');
+                    $('#fpOptionsList .fp-opt-item[data-value=""]').addClass('selected');
+                    $('#fpDropdownBox').hide();
                 }
             }
+
+            // Floor Plan Searchable Dropdown
+            $('#fpSelectBtn').on('click', function(e) {
+                e.stopPropagation();
+                const box = $('#fpDropdownBox');
+                const isOpen = box.is(':visible');
+                if (isOpen) {
+                    box.hide();
+                } else {
+                    box.show();
+                    $('#fpSearchField').val('').trigger('input').focus();
+                }
+            });
+
+            $('#fpSearchField').on('input', function() {
+                const term = $(this).val().toLowerCase().trim();
+                let matchCount = 0;
+                $('#fpOptionsList .fp-opt-item').each(function() {
+                    const text = $(this).text().toLowerCase();
+                    if (text.includes(term)) {
+                        $(this).show();
+                        matchCount++;
+                    } else {
+                        $(this).hide();
+                    }
+                });
+                $('#fpNoMatch').toggle(matchCount === 0);
+            });
+
+            $('#fpDropdownBox').on('click', function(e) {
+                e.stopPropagation();
+            });
+
+            $('#fpOptionsList').on('click', '.fp-opt-item', function(e) {
+                const val = $(this).data('value');
+                const label = val ? val : 'Select Floor Plan';
+                $('#sidebar-floor-plan').val(val);
+                $('#fpSelectedLabel').text(label);
+                $('#fpOptionsList .fp-opt-item').removeClass('selected');
+                $(this).addClass('selected');
+                $('#fpDropdownBox').hide();
+                debouncedSubmit();
+            });
+
+            $(document).on('click', function() {
+                $('#fpDropdownBox').hide();
+            });
 
             // 🔹 page load
             loadBodyStyles($('#sidebar-type').val());
@@ -1160,7 +1238,11 @@ if (!function_exists('formatPrice')) {
             $('#year-select').val('');
             $('#seller-select').val('');
             $('#sidebar-floor-plan').val('');
+            $('#fpSelectedLabel').text('Select Floor Plan');
+            $('#fpOptionsList .fp-opt-item').removeClass('selected');
+            $('#fpOptionsList .fp-opt-item[data-value=""]').addClass('selected');
             $('#sidebar-floor-plan-group').hide();
+            $('#fpDropdownBox').hide();
 
             // Reset stored values for text inputs
             $('#sidebarFilterForm input[type="text"]').each(function() {
