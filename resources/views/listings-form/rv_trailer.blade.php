@@ -158,7 +158,7 @@
                 <input type="text" class="fp-search" placeholder="Search..." oninput="filterFpOptions(this.value)"
                     onclick="event.stopPropagation()">
                 <div class="fp-options" id="fpOptions">
-                    @foreach(['SINGLES UNIT', 'COUPLES UNIT', 'FAMILY UNIT', 'BUNK OVER CAB', 'BUNKHOUSE', 'FRONT BUNK', 'MID BUNK', 'REAR BUNK', 'DOUBLE BED', 'QUEEN BED', 'KING BED', 'MURPHY BED', 'FRONT BATH', 'FRONT BEDROOM', 'FRONT ENTERTAINMENT', 'FRONT LIVING AREA', 'FRONT DINETTE', 'FRONT KITCHEN', 'MID BATH', 'MID KITCHEN', 'KITCHEN ISLAND', 'REAR BATH', 'REAR BEDROOM', 'REAR ENTERTAINMENT', 'REAR LIVING AREA', 'REAR DINETTE', 'REAR KITCHEN', 'REAR SLIDE', 'PASS THROUGH STORAGE'] as $opt)
+                    @foreach(['SINGLES UNIT', 'COUPLES UNIT', 'FAMILY UNIT', 'BUNK OVER CAB', 'BUNKHOUSE', 'FRONT BUNK', 'MID BUNK', 'REAR BUNK', 'DOUBLE BED', 'QUEEN BED', 'KING BED', 'MURPHY BED', 'FRONT BATH', 'FRONT BEDROOM', 'FRONT ENTERTAINMENT', 'FRONT LIVING AREA', 'FRONT DINETTE', 'FRONT KITCHEN', 'MID BATH', 'MID KITCHEN', 'KITCHEN ISLAND', 'REAR BATH', 'REAR BEDROOM', 'REAR ENTERTAINMENT', 'REAR LIVING REA', 'REAR LIVING AREA', 'REAR DINETTE', 'REAR KITCHEN', 'REAR SLIDE', 'PASS THROUGH STORAGE', 'BATH AND A HALF', 'FRONT LIVING', 'LOFT', 'OUTDOOR ENTERTAINMENT', 'OUTDOOR KITCHEN', 'REAR TWIN', 'TWO ENTRY/EXIT DOORS', 'TWO FULL BATHS', 'U SHAPED DINETTE', 'WALK-THRU BATH'] as $opt)
                         <div class="fp-option" data-value="{{ $opt }}" onclick="toggleFpOption(this)">{{ $opt }}</div>
                     @endforeach
                 </div>

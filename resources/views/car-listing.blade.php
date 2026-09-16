@@ -302,6 +302,25 @@ if (!function_exists('formatPrice')) {
                             </select>
                         </div>
 
+                        <!-- Floor Plan (Shows for RV / TRAILER and HEAVY DUTY TRAILERS) -->
+                        @php
+                            $currentAsset = request('selected_asset');
+                            $showFloorPlan = in_array($currentAsset, ['RV / TRAILER', 'HEAVY DUTY TRAILERS'], true);
+                        @endphp
+                        <div class="filter-group" id="sidebar-floor-plan-group" style="{{ $showFloorPlan ? '' : 'display:none;' }}">
+                            <label class="sidebar-label">Floor Plan</label>
+                            <select name="selected_floor_plan" id="sidebar-floor-plan" class="form-select sidebar-input">
+                                <option value="">Select Floor Plan</option>
+                                @if(isset($floorPlanOptions))
+                                    @foreach($floorPlanOptions as $fp)
+                                        <option value="{{ $fp }}" {{ request('selected_floor_plan') == $fp ? 'selected' : '' }}>
+                                            {{ $fp }}
+                                        </option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+
                         <!-- Power Type -->
                         <div class="filter-group">
                             <label class="sidebar-label">Power Type</label>
@@ -1041,12 +1060,25 @@ if (!function_exists('formatPrice')) {
 
         $(document).ready(function() {
 
+            function toggleFloorPlan(assetType) {
+                const isTrailerOrRv = (assetType === 'RV / TRAILER' || assetType === 'HEAVY DUTY TRAILERS');
+                if (isTrailerOrRv) {
+                    $('#sidebar-floor-plan-group').show();
+                } else {
+                    $('#sidebar-floor-plan-group').hide();
+                    $('#sidebar-floor-plan').val('');
+                }
+            }
+
             // 🔹 page load
             loadBodyStyles($('#sidebar-type').val());
+            toggleFloorPlan($('#sidebar-type').val());
 
             // 🔹 asset change
             $('#sidebar-type').on('change', function() {
-                loadBodyStyles($(this).val());
+                const val = $(this).val();
+                loadBodyStyles(val);
+                toggleFloorPlan(val);
             });
 
         });
@@ -1127,6 +1159,8 @@ if (!function_exists('formatPrice')) {
             $('#body-style-select').html('<option value="">Select Body Style</option>');
             $('#year-select').val('');
             $('#seller-select').val('');
+            $('#sidebar-floor-plan').val('');
+            $('#sidebar-floor-plan-group').hide();
 
             // Reset stored values for text inputs
             $('#sidebarFilterForm input[type="text"]').each(function() {
