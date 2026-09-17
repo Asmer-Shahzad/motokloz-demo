@@ -98,6 +98,7 @@ class SearchController extends Controller
             'selected_power' => $request->selected_power_type,
             'selected_fuel' => $request->selected_fuel_type,
             'selected_seller' => $request->selected_seller, // ✅ ADD THIS
+            'selected_floor_plan' => $request->selected_floor_plan,
             'keywords' => $request->keywords,
             'client_id' => auth()->check() ? auth()->id() : '',
             // If distance filter active, fetch ALL records (page 1, huge per_page) to filter across full dataset
@@ -361,6 +362,18 @@ class SearchController extends Controller
             'selected_distance' => $selectedDistance,
             'user_lat'          => $hasGps ? (float) $userLat : null,
             'user_lng'          => $hasGps ? (float) $userLng : null,
+
+            'floorPlanOptions' => [
+                'SINGLES UNIT', 'COUPLES UNIT', 'FAMILY UNIT', 'BUNK OVER CAB', 'BUNKHOUSE',
+                'FRONT BUNK', 'MID BUNK', 'REAR BUNK', 'DOUBLE BED', 'QUEEN BED', 'KING BED',
+                'MURPHY BED', 'FRONT BATH', 'FRONT BEDROOM', 'FRONT ENTERTAINMENT', 'FRONT LIVING AREA',
+                'FRONT DINETTE', 'FRONT KITCHEN', 'MID BATH', 'MID KITCHEN', 'KITCHEN ISLAND',
+                'REAR BATH', 'REAR BEDROOM', 'REAR ENTERTAINMENT', 'REAR LIVING REA', 'REAR DINETTE',
+                'REAR KITCHEN', 'REAR SLIDE', 'PASS THROUGH STORAGE',
+                'BATH AND A HALF', 'FRONT LIVING', 'LOFT', 'OUTDOOR ENTERTAINMENT', 'OUTDOOR KITCHEN',
+                'REAR LIVING AREA', 'REAR TWIN', 'TWO ENTRY/EXIT DOORS', 'TWO FULL BATHS',
+                'U SHAPED DINETTE', 'WALK-THRU BATH',
+            ],
         ];
 
 
