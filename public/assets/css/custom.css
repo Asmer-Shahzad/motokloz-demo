@@ -3285,7 +3285,9 @@ input.form-control::placeholder {
     background-color: #ff9800;
     color: white;
 }
-
+input#fpSearchField {
+    color: var(--select-color) !important;
+}
 .modal-header button {
     color: white;
 }

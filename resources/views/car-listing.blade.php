@@ -308,9 +308,9 @@ if (!function_exists('formatPrice')) {
                             .fp-select-btn { display: flex; align-items: center; justify-content: space-between; text-align: left; cursor: pointer; width: 100%; }
                             .fp-dropdown-box { position: absolute; top: 100%; left: 0; right: 0; z-index: 1050; background: var(--bg-color); border: 1px solid #3a424d; border-radius: 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); margin-top: 4px; overflow: hidden; }
                             .fp-search-wrap { padding: 8px; border-bottom: 1px solid #2d3540; }
-                            .fp-search-field { height: 34px !important; font-size: 13px !important; background: #14181d !important; color: #fff !important; border: 1px solid #3a424d !important; border-radius: 4px !important; padding: 0 10px !important; }
+                            .fp-search-field { height: 34px !important; font-size: 13px !important; background: var(--banner-bg-color) !important; color: #fff !important; border: 1px solid #3a424d !important; border-radius: 4px !important; padding: 0 10px !important; }
                             .fp-options-list { max-height: 220px; overflow-y: auto; padding: 4px 0; }
-                            .fp-opt-item { padding: 8px 12px; font-size: 13px; color: #cfd6df; cursor: pointer; transition: background 0.15s, color 0.15s; }
+                            .fp-opt-item { padding: 8px 12px; font-size: 13px; color: var(--select-color); cursor: pointer; transition: background 0.15s, color 0.15s; }
                             .fp-opt-item:hover { background: #ff9800; color: #fff; }
                             .fp-opt-item.selected { background: rgba(255, 152, 0, 0.2); color: #ff9800; font-weight: 600; }
                             .fp-no-match { padding: 10px 12px; font-size: 13px; color: #8c97a5; text-align: center; }
