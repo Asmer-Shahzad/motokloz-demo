@@ -108,6 +108,11 @@ class HomeController extends Controller
         return view('coming-soon', ['pageTitle' => 'Coming Soon']);
     }
 
+    public function anCanada()
+    {
+        return view('an-canada', ['pageTitle' => 'AN Canada - Coming Soon']);
+    }
+
     public function dealerprofile()
     {
         return view('dealer-profile', ['pageTitle' => 'Dealer Profile']);

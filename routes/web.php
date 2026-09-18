@@ -59,6 +59,7 @@ Route::post('/subscribe', [DealerNetworkController::class, 'subscribe_submit'])
     ->name('subscribe.application.submit');
 
 Route::get('/coming-soon', [HomeController::class, 'comingsoon'])->name('comingsoon');
+Route::get('/{route}', [HomeController::class, 'anCanada'])->where('route', '(?i)ancanada')->name('an.canada');
 Route::get('/buy/step-1', [HomeController::class, 'buyFlowStep1'])->name('buy.step1');
 Route::get('/buy/step-2', [HomeController::class, 'buyFlowStep2'])->name('buy.step2');
 Route::get('/buy/step-3', [HomeController::class, 'buyFlowStep3'])->name('buy.step3');

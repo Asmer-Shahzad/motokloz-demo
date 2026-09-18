@@ -242,24 +242,24 @@ toggleBtn.addEventListener("click", () => {
     const toggleBtn = document.getElementById("themeToggle");
     const icon = document.getElementById("themeIcon");
 
-    toggleBtn.addEventListener("click", function () {
+    if (toggleBtn) {
+        toggleBtn.addEventListener("click", function () {
+            document.body.classList.toggle("dark-mode");
 
-        document.body.classList.toggle("dark-mode");
-
-        if (document.body.classList.contains("dark-mode")) {
-            icon.src = "/assets/images/lightmood.png";
-            localStorage.setItem("theme", "dark");
-        } else {
-            icon.src = "/assets/images/darkmood.png";
-            localStorage.setItem("theme", "light");
-        }
-
-    });
+            if (document.body.classList.contains("dark-mode")) {
+                if (icon) icon.src = "/assets/images/lightmood.png";
+                localStorage.setItem("theme", "dark");
+            } else {
+                if (icon) icon.src = "/assets/images/darkmood.png";
+                localStorage.setItem("theme", "light");
+            }
+        });
+    }
 
     // Page load par state restore
     if (localStorage.getItem("theme") === "dark") {
         document.body.classList.add("dark-mode");
-        icon.src = "/assets/images/lightmood.png";
+        if (icon) icon.src = "/assets/images/lightmood.png";
     }
 </script>
 <script>
