@@ -45,7 +45,12 @@ class DealerNetworkController extends Controller
                         : (isset($dealer['inventory_count']) ? $dealer['inventory_count'] : 0);
                 }
 
-                $dealers = collect($dealers)->filter(function ($dealer) use ($dealerName, $postalCode) {
+                $excludedDealerIds = [1, 2, 3, 4, 5, 11, 30, 55];
+
+                $dealers = collect($dealers)->reject(function ($dealer) use ($excludedDealerIds) {
+                    $dealerId = (int) ($dealer['id'] ?? 0);
+                    return in_array($dealerId, $excludedDealerIds, true);
+                })->filter(function ($dealer) use ($dealerName, $postalCode) {
                     $matches = true;
                     
                     if (!empty($dealerName)) {

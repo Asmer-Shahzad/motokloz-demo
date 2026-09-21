@@ -119,25 +119,123 @@
     }
 
     /* ==========================================================================
-       1. Top Navigation Bar (100% Figma Matched)
+       1. Top Navigation Bar (100% Figma & Responsive Matched)
        ========================================================================== */
     .an-navbar {
-        padding: 24px 0 18px;
+        padding: 22px 0 16px;
         background: transparent;
         position: relative;
-        z-index: 50;
+        z-index: 100;
     }
 
     .an-navbar-inner {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        position: relative;
     }
 
     .an-nav-left {
         display: flex;
         align-items: center;
         gap: 20px;
+    }
+
+    .an-brand-logo {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .an-nav-right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .an-nav-mobile-trigger {
+        display: none;
+    }
+
+    /* Mobile 3-Dot Button */
+    .an-mobile-dots-btn {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--an-border-color);
+        color: var(--an-text-main);
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 19px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        padding: 0;
+    }
+
+    body:not(.dark-mode) .an-mobile-dots-btn {
+        background: rgba(0, 0, 0, 0.05);
+        color: #0F172A;
+    }
+
+    .an-mobile-dots-btn:hover {
+        border-color: #F58D02;
+        color: #F58D02;
+        background: rgba(245, 141, 2, 0.12);
+    }
+
+    /* Mobile Dropdown Popup */
+    .an-mobile-menu-dropdown {
+        display: none;
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 0;
+        right: 0;
+        background: var(--an-card-bg);
+        border: 1px solid var(--an-border-color);
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        backdrop-filter: blur(14px);
+    }
+
+    .an-mobile-menu-dropdown.show {
+        display: block;
+        animation: anSlideDown 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes anSlideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .an-mobile-menu-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--an-border-color);
+    }
+
+    .an-mobile-menu-row:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .an-mobile-menu-label {
+        font-size: 14.5px;
+        font-weight: 700;
+        color: var(--an-text-main);
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 
     /* Language Pill matching Figma */
@@ -169,13 +267,13 @@
     }
 
     /* GTranslate Dropdown */
-    .an-nav-left .gtranslate_wrapper {
+    .gtranslate_wrapper {
         display: inline-flex;
         align-items: center;
         z-index: 99;
     }
 
-    .an-nav-left .gtranslate_wrapper select {
+    .gtranslate_wrapper select {
         background: rgba(255, 255, 255, 0.06);
         color: #FFFFFF;
         border: 1px solid rgba(255, 255, 255, 0.22);
@@ -188,54 +286,42 @@
         transition: all 0.2s ease;
     }
 
-    body:not(.dark-mode) .an-nav-left .gtranslate_wrapper select {
+    body:not(.dark-mode) .gtranslate_wrapper select {
         background: rgba(0, 0, 0, 0.05);
         color: #0F172A;
         border: 1px solid rgba(0, 0, 0, 0.15);
     }
 
-    .an-nav-left .gtranslate_wrapper select:hover {
+    .gtranslate_wrapper select:hover {
         border-color: #F58D02;
     }
 
-    /* Theme Toggle Button (Figma Style: Clean circular button with sharp sun/moon icon) */
+    /* Theme Toggle Button (Matches Header Style) */
     button.an-theme-toggle-btn {
-        background: rgba(255, 255, 255, 0.05) !important;
-        border: 1px solid rgba(255, 255, 255, 0.22) !important;
-        border-radius: 50% !important;
-        width: 40px;
-        height: 40px;
+        background: transparent !important;
+        border: none !important;
+        width: 38px;
+        height: 38px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
         padding: 0;
-        transition: all 0.25s ease;
-        color: #FFFFFF;
-    }
-
-    body:not(.dark-mode) button.an-theme-toggle-btn {
-        background: rgba(0, 0, 0, 0.05) !important;
-        border: 1px solid rgba(0, 0, 0, 0.15) !important;
-        color: #0F172A;
+        transition: transform 0.25s ease;
     }
 
     button.an-theme-toggle-btn:hover {
-        border-color: #F58D02 !important;
-        color: #F58D02 !important;
         transform: scale(1.08);
     }
 
-    button.an-theme-toggle-btn i {
-        font-size: 17px;
-        color: currentColor;
-        transition: transform 0.3s ease, color 0.2s ease;
+    button.an-theme-toggle-btn img#themeIcon,
+    button.an-theme-toggle-btn img#themeIconMobile {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+        display: block;
     }
 
-    button.an-theme-toggle-btn:hover i {
-        color: #F58D02;
-        transform: rotate(30deg);
-    }
 
     .an-login-btn {
         background: #F58D02;
@@ -315,7 +401,10 @@
         justify-content: center;
         pointer-events: auto;
     }
-
+.theme-iconss{
+    border-radius: 20px;
+    background: var(--an-text-main);
+}
     .an-offer-badge {
         background: #F58D02;
         color: #FFFFFF;
@@ -472,26 +561,26 @@
     .an-feature-text strong {
         display: block;
         font-weight: 800;
-        font-size: 24px;
+        font-size: 20px;
         color: var(--an-feature-title);
     }
 
     .an-feature-text span {
         font-size: 20px;
         font-weight: 700;
-        color: var(--an-feature-sub);
+        color: var(--an-feature-title);
     }
 
     .an-feature-text span.badge-free {
         color: #F58D02;
         font-weight: 900;
-        font-size: 20px;
+        font-size: 24px;
     }
 
     .an-feature-text span.badge-leads {
         color: #F58D02;
         font-weight: 900;
-        font-size: 20px;
+        font-size: 24px;
     }
 
     /* ==========================================================================
@@ -679,6 +768,8 @@
         flex-shrink: 0;
         background: rgba(245, 141, 2, 0.08);
         transition: all 0.25s ease;
+        text-decoration: none;
+        
     }
 
     .an-info-icon-box i {
@@ -899,21 +990,45 @@
     }
 
     /* ==========================================================================
-       7. Responsive Breakpoints
+       7. Responsive Breakpoints (All Devices: Mobile, Tablet, Laptop, Desktop)
        ========================================================================== */
-    @media (max-width: 1024px) {
+    @media (max-width: 1200px) {
+        .an-container {
+            max-width: 100%;
+            padding: 0 24px;
+        }
+
         .an-hero-content-overlay {
-            width: 70%;
+            width: 65%;
+        }
+
+        .an-features-row {
+            gap: 18px;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .an-desktop-only,
+        .an-nav-right {
+            display: none !important;
+        }
+
+        .an-nav-mobile-trigger {
+            display: block !important;
+        }
+
+        .an-hero-content-overlay {
+            width: 75%;
         }
 
         .an-features-row {
             grid-template-columns: repeat(2, 1fr);
-            gap: 22px;
+            gap: 18px;
         }
 
         .an-contact-grid {
             grid-template-columns: 1fr;
-            gap: 45px;
+            gap: 40px;
         }
 
         .an-contact-left {
@@ -937,7 +1052,7 @@
         .an-middle-card {
             flex-direction: column;
             text-align: center;
-            padding: 32px 24px;
+            padding: 30px 20px;
         }
 
         .an-mid-divider {
@@ -952,10 +1067,55 @@
     }
 
     @media (max-width: 768px) {
+        .an-container {
+            padding: 0 16px;
+        }
+
+        .an-navbar {
+            padding: 14px 0 12px;
+        }
+
+        .an-brand-logo .logo-dark-ver,
+        .an-brand-logo .logo-light-ver {
+            height: 32px;
+        }
+
+        /* Hero Banner on Mobile - Beautiful Background with Seamless Gradient Overlay */
+        .an-hero-section {
+            margin: 0 0 24px;
+        }
+
+        .an-hero-banner-wrap {
+            position: relative;
+            min-height: 480px;
+            display: flex;
+            align-items: center;
+            border-radius: 0;
+            overflow: hidden;
+        }
+
+        .an-hero-bg-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: 70% center;
+            min-height: 100%;
+            max-height: none;
+            filter: brightness(0.65);
+        }
+
         .an-hero-inner-container {
             position: relative;
-            background: rgba(15, 18, 22, 0.95);
-            padding: 28px 20px;
+            background: linear-gradient(180deg, rgba(15, 18, 22, 0.45) 0%, rgba(15, 18, 22, 0.88) 55%, rgba(15, 18, 22, 0.98) 100%);
+            padding: 24px 18px;
+            width: 100%;
+            min-height: 480px;
+            display: flex;
+            align-items: center;
+            z-index: 2;
         }
 
         .an-hero-content-overlay {
@@ -963,44 +1123,219 @@
             max-width: 100%;
         }
 
-        .an-hero-bg-img {
-            min-height: 220px;
-            max-height: 320px;
+        .an-offer-badge {
+            font-size: 11.5px;
+            padding: 6px 13px;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .an-offer-badge img.an-badge-leaf {
+            width: 13px;
+            height: 13px;
+        }
+
+        .an-hero-heading {
+            font-size: 23px;
+            line-height: 1.18;
+            margin-bottom: 8px;
+        }
+
+        .an-hero-price {
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .an-hero-price .price-val {
+            font-size: 36px;
+        }
+
+        .an-hero-price .price-period {
+            font-size: 19px;
+        }
+
+        .an-locked-badge-wrap {
+            padding: 6px 16px;
+            margin-bottom: 10px;
+        }
+
+        .an-locked-badge-text {
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .an-expiry-note {
+            font-size: 12.5px;
+            gap: 8px;
+        }
+
+        .an-expiry-note .an-cal-icon {
+            width: 22px;
+            height: 22px;
+            font-size: 11px;
+        }
+
+        /* 4 Features Section */
+        .an-features-section {
+            padding: 10px 0 30px;
         }
 
         .an-features-row {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .an-feature-card {
+            padding: 12px 10px;
+            gap: 10px;
+            background: var(--an-card-bg);
+            border: 1px solid var(--an-border-color);
+            border-radius: 12px;
+        }
+
+        .an-feature-icon-img {
+            width: 46px;
+            height: 46px;
+        }
+
+        .an-feature-text strong {
+            font-size: 15px;
+            line-height: 1.2;
+        }
+
+        .an-feature-text span {
+            font-size: 12px;
+            line-height: 1.2;
+        }
+
+        /* Middle Leads Section */
+        .an-middle-section {
+            padding: 10px 0 30px;
+        }
+
+        .an-middle-card {
+            padding: 22px 16px;
             gap: 16px;
+            border-radius: 16px;
+        }
+
+        .an-mid-leads-title {
+            font-size: 24px;
+            line-height: 1.2;
+        }
+
+        .an-mid-leads-sub {
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .an-mid-divider {
+            width: 75%;
+            height: 1px;
+            margin: 4px auto;
+        }
+
+        .an-mid-right img {
+            max-width: 220px;
+            height: auto;
+        }
+
+        /* Contact Section */
+        .an-contact-section {
+            padding: 30px 0 50px;
+        }
+
+        .an-contact-grid {
+            gap: 26px;
         }
 
         .an-contact-header-block {
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 14px;
+            gap: 10px;
+            margin-bottom: 16px;
         }
 
         .an-leaf-img {
-            width: 54px;
-            height: 54px;
-            margin-top: 0;
+            width: 44px;
+            height: 44px;
         }
 
         .an-contact-brand {
-            font-size: 38px;
+            font-size: 24px;
         }
 
         .an-contact-title {
-            font-size: 48px;
-            margin-bottom: 12px;
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .an-contact-desc {
+            font-size: 13.5px;
+            line-height: 1.5;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         .an-info-list {
             padding-left: 0;
+            gap: 14px;
+        }
+
+        .an-info-row {
+            gap: 12px;
+        }
+
+        .an-info-icon-box {
+            width: 40px;
+            height: 40px;
+            font-size: 15px;
+        }
+
+        .an-info-label {
+            font-size: 11.5px;
+        }
+
+        .an-info-val {
+            font-size: 14px;
         }
 
         .an-form-card {
-            padding: 28px 20px;
+            padding: 20px 16px;
+            border-radius: 16px;
+        }
+
+        .an-form-head-title {
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .an-form-head-sub {
+            font-size: 12.5px;
+            text-align: center;
+        }
+
+        .an-input-field {
+            font-size: 13.5px;
+            height: 46px;
+            padding: 10px 14px 10px 40px;
+        }
+
+        .an-input-icon {
+            font-size: 13px;
+            left: 14px;
+        }
+
+        .an-submit-btn {
+            font-size: 15px;
+            padding: 12px 18px;
+            height: 46px;
+        }
+
+        /* Footer */
+        .an-footer {
+            padding: 26px 0 20px;
         }
 
         .an-footer-inner {
@@ -1009,12 +1344,44 @@
             text-align: center;
         }
 
-        .an-mid-leads-title {
-            font-size: 32px;
+        .an-footer-links {
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
         }
 
-        .an-mid-left img {
-            max-width: 300px;
+        .an-footer-social {
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .an-social-icon {
+            width: 34px;
+            height: 34px;
+            font-size: 14px;
+        }
+
+        .an-footer-copy {
+            font-size: 12px;
+        }
+    }
+
+    @media (max-width: 440px) {
+        .an-features-row {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .an-feature-card {
+            padding: 12px 14px;
+        }
+
+        .an-feature-text strong {
+            font-size: 16px;
+        }
+
+        .an-feature-text span {
+            font-size: 13px;
         }
     }
 </style>
@@ -1031,22 +1398,55 @@
                         <img src="{{ asset('assets/images/lightlogo.png') }}" class="logo-light-ver" alt="Motokloz Logo">
                     </a>
 
-                    <!-- Google Translate Dropdown Container -->
-                    <div class="gtranslate_wrapper"></div>
+                    <!-- Google Translate Dropdown Container (Desktop on Left next to Logo) -->
+                    <div class="gtranslate_wrapper an-desktop-only"></div>
 
-                    <!-- Theme Toggle Button (Figma Style: Circular Button with Sun Icon) -->
-                    <button id="themeToggle" class="an-theme-toggle-btn" aria-label="Toggle theme" type="button" title="Toggle Light/Dark Theme">
-                        <i class="fa-regular fa-sun"></i>
+                    <!-- Theme Toggle Button (Desktop on Left next to Logo) -->
+                    <button id="themeToggle" class="an-theme-toggle-btn an-desktop-only" aria-label="Toggle theme" type="button" title="Toggle Light/Dark Theme">
+                        <img id="themeIcon" class="theme-iconss" src="/assets/images/darkmood.png" alt="Theme toggle" />
                     </button>
                 </div>
 
-                <div class="an-nav-right">
+                <!-- Desktop Right Actions (> 992px) -->
+                <div class="an-nav-right an-desktop-only">
                     @auth
                         <a href="{{ route('agent.dashboard') }}" class="an-login-btn">
                             Dashboard
                         </a>
                     @else
                         <button type="button" class="an-login-btn" data-bs-toggle="modal" data-bs-target="#chatLoginModal">
+                            Log In / Sign Up
+                        </button>
+                    @endauth
+                </div>
+
+                <!-- Mobile Trigger (<= 992px): 3-Dot Menu Button -->
+                <div class="an-nav-mobile-trigger">
+                    <button class="an-mobile-dots-btn" id="anMobileDotsBtn" type="button" aria-label="Open Navigation Menu" title="Menu">
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Dropdown Menu -->
+            <div class="an-mobile-menu-dropdown" id="anMobileDropdown">
+                <div class="an-mobile-menu-row">
+                    <span class="an-mobile-menu-label"><i class="fa-solid fa-globe text-orange"></i> Language</span>
+                    <div class="gtranslate_wrapper"></div>
+                </div>
+                <div class="an-mobile-menu-row">
+                    <span class="an-mobile-menu-label"><i class="fa-solid fa-circle-half-stroke text-orange"></i> Theme</span>
+                    <button id="themeToggleMobile" class="an-theme-toggle-btn" aria-label="Toggle theme" type="button" title="Toggle Light/Dark Theme">
+                        <img id="themeIconMobile" class="theme-iconss" src="/assets/images/darkmood.png" alt="Theme toggle" />
+                    </button>
+                </div>
+                <div class="an-mobile-menu-row pt-3">
+                    @auth
+                        <a href="{{ route('agent.dashboard') }}" class="an-login-btn w-100 text-center">
+                            Dashboard
+                        </a>
+                    @else
+                        <button type="button" class="an-login-btn w-100" data-bs-toggle="modal" data-bs-target="#chatLoginModal">
                             Log In / Sign Up
                         </button>
                     @endauth
@@ -1113,8 +1513,8 @@
                 <div class="an-feature-card" data-aos="fade-up" data-aos-delay="200">
                     <img src="{{ asset('assets/images/Frame 2147227181.png') }}" class="an-feature-icon-img" alt="Quality Leads">
                     <div class="an-feature-text">
-                        <strong>Quality, High-</strong>
-                        <span>Engagement <span class="badge-leads">LEADS</span></span>
+                        <strong>Quality, High-Engagement</strong>
+                         <span class="badge-leads">LEADS</span>
                     </div>
                 </div>
 
@@ -1188,7 +1588,7 @@
                             </div>
                             <div class="an-info-text">
                                 <span class="an-info-label">Call Us</span>
-                                <a href="tel:+18005550123" class="an-info-val">+1 (800) 555-0123</a>
+                                <a href="tel:18773475569" class="an-info-val">1-877-347-KLOZ (5569)</a>
                             </div>
                         </div>
 
@@ -1199,18 +1599,18 @@
                             </div>
                             <div class="an-info-text">
                                 <span class="an-info-label">Email Us</span>
-                                <a href="mailto:support@ancanada.ca" class="an-info-val">support@ancanada.ca</a>
+                                <a href="mailto:ANdeal@motokloz.com" class="an-info-val">ANdeal@motokloz.com</a>
                             </div>
                         </div>
 
-                        <!-- Location -->
+                        <!-- Location (Opens in Google Maps) -->
                         <div class="an-info-row">
-                            <div class="an-info-icon-box">
+                            <a href="https://maps.google.com/?q=Edmonton,+AB,+Canada" target="_blank" rel="noopener noreferrer" class="an-info-icon-box" title="Open Edmonton, AB in Google Maps">
                                 <i class="fa-solid fa-location-dot"></i>
-                            </div>
+                            </a>
                             <div class="an-info-text">
                                 <span class="an-info-label">Our Location</span>
-                                <span class="an-info-val">Toronto, ON, Canada</span>
+                                <a href="https://maps.google.com/?q=Edmonton,+AB,+Canada" target="_blank" rel="noopener noreferrer" class="an-info-val">Edmonton, AB</a>
                             </div>
                         </div>
                     </div>
@@ -1227,7 +1627,7 @@
                         <form id="anContactForm" action="{{ route('contact.mail') }}" method="POST" data-ajax="1" data-no-loader="1">
                             @csrf
                             <input type="hidden" name="source" value="AN Canada Exclusive Offer Page">
-                            <input type="hidden" name="dealer_email" value="support@ancanada.ca">
+                            <input type="hidden" name="dealer_email" value="ANdeal@motokloz.com">
 
                             <!-- Full Name -->
                             <div class="an-form-group">
@@ -1302,21 +1702,54 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Theme toggle support for FA sun icon
-        const themeBtn = document.getElementById('themeToggle');
-        if (themeBtn) {
-            themeBtn.addEventListener('click', function () {
-                const icon = themeBtn.querySelector('i');
-                if (document.body.classList.contains('dark-mode')) {
-                    if (icon) {
-                        icon.classList.remove('fa-moon');
-                        icon.classList.add('fa-sun');
-                    }
+        // Mobile 3-dot Menu Toggle
+        const mobileMenuBtn = document.getElementById('anMobileDotsBtn');
+        const mobileDropdown = document.getElementById('anMobileDropdown');
+
+        if (mobileMenuBtn && mobileDropdown) {
+            mobileMenuBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                mobileDropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!mobileDropdown.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                    mobileDropdown.classList.remove('show');
+                }
+            });
+        }
+
+        // Theme toggle icon sync helper
+        function syncThemeIcons() {
+            const isDark = document.body.classList.contains('dark-mode');
+            const mainIcon = document.getElementById('themeIcon');
+            const mobileIcon = document.getElementById('themeIconMobile');
+            const targetSrc = isDark ? '/assets/images/lightmood.png' : '/assets/images/darkmood.png';
+            if (mainIcon) mainIcon.src = targetSrc;
+            if (mobileIcon) mobileIcon.src = targetSrc;
+        }
+
+        // Run on page load
+        syncThemeIcons();
+
+        // Main theme toggle click observer
+        const mainToggle = document.getElementById('themeToggle');
+        if (mainToggle) {
+            mainToggle.addEventListener('click', function () {
+                setTimeout(syncThemeIcons, 10);
+            });
+        }
+
+        // Mobile theme toggle sync
+        const mobileThemeToggle = document.getElementById('themeToggleMobile');
+        if (mobileThemeToggle) {
+            mobileThemeToggle.addEventListener('click', function () {
+                if (mainToggle) {
+                    mainToggle.click();
                 } else {
-                    if (icon) {
-                        icon.classList.remove('fa-sun');
-                        icon.classList.add('fa-moon');
-                    }
+                    document.body.classList.toggle('dark-mode');
+                    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+                    syncThemeIcons();
                 }
             });
         }

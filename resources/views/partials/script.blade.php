@@ -260,6 +260,8 @@ toggleBtn.addEventListener("click", () => {
     if (localStorage.getItem("theme") === "dark") {
         document.body.classList.add("dark-mode");
         if (icon) icon.src = "/assets/images/lightmood.png";
+    } else {
+        if (icon) icon.src = "/assets/images/darkmood.png";
     }
 </script>
 <script>

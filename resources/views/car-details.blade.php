@@ -1,45 +1,88 @@
 @extends('layouts.app')
-@section('title', $pageTitle ?? 'Motokloz | Car Details')
-
-@section('meta')
 @php
 if (!function_exists('formatPrice')) {
     function formatPrice($price)
     {
         $cleaned = preg_replace('/[^0-9.]/', '', (string) $price);
         $number = is_numeric($cleaned) ? (float) $cleaned : 0;
-        return number_format($number, 0, '.', ','); // 👈 yahan 2 → 0
+        return number_format($number, 0, '.', ',');
     }
 }
-@endphp
-@php
-    $year = $searched_vehicle->year ?? '';
-    $make = $searched_vehicle->mfg_auto ?? '';
-    $model = $searched_vehicle->model ?? '';
-    $trim = $searched_vehicle->trim ?? '';
-    $color = $searched_vehicle->ext_color ?? '';
-    $city = $dealer->city ?? $searched_vehicle->dealer_city ?? $searched_vehicle->city ?? '';
-    $province = $dealer->province ?? $searched_vehicle->dealer_province ?? $searched_vehicle->province ?? '';
-    $price = formatPrice($searched_vehicle->disclosed_price ?? 0);
-    $mileage = formatPrice($searched_vehicle->mileage ?? 0);
-    $transmission = $searched_vehicle->transmission ?? 'N/A';
-    $drivetrain = $searched_vehicle->drivetrain ?? 'N/A';
-    $dealerName = $dealer->dba ?? $dealer->first_name ?? $searched_vehicle->dealer_name ?? 'Dealer';
-    
-    $vehicleName = trim($year . ' ' . $make . ' ' . $model . ' ' . $trim);
-    $vehicleNameWithColor = trim($year . ' ' . $color . ' ' . $make . ' ' . $model . ' ' . $trim);
-    $location = collect([$city, $province])->filter()->implode(', ');
 
-    $vehicleTitle = trim('Used ' . $vehicleName . ' for Sale' . ($location ? ' in ' . $location : '') . ' | Motokloz');
-    if (trim($vehicleName) === '') {
-        $vehicleTitle = "Vehicle for Sale | Motokloz";
+    $year = trim((string) ($searched_vehicle->year ?? ''));
+    $make = trim((string) ($searched_vehicle->mfg_auto ?? $searched_vehicle->make ?? ''));
+    $model = trim((string) ($searched_vehicle->model ?? ''));
+    $trim = trim((string) ($searched_vehicle->trim ?? ''));
+    $drivetrain = trim((string) ($searched_vehicle->drivetrain ?? ''));
+    if (strcasecmp($drivetrain, 'N/A') === 0 || strcasecmp($drivetrain, 'NA') === 0) {
+        $drivetrain = '';
     }
-    
-    $vehicleDescription = trim('Used ' . $vehicleNameWithColor . ' for $' . $price . ($location ? ' in ' . $location : '') . '. ' . $mileage . ' km, ' . $transmission . ' and ' . $drivetrain . '. Contact ' . $dealerName . ' on Motokloz.');
-    if (trim($vehicleName) === '') {
-        $vehicleDescription = "Check out this vehicle at Motokloz. Contact us for more details and pricing.";
+
+    $city = trim((string) ($dealer->city ?? $searched_vehicle->dealer_city ?? $searched_vehicle->city ?? ''));
+    $province = trim((string) ($dealer->province ?? $searched_vehicle->dealer_province ?? $searched_vehicle->province ?? ''));
+
+    $vehicleParts = array_filter([$year, $make, $model, $trim, $drivetrain], fn($p) => $p !== '');
+    $vehicleHeading = implode(' ', $vehicleParts);
+
+    $locParts = array_filter([$city, $province], fn($l) => $l !== '');
+    $locationStr = implode(', ', $locParts);
+
+    // Meta Title: Used {year} {make} {model} {trim} {drivetrain} for Sale in {city}, {province}
+    if ($vehicleHeading !== '') {
+        $vehicleTitle = 'Used ' . $vehicleHeading . ($locationStr !== '' ? ' for Sale in ' . $locationStr : ' for Sale');
+    } else {
+        $vehicleTitle = 'Used Vehicle for Sale | Motokloz';
     }
-    
+
+    // Mileage
+    $rawMileage = preg_replace('/[^0-9]/', '', (string) ($searched_vehicle->mileage ?? ''));
+    $mileageFormatted = $rawMileage !== '' ? number_format((float) $rawMileage) : '';
+
+    // Features extraction (up to 4 features)
+    $rawFeatures = array_filter(array_merge(
+        array_filter(explode(',', $searched_vehicle->interior ?? '')),
+        array_filter(explode(',', $searched_vehicle->extras ?? '')),
+        array_filter(explode(',', $searched_vehicle->imp ?? '')),
+        array_filter(explode(',', $searched_vehicle->after_market_items ?? '')),
+        array_filter(explode(';', $searched_vehicle->options ?? ''))
+    ));
+
+    $features = collect($rawFeatures)
+        ->map(function ($f) {
+            $f = trim($f);
+            return preg_replace('/\s+/', ' ', $f);
+        })
+        ->filter(function ($f) {
+            return $f !== '' && strlen($f) > 2;
+        })
+        ->unique(fn($f) => strtolower($f))
+        ->values()
+        ->take(4);
+
+    $featureText = '';
+    if ($features->count() > 1) {
+        $lastFeature = $features->pop();
+        $featureText = ' with ' . $features->map(fn($f) => strtolower($f))->implode(', ') . ' and ' . strtolower($lastFeature);
+    } elseif ($features->count() === 1) {
+        $featureText = ' with ' . strtolower($features->first());
+    }
+
+    // Meta Description: Used {year} {make} {model} {trim} {drivetrain} for sale in {city}, {province}. {mileage} km with {feature_1}, {feature_2}, {feature_3} and {feature_4}. View photos, pricing and details on Motokloz.
+    $middleParts = [];
+    if ($mileageFormatted !== '') {
+        $middleParts[] = $mileageFormatted . ' km' . $featureText;
+    } elseif ($featureText !== '') {
+        $middleParts[] = ltrim($featureText);
+    }
+
+    $middleSentence = !empty($middleParts) ? ' ' . implode(' ', $middleParts) . '.' : '';
+
+    if ($vehicleHeading !== '') {
+        $vehicleDescription = 'Used ' . $vehicleHeading . ($locationStr !== '' ? ' for sale in ' . $locationStr : ' for sale') . '.' . $middleSentence . ' View photos, pricing and details on Motokloz.';
+    } else {
+        $vehicleDescription = 'Browse used vehicles on Motokloz. View photos, pricing and details online.';
+    }
+
     $primaryImage = $searched_vehicle->primary_image ?? '';
     $defaultImage = 'https://motokloz.com/assets/images/defaultimage.jpg';
     $imageUrl = $defaultImage;
@@ -56,8 +99,10 @@ if (!function_exists('formatPrice')) {
     }
 @endphp
 
-{{-- CRITICAL META TAGS --}}
 @section('title', $vehicleTitle)
+@section('meta_description', $vehicleDescription)
+
+@section('meta')
 <meta name="title" content="{{ $vehicleTitle }}">
 <meta name="description" content="{{ $vehicleDescription }}">
 
@@ -656,10 +701,10 @@ if (!function_exists('formatPrice')) {
                                         WhatsApp: N/A
                                     @endif
                                 </div>
-                                @if($searched_vehicle->dealer && $searched_vehicle->dealer->subaccount && $dealer->subaccount->twilio_phone_number)
+                                @if(!empty($dealer->subaccount->twilio_phone_number))
                                     <div class="mb-2">
                                         <img src="/assets/images/Background (11).png" width="20" alt="whatsapp" class="contact-icon light-dark"> 
-                                        SMS: {{ $searched_vehicle->dealer->subaccount->twilio_phone_number }}
+                                        SMS: {{ $dealer->subaccount->twilio_phone_number }}
                                     </div>
                                 @endif
                             </div>

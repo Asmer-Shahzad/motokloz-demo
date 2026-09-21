@@ -21,7 +21,7 @@ class InventoryController extends Controller
 
     use EnrichesVehicleLocation;
 
-    private array $excludedSitemapDealerIds = [1, 2, 55];
+    private array $excludedSitemapDealerIds = [1, 2, 3, 4, 5, 11, 30, 55];
 
 
     private function baseUrl(): string
