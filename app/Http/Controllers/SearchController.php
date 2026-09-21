@@ -510,25 +510,32 @@ class SearchController extends Controller
 
             Log::info('Sending contact email to: ' . $dealerEmail);
 
-            // 1. Save lead to Diskloz admin_leads table
+            $leadType = $request->topic ?? ($request->source ?? 'AN Canada Exclusive Offer Page');
+
+            // 1. Send lead to Diskloz API (with DB fallback)
             try {
-                $leadType = $request->topic ?? ($request->source ?? 'AN Canada Exclusive Offer Page');
-                DB::connection('diskloz')->table('admin_leads')->insert([
-                    'name'       => $validated['name'],
-                    'email'      => $validated['email'],
-                    'phone'      => $validated['phone'] ?? null,
-                    'type'       => $leadType,
-                    'message'    => $validated['message'],
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                $apiUrl = $this->disklozBaseUrl() . '/api/save_admin_lead';
+                $apiResponse = Http::timeout(8)->post($apiUrl, [
+                    'name'    => $validated['name'],
+                    'email'   => $validated['email'],
+                    'phone'   => $validated['phone'] ?? null,
+                    'type'    => $leadType,
+                    'message' => $validated['message'],
                 ]);
-                Log::info('Lead successfully saved to diskloz.admin_leads', [
-                    'name'  => $validated['name'],
-                    'email' => $validated['email'],
-                    'type'  => $leadType,
-                ]);
-            } catch (\Exception $dbEx) {
-                Log::error('Failed to save lead in diskloz.admin_leads: ' . $dbEx->getMessage());
+
+                if ($apiResponse->successful()) {
+                    Log::info('Lead successfully sent to Diskloz API', [
+                        'status' => $apiResponse->status(),
+                        'name'   => $validated['name'],
+                        'email'  => $validated['email'],
+                    ]);
+                } else {
+                    Log::warning('Diskloz API responded with status ' . $apiResponse->status() . ', trying direct DB fallback');
+                    $this->saveLeadDirectDb($validated, $leadType);
+                }
+            } catch (\Exception $apiEx) {
+                Log::error('Diskloz API call failed: ' . $apiEx->getMessage() . ', trying direct DB fallback');
+                $this->saveLeadDirectDb($validated, $leadType);
             }
 
             // 2. Prepare and send notification email
@@ -593,6 +600,27 @@ class SearchController extends Controller
                 'success' => false,
                 'message' => 'Failed to send message. Error: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    /**
+     * Fallback to direct DB insert into diskloz.admin_leads
+     */
+    private function saveLeadDirectDb(array $validated, string $leadType): void
+    {
+        try {
+            DB::connection('diskloz')->table('admin_leads')->insert([
+                'name'       => $validated['name'],
+                'email'      => $validated['email'],
+                'phone'      => $validated['phone'] ?? null,
+                'type'       => $leadType,
+                'message'    => $validated['message'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            Log::info('Lead saved to diskloz.admin_leads via DB fallback');
+        } catch (\Exception $e) {
+            Log::error('Direct DB fallback failed: ' . $e->getMessage());
         }
     }
 
