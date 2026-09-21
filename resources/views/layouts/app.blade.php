@@ -457,7 +457,9 @@
             });
         })();
     </script>
-    @include('partials.header')
+    @unless(View::hasSection('hide_header'))
+        @include('partials.header')
+    @endunless
 
     <!-- Professional Image Lightbox -->
     <div id="mto-lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
@@ -1007,7 +1009,9 @@
     </script>
    
     @yield('content')
-    @include('partials.footer')
+    @unless(View::hasSection('hide_footer'))
+        @include('partials.footer')
+    @endunless
     @include('partials.script')
     @include('partials.login-modal')
 </body>
