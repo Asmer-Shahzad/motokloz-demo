@@ -436,7 +436,7 @@ class ListingController extends Controller
     {
         Log::info('Incoming Request Data:', $request->all());
 
-        $skip = ['inventory_logo', '_token', 'features', 'extra_services'];
+        $skip = ['inventory_logo', '_token', 'features', 'extra_services', 'floor_plans'];
 
         $postFields = [];
 
@@ -457,6 +457,12 @@ class ListingController extends Controller
         $features = (array) $request->input('features', []);
         foreach ($features as $i => $feature) {
             $postFields["interior[{$i}]"] = (string) $feature;
+        }
+
+        // ✅ Floor Plans
+        $floorPlans = (array) $request->input('floor_plans', []);
+        foreach ($floorPlans as $i => $fp) {
+            $postFields["floor_plans[{$i}]"] = (string) $fp;
         }
 
         // ✅ Extra Services
