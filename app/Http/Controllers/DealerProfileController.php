@@ -53,8 +53,15 @@ class DealerProfileController extends Controller
         return response()->json($json);
     }
 
+    private array $excludedDealerIds = [1, 2, 3, 4, 5, 11, 30, 55];
+
     public function dealer_inventory_details($name, $id, Request $request)
     {
+        // Check if dealer is in excluded list
+        if (in_array((int) $id, $this->excludedDealerIds, true)) {
+            abort(404, 'Dealer not found');
+        }
+
         // $name sirf URL ke liye (ignore karo)
         // $id use karo database ke liye
         
@@ -142,23 +149,55 @@ class DealerProfileController extends Controller
         $dealerName = trim((string) ($dealer->dba ?? $dealer->legal_name ?? $dealer->first_name ?? $dealer->name ?? 'Dealer'));
         $dealerCity = trim((string) ($dealer->city ?? ''));
         $dealerProvince = trim((string) ($dealer->province ?? ''));
-        $dealerTitle = trim($dealerName . ' | ' . ($dealerCity !== '' ? $dealerCity : 'Location') . ', Used Car Dealer');
+
+        $locationParts = array_filter([$dealerCity, $dealerProvince], fn($p) => $p !== '');
+        $dealerLocation = implode(', ', $locationParts);
+
+        // Title: {dealer_name} Used Vehicle Inventory in {city}, {province}
+        $dealerTitle = $dealerLocation !== ''
+            ? "{$dealerName} Used Vehicle Inventory in {$dealerLocation}"
+            : "{$dealerName} Used Vehicle Inventory | Motokloz";
+
+        // Makes: Shop {make_1}, {make_2} and {make_3} vehicles
+        $makes = collect($inventoryData)
+            ->map(function ($item) {
+                $item = (array) $item;
+                return trim($item['mfg_auto'] ?? $item['make'] ?? $item['brand'] ?? '');
+            })
+            ->filter()
+            ->unique()
+            ->values()
+            ->take(3);
+
+        if ($makes->count() > 1) {
+            $lastMake = $makes->pop();
+            $makesText = 'Shop ' . $makes->implode(', ') . ' and ' . $lastMake . ' vehicles';
+        } elseif ($makes->count() === 1) {
+            $makesText = 'Shop ' . $makes->first() . ' vehicles';
+        } else {
+            $makesText = 'Shop quality vehicles';
+        }
+
+        // Description: Browse {stock_count} used vehicles from {dealer_name} in {city}, {province}. Shop {make_1}, {make_2} and {make_3} vehicles and view prices, photos and details on Motokloz.
+        $stockCountText = $total_inventory > 0 ? "{$total_inventory} used vehicles" : "used vehicles";
+        $dealerDescription = "Browse {$stockCountText} from {$dealerName}" . ($dealerLocation !== '' ? " in {$dealerLocation}" : "") . ". {$makesText} and view prices, photos and details on Motokloz.";
 
         return view('dealer-profile', [
-            'user'             => $user,
-            'userInfo'         => $userInfo,
-            'dealer'           => $dealer,
-            'contact'          => $dealer->phone_no ?? null,
-            'inventory'        => $inventory,
-            'total_inventory'  => $total_inventory,
-            'searched_vehicle' => $searched_vehicle,
-            'disklozBaseUrl'   => $this->disklozBaseUrl(),
-            'mapAddress'       => $mapAddress,
-            'pageTitle'        => $dealerTitle,
-            'dealerName'       => $dealerName,
-            'dealerCity'       => $dealerCity,
-            'dealerProvince'   => $dealerProvince,
-            'topBrands'        => $topBrands,
+            'user'              => $user,
+            'userInfo'          => $userInfo,
+            'dealer'            => $dealer,
+            'contact'           => $dealer->phone_no ?? null,
+            'inventory'         => $inventory,
+            'total_inventory'   => $total_inventory,
+            'searched_vehicle'  => $searched_vehicle,
+            'disklozBaseUrl'    => $this->disklozBaseUrl(),
+            'mapAddress'        => $mapAddress,
+            'pageTitle'         => $dealerTitle,
+            'dealerDescription' => $dealerDescription,
+            'dealerName'        => $dealerName,
+            'dealerCity'        => $dealerCity,
+            'dealerProvince'    => $dealerProvince,
+            'topBrands'         => $topBrands,
         ]);
     }
 
@@ -253,6 +292,11 @@ class DealerProfileController extends Controller
 
     public function dealer_inventory(Request $request, $id)
     {
+        // Check if dealer is in excluded list
+        if (in_array((int) $id, $this->excludedDealerIds, true)) {
+            abort(404, 'Dealer not found');
+        }
+
         $user = Auth::user();
         $userInfo = $user->information ?? new UserInformation();
 

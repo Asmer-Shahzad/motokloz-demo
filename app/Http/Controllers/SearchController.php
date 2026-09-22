@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use App\Models\UserInformation;
 use App\Models\User;
 use App\Http\Controllers\Concerns\EnrichesVehicleLocation;
@@ -499,35 +500,92 @@ class SearchController extends Controller
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|email',
-                'phone' => 'required|string',
+                'phone' => 'nullable|string',
                 'message' => 'required|string',
-                'dealer_email' => 'required|email'
+                'dealer_email' => 'required|email',
+                'topic' => 'nullable|string',
             ]);
 
             $dealerEmail = $validated['dealer_email'];
 
             Log::info('Sending contact email to: ' . $dealerEmail);
 
-            Mail::send('emails.generic-notification', [
-                'title' => 'New Contact Message',
-                'heading' => 'New Contact Message',
-                'subtitle' => 'Submitted via Motokloz',
-                'intro' => 'A new contact message has been submitted. Details are below.',
-                'rows' => [
+            $leadType = $request->topic ?? ($request->source ?? 'AN Canada Exclusive Offer Page');
+
+            // 1. Send lead to Diskloz API (with DB fallback)
+            try {
+                $apiUrl = $this->disklozBaseUrl() . '/api/save_admin_lead';
+                $apiResponse = Http::timeout(8)->post($apiUrl, [
+                    'name'    => $validated['name'],
+                    'email'   => $validated['email'],
+                    'phone'   => $validated['phone'] ?? null,
+                    'type'    => $leadType,
+                    'message' => $validated['message'],
+                ]);
+
+                if ($apiResponse->successful()) {
+                    Log::info('Lead successfully sent to Diskloz API', [
+                        'status' => $apiResponse->status(),
+                        'name'   => $validated['name'],
+                        'email'  => $validated['email'],
+                    ]);
+                } else {
+                    Log::warning('Diskloz API responded with status ' . $apiResponse->status() . ', trying direct DB fallback');
+                    $this->saveLeadDirectDb($validated, $leadType);
+                }
+            } catch (\Exception $apiEx) {
+                Log::error('Diskloz API call failed: ' . $apiEx->getMessage() . ', trying direct DB fallback');
+                $this->saveLeadDirectDb($validated, $leadType);
+            }
+
+            // 2. Prepare and send notification email
+            $isAnCanada = str_contains(strtolower($request->source ?? ''), 'an canada') || $dealerEmail === 'ANdeal@motokloz.com';
+
+            if ($isAnCanada) {
+                Mail::send('emails.an-lead-notification', [
+                    'title'           => 'New AN Canada Lead - ' . $validated['name'],
+                    'heading'         => 'New AN Canada Exclusive Offer Lead',
+                    'lead_name'       => $validated['name'],
+                    'lead_email'      => $validated['email'],
+                    'lead_phone'      => $validated['phone'] ?? null,
+                    'lead_topic'      => $request->topic ?? 'AN Canada Exclusive Offer ($499/mo)',
+                    'source'          => $request->source ?? 'AN Canada Exclusive Offer Page',
+                    'lead_message'    => $validated['message'],
+                    'submitted_at'    => now()->format('M d, Y - h:i A (T)'),
+                ], function ($message) use ($dealerEmail, $validated) {
+                    $message->to($dealerEmail)
+                        ->subject('🎯 New AN Canada Lead - ' . $validated['name'])
+                        ->replyTo($validated['email'], $validated['name']);
+                });
+            } else {
+                $rows = [
                     ['label' => 'Name', 'value' => $validated['name']],
                     ['label' => 'Email', 'value' => $validated['email']],
-                    ['label' => 'Phone', 'value' => $validated['phone']],
-                    ['label' => 'Vehicle ID', 'value' => $request->vehicle_id ?? 'N/A'],
-                    ['label' => 'Source', 'value' => $request->source ?? 'Website'],
-                    ['label' => 'Message', 'value' => $validated['message']],
-                    ['label' => 'Submitted At', 'value' => now()->format('Y-m-d H:i:s')],
-                ],
-                'footer' => 'This message was submitted via Motokloz. Please contact the customer directly.',
-            ], function ($message) use ($dealerEmail, $validated) {
-                $message->to($dealerEmail)
-                    ->subject('New Contact Message - ' . $validated['name'])
-                    ->replyTo($validated['email'], $validated['name']);
-            });
+                    ['label' => 'Phone', 'value' => $validated['phone'] ?? 'N/A'],
+                ];
+
+                if ($request->filled('topic')) {
+                    $rows[] = ['label' => 'Topic / Subject', 'value' => $request->topic];
+                }
+
+                $rows[] = ['label' => 'Vehicle ID', 'value' => $request->vehicle_id ?? 'N/A'];
+                $rows[] = ['label' => 'Source', 'value' => $request->source ?? 'Website'];
+                $rows[] = ['label' => 'Message', 'value' => $validated['message']];
+                $rows[] = ['label' => 'Submitted At', 'value' => now()->format('Y-m-d H:i:s')];
+
+                Mail::send('emails.generic-notification', [
+                    'title'    => 'New Contact Message',
+                    'heading'  => 'New Contact Message',
+                    'subtitle' => 'Submitted via Motokloz',
+                    'intro'    => 'A new contact message has been submitted. Details are below.',
+                    'rows'     => $rows,
+                    'footer'   => 'This message was submitted via Motokloz. Please contact the customer directly.',
+                ], function ($message) use ($dealerEmail, $validated) {
+                    $message->to($dealerEmail)
+                        ->subject('New Contact Message - ' . $validated['name'])
+                        ->replyTo($validated['email'], $validated['name']);
+                });
+            }
 
             Log::info('Contact email sent to: ' . $dealerEmail);
 
@@ -542,6 +600,27 @@ class SearchController extends Controller
                 'success' => false,
                 'message' => 'Failed to send message. Error: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    /**
+     * Fallback to direct DB insert into diskloz.admin_leads
+     */
+    private function saveLeadDirectDb(array $validated, string $leadType): void
+    {
+        try {
+            DB::connection('diskloz')->table('admin_leads')->insert([
+                'name'       => $validated['name'],
+                'email'      => $validated['email'],
+                'phone'      => $validated['phone'] ?? null,
+                'type'       => $leadType,
+                'message'    => $validated['message'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            Log::info('Lead saved to diskloz.admin_leads via DB fallback');
+        } catch (\Exception $e) {
+            Log::error('Direct DB fallback failed: ' . $e->getMessage());
         }
     }
 

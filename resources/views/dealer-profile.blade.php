@@ -92,16 +92,23 @@ $isMotokloz = $source === 'motokloz';
 $dealerName = $dealerName ?? ($dealer->dba ?? $dealer->legal_name ?? $dealer->first_name ?? $dealer->name ?? 'Dealer');
 $dealerCity = $dealerCity ?? ($dealer->city ?? '');
 $dealerProvince = $dealerProvince ?? ($dealer->province ?? '');
+$pageTitle = $pageTitle ?? ($dealerName . ' Used Vehicle Inventory');
+$dealerDescription = $dealerDescription ?? ("Browse used vehicles from {$dealerName}. View prices, photos and details on Motokloz.");
 @endphp
+@section('title', $pageTitle)
+@section('meta_description', $dealerDescription)
 @section('meta')
 <meta name="title" content="{{ $pageTitle }}" />
-<meta name="description" content="{{ $dealerName }} has {{ $total_inventory }} vehicles in stock in {{ $dealerCity }}{{ $dealerProvince ? ' | ' . $dealerProvince : '' }}, including {{ $topBrands ?: 'popular brands' }}. Financing, trade-ins & full-service maintenance available." />
-
+<meta name="description" content="{{ $dealerDescription }}" />
+<meta property="og:url" content="{{ url()->current() }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ $pageTitle }}">
+<meta property="og:description" content="{{ $dealerDescription }}">
+<meta property="og:site_name" content="Motokloz">
 @endsection
 @section('canonical')
 <link rel="canonical" href="{{ url()->current() }}">
 @endsection
-@section('title', $pageTitle)
 @section('content')
 
 <!-- DEALER PROFILE BANNER — Google Maps Embed -->
@@ -145,8 +152,7 @@ $dealerProvince = $dealerProvince ?? ($dealer->province ?? '');
 
                         <div>
                             <h1 class="mb-3 fw-bold">
-                                {{$dealer->dba}}
-                                <!--{{ $dealer->first_name }} {{ $dealer->last_name }}-->
+                                {{ $dealer->dba ?? ($dealer->first_name ?? '') . ' ' . ($dealer->last_name ?? '') }}
                             </h1>
                             <p>
                                 <i class="fas fa-map-marker-alt text-warning me-1"></i>
@@ -1493,7 +1499,7 @@ $dealerLogo = $dealer->logo
   "url": "{{ url()->current() }}",
   "logo": "{{ $dealerLogo }}",
   "image": "{{ $dealerLogo }}",
-  "description": "{{ safeJson($dealer->internal_notes ?: ($dealer->dba . ' offers quality vehicles with financing and service options in ' . ($dealer->city ?? 'Canada') . '.')) }}",
+  "description": "{{ safeJson(($dealer->internal_notes ?? '') ?: ($dealer->dba . ' offers quality vehicles with financing and service options in ' . ($dealer->city ?? 'Canada') . '.')) }}",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "{{ safeJson($dealer->physical_address ?? '') }}",

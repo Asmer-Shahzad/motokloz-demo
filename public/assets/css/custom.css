@@ -259,7 +259,10 @@ a.logo-o-link {
 .gt_float_switcher .gt-selected .gt-current-lang {
     color: var(--select-color) !important;
 }
-
+.gt-lang-code{
+    color: var(--an-feature-title);
+}
+    
 .gtranslate_wrapper .gt_options {
     top: calc(100% + 8px);
     z-index: 9999;
