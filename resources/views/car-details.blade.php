@@ -67,7 +67,7 @@ if (!function_exists('formatPrice')) {
         $featureText = ' with ' . strtolower($features->first());
     }
 
-    // Meta Description: Used {year} {make} {model} {trim} {drivetrain} for sale in {city}, {province}. {mileage} km with {feature_1}, {feature_2}, {feature_3} and {feature_4}. View photos, pricing and details on Motokloz.
+    // Meta Description: Used {year} {make} {model} {trim} {drivetrain} for sale in {city}, {province}. {mileage} km with {feature_1}, {feature_2}, {feature_3} and {feature_4}.
     $middleParts = [];
     if ($mileageFormatted !== '') {
         $middleParts[] = $mileageFormatted . ' km' . $featureText;
@@ -78,9 +78,9 @@ if (!function_exists('formatPrice')) {
     $middleSentence = !empty($middleParts) ? ' ' . implode(' ', $middleParts) . '.' : '';
 
     if ($vehicleHeading !== '') {
-        $vehicleDescription = 'Used ' . $vehicleHeading . ($locationStr !== '' ? ' for sale in ' . $locationStr : ' for sale') . '.' . $middleSentence . ' View photos, pricing and details on Motokloz.';
+        $vehicleDescription = trim('Used ' . $vehicleHeading . ($locationStr !== '' ? ' for sale in ' . $locationStr : ' for sale') . '.' . $middleSentence);
     } else {
-        $vehicleDescription = 'Browse used vehicles on Motokloz. View photos, pricing and details online.';
+        $vehicleDescription = 'Browse used vehicles for sale on Motokloz.';
     }
 
     $primaryImage = $searched_vehicle->primary_image ?? '';

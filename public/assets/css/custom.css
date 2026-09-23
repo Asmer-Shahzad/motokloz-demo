@@ -251,6 +251,9 @@ a.logo-o-link {
     width: 100%;
     height: 100%;
 }
+.gt-lang-code{
+    color: var(--select-color) !important;
+}
 
 .gtranslate_wrapper .gt_float_switcher .gt-current-lang {
     padding: 13px 20px !important;

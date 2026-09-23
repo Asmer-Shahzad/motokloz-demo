@@ -53,12 +53,20 @@ class DealerProfileController extends Controller
         return response()->json($json);
     }
 
-    private array $excludedDealerIds = [1, 2, 3, 4, 5, 11, 30, 55];
+    private array $redirectDealerIds = [5, 11];
+    private array $excludedDealerIds = [1, 2, 3, 4, 30, 55];
 
     public function dealer_inventory_details($name, $id, Request $request)
     {
-        // Check if dealer is in excluded list
-        if (in_array((int) $id, $this->excludedDealerIds, true)) {
+        $dealerId = (int) $id;
+
+        // Sirf in 2 dealers (5 aur 11) ko /dealer-profile/ per 301 redirect karo
+        if (in_array($dealerId, $this->redirectDealerIds, true)) {
+            return redirect('/dealer-profile/', 301);
+        }
+
+        // Baqi excluded dealers ko 404 karo
+        if (in_array($dealerId, $this->excludedDealerIds, true)) {
             abort(404, 'Dealer not found');
         }
 
